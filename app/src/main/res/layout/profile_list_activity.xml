@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="profiles"
+            type="android.databinding.ObservableList&lt;com.wireguard.config.Profile&gt;" />
+    </data>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:items="@{profiles}"
+        app:layout="@{@layout/profile_list_item}" />
+</layout>
