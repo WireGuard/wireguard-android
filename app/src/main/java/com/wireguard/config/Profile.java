@@ -59,7 +59,7 @@ public class Profile {
     public String toString() {
         StringBuilder sb = new StringBuilder().append(iface.toString());
         for (Peer peer : peers)
-            sb.append(peer.toString());
+            sb.append('\n').append(peer.toString());
         return sb.toString();
     }
 }
