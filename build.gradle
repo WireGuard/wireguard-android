@@ -1,0 +1,18 @@
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+buildscript {
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
