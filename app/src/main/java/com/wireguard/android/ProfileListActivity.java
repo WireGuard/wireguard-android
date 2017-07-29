@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -41,6 +43,20 @@ public class ProfileListActivity extends Activity {
                     service.connectProfile(profile);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_list, menu);
+        return true;
+    }
+
+    public void onMenuNewAction(MenuItem item) {
+
+    }
+
+    public void onMenuSettings(MenuItem item) {
+
     }
 
     @Override

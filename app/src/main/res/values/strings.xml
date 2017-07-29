@@ -2,5 +2,7 @@
 <resources>
     <string name="app_name">WireGuard</string>
     <string name="connected">Connected</string>
+    <string name="create">Add</string>
     <string name="disconnected">Disconnected</string>
+    <string name="settings">Settings</string>
 </resources>
