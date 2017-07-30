@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
+import java.lang.ref.WeakReference;
+
 /**
  * A generic ListAdapter backed by an ObservableList.
  */
@@ -18,7 +20,7 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
     private final int layoutId;
     private final LayoutInflater layoutInflater;
     private ObservableList<T> list;
-    private final OnListChangedCallback<ObservableList<T>> callback = new OnListChangedCallback<>();
+    private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
 
     ObservableListAdapter(Context context, int layoutId, ObservableList<T> list) {
         this.layoutInflater = LayoutInflater.from(context);
@@ -60,32 +62,44 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         }
     }
 
-    private class OnListChangedCallback<L extends ObservableList<T>>
-            extends ObservableList.OnListChangedCallback<L> {
-        @Override
-        public void onChanged(L sender) {
-            ObservableListAdapter.this.notifyDataSetChanged();
+    private static class OnListChangedCallback<U>
+            extends ObservableList.OnListChangedCallback<ObservableList<U>> {
+
+        private final WeakReference<ObservableListAdapter<U>> weakAdapter;
+
+        private OnListChangedCallback(ObservableListAdapter<U> adapter) {
+            weakAdapter = new WeakReference<>(adapter);
         }
 
         @Override
-        public void onItemRangeChanged(L sender, int positionStart, int itemCount) {
-            ObservableListAdapter.this.notifyDataSetChanged();
+        public void onChanged(ObservableList<U> sender) {
+            final ObservableListAdapter<U> adapter = weakAdapter.get();
+            if (adapter != null)
+                adapter.notifyDataSetChanged();
+            else
+                sender.removeOnListChangedCallback(this);
         }
 
         @Override
-        public void onItemRangeInserted(L sender, int positionStart, int itemCount) {
-            ObservableListAdapter.this.notifyDataSetChanged();
+        public void onItemRangeChanged(ObservableList<U> sender, int positionStart, int itemCount) {
+            onChanged(sender);
         }
 
         @Override
-        public void onItemRangeMoved(L sender, int fromPosition, int toPosition,
+        public void onItemRangeInserted(ObservableList<U> sender, int positionStart,
+                                        int itemCount) {
+            onChanged(sender);
+        }
+
+        @Override
+        public void onItemRangeMoved(ObservableList<U> sender, int fromPosition, int toPosition,
                                      int itemCount) {
-            ObservableListAdapter.this.notifyDataSetChanged();
+            onChanged(sender);
         }
 
         @Override
-        public void onItemRangeRemoved(L sender, int positionStart, int itemCount) {
-            ObservableListAdapter.this.notifyDataSetChanged();
+        public void onItemRangeRemoved(ObservableList<U> sender, int positionStart, int itemCount) {
+            onChanged(sender);
         }
     }
 }
