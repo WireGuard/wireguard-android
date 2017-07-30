@@ -12,6 +12,7 @@ import android.util.Log;
 import com.wireguard.config.Profile;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +34,12 @@ public class ProfileService extends Service {
 
     @Override
     public void onCreate() {
-        new ProfileLoader().execute(getFilesDir().listFiles());
+        new ProfileLoader().execute(getFilesDir().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".conf");
+            }
+        }));
     }
 
     @Override
