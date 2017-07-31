@@ -86,7 +86,7 @@ up_if() {
 }
 
 set_dns() {
-	cndc resolver setnetdns "$NETID" "" "${DNS[@]}"
+	[[ ${#DNS[@]} -eq 0 ]] || cndc resolver setnetdns "$NETID" "" "${DNS[@]}"
 }
 
 add_addr() {
