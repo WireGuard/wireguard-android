@@ -15,7 +15,7 @@ INTERFACE=""
 NETID=0
 ADDRESSES=( )
 MTU=""
-DNS=""
+DNS=( )
 CONFIG_FILE=""
 PROGRAM="${0##*/}"
 ARGS=( "$@" )
@@ -38,7 +38,7 @@ parse_options() {
 			case "$key" in
 			Address) ADDRESSES+=( ${value//,/ } ); continue ;;
 			MTU) MTU="$value"; continue ;;
-			DNS) DNS="$value"; continue ;;
+			DNS) DNS+=( ${value//,/ } ); continue ;;
 			esac
 		fi
 		WG_CONFIG+="$line"$'\n'
@@ -86,7 +86,7 @@ up_if() {
 }
 
 set_dns() {
-	cndc resolver setnetdns "$NETID" "" "$1"
+	cndc resolver setnetdns "$NETID" "" "${DNS[@]}"
 }
 
 add_addr() {
@@ -157,7 +157,7 @@ cmd_up() {
 		add_addr "$i"
 	done
 	up_if
-	[[ -z $DNS ]] || set_dns "$DNS"
+	set_dns
 	for i in $(while read -r _ i; do for i in $i; do [[ $i =~ ^[0-9a-z:.]+/[0-9]+$ ]] && echo "$i"; done; done < <(wg show "$INTERFACE" allowed-ips) | sort -nr -k 2 -t /); do
 		[[ $(ip route get "$i" 2>/dev/null) == *dev\ $INTERFACE\ * ]] || add_route "$i"
 	done
