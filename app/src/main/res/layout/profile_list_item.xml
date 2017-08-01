@@ -21,6 +21,16 @@
             android:text="@{item.name}" />
 
         <TextView
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/profile_name"
+            android:text="@{item.isConnected ? @string/connected : @string/disconnected}"
+            android:textAlignment="textEnd"
+            android:textColor="@{item.isConnected ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile_name"
