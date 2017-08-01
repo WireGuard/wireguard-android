@@ -12,8 +12,10 @@ import android.util.Log;
 import com.wireguard.config.Profile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,6 +47,84 @@ public class ProfileService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
+    }
+
+    private class ProfileAdder extends AsyncTask<Void, Void, Boolean> {
+        private final Profile profile;
+
+        private ProfileAdder(Profile profile) {
+            super();
+            this.profile = profile;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, "Adding profile " + profile.getName());
+            try {
+                final String configFile = profile.getName() + ".conf";
+                final FileOutputStream stream = openFileOutput(configFile, MODE_PRIVATE);
+                stream.write(profile.toString().getBytes(StandardCharsets.UTF_8));
+                stream.close();
+                return true;
+            } catch (IOException e) {
+                Log.e(TAG, "Could not create profile " + profile.getName(), e);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            profile.setIsConnected(false);
+            profiles.add(profile);
+        }
+    }
+
+    private class ProfileConnecter extends AsyncTask<Void, Void, Boolean> {
+        private final Profile profile;
+
+        private ProfileConnecter(Profile profile) {
+            super();
+            this.profile = profile;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, "Running wg-quick up for profile " + profile.getName());
+            final File configFile = new File(getFilesDir(), profile.getName() + ".conf");
+            return RootShell.run(null, "wg-quick up '" + configFile.getPath() + "'") == 0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            profile.setIsConnected(true);
+        }
+    }
+
+    private class ProfileDisconnecter extends AsyncTask<Void, Void, Boolean> {
+        private final Profile profile;
+
+        private ProfileDisconnecter(Profile profile) {
+            super();
+            this.profile = profile;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, "Running wg-quick down for profile " + profile.getName());
+            final File configFile = new File(getFilesDir(), profile.getName() + ".conf");
+            return RootShell.run(null, "wg-quick down '" + configFile.getPath() + "'") == 0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            profile.setIsConnected(false);
+        }
     }
 
     private class ProfileLoader extends AsyncTask<File, Void, List<Profile>> {
@@ -83,9 +163,82 @@ public class ProfileService extends Service {
         }
     }
 
+    private class ProfileRemover extends AsyncTask<Void, Void, Boolean> {
+        private final Profile profile;
+
+        private ProfileRemover(Profile profile) {
+            super();
+            this.profile = profile;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, "Removing profile " + profile.getName());
+            final File configFile = new File(getFilesDir(), profile.getName() + ".conf");
+            if (configFile.delete()) {
+                return true;
+            } else {
+                Log.e(TAG, "Could not delete configuration for profile " + profile.getName());
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            profiles.remove(profile);
+        }
+    }
+
+    private class ProfileUpdater extends AsyncTask<Void, Void, Boolean> {
+        private final Profile profile, newProfile;
+        private final boolean wasConnected;
+
+        private ProfileUpdater(Profile profile, Profile newProfile, boolean wasConnected) {
+            super();
+            this.profile = profile;
+            this.newProfile = newProfile;
+            this.wasConnected = wasConnected;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, "Updating profile " + profile.getName());
+            if (!newProfile.getName().equals(profile.getName()))
+                throw new IllegalStateException("Profile name mismatch: " + profile.getName());
+            try {
+                final String configFile = profile.getName() + ".conf";
+                final FileOutputStream stream = openFileOutput(configFile, MODE_PRIVATE);
+                stream.write(newProfile.toString().getBytes(StandardCharsets.UTF_8));
+                stream.close();
+                return true;
+            } catch (IOException e) {
+                Log.e(TAG, "Could not update profile " + profile.getName(), e);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            // FIXME: This is also why the list of profiles should be a map.
+            final int index = profiles.indexOf(profile);
+            profiles.set(index, newProfile);
+            if (wasConnected)
+                new ProfileConnecter(newProfile).execute();
+        }
+    }
+
     private class ProfileServiceBinder extends Binder implements ProfileServiceInterface {
         @Override
         public void connectProfile(Profile profile) {
+            if (!profiles.contains(profile))
+                return;
+            if (profile.getIsConnected())
+                return;
+            new ProfileConnecter(profile).execute();
         }
 
         @Override
@@ -97,6 +250,11 @@ public class ProfileService extends Service {
 
         @Override
         public void disconnectProfile(Profile profile) {
+            if (!profiles.contains(profile))
+                return;
+            if (!profile.getIsConnected())
+                return;
+            new ProfileDisconnecter(profile).execute();
         }
 
         @Override
@@ -106,10 +264,28 @@ public class ProfileService extends Service {
 
         @Override
         public void removeProfile(Profile profile) {
+            if (!profiles.contains(profile))
+                return;
+            if (profile.getIsConnected())
+                new ProfileDisconnecter(profile).execute();
+            new ProfileRemover(profile).execute();
         }
 
         @Override
         public void saveProfile(Profile newProfile) {
+            // FIXME: This is why the list of profiles should be a map.
+            Profile profile = null;
+            for (Profile p : profiles)
+                if (p.getName().equals(newProfile.getName()))
+                    profile = p;
+            if (profile != null) {
+                final boolean wasConnected = profile.getIsConnected();
+                if (wasConnected)
+                    new ProfileDisconnecter(profile).execute();
+                new ProfileUpdater(profile, newProfile, wasConnected).execute();
+            } else {
+                new ProfileAdder(newProfile).execute();
+            }
         }
     }
 }
