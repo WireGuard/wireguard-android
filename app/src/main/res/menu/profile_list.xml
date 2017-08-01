@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:alphabeticShortcut="n"
-        android:icon="@drawable/ic_action_add"
-        android:onClick="onMenuNewAction"
-        android:showAsAction="ifRoom"
-        android:title="@string/create" />
-    <item
         android:alphabeticShortcut="s"
         android:icon="@drawable/ic_settings"
         android:onClick="onMenuSettings"
