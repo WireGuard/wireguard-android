@@ -90,7 +90,9 @@ public class ProfileService extends Service {
 
         @Override
         public Profile copyProfileForEditing(Profile profile) {
-            return null;
+            if (!profiles.contains(profile))
+                return null;
+            return profile.copy();
         }
 
         @Override
