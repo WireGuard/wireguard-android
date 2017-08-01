@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -132,8 +133,13 @@ public class ProfileService extends Service {
         protected List<Profile> doInBackground(File... files) {
             final List<String> interfaceNames = new LinkedList<>();
             final List<Profile> loadedProfiles = new LinkedList<>();
-            final String command = "ip -br link show type wireguard | cut -d' ' -f1";
-            if (RootShell.run(interfaceNames, command) != 0) {
+            final String command = "wg show interfaces";
+            if (RootShell.run(interfaceNames, command) == 0 && interfaceNames.size() == 1) {
+                // wg puts all interface names on the same line. Split them into separate elements.
+                final String nameList = interfaceNames.get(0);
+                Collections.addAll(interfaceNames, nameList.split(" "));
+                interfaceNames.remove(0);
+            } else {
                 interfaceNames.clear();
                 Log.w(TAG, "Can't enumerate network interfaces. All profiles will appear down.");
             }
