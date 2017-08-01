@@ -8,8 +8,12 @@ import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.wireguard.android.databinding.ProfileListActivityBinding;
+import com.wireguard.config.Profile;
 
 public class ProfileListActivity extends Activity {
     private final ServiceConnection connection = new ProfileServiceConnection();
@@ -23,6 +27,20 @@ public class ProfileListActivity extends Activity {
         // Ensure the long-running service is started. This only needs to happen once.
         Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
+
+        ListView listView = findViewById(R.id.profile_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Profile profile = (Profile) parent.getItemAtPosition(position);
+                if (profile == null || service == null)
+                    return;
+                if (profile.getIsConnected())
+                    service.disconnectProfile(profile);
+                else
+                    service.connectProfile(profile);
+            }
+        });
     }
 
     @Override
