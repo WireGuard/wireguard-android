@@ -51,10 +51,6 @@ public class ProfileListActivity extends Activity {
         return true;
     }
 
-    public void onMenuNewAction(MenuItem item) {
-
-    }
-
     public void onMenuSettings(MenuItem item) {
 
     }
