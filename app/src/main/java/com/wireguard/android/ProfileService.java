@@ -50,25 +50,35 @@ public class ProfileService extends Service {
     private class ProfileLoader extends AsyncTask<File, Void, List<Profile>> {
         @Override
         protected List<Profile> doInBackground(File... files) {
+            final List<String> interfaceNames = new LinkedList<>();
             final List<Profile> loadedProfiles = new LinkedList<>();
+            final String command = "ip -br link show type wireguard | cut -d' ' -f1";
+            if (RootShell.run(interfaceNames, command) != 0) {
+                interfaceNames.clear();
+                Log.w(TAG, "Can't enumerate network interfaces. All profiles will appear down.");
+            }
             for (File file : files) {
+                if (isCancelled())
+                    return null;
                 final String fileName = file.getName();
                 final String profileName = fileName.substring(0, fileName.length() - 5);
                 final Profile profile = new Profile(profileName);
+                Log.v(TAG, "Attempting to load profile " + profileName);
                 try {
                     profile.parseFrom(openFileInput(fileName));
+                    profile.setIsConnected(interfaceNames.contains(profileName));
                     loadedProfiles.add(profile);
                 } catch (IOException e) {
                     Log.w(TAG, "Failed to load profile from " + fileName, e);
                 }
-                if (isCancelled())
-                    break;
             }
             return loadedProfiles;
         }
 
         @Override
         protected void onPostExecute(List<Profile> loadedProfiles) {
+            if (loadedProfiles == null)
+                return;
             profiles.addAll(loadedProfiles);
         }
     }
