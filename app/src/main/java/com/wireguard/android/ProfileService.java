@@ -74,8 +74,30 @@ public class ProfileService extends Service {
     }
 
     private class ProfileServiceBinder extends Binder implements ProfileServiceInterface {
+        @Override
+        public void connectProfile(Profile profile) {
+        }
+
+        @Override
+        public Profile copyProfileForEditing(Profile profile) {
+            return null;
+        }
+
+        @Override
+        public void disconnectProfile(Profile profile) {
+        }
+
+        @Override
         public ObservableList<Profile> getProfiles() {
             return profiles;
+        }
+
+        @Override
+        public void removeProfile(Profile profile) {
+        }
+
+        @Override
+        public void saveProfile(Profile newProfile) {
         }
     }
 }
