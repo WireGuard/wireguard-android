@@ -156,7 +156,7 @@ public class ProfileService extends Service {
                     profile.parseFrom(openFileInput(fileName));
                     profile.setIsConnected(interfaceNames.contains(profileName));
                     loadedProfiles.add(profile);
-                } catch (IOException e) {
+                } catch (IOException | IndexOutOfBoundsException e) {
                     Log.w(TAG, "Failed to load profile from " + fileName, e);
                 }
             }

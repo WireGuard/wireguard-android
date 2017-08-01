@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 import android.databinding.Observable;
 
 import com.wireguard.android.BR;
+import com.wireguard.crypto.Keypair;
 
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block).
@@ -14,8 +15,14 @@ public class Interface extends BaseObservable implements Observable {
     private String address;
     private String dns;
     private String listenPort;
+    private Keypair keypair;
     private String mtu;
-    private String privateKey;
+
+    public void generateKeypair() {
+        keypair = new Keypair();
+        notifyPropertyChanged(BR.privateKey);
+        notifyPropertyChanged(BR.publicKey);
+    }
 
     @Bindable
     public String getAddress() {
@@ -39,7 +46,12 @@ public class Interface extends BaseObservable implements Observable {
 
     @Bindable
     public String getPrivateKey() {
-        return privateKey;
+        return keypair != null ? keypair.getPrivateKey() : null;
+    }
+
+    @Bindable
+    public String getPublicKey() {
+        return keypair != null ? keypair.getPublicKey() : null;
     }
 
     public void parseFrom(String line) {
@@ -53,7 +65,7 @@ public class Interface extends BaseObservable implements Observable {
         else if (key == Attribute.MTU)
             mtu = key.parseFrom(line);
         else if (key == Attribute.PRIVATE_KEY)
-            privateKey = key.parseFrom(line);
+            keypair = new Keypair(key.parseFrom(line));
     }
 
     public void setAddress(String address) {
@@ -77,8 +89,12 @@ public class Interface extends BaseObservable implements Observable {
     }
 
     public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
+        // Avoid exceptions from Keypair while the user is typing.
+        if (privateKey.length() != Keypair.KEY_STRING_LENGTH)
+            return;
+        keypair = new Keypair(privateKey);
         notifyPropertyChanged(BR.privateKey);
+        notifyPropertyChanged(BR.publicKey);
     }
 
     @Override
@@ -92,8 +108,8 @@ public class Interface extends BaseObservable implements Observable {
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
         if (mtu != null)
             sb.append(Attribute.MTU.composeWith(mtu));
-        if (privateKey != null)
-            sb.append(Attribute.PRIVATE_KEY.composeWith(privateKey));
+        if (keypair != null)
+            sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
         return sb.toString();
     }
 }
