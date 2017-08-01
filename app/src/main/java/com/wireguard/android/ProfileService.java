@@ -54,10 +54,15 @@ public class ProfileService extends Service {
 
     private class ProfileAdder extends AsyncTask<Void, Void, Boolean> {
         private final Profile profile;
+        private final boolean shouldConnect;
 
-        private ProfileAdder(Profile profile) {
+        private ProfileAdder(Profile profile, boolean shouldConnect) {
             super();
+            for (Profile p : profiles)
+                if (p.getName().equals(profile.getName()))
+                    throw new IllegalStateException("Profile already exists: " + profile.getName());
             this.profile = profile;
+            this.shouldConnect = shouldConnect;
         }
 
         @Override
@@ -65,6 +70,8 @@ public class ProfileService extends Service {
             Log.i(TAG, "Adding profile " + profile.getName());
             try {
                 final String configFile = profile.getName() + ".conf";
+                if (new File(getFilesDir(), configFile).exists())
+                    throw new IOException("Refusing to overwrite existing profile configuration");
                 final FileOutputStream stream = openFileOutput(configFile, MODE_PRIVATE);
                 stream.write(profile.toString().getBytes(StandardCharsets.UTF_8));
                 stream.close();
@@ -81,6 +88,8 @@ public class ProfileService extends Service {
                 return;
             profile.setIsConnected(false);
             profiles.add(profile);
+            if (shouldConnect)
+                new ProfileConnecter(profile).execute();
         }
     }
 
@@ -173,10 +182,14 @@ public class ProfileService extends Service {
 
     private class ProfileRemover extends AsyncTask<Void, Void, Boolean> {
         private final Profile profile;
+        private final Profile replaceWith;
+        private final boolean shouldConnect;
 
-        private ProfileRemover(Profile profile) {
+        private ProfileRemover(Profile profile, Profile replaceWith, Boolean shouldConnect) {
             super();
             this.profile = profile;
+            this.replaceWith = replaceWith;
+            this.shouldConnect = shouldConnect != null ? shouldConnect : false;
         }
 
         @Override
@@ -196,46 +209,8 @@ public class ProfileService extends Service {
             if (!result)
                 return;
             profiles.remove(profile);
-        }
-    }
-
-    private class ProfileUpdater extends AsyncTask<Void, Void, Boolean> {
-        private final Profile profile, newProfile;
-        private final boolean wasConnected;
-
-        private ProfileUpdater(Profile profile, Profile newProfile, boolean wasConnected) {
-            super();
-            this.profile = profile;
-            this.newProfile = newProfile;
-            this.wasConnected = wasConnected;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            Log.i(TAG, "Updating profile " + profile.getName());
-            if (!newProfile.getName().equals(profile.getName()))
-                throw new IllegalStateException("Profile name mismatch: " + profile.getName());
-            try {
-                final String configFile = profile.getName() + ".conf";
-                final FileOutputStream stream = openFileOutput(configFile, MODE_PRIVATE);
-                stream.write(newProfile.toString().getBytes(StandardCharsets.UTF_8));
-                stream.close();
-                return true;
-            } catch (IOException e) {
-                Log.e(TAG, "Could not update profile " + profile.getName(), e);
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (!result)
-                return;
-            // FIXME: This is also why the list of profiles should be a map.
-            final int index = profiles.indexOf(profile);
-            profiles.set(index, newProfile);
-            if (wasConnected)
-                new ProfileConnecter(newProfile).execute();
+            if (replaceWith != null)
+                new ProfileAdder(replaceWith, shouldConnect).execute();
         }
     }
 
@@ -276,23 +251,20 @@ public class ProfileService extends Service {
                 return;
             if (profile.getIsConnected())
                 new ProfileDisconnecter(profile).execute();
-            new ProfileRemover(profile).execute();
+            new ProfileRemover(profile, null, null).execute();
         }
 
         @Override
-        public void saveProfile(Profile newProfile) {
-            // FIXME: This is why the list of profiles should be a map.
-            Profile profile = null;
-            for (Profile p : profiles)
-                if (p.getName().equals(newProfile.getName()))
-                    profile = p;
-            if (profile != null) {
-                final boolean wasConnected = profile.getIsConnected();
+        public void saveProfile(Profile oldProfile, Profile newProfile) {
+            if (oldProfile != null) {
+                if (!profiles.contains(oldProfile))
+                    return;
+                final boolean wasConnected = oldProfile.getIsConnected();
                 if (wasConnected)
-                    new ProfileDisconnecter(profile).execute();
-                new ProfileUpdater(profile, newProfile, wasConnected).execute();
+                    new ProfileDisconnecter(oldProfile).execute();
+                new ProfileRemover(oldProfile, newProfile, wasConnected).execute();
             } else {
-                new ProfileAdder(newProfile).execute();
+                new ProfileAdder(newProfile, false).execute();
             }
         }
     }

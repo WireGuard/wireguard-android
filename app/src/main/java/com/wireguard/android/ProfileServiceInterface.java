@@ -57,13 +57,14 @@ public interface ProfileServiceInterface {
     void removeProfile(Profile profile);
 
     /**
-     * Adds the profile if it does not yet exist, or replaces an existing profile of the same name.
+     * Replace the given profile, or add a new profile if oldProfile is null.
      * If the profile exists and is currently connected, it will be disconnected before the
      * replacement, and the service will attempt to reconnect it afterward. If the profile is new,
      * it will be set to the disconnected state. If successful, configuration for this profile will
      * be saved to persistent storage.
      *
+     * @param oldProfile The existing profile to replace, or null to add the new profile.
      * @param newProfile The profile to add, or a copy of the profile to replace.
      */
-    void saveProfile(Profile newProfile);
+    void saveProfile(Profile oldProfile, Profile newProfile);
 }
