@@ -1,5 +1,6 @@
 package com.wireguard.android;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -19,8 +20,15 @@ class RootShell {
      * Setup commands that are run at the beginning of each root shell. The trap command ensures
      * access to the return value of the last command, since su itself always exits with 0.
      */
-    private static final String SETUP = "export TMPDIR=/data/local/tmp\ntrap 'echo $?' EXIT\n";
+    private static final String SETUP = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
     private static final String TAG = "RootShell";
+
+    private final byte setupCommands[];
+
+    RootShell(Context context) {
+        final String tmpdir = context.getCacheDir().getPath();
+        setupCommands = String.format(SETUP, tmpdir).getBytes(StandardCharsets.UTF_8);
+    }
 
     /**
      * Run a series of commands in a root shell. These commands are all sent to the same shell
@@ -31,7 +39,7 @@ class RootShell {
      * @param commands One or more commands to run as root (each element is a separate line).
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    static int run(List<String> output, String... commands) {
+    int run(List<String> output, String... commands) {
         if (commands.length < 1)
             throw new IndexOutOfBoundsException("At least one command must be supplied");
         int exitValue = -1;
@@ -39,7 +47,7 @@ class RootShell {
             final ProcessBuilder builder = new ProcessBuilder().redirectErrorStream(true);
             final Process process = builder.command("su").start();
             final OutputStream stdin = process.getOutputStream();
-            stdin.write(SETUP.getBytes(StandardCharsets.UTF_8));
+            stdin.write(setupCommands);
             for (String command : commands)
                 stdin.write(command.concat("\n").getBytes(StandardCharsets.UTF_8));
             stdin.close();

@@ -29,6 +29,7 @@ public class ProfileService extends Service {
 
     private final IBinder binder = new ProfileServiceBinder();
     private final ObservableList<Profile> profiles = new ObservableArrayList<>();
+    private RootShell rootShell;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,6 +38,7 @@ public class ProfileService extends Service {
 
     @Override
     public void onCreate() {
+        rootShell = new RootShell(this);
         new ProfileLoader().execute(getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -94,7 +96,7 @@ public class ProfileService extends Service {
         protected Boolean doInBackground(Void... voids) {
             Log.i(TAG, "Running wg-quick up for profile " + profile.getName());
             final File configFile = new File(getFilesDir(), profile.getName() + ".conf");
-            return RootShell.run(null, "wg-quick up '" + configFile.getPath() + "'") == 0;
+            return rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'") == 0;
         }
 
         @Override
@@ -117,7 +119,7 @@ public class ProfileService extends Service {
         protected Boolean doInBackground(Void... voids) {
             Log.i(TAG, "Running wg-quick down for profile " + profile.getName());
             final File configFile = new File(getFilesDir(), profile.getName() + ".conf");
-            return RootShell.run(null, "wg-quick down '" + configFile.getPath() + "'") == 0;
+            return rootShell.run(null, "wg-quick down '" + configFile.getPath() + "'") == 0;
         }
 
         @Override
@@ -134,7 +136,7 @@ public class ProfileService extends Service {
             final List<String> interfaceNames = new LinkedList<>();
             final List<Profile> loadedProfiles = new LinkedList<>();
             final String command = "wg show interfaces";
-            if (RootShell.run(interfaceNames, command) == 0 && interfaceNames.size() == 1) {
+            if (rootShell.run(interfaceNames, command) == 0 && interfaceNames.size() == 1) {
                 // wg puts all interface names on the same line. Split them into separate elements.
                 final String nameList = interfaceNames.get(0);
                 Collections.addAll(interfaceNames, nameList.split(" "));
