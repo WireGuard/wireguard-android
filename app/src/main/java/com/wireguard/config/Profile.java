@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * Represents a wg-quick profile.
  */
 
-public class Profile extends BaseObservable implements Observable {
+public class Profile extends BaseObservable implements Copyable<Profile>, Observable {
     private final Interface iface = new Interface();
     private boolean isConnected;
     private final String name;
@@ -28,6 +28,22 @@ public class Profile extends BaseObservable implements Observable {
     public Profile(String name) {
         super();
         this.name = name;
+    }
+
+    private Profile(Profile original)
+            throws IOException {
+        this(original.getName());
+        final byte configBytes[] = original.toString().getBytes(StandardCharsets.UTF_8);
+        final ByteArrayInputStream configStream = new ByteArrayInputStream(configBytes);
+        parseFrom(configStream);
+    }
+
+    public Profile copy() {
+        try {
+            return new Profile(this);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public Interface getInterface() {
