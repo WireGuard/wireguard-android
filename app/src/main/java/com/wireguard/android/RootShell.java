@@ -24,10 +24,16 @@ class RootShell {
     private static final String TAG = "RootShell";
 
     private final byte setupCommands[];
+    private final String shell;
 
     RootShell(Context context) {
+        this(context, "su");
+    }
+
+    RootShell(Context context, String shell) {
         final String tmpdir = context.getCacheDir().getPath();
         setupCommands = String.format(SETUP_TEMPLATE, tmpdir).getBytes(StandardCharsets.UTF_8);
+        this.shell = shell;
     }
 
     /**
@@ -45,7 +51,7 @@ class RootShell {
         int exitValue = -1;
         try {
             final ProcessBuilder builder = new ProcessBuilder().redirectErrorStream(true);
-            final Process process = builder.command("su").start();
+            final Process process = builder.command(shell).start();
             final OutputStream stdin = process.getOutputStream();
             stdin.write(setupCommands);
             for (String command : commands)
