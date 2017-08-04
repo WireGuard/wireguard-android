@@ -1,7 +1,5 @@
 package com.wireguard.android;
 
-import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +14,8 @@ import com.wireguard.config.Profile;
  * Fragment containing the list of available WireGuard profiles. Must be part of a ProfileActivity.
  */
 
-public class ProfileListFragment extends Fragment implements ServiceConnectionListener {
-    private ProfileActivity activity;
+public class ProfileListFragment extends ProfileActivityFragment {
     private ProfileListFragmentBinding binding;
-    private ProfileServiceInterface service;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        activity = (ProfileActivity) context;
-        activity.addServiceConnectionListener(this);
-        service = activity.getService();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -58,19 +46,8 @@ public class ProfileListFragment extends Fragment implements ServiceConnectionLi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        activity.removeServiceConnectionListener(this);
-    }
-
-    @Override
     public void onServiceConnected(ProfileServiceInterface service) {
-        this.service = service;
+        super.onServiceConnected(service);
         binding.setProfiles(service.getProfiles());
-    }
-
-    @Override
-    public void onServiceDisconnected() {
-        service = null;
     }
 }
