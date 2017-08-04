@@ -20,14 +20,14 @@ class RootShell {
      * Setup commands that are run at the beginning of each root shell. The trap command ensures
      * access to the return value of the last command, since su itself always exits with 0.
      */
-    private static final String SETUP = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
+    private static final String SETUP_TEMPLATE = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
     private static final String TAG = "RootShell";
 
     private final byte setupCommands[];
 
     RootShell(Context context) {
         final String tmpdir = context.getCacheDir().getPath();
-        setupCommands = String.format(SETUP, tmpdir).getBytes(StandardCharsets.UTF_8);
+        setupCommands = String.format(SETUP_TEMPLATE, tmpdir).getBytes(StandardCharsets.UTF_8);
     }
 
     /**
