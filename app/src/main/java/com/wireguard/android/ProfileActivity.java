@@ -5,53 +5,53 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.wireguard.android.databinding.ProfileListActivityBinding;
 import com.wireguard.config.Profile;
 
-public class ProfileListActivity extends Activity {
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Activity that allows creating/viewing/editing/deleting WireGuard profiles.
+ */
+
+public class ProfileActivity extends Activity {
     private final ServiceConnection connection = new ProfileServiceConnection();
-    private ProfileListActivityBinding binding;
+    private final List<ServiceConnectionListener> listeners = new ArrayList<>();
     private ProfileServiceInterface service;
+
+    public void addServiceConnectionListener(ServiceConnectionListener listener) {
+        listeners.add(listener);
+    }
+
+    public ProfileServiceInterface getService() {
+        return service;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.profile_list_activity);
+        setContentView(R.layout.profile_activity);
         // Ensure the long-running service is started. This only needs to happen once.
         Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
-
-        ListView listView = findViewById(R.id.profile_list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Profile profile = (Profile) parent.getItemAtPosition(position);
-                if (profile == null || service == null)
-                    return;
-                if (profile.getIsConnected())
-                    service.disconnectProfile(profile);
-                else
-                    service.connectProfile(profile);
-            }
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_list, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     public void onMenuSettings(MenuItem item) {
+
+    }
+
+    public void onProfileSelected(Profile profile) {
 
     }
 
@@ -67,20 +67,29 @@ public class ProfileListActivity extends Activity {
         super.onStop();
         if (service != null) {
             unbindService(connection);
+            for (ServiceConnectionListener listener : listeners)
+                listener.onServiceDisconnected();
             service = null;
         }
+    }
+
+    public void removeServiceConnectionListener(ServiceConnectionListener listener) {
+        listeners.remove(listener);
     }
 
     private class ProfileServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName component, IBinder binder) {
             service = (ProfileServiceInterface) binder;
-            binding.setProfiles(service.getProfiles());
+            for (ServiceConnectionListener listener : listeners)
+                listener.onServiceConnected(service);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName component) {
             // This function is only called when the service crashes or goes away unexpectedly.
+            for (ServiceConnectionListener listener : listeners)
+                listener.onServiceDisconnected();
             service = null;
         }
     }
