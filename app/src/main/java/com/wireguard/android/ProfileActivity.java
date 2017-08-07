@@ -1,6 +1,7 @@
 package com.wireguard.android;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +36,12 @@ public class ProfileActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This layout consists only of containers for fragments.
         setContentView(R.layout.profile_activity);
+        // Fill the layout with the initial set of fragments.
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.list_fragment_container, new ProfileListFragment());
+        transaction.commit();
         // Ensure the long-running service is started. This only needs to happen once.
         Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
