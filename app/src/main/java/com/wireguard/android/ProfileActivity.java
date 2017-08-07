@@ -39,11 +39,11 @@ public class ProfileActivity extends Activity {
         // This layout consists only of containers for fragments.
         setContentView(R.layout.profile_activity);
         // Fill the layout with the initial set of fragments.
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.list_fragment_container, new ProfileListFragment());
         transaction.commit();
         // Ensure the long-running service is started. This only needs to happen once.
-        Intent intent = new Intent(this, ProfileService.class);
+        final Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
     }
 
