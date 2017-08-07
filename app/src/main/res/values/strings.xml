@@ -3,5 +3,6 @@
     <string name="app_name">WireGuard</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
+    <string name="placeholder_text">No profile selected.</string>
     <string name="settings">Settings</string>
 </resources>
