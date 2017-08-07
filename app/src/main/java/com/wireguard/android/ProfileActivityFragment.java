@@ -15,13 +15,27 @@ public class ProfileActivityFragment extends Fragment implements ServiceConnecti
     public void onAttach(Context context) {
         super.onAttach(context);
         activity = (ProfileActivity) context;
-        activity.addServiceConnectionListener(this);
-        service = activity.getService();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        activity = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        activity.addServiceConnectionListener(this);
+        // If the service is already connected, there will be no callback, so run the handler now.
+        final ProfileServiceInterface service = activity.getService();
+        if (service != null)
+            onServiceConnected(service);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         activity.removeServiceConnectionListener(this);
     }
 
