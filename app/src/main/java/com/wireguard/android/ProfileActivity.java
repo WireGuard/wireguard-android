@@ -22,6 +22,7 @@ import java.util.List;
 
 public class ProfileActivity extends Activity {
     private final ServiceConnection connection = new ProfileServiceConnection();
+    private boolean isSplitLayout;
     private final List<ServiceConnectionListener> listeners = new ArrayList<>();
     private ProfileServiceInterface service;
 
@@ -38,9 +39,12 @@ public class ProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         // This layout consists only of containers for fragments.
         setContentView(R.layout.profile_activity);
+        isSplitLayout = findViewById(R.id.detail_fragment_container) != null;
         // Fill the layout with the initial set of fragments.
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.list_fragment_container, new ProfileListFragment());
+        if (isSplitLayout)
+            transaction.add(R.id.detail_fragment_container, new PlaceholderFragment());
         transaction.commit();
         // Ensure the long-running service is started. This only needs to happen once.
         final Intent intent = new Intent(this, ProfileService.class);
