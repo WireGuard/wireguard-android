@@ -20,6 +20,11 @@ import java.nio.charset.StandardCharsets;
  */
 
 public class Profile extends BaseObservable implements Copyable<Profile>, Observable {
+    public static boolean isNameValid(String name) {
+        final int IFNAMSIZ = 16;
+        return !name.contains(" ") && name.getBytes(StandardCharsets.UTF_8).length <= IFNAMSIZ;
+    }
+
     private final Interface iface = new Interface();
     private boolean isConnected;
     private String name;
