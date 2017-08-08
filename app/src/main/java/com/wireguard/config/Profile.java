@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class Profile extends BaseObservable implements Copyable<Profile>, Observable {
     private final Interface iface = new Interface();
     private boolean isConnected;
-    private final String name;
+    private String name;
     private final ObservableList<Peer> peers = new ObservableArrayList<>();
 
     public Profile(String name) {
@@ -55,6 +55,7 @@ public class Profile extends BaseObservable implements Copyable<Profile>, Observ
         return isConnected;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
@@ -87,6 +88,11 @@ public class Profile extends BaseObservable implements Copyable<Profile>, Observ
     public void setIsConnected(boolean isConnected) {
         this.isConnected = isConnected;
         notifyPropertyChanged(BR.isConnected);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        notifyPropertyChanged(BR.name);
     }
 
     @Override
