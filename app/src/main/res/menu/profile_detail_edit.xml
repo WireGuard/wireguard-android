@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:alphabeticShortcut="s"
+        android:icon="@drawable/ic_action_save"
+        android:onClick="onMenuSave"
+        android:showAsAction="always"
+        android:title="@string/save" />
+</menu>

@@ -1,54 +1,53 @@
 package com.wireguard.android;
 
-import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.wireguard.config.Profile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity that allows creating/viewing/editing/deleting WireGuard profiles.
  */
 
-public class ProfileActivity extends Activity {
-    private final ServiceConnection connection = new ProfileServiceConnection();
-    private boolean isSplitLayout;
-    private final List<ServiceConnectionListener> listeners = new ArrayList<>();
-    private ProfileServiceInterface service;
+public class ProfileActivity extends ServiceClientActivity<ProfileServiceInterface> {
+    public static final String KEY_PROFILE_NAME = "profile_name";
 
-    public void addServiceConnectionListener(ServiceConnectionListener listener) {
-        listeners.add(listener);
+    // FIXME: These must match the constants in profile_list_activity.xml
+    private static final String TAG_DETAIL = "detail";
+    private static final String TAG_LIST = "list";
+
+    private String currentProfile;
+    private boolean isSplitLayout;
+
+    public ProfileActivity() {
+        super(ProfileService.class);
     }
 
-    public ProfileServiceInterface getService() {
-        return service;
+    @Override
+    public void onBackPressed() {
+        if (!isSplitLayout && currentProfile != null) {
+            onProfileSelected(null);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This layout consists only of containers for fragments.
+        // Restore the saved profile if there is one; otherwise grab it from the intent.
+        if (savedInstanceState != null)
+            currentProfile = savedInstanceState.getString(KEY_PROFILE_NAME);
+        else
+            currentProfile = getIntent().getStringExtra(KEY_PROFILE_NAME);
+        // Set up the base layout and fill it with fragments.
         setContentView(R.layout.profile_activity);
-        isSplitLayout = findViewById(R.id.detail_fragment_container) != null;
-        // Fill the layout with the initial set of fragments.
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.list_fragment_container, new ProfileListFragment());
-        if (isSplitLayout)
-            transaction.add(R.id.detail_fragment_container, new PlaceholderFragment());
-        transaction.commit();
-        // Ensure the long-running service is started. This only needs to happen once.
-        final Intent intent = new Intent(this, ProfileService.class);
-        startService(intent);
+        final int orientation = getResources().getConfiguration().orientation;
+        isSplitLayout = orientation == Configuration.ORIENTATION_LANDSCAPE;
+        updateLayout(currentProfile);
     }
 
     @Override
@@ -57,50 +56,54 @@ public class ProfileActivity extends Activity {
         return true;
     }
 
+    public void onMenuEdit(MenuItem item) {
+
+    }
+
+    public void onMenuSave(MenuItem item) {
+
+    }
+
     public void onMenuSettings(MenuItem item) {
 
     }
 
-    public void onProfileSelected(Profile profile) {
-
+    public void onProfileSelected(String profile) {
+        updateLayout(profile);
+        currentProfile = profile;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, ProfileService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_PROFILE_NAME, currentProfile);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (service != null) {
-            unbindService(connection);
-            for (ServiceConnectionListener listener : listeners)
-                listener.onServiceDisconnected();
-            service = null;
+    private void updateLayout(String profile) {
+        final FragmentManager fm = getFragmentManager();
+        final Fragment detailFragment = fm.findFragmentByTag(TAG_DETAIL);
+        final Fragment listFragment = fm.findFragmentByTag(TAG_LIST);
+        final FragmentTransaction transaction = fm.beginTransaction();
+        if (profile != null) {
+            if (isSplitLayout) {
+                if (listFragment.isHidden())
+                    transaction.show(listFragment);
+            } else {
+                transaction.hide(listFragment);
+            }
+            if (detailFragment.isHidden())
+                transaction.show(detailFragment);
+        } else {
+            if (isSplitLayout) {
+                if (detailFragment.isHidden())
+                    transaction.show(detailFragment);
+            } else {
+                transaction.hide(detailFragment);
+            }
+            if (listFragment.isHidden())
+                transaction.show(listFragment);
         }
-    }
-
-    public void removeServiceConnectionListener(ServiceConnectionListener listener) {
-        listeners.remove(listener);
-    }
-
-    private class ProfileServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName component, IBinder binder) {
-            service = (ProfileServiceInterface) binder;
-            for (ServiceConnectionListener listener : listeners)
-                listener.onServiceConnected(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName component) {
-            // This function is only called when the service crashes or goes away unexpectedly.
-            for (ServiceConnectionListener listener : listeners)
-                listener.onServiceDisconnected();
-            service = null;
-        }
+        transaction.commit();
+        ((ProfileDetailFragment) detailFragment).setProfile(profile);
     }
 }
