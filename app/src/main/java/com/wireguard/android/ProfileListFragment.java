@@ -36,9 +36,9 @@ public class ProfileListFragment extends ProfileActivityFragment {
                 if (profile == null || service == null)
                     return false;
                 if (profile.getIsConnected())
-                    service.disconnectProfile(profile);
+                    service.disconnectProfile(profile.getName());
                 else
-                    service.connectProfile(profile);
+                    service.connectProfile(profile.getName());
                 return true;
             }
         });
