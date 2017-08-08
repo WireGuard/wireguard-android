@@ -9,12 +9,9 @@ import java.security.SecureRandom;
  */
 
 public class Keypair {
-    private static final int KEY_LENGTH = 32;
-    public static final int KEY_STRING_LENGTH = 44;
-
     private static byte[] generatePrivateKey() {
         final SecureRandom secureRandom = new SecureRandom();
-        final byte privateKey[] = new byte[KEY_LENGTH];
+        final byte privateKey[] = new byte[KeyEncoding.WG_KEY_LEN];
         secureRandom.nextBytes(privateKey);
         privateKey[0] &= 248;
         privateKey[31] &= 127;
@@ -23,20 +20,9 @@ public class Keypair {
     }
 
     private static byte[] generatePublicKey(byte privateKey[]) {
-        final byte publicKey[] = new byte[KEY_LENGTH];
+        final byte publicKey[] = new byte[KeyEncoding.WG_KEY_LEN];
         Curve25519.eval(publicKey, 0, privateKey, null);
         return publicKey;
-    }
-
-    private static byte[] parseKey(String key) {
-        final byte keyBytes[] = Base64.decode(key, Base64.NO_WRAP);
-        if (keyBytes.length != KEY_LENGTH)
-            throw new IndexOutOfBoundsException("Key is not the correct length");
-        return keyBytes;
-    }
-
-    private static String unParseKey(byte keyBytes[]) {
-        return Base64.encodeToString(keyBytes, Base64.NO_WRAP);
     }
 
     private final byte privateKey[];
@@ -52,14 +38,14 @@ public class Keypair {
     }
 
     public Keypair(String privateKey) {
-        this(parseKey(privateKey));
+        this(KeyEncoding.keyFromBase64(privateKey));
     }
 
     public String getPrivateKey() {
-        return unParseKey(privateKey);
+        return KeyEncoding.keyToBase64(privateKey);
     }
 
     public String getPublicKey() {
-        return unParseKey(publicKey);
+        return KeyEncoding.keyToBase64(publicKey);
     }
 }

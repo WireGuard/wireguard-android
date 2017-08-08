@@ -6,6 +6,7 @@ import android.databinding.Observable;
 
 import com.wireguard.android.BR;
 import com.wireguard.crypto.Keypair;
+import com.wireguard.crypto.KeyEncoding;
 
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block).
@@ -90,7 +91,7 @@ public class Interface extends BaseObservable implements Observable {
 
     public void setPrivateKey(String privateKey) {
         // Avoid exceptions from Keypair while the user is typing.
-        if (privateKey.length() != Keypair.KEY_STRING_LENGTH)
+        if (privateKey.length() != KeyEncoding.WG_KEY_LEN_BASE64)
             return;
         keypair = new Keypair(privateKey);
         notifyPropertyChanged(BR.privateKey);
