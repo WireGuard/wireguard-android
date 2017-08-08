@@ -1,11 +1,11 @@
 package com.wireguard.android;
 
 /**
- * Interface for fragments that need notification about connection changes to the ProfileService.
+ * Interface for fragments that need notification about service connection changes.
  */
 
-interface ServiceConnectionListener {
-    void onServiceConnected(ProfileServiceInterface service);
+interface ServiceConnectionListener<T> {
+    void onServiceConnected(T service);
 
     void onServiceDisconnected();
 }

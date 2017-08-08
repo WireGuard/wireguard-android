@@ -38,6 +38,9 @@ public class ProfileService extends Service {
     @Override
     public void onCreate() {
         rootShell = new RootShell(this);
+        // Ensure the service sticks around after being unbound. This only needs to happen once.
+        final Intent intent = new Intent(this, ProfileService.class);
+        startService(intent);
         new ProfileLoader().execute(getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {

@@ -8,7 +8,7 @@ import com.wireguard.config.Profile;
  * Interface for the background connection service.
  */
 
-public interface ProfileServiceInterface {
+interface ProfileServiceInterface {
     /**
      * Attempt to set up and enable an interface for this profile. The profile's connection state
      * will be updated if connection is successful. If this profile is already connected, or it is

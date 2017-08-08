@@ -4,6 +4,7 @@
 
     <data>
 
+        <!--suppress AndroidDomInspection -->
         <variable
             name="profiles"
             type="android.databinding.ObservableArrayMap&lt;String, com.wireguard.config.Profile&gt;" />

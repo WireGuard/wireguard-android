@@ -11,10 +11,10 @@ import com.wireguard.android.databinding.ProfileListFragmentBinding;
 import com.wireguard.config.Profile;
 
 /**
- * Fragment containing the list of available WireGuard profiles. Must be part of a ProfileActivity.
+ * Fragment containing the list of available WireGuard profiles.
  */
 
-public class ProfileListFragment extends ProfileActivityFragment {
+public class ProfileListFragment extends ServiceClientFragment<ProfileServiceInterface> {
     private ProfileListFragmentBinding binding;
 
     @Override
@@ -25,7 +25,7 @@ public class ProfileListFragment extends ProfileActivityFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Profile profile = (Profile) parent.getItemAtPosition(position);
-                ((ProfileActivity) getActivity()).onProfileSelected(profile);
+                ((ProfileActivity) getActivity()).onProfileSelected(profile.getName());
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -33,6 +33,7 @@ public class ProfileListFragment extends ProfileActivityFragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
                                            long id) {
                 final Profile profile = (Profile) parent.getItemAtPosition(position);
+                final ProfileServiceInterface service = getService();
                 if (profile == null || service == null)
                     return false;
                 if (profile.getIsConnected())
