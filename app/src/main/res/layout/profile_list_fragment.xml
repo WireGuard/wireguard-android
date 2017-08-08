@@ -6,7 +6,7 @@
 
         <variable
             name="profiles"
-            type="android.databinding.ObservableList&lt;com.wireguard.config.Profile&gt;" />
+            type="android.databinding.ObservableArrayMap&lt;String, com.wireguard.config.Profile&gt;" />
     </data>
 
     <ListView

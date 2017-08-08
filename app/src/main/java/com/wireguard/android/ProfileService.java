@@ -2,8 +2,7 @@ package com.wireguard.android;
 
 import android.app.Service;
 import android.content.Intent;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
+import android.databinding.ObservableArrayMap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -28,7 +27,7 @@ public class ProfileService extends Service {
     private static final String TAG = "ProfileService";
 
     private final IBinder binder = new ProfileServiceBinder();
-    private final ObservableList<Profile> profiles = new ObservableArrayList<>();
+    private final ObservableArrayMap<String, Profile> profiles = new ObservableArrayMap<>();
     private RootShell rootShell;
 
     @Override
@@ -58,9 +57,8 @@ public class ProfileService extends Service {
 
         private ProfileAdder(Profile profile, boolean shouldConnect) {
             super();
-            for (Profile p : profiles)
-                if (p.getName().equals(profile.getName()))
-                    throw new IllegalStateException("Profile already exists: " + profile.getName());
+            if (profiles.get(profile.getName()) != null)
+                throw new IllegalStateException("Profile already exists: " + profile.getName());
             this.profile = profile;
             this.shouldConnect = shouldConnect;
         }
@@ -87,7 +85,7 @@ public class ProfileService extends Service {
             if (!result)
                 return;
             profile.setIsConnected(false);
-            profiles.add(profile);
+            profiles.put(profile.getName(), profile);
             if (shouldConnect)
                 new ProfileConnecter(profile).execute();
         }
@@ -176,7 +174,8 @@ public class ProfileService extends Service {
         protected void onPostExecute(List<Profile> loadedProfiles) {
             if (loadedProfiles == null)
                 return;
-            profiles.addAll(loadedProfiles);
+            for (Profile profile : loadedProfiles)
+                profiles.put(profile.getName(), profile);
         }
     }
 
@@ -208,7 +207,7 @@ public class ProfileService extends Service {
         protected void onPostExecute(Boolean result) {
             if (!result)
                 return;
-            profiles.remove(profile);
+            profiles.remove(profile.getName());
             if (replaceWith != null)
                 new ProfileAdder(replaceWith, shouldConnect).execute();
         }
@@ -217,7 +216,7 @@ public class ProfileService extends Service {
     private class ProfileServiceBinder extends Binder implements ProfileServiceInterface {
         @Override
         public void connectProfile(Profile profile) {
-            if (!profiles.contains(profile))
+            if (profiles.get(profile.getName()) != profile)
                 return;
             if (profile.getIsConnected())
                 return;
@@ -226,14 +225,14 @@ public class ProfileService extends Service {
 
         @Override
         public Profile copyProfileForEditing(Profile profile) {
-            if (!profiles.contains(profile))
+            if (profiles.get(profile.getName()) != profile)
                 return null;
             return profile.copy();
         }
 
         @Override
         public void disconnectProfile(Profile profile) {
-            if (!profiles.contains(profile))
+            if (profiles.get(profile.getName()) != profile)
                 return;
             if (!profile.getIsConnected())
                 return;
@@ -241,13 +240,13 @@ public class ProfileService extends Service {
         }
 
         @Override
-        public ObservableList<Profile> getProfiles() {
+        public ObservableArrayMap<String, Profile> getProfiles() {
             return profiles;
         }
 
         @Override
         public void removeProfile(Profile profile) {
-            if (!profiles.contains(profile))
+            if (profiles.get(profile.getName()) != profile)
                 return;
             if (profile.getIsConnected())
                 new ProfileDisconnecter(profile).execute();
@@ -257,7 +256,7 @@ public class ProfileService extends Service {
         @Override
         public void saveProfile(Profile oldProfile, Profile newProfile) {
             if (oldProfile != null) {
-                if (!profiles.contains(oldProfile))
+                if (profiles.get(oldProfile.getName()) != oldProfile)
                     return;
                 final boolean wasConnected = oldProfile.getIsConnected();
                 if (wasConnected)
