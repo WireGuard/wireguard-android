@@ -1,6 +1,6 @@
 package com.wireguard.android;
 
-import android.databinding.ObservableList;
+import android.databinding.ObservableArrayMap;
 
 import com.wireguard.config.Profile;
 
@@ -44,7 +44,7 @@ public interface ProfileServiceInterface {
      *
      * @return The list of known profiles.
      */
-    ObservableList<Profile> getProfiles();
+    ObservableArrayMap<String, Profile> getProfiles();
 
     /**
      * Remove a profile from being managed by this service. If the profile is currently connected,
