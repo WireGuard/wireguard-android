@@ -215,26 +215,23 @@ public class ProfileService extends Service {
 
     private class ProfileServiceBinder extends Binder implements ProfileServiceInterface {
         @Override
-        public void connectProfile(Profile profile) {
-            if (profiles.get(profile.getName()) != profile)
-                return;
-            if (profile.getIsConnected())
+        public void connectProfile(String name) {
+            final Profile profile = profiles.get(name);
+            if (profile == null || profile.getIsConnected())
                 return;
             new ProfileConnecter(profile).execute();
         }
 
         @Override
-        public Profile copyProfileForEditing(Profile profile) {
-            if (profiles.get(profile.getName()) != profile)
-                return null;
-            return profile.copy();
+        public Profile copyProfileForEditing(String name) {
+            final Profile profile = profiles.get(name);
+            return profile != null ? profile.copy() : null;
         }
 
         @Override
-        public void disconnectProfile(Profile profile) {
-            if (profiles.get(profile.getName()) != profile)
-                return;
-            if (!profile.getIsConnected())
+        public void disconnectProfile(String name) {
+            final Profile profile = profiles.get(name);
+            if (profile == null || !profile.getIsConnected())
                 return;
             new ProfileDisconnecter(profile).execute();
         }
@@ -245,8 +242,9 @@ public class ProfileService extends Service {
         }
 
         @Override
-        public void removeProfile(Profile profile) {
-            if (profiles.get(profile.getName()) != profile)
+        public void removeProfile(String name) {
+            final Profile profile = profiles.get(name);
+            if (profile == null)
                 return;
             if (profile.getIsConnected())
                 new ProfileDisconnecter(profile).execute();
@@ -254,9 +252,10 @@ public class ProfileService extends Service {
         }
 
         @Override
-        public void saveProfile(Profile oldProfile, Profile newProfile) {
-            if (oldProfile != null) {
-                if (profiles.get(oldProfile.getName()) != oldProfile)
+        public void saveProfile(String oldName, Profile newProfile) {
+            if (oldName != null) {
+                final Profile oldProfile = profiles.get(oldName);
+                if (oldProfile == null)
                     return;
                 final boolean wasConnected = oldProfile.getIsConnected();
                 if (wasConnected)
