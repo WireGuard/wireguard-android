@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 public class Keypair {
     private static byte[] generatePrivateKey() {
         final SecureRandom secureRandom = new SecureRandom();
-        final byte privateKey[] = new byte[KeyEncoding.WG_KEY_LEN];
+        final byte[] privateKey = new byte[KeyEncoding.WG_KEY_LEN];
         secureRandom.nextBytes(privateKey);
         privateKey[0] &= 248;
         privateKey[31] &= 127;
@@ -19,20 +19,20 @@ public class Keypair {
         return privateKey;
     }
 
-    private static byte[] generatePublicKey(byte privateKey[]) {
-        final byte publicKey[] = new byte[KeyEncoding.WG_KEY_LEN];
+    private static byte[] generatePublicKey(byte[] privateKey) {
+        final byte[] publicKey = new byte[KeyEncoding.WG_KEY_LEN];
         Curve25519.eval(publicKey, 0, privateKey, null);
         return publicKey;
     }
 
-    private final byte privateKey[];
-    private final byte publicKey[];
+    private final byte[] privateKey;
+    private final byte[] publicKey;
 
     public Keypair() {
         this(generatePrivateKey());
     }
 
-    private Keypair(byte privateKey[]) {
+    private Keypair(byte[] privateKey) {
         this.privateKey = privateKey;
         publicKey = generatePublicKey(privateKey);
     }
