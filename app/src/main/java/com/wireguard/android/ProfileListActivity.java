@@ -34,13 +34,22 @@ public class ProfileListActivity extends ProfileActivity {
                 transaction.remove(detailFragment);
         }
         transaction.commit();
-        onProfileSelected(getCurrentProfile());
+        if (isEditing())
+            onMenuEdit(null);
+        else
+            onProfileSelected(getCurrentProfile());
     }
 
     @Override
     public void onMenuEdit(MenuItem item) {
         setIsEditing(true);
-
+        if (isSplitLayout) {
+            updateLayout(getCurrentProfile());
+        } else {
+            final Intent intent = new Intent(this, ProfileEditActivity.class);
+            intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -64,10 +73,26 @@ public class ProfileListActivity extends ProfileActivity {
 
     public void updateLayout(String profile) {
         final Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
-        if (profile != null) {
+        if (isEditing() && profile == null)
+            throw new IllegalStateException();
+        if (isEditing()) {
+            if (fragment instanceof ProfileEditFragment) {
+                final ProfileEditFragment editFragment = (ProfileEditFragment) fragment;
+                if (!profile.equals(editFragment.getProfile()))
+                    editFragment.setProfile(profile);
+            } else {
+                final ProfileEditFragment editFragment = new ProfileEditFragment();
+                editFragment.setProfile(profile);
+                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.fragment_container, editFragment, TAG_EDIT);
+                transaction.commit();
+            }
+        } else if (profile != null) {
             if (fragment instanceof ProfileDetailFragment) {
                 final ProfileDetailFragment detailFragment = (ProfileDetailFragment) fragment;
-                detailFragment.setProfile(profile);
+                if (!profile.equals(detailFragment.getProfile()))
+                    detailFragment.setProfile(profile);
             } else {
                 final ProfileDetailFragment detailFragment = new ProfileDetailFragment();
                 detailFragment.setProfile(profile);
