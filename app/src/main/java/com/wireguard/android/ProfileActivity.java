@@ -13,6 +13,7 @@ abstract class ProfileActivity extends ServiceClientActivity<ProfileServiceInter
     public static final String KEY_IS_EDITING = "is_editing";
     public static final String KEY_PROFILE_NAME = "profile_name";
     protected static final String TAG_DETAIL = "detail";
+    protected static final String TAG_EDIT = "edit";
     protected static final String TAG_LIST = "list";
     protected static final String TAG_PLACEHOLDER = "placeholder";
 
