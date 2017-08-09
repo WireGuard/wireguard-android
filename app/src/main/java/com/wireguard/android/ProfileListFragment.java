@@ -25,7 +25,7 @@ public class ProfileListFragment extends ServiceClientFragment<ProfileServiceInt
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Profile profile = (Profile) parent.getItemAtPosition(position);
-                ((ProfileActivity) getActivity()).onProfileSelected(profile.getName());
+                ((ProfileListActivity) getActivity()).onProfileSelected(profile.getName());
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
