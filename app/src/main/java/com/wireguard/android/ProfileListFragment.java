@@ -16,11 +16,14 @@ import com.wireguard.config.Profile;
 
 public class ProfileListFragment extends ServiceClientFragment<ProfileServiceInterface> {
     private ProfileListFragmentBinding binding;
+    private boolean isSplitLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         binding = ProfileListFragmentBinding.inflate(inflater, parent, false);
         final ListView listView = (ListView) binding.getRoot();
+        listView.setChoiceMode(isSplitLayout
+                ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -50,5 +53,9 @@ public class ProfileListFragment extends ServiceClientFragment<ProfileServiceInt
     public void onServiceConnected(ProfileServiceInterface service) {
         super.onServiceConnected(service);
         binding.setProfiles(service.getProfiles());
+    }
+
+    public void setIsSplitLayout(boolean isSplitLayout) {
+        this.isSplitLayout = isSplitLayout;
     }
 }
