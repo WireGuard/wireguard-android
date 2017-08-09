@@ -1,7 +1,5 @@
 package com.wireguard.crypto;
 
-import android.util.Base64;
-
 import java.security.SecureRandom;
 
 /**
@@ -11,7 +9,7 @@ import java.security.SecureRandom;
 public class Keypair {
     private static byte[] generatePrivateKey() {
         final SecureRandom secureRandom = new SecureRandom();
-        final byte[] privateKey = new byte[KeyEncoding.WG_KEY_LEN];
+        final byte[] privateKey = new byte[KeyEncoding.KEY_LENGTH];
         secureRandom.nextBytes(privateKey);
         privateKey[0] &= 248;
         privateKey[31] &= 127;
@@ -20,7 +18,7 @@ public class Keypair {
     }
 
     private static byte[] generatePublicKey(byte[] privateKey) {
-        final byte[] publicKey = new byte[KeyEncoding.WG_KEY_LEN];
+        final byte[] publicKey = new byte[KeyEncoding.KEY_LENGTH];
         Curve25519.eval(publicKey, 0, privateKey, null);
         return publicKey;
     }
