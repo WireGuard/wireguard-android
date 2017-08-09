@@ -1,9 +1,8 @@
 package com.wireguard.android;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -14,55 +13,54 @@ public class ProfileListActivity extends ProfileActivity {
     private boolean isSplitLayout;
 
     @Override
-    public void onBackPressed() {
-        final FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set up the base layout and fill it with fragments.
         setContentView(R.layout.profile_list_activity);
-        final int orientation = getResources().getConfiguration().orientation;
-        isSplitLayout = orientation == Configuration.ORIENTATION_LANDSCAPE;
-        updateLayout(getCurrentProfile());
+        isSplitLayout = findViewById(R.id.fragment_container) != null;
+        if (!isSplitLayout) {
+            // Avoid ProfileDetailFragment adding its menu when it is not in the view hierarchy.
+            final Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DETAIL);
+            if (fragment != null) {
+                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.remove(fragment);
+                transaction.commit();
+            }
+        }
+        onProfileSelected(getCurrentProfile());
     }
 
     public void onProfileSelected(String profile) {
-        updateLayout(profile);
-        setCurrentProfile(profile);
+        if (isSplitLayout) {
+            updateLayout(profile);
+            setCurrentProfile(profile);
+        } else if (profile != null) {
+            final Intent intent = new Intent(this, ProfileDetailActivity.class);
+            intent.putExtra(KEY_PROFILE_NAME, profile);
+            startActivity(intent);
+            setCurrentProfile(null);
+        }
     }
 
-    private void updateLayout(String profile) {
-        final FragmentManager fm = getFragmentManager();
-        final Fragment detailFragment = fm.findFragmentByTag(TAG_DETAIL);
-        final Fragment listFragment = fm.findFragmentByTag(TAG_LIST);
-        final FragmentTransaction transaction = fm.beginTransaction();
+    public void updateLayout(String profile) {
+        final Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
         if (profile != null) {
-            if (isSplitLayout) {
-                if (listFragment.isHidden())
-                    transaction.show(listFragment);
+            if (fragment instanceof ProfileDetailFragment) {
+                final ProfileDetailFragment detailFragment = (ProfileDetailFragment) fragment;
+                detailFragment.setProfile(profile);
             } else {
-                transaction.hide(listFragment);
+                final ProfileDetailFragment detailFragment = new ProfileDetailFragment();
+                detailFragment.setProfile(profile);
+                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, detailFragment, TAG_DETAIL);
+                transaction.commit();
             }
-            if (detailFragment.isHidden())
-                transaction.show(detailFragment);
         } else {
-            if (isSplitLayout) {
-                if (detailFragment.isHidden())
-                    transaction.show(detailFragment);
-            } else {
-                transaction.hide(detailFragment);
+            if (!(fragment instanceof PlaceholderFragment)) {
+                final PlaceholderFragment placeholderFragment = new PlaceholderFragment();
+                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, placeholderFragment, TAG_PLACEHOLDER);
+                transaction.commit();
             }
-            if (listFragment.isHidden())
-                transaction.show(listFragment);
         }
-        transaction.commit();
-        ((ProfileDetailFragment) detailFragment).setProfile(profile);
     }
 }

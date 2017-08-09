@@ -8,10 +8,11 @@ import android.view.MenuItem;
  * Base class for activities that use ProfileListFragment and ProfileDetailFragment.
  */
 
-class ProfileActivity extends ServiceClientActivity<ProfileServiceInterface> {
+abstract class ProfileActivity extends ServiceClientActivity<ProfileServiceInterface> {
     public static final String KEY_PROFILE_NAME = "profile_name";
     protected static final String TAG_DETAIL = "detail";
     protected static final String TAG_LIST = "list";
+    protected static final String TAG_PLACEHOLDER = "placeholder";
 
     private String currentProfile;
 
