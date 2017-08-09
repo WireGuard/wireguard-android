@@ -10,22 +10,15 @@ import android.view.ViewGroup;
 import com.wireguard.android.databinding.ProfileDetailFragmentBinding;
 
 /**
- * Fragment for viewing and editing a WireGuard profile.
+ * Fragment for viewing information about a WireGuard profile.
  */
 
-public class ProfileDetailFragment extends ServiceClientFragment<ProfileServiceInterface> {
+public class ProfileDetailFragment extends ProfileFragment {
     private ProfileDetailFragmentBinding binding;
-    private String name;
-
-    public ProfileDetailFragment() {
-        super();
-        setArguments(new Bundle());
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = getArguments().getString(ProfileActivity.KEY_PROFILE_NAME);
         setHasOptionsMenu(true);
     }
 
@@ -37,20 +30,20 @@ public class ProfileDetailFragment extends ServiceClientFragment<ProfileServiceI
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         binding = ProfileDetailFragmentBinding.inflate(inflater, parent, false);
+        binding.setProfile(getCachedProfile());
         return binding.getRoot();
     }
 
     @Override
     public void onServiceConnected(ProfileServiceInterface service) {
         super.onServiceConnected(service);
-        binding.setProfile(service.getProfiles().get(name));
+        binding.setProfile(service.getProfiles().get(getProfile()));
     }
 
-    public void setProfile(String name) {
-        this.name = name;
-        getArguments().putString(ProfileActivity.KEY_PROFILE_NAME, name);
-        final ProfileServiceInterface service = getService();
-        if (binding != null && service != null)
-            binding.setProfile(service.getProfiles().get(name));
+    @Override
+    public void setProfile(String profile) {
+        super.setProfile(profile);
+        if (binding != null)
+            binding.setProfile(getCachedProfile());
     }
 }
