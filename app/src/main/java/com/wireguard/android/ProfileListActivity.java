@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * Activity that allows creating/viewing/editing/deleting WireGuard profiles.
@@ -36,7 +37,20 @@ public class ProfileListActivity extends ProfileActivity {
         onProfileSelected(getCurrentProfile());
     }
 
+    @Override
+    public void onMenuEdit(MenuItem item) {
+        setIsEditing(true);
+
+    }
+
+    @Override
+    public void onMenuSave(MenuItem item) {
+        setIsEditing(false);
+
+    }
+
     public void onProfileSelected(String profile) {
+        setIsEditing(false);
         if (isSplitLayout) {
             updateLayout(profile);
             setCurrentProfile(profile);

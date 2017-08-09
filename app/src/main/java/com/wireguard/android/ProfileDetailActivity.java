@@ -2,6 +2,7 @@ package com.wireguard.android;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * Activity that allows viewing information about a single WireGuard profile.
@@ -15,5 +16,15 @@ public class ProfileDetailActivity extends ProfileActivity {
         setTitle(getCurrentProfile());
         Fragment detailFragment = getFragmentManager().findFragmentByTag(TAG_DETAIL);
         ((ProfileDetailFragment) detailFragment).setProfile(getCurrentProfile());
+    }
+
+    @Override
+    public void onMenuEdit(MenuItem item) {
+
+    }
+
+    @Override
+    public void onMenuSave(MenuItem item) {
+        throw new IllegalStateException();
     }
 }

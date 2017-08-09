@@ -51,13 +51,9 @@ abstract class ProfileActivity extends ServiceClientActivity<ProfileServiceInter
         return true;
     }
 
-    public void onMenuEdit(MenuItem item) {
+    public abstract void onMenuEdit(MenuItem item);
 
-    }
-
-    public void onMenuSave(MenuItem item) {
-
-    }
+    public abstract void onMenuSave(MenuItem item);
 
     public void onMenuSettings(MenuItem item) {
 
