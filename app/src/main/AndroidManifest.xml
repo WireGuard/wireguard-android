@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.DarkActionBar">
-        <activity android:name=".ProfileActivity">
+        <activity android:name=".ProfileListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
