@@ -90,10 +90,14 @@ public class Interface extends BaseObservable implements Observable {
     }
 
     public void setPrivateKey(String privateKey) {
-        // Avoid exceptions from Keypair while the user is typing.
-        if (privateKey.length() != KeyEncoding.KEY_LENGTH_BASE64)
-            return;
-        keypair = new Keypair(privateKey);
+        if (privateKey != null && !privateKey.isEmpty()) {
+            // Avoid exceptions from Keypair while the user is typing.
+            if (privateKey.length() != KeyEncoding.KEY_LENGTH_BASE64)
+                return;
+            keypair = new Keypair(privateKey);
+        } else {
+            keypair = null;
+        }
         notifyPropertyChanged(BR.privateKey);
         notifyPropertyChanged(BR.publicKey);
     }
