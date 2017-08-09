@@ -16,6 +16,9 @@
             android:name=".ProfileDetailActivity"
             android:label=""
             android:parentActivityName=".ProfileListActivity" />
+        <activity
+            android:name=".ProfileEditActivity"
+            android:label="@string/edit_activity_title" />
         <activity android:name=".ProfileListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

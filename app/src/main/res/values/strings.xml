@@ -4,6 +4,7 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="edit">Edit</string>
+    <string name="edit_activity_title">Edit WireGuard Profile</string>
     <string name="placeholder_text">No profile selected</string>
     <string name="profile_name">Profile name</string>
     <string name="public_key">Public key</string>
