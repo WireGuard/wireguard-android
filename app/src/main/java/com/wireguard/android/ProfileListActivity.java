@@ -17,15 +17,22 @@ public class ProfileListActivity extends ProfileActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_list_activity);
         isSplitLayout = findViewById(R.id.fragment_container) != null;
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final Fragment listFragment = getFragmentManager().findFragmentByTag(TAG_LIST);
+        if (listFragment instanceof ProfileListFragment) {
+            ((ProfileListFragment) listFragment).setIsSplitLayout(isSplitLayout);
+        } else {
+            final ProfileListFragment newListFragment = new ProfileListFragment();
+            newListFragment.setIsSplitLayout(isSplitLayout);
+            transaction.add(R.id.list_container, newListFragment, TAG_LIST);
+        }
         if (!isSplitLayout) {
             // Avoid ProfileDetailFragment adding its menu when it is not in the view hierarchy.
-            final Fragment fragment = getFragmentManager().findFragmentByTag(TAG_DETAIL);
-            if (fragment != null) {
-                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.remove(fragment);
-                transaction.commit();
-            }
+            final Fragment detailFragment = getFragmentManager().findFragmentByTag(TAG_DETAIL);
+            if (detailFragment != null)
+                transaction.remove(detailFragment);
         }
+        transaction.commit();
         onProfileSelected(getCurrentProfile());
     }
 
