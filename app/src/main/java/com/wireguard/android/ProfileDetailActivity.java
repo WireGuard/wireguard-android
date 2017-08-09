@@ -1,6 +1,7 @@
 package com.wireguard.android;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -20,7 +21,9 @@ public class ProfileDetailActivity extends ProfileActivity {
 
     @Override
     public void onMenuEdit(MenuItem item) {
-
+        final Intent intent = new Intent(this, ProfileEditActivity.class);
+        intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
+        startActivity(intent);
     }
 
     @Override
