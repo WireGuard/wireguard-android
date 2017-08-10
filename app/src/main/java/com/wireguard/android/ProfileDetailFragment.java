@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wireguard.android.databinding.ProfileDetailFragmentBinding;
+import com.wireguard.config.Profile;
 
 /**
  * Fragment for viewing information about a WireGuard profile.
@@ -15,6 +16,12 @@ import com.wireguard.android.databinding.ProfileDetailFragmentBinding;
 
 public class ProfileDetailFragment extends ProfileFragment {
     private ProfileDetailFragmentBinding binding;
+
+    @Override
+    protected void onCachedProfileChanged(Profile cachedProfile) {
+        if (binding != null)
+            binding.setProfile(cachedProfile);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,18 +39,5 @@ public class ProfileDetailFragment extends ProfileFragment {
         binding = ProfileDetailFragmentBinding.inflate(inflater, parent, false);
         binding.setProfile(getCachedProfile());
         return binding.getRoot();
-    }
-
-    @Override
-    public void onServiceConnected(ProfileServiceInterface service) {
-        super.onServiceConnected(service);
-        binding.setProfile(service.getProfiles().get(getProfile()));
-    }
-
-    @Override
-    public void setProfile(String profile) {
-        super.setProfile(profile);
-        if (binding != null)
-            binding.setProfile(getCachedProfile());
     }
 }

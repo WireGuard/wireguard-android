@@ -20,14 +20,17 @@ abstract class ProfileFragment extends ServiceClientFragment<ProfileServiceInter
         return profile;
     }
 
+    protected void onCachedProfileChanged(Profile cachedProfile) {
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Restore the saved profile if there is one; otherwise grab it from the arguments.
         if (savedInstanceState != null)
-            profile = savedInstanceState.getString(ProfileActivity.KEY_PROFILE_NAME);
+            setProfile(savedInstanceState.getString(ProfileActivity.KEY_PROFILE_NAME));
         else if (getArguments() != null)
-            profile = getArguments().getString(ProfileActivity.KEY_PROFILE_NAME);
+            setProfile(getArguments().getString(ProfileActivity.KEY_PROFILE_NAME));
     }
 
     @Override
@@ -39,15 +42,20 @@ abstract class ProfileFragment extends ServiceClientFragment<ProfileServiceInter
     @Override
     public void onServiceConnected(ProfileServiceInterface service) {
         super.onServiceConnected(service);
-        cachedProfile = service.getProfiles().get(profile);
+        updateCachedProfile(service);
     }
 
     public void setProfile(String profile) {
         this.profile = profile;
-        final ProfileServiceInterface service = getService();
-        if (service != null)
-            cachedProfile = service.getProfiles().get(profile);
-        else
-            cachedProfile = null;
+        updateCachedProfile(getService());
+    }
+
+    private void updateCachedProfile(ProfileServiceInterface service) {
+        final Profile newCachedProfile = service != null
+                ? service.getProfiles().get(profile) : null;
+        if (newCachedProfile != cachedProfile) {
+            cachedProfile = newCachedProfile;
+            onCachedProfileChanged(newCachedProfile);
+        }
     }
 }
