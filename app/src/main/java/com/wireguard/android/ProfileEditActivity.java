@@ -1,6 +1,8 @@
 package com.wireguard.android;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.MenuItem;
 
 /**
@@ -8,6 +10,14 @@ import android.view.MenuItem;
  */
 
 public class ProfileEditActivity extends ProfileActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.profile_edit_activity);
+        Fragment editFragment = getFragmentManager().findFragmentByTag(TAG_EDIT);
+        ((ProfileEditFragment) editFragment).setProfile(getCurrentProfile());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
