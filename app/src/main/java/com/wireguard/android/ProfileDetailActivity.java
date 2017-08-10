@@ -20,14 +20,20 @@ public class ProfileDetailActivity extends ProfileActivity {
     }
 
     @Override
-    public void onMenuEdit(MenuItem item) {
-        final Intent intent = new Intent(this, ProfileEditActivity.class);
-        intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onMenuSave(MenuItem item) {
-        throw new IllegalStateException();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_edit:
+                final Intent intent = new Intent(this, ProfileEditActivity.class);
+                intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
+                startActivity(intent);
+                return true;
+            case R.id.menu_action_save:
+                throw new IllegalStateException();
+            case R.id.menu_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return false;
+        }
     }
 }
