@@ -21,6 +21,9 @@ abstract class ServiceClientFragment<T> extends Fragment implements ServiceConne
         @SuppressWarnings("unchecked")
         final ServiceConnectionProvider<T> localContext = (ServiceConnectionProvider<T>) context;
         provider = localContext;
+        service = provider.getService();
+        if (service != null)
+            onServiceConnected(service);
     }
 
     @Override
