@@ -58,8 +58,10 @@ public class ProfileListActivity extends ProfileActivity {
     }
 
     public void onProfileSelected(String profile) {
-        setIsEditing(false);
         if (isSplitLayout) {
+            if (isEditing())
+                getFragmentManager().popBackStack();
+            setIsEditing(false);
             updateLayout(profile);
             setCurrentProfile(profile);
         } else if (profile != null) {
@@ -85,8 +87,6 @@ public class ProfileListActivity extends ProfileActivity {
 
     public void updateLayout(String profile) {
         final Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
-        if (isEditing() && profile == null)
-            throw new IllegalStateException();
         if (isEditing()) {
             if (fragment instanceof ProfileEditFragment) {
                 final ProfileEditFragment editFragment = (ProfileEditFragment) fragment;
