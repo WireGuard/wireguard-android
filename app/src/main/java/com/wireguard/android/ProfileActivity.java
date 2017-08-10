@@ -52,14 +52,6 @@ abstract class ProfileActivity extends ServiceClientActivity<ProfileServiceInter
         return true;
     }
 
-    public abstract void onMenuEdit(MenuItem item);
-
-    public abstract void onMenuSave(MenuItem item);
-
-    public void onMenuSettings(MenuItem item) {
-        startActivity(new Intent(this, SettingsActivity.class));
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

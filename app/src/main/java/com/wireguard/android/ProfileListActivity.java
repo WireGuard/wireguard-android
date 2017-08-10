@@ -35,27 +35,26 @@ public class ProfileListActivity extends ProfileActivity {
         }
         transaction.commit();
         if (isEditing())
-            onMenuEdit(null);
+            startEditing();
         else
             onProfileSelected(getCurrentProfile());
     }
 
     @Override
-    public void onMenuEdit(MenuItem item) {
-        setIsEditing(true);
-        if (isSplitLayout) {
-            updateLayout(getCurrentProfile());
-        } else {
-            final Intent intent = new Intent(this, ProfileEditActivity.class);
-            intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
-            startActivity(intent);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_edit:
+                startEditing();
+                return true;
+            case R.id.menu_action_save:
+                getFragmentManager().popBackStack();
+                return false;
+            case R.id.menu_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return false;
         }
-    }
-
-    @Override
-    public void onMenuSave(MenuItem item) {
-        setIsEditing(false);
-
     }
 
     public void onProfileSelected(String profile) {
@@ -68,6 +67,19 @@ public class ProfileListActivity extends ProfileActivity {
             intent.putExtra(KEY_PROFILE_NAME, profile);
             startActivity(intent);
             setCurrentProfile(null);
+        }
+    }
+
+    private void startEditing() {
+        if (isSplitLayout) {
+            setIsEditing(true);
+            updateLayout(getCurrentProfile());
+        } else if (getCurrentProfile() != null) {
+            final Intent intent = new Intent(this, ProfileEditActivity.class);
+            intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
+            startActivity(intent);
+            setCurrentProfile(null);
+            setIsEditing(false);
         }
     }
 
