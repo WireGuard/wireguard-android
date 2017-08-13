@@ -23,14 +23,14 @@ class RootShell {
     private static final String SETUP_TEMPLATE = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
     private static final String TAG = "RootShell";
 
-    private final byte setupCommands[];
+    private final byte[] setupCommands;
     private final String shell;
 
-    RootShell(Context context) {
+    RootShell(final Context context) {
         this(context, "su");
     }
 
-    RootShell(Context context, String shell) {
+    RootShell(final Context context, final String shell) {
         final String tmpdir = context.getCacheDir().getPath();
         setupCommands = String.format(SETUP_TEMPLATE, tmpdir).getBytes(StandardCharsets.UTF_8);
         this.shell = shell;
@@ -45,7 +45,7 @@ class RootShell {
      * @param commands One or more commands to run as root (each element is a separate line).
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    int run(List<String> output, String... commands) {
+    int run(final List<String> output, final String... commands) {
         if (commands.length < 1)
             throw new IndexOutOfBoundsException("At least one command must be supplied");
         int exitValue = -1;
@@ -54,7 +54,7 @@ class RootShell {
             final Process process = builder.command(shell).start();
             final OutputStream stdin = process.getOutputStream();
             stdin.write(setupCommands);
-            for (String command : commands)
+            for (final String command : commands)
                 stdin.write(command.concat("\n").getBytes(StandardCharsets.UTF_8));
             stdin.close();
             Log.d(TAG, "Sent " + commands.length + " command(s), now reading output");

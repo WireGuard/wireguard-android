@@ -10,11 +10,26 @@ import com.android.databinding.library.baseAdapters.BR;
  * Represents the configuration for a WireGuard peer (a [Peer] block).
  */
 
-public class Peer extends BaseObservable implements Observable {
+public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
     private String allowedIPs;
     private String endpoint;
     private String persistentKeepalive;
     private String publicKey;
+
+    @Override
+    public Peer copy() {
+        final Peer copy = new Peer();
+        copy.copyFrom(this);
+        return copy;
+    }
+
+    @Override
+    public void copyFrom(final Peer source) {
+        allowedIPs = source.allowedIPs;
+        endpoint = source.endpoint;
+        persistentKeepalive = source.persistentKeepalive;
+        publicKey = source.publicKey;
+    }
 
     @Bindable
     public String getAllowedIPs() {
@@ -36,7 +51,7 @@ public class Peer extends BaseObservable implements Observable {
         return publicKey;
     }
 
-    public void parseFrom(String line) {
+    public void parseFrom(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
             allowedIPs = key.parseFrom(line);
@@ -46,24 +61,34 @@ public class Peer extends BaseObservable implements Observable {
             persistentKeepalive = key.parseFrom(line);
         else if (key == Attribute.PUBLIC_KEY)
             publicKey = key.parseFrom(line);
+        else
+            throw new IllegalArgumentException(line);
     }
 
     public void setAllowedIPs(String allowedIPs) {
+        if (allowedIPs != null && allowedIPs.isEmpty())
+            allowedIPs = null;
         this.allowedIPs = allowedIPs;
         notifyPropertyChanged(BR.allowedIPs);
     }
 
     public void setEndpoint(String endpoint) {
+        if (endpoint != null && endpoint.isEmpty())
+            endpoint = null;
         this.endpoint = endpoint;
         notifyPropertyChanged(BR.endpoint);
     }
 
     public void setPersistentKeepalive(String persistentKeepalive) {
+        if (persistentKeepalive != null && persistentKeepalive.isEmpty())
+            persistentKeepalive = null;
         this.persistentKeepalive = persistentKeepalive;
         notifyPropertyChanged(BR.persistentKeepalive);
     }
 
     public void setPublicKey(String publicKey) {
+        if (publicKey != null && publicKey.isEmpty())
+            publicKey = null;
         this.publicKey = publicKey;
         notifyPropertyChanged(BR.publicKey);
     }

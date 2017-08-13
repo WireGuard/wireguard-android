@@ -7,10 +7,9 @@ import android.content.Intent;
 public class BootCompletedReceiver extends BroadcastReceiver {
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
         if (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
             return;
-        Intent startServiceIntent = new Intent(context, ProfileService.class);
-        context.startService(startServiceIntent);
+        context.startService(new Intent(context, VpnService.class));
     }
 }

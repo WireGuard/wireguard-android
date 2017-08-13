@@ -6,14 +6,15 @@
 
         <!--suppress AndroidDomInspection -->
         <variable
-            name="profiles"
-            type="android.databinding.ObservableArrayMap&lt;String, com.wireguard.config.Profile&gt;" />
+            name="configs"
+            type="android.databinding.ObservableArrayMap&lt;String, com.wireguard.config.Config&gt;" />
     </data>
 
     <ListView
-        android:id="@+id/profile_list"
+        android:id="@+id/config_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:items="@{profiles}"
-        app:layout="@{@layout/profile_list_item}" />
+        android:choiceMode="singleChoice"
+        app:items="@{configs}"
+        app:layout="@{@layout/config_list_item}" />
 </layout>

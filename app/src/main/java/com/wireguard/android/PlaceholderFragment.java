@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 
 public class PlaceholderFragment extends Fragment {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup parent,
+                             final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.placeholder_fragment, parent, false);
     }
 }
