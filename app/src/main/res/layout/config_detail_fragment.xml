@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
-            name="profile"
-            type="com.wireguard.config.Profile" />
+            name="config"
+            type="com.wireguard.config.Config" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <TextView
-                android:id="@+id/profile_name_label"
+                android:id="@+id/config_name_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:labelFor="@+id/profile_name_text"
-                android:text="@string/profile_name" />
+                android:labelFor="@+id/config_name_text"
+                android:text="@string/config_name" />
 
             <TextView
-                android:id="@+id/profile_name_text"
+                android:id="@+id/config_name_text"
                 style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profile_name_label"
-                android:text="@{profile.name}" />
+                android:layout_below="@+id/config_name_label"
+                android:text="@{config.name}" />
 
             <TextView
                 android:id="@+id/public_key_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profile_name_text"
+                android:layout_below="@+id/config_name_text"
                 android:labelFor="@+id/public_key_text"
                 android:text="@string/public_key" />
 
@@ -50,7 +49,13 @@
                 android:layout_below="@+id/public_key_label"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{profile.interface.publicKey}" />
+                android:text="@{config.interface.publicKey}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/public_key_text"
+                android:text="@{config.toString()}" />
         </RelativeLayout>
     </ScrollView>
 </layout>

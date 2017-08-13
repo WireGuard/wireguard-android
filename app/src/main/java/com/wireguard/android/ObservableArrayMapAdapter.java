@@ -14,7 +14,7 @@ import android.widget.ListAdapter;
 import java.lang.ref.WeakReference;
 
 /**
- * A generic ListAdapter backed by an ObservableMap.
+ * A generic ListAdapter backed by an ObservableArrayMap.
  */
 
 class ObservableArrayMapAdapter<K, V> extends BaseAdapter implements ListAdapter {
@@ -23,8 +23,10 @@ class ObservableArrayMapAdapter<K, V> extends BaseAdapter implements ListAdapter
     private ObservableArrayMap<K, V> map;
     private final OnMapChangedCallback<K, V> callback = new OnMapChangedCallback<>(this);
 
-    ObservableArrayMapAdapter(Context context, int layoutId, ObservableArrayMap<K, V> map) {
-        this.layoutInflater = LayoutInflater.from(context);
+    ObservableArrayMapAdapter(final Context context, final int layoutId,
+                              final ObservableArrayMap<K, V> map) {
+        super();
+        layoutInflater = LayoutInflater.from(context);
         this.layoutId = layoutId;
         setMap(map);
     }
@@ -35,17 +37,17 @@ class ObservableArrayMapAdapter<K, V> extends BaseAdapter implements ListAdapter
     }
 
     @Override
-    public V getItem(int position) {
-        return map != null ? map.get(map.keyAt(position)) : null;
+    public V getItem(final int position) {
+        return map != null ? map.valueAt(position) : null;
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public long getItemId(final int position) {
+        return getItem(position) != null ? getItem(position).hashCode() : -1;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
@@ -54,7 +56,12 @@ class ObservableArrayMapAdapter<K, V> extends BaseAdapter implements ListAdapter
         return binding.getRoot();
     }
 
-    public void setMap(ObservableArrayMap<K, V> newMap) {
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    public void setMap(final ObservableArrayMap<K, V> newMap) {
         if (map != null)
             map.removeOnMapChangedCallback(callback);
         map = newMap;
@@ -68,12 +75,13 @@ class ObservableArrayMapAdapter<K, V> extends BaseAdapter implements ListAdapter
 
         private final WeakReference<ObservableArrayMapAdapter<K, V>> weakAdapter;
 
-        private OnMapChangedCallback(ObservableArrayMapAdapter<K, V> adapter) {
+        private OnMapChangedCallback(final ObservableArrayMapAdapter<K, V> adapter) {
+            super();
             weakAdapter = new WeakReference<>(adapter);
         }
 
         @Override
-        public void onMapChanged(ObservableMap<K, V> sender, K key) {
+        public void onMapChanged(final ObservableMap<K, V> sender, final K key) {
             final ObservableArrayMapAdapter<K, V> adapter = weakAdapter.get();
             if (adapter != null)
                 adapter.notifyDataSetChanged();

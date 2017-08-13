@@ -5,17 +5,16 @@
 
         <variable
             name="item"
-            type="com.wireguard.config.Profile" />
+            type="com.wireguard.config.Config" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/activatedBackgroundIndicator"
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/profile_name"
+            android:id="@+id/config_name"
             style="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,9 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/profile_name"
-            android:text="@{item.isConnected ? @string/connected : @string/disconnected}"
+            android:layout_toEndOf="@+id/config_name"
+            android:text="@{item.isEnabled ? @string/connected : @string/disconnected}"
             android:textAlignment="textEnd"
-            android:textColor="@{item.isConnected ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
+            android:textColor="@{item.isEnabled ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
     </RelativeLayout>
 </layout>

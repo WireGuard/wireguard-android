@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="config"
+            type="com.wireguard.config.Config" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/config_name_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:labelFor="@+id/config_name_text"
+                android:text="@string/config_name" />
+
+            <EditText
+                android:id="@+id/config_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/config_name_label"
+                android:inputType="textCapWords"
+                android:text="@={config.name}" />
+
+            <TextView
+                android:id="@+id/private_key_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/config_name_text"
+                android:labelFor="@+id/private_key_text"
+                android:text="@string/private_key" />
+
+            <EditText
+                android:id="@+id/private_key_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/private_key_label"
+                android:layout_toStartOf="@+id/generate_private_key_button"
+                android:inputType="textVisiblePassword"
+                android:text="@={config.interface.privateKey}" />
+
+            <Button
+                android:id="@+id/generate_private_key_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/private_key_text"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/private_key_label"
+                android:onClick="@{() -> config.interface.generateKeypair()}"
+                android:text="@string/generate" />
+
+            <TextView
+                android:id="@+id/public_key_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/private_key_text"
+                android:layout_toStartOf="@+id/listen_port_label"
+                android:labelFor="@+id/public_key_text"
+                android:text="@string/public_key" />
+
+            <TextView
+                android:id="@+id/public_key_text"
+                style="@android:style/Widget.EditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/public_key_label"
+                android:layout_toStartOf="@+id/listen_port_text"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:hint="@string/hint_generated"
+                android:maxLines="1"
+                android:text="@{config.interface.publicKey}" />
+
+            <TextView
+                android:id="@+id/listen_port_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/public_key_label"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/generate_private_key_button"
+                android:layout_below="@+id/generate_private_key_button"
+                android:labelFor="@+id/listen_port_text"
+                android:text="@string/listen_port" />
+
+            <EditText
+                android:id="@+id/listen_port_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/public_key_text"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/generate_private_key_button"
+                android:layout_below="@+id/listen_port_label"
+                android:hint="@string/hint_random"
+                android:inputType="number"
+                android:text="@={config.interface.listenPort}"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/dns_server_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/public_key_text"
+                android:layout_toStartOf="@+id/mtu_label"
+                android:labelFor="@+id/dns_server_text"
+                android:text="@string/dns_servers" />
+
+            <EditText
+                android:id="@+id/dns_server_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/dns_server_label"
+                android:layout_toStartOf="@+id/mtu_text"
+                android:hint="@string/hint_optional"
+                android:inputType="text"
+                android:text="@={config.interface.dns}" />
+
+            <TextView
+                android:id="@+id/mtu_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/dns_server_label"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/generate_private_key_button"
+                android:layout_below="@+id/listen_port_text"
+                android:labelFor="@+id/mtu_text"
+                android:text="@string/mtu" />
+
+            <EditText
+                android:id="@+id/mtu_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/dns_server_text"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/generate_private_key_button"
+                android:layout_below="@+id/mtu_label"
+                android:hint="@string/hint_automatic"
+                android:inputType="number"
+                android:text="@={config.interface.mtu}"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/dns_server_text"
+                android:text="@{config.toString()}" />
+        </RelativeLayout>
+    </ScrollView>
+</layout>

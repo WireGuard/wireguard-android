@@ -28,10 +28,10 @@ public class KeyEncoding {
     }
 
     private static void encodeBase64(final byte[] src, final int src_offset,
-                                     char[] dest, final int dest_offset) {
+                                     final char[] dest, final int dest_offset) {
         final byte[] input = {
-                (byte) ((src[0 + src_offset] >>> 2) & 63),
-                (byte) ((src[0 + src_offset] << 4 | ((src[1 + src_offset] & 0xff) >>> 4)) & 63),
+                (byte) ((src[src_offset] >>> 2) & 63),
+                (byte) ((src[src_offset] << 4 | ((src[1 + src_offset] & 0xff) >>> 4)) & 63),
                 (byte) ((src[1 + src_offset] << 2 | ((src[2 + src_offset] & 0xff) >>> 6)) & 63),
                 (byte) ((src[2 + src_offset]) & 63),
         };
@@ -54,12 +54,12 @@ public class KeyEncoding {
             final int val = decodeBase64(input, i * 4);
             if (val < 0)
                 throw new IllegalArgumentException(KEY_LENGTH_BASE64_EXCEPTION_MESSAGE);
-            key[i * 3 + 0] = (byte) ((val >>> 16) & 0xff);
+            key[i * 3] = (byte) ((val >>> 16) & 0xff);
             key[i * 3 + 1] = (byte) ((val >>> 8) & 0xff);
             key[i * 3 + 2] = (byte) (val & 0xff);
         }
         final char[] endSegment = {
-                input[i * 4 + 0],
+                input[i * 4],
                 input[i * 4 + 1],
                 input[i * 4 + 2],
                 'A',
@@ -67,7 +67,7 @@ public class KeyEncoding {
         final int val = decodeBase64(endSegment, 0);
         if (val < 0 || (val & 0xff) != 0)
             throw new IllegalArgumentException(KEY_LENGTH_BASE64_EXCEPTION_MESSAGE);
-        key[i * 3 + 0] = (byte) ((val >>> 16) & 0xff);
+        key[i * 3] = (byte) ((val >>> 16) & 0xff);
         key[i * 3 + 1] = (byte) ((val >>> 8) & 0xff);
         return key;
     }
@@ -80,7 +80,7 @@ public class KeyEncoding {
         for (i = 0; i < KEY_LENGTH / 3; ++i)
             encodeBase64(key, i * 3, output, i * 4);
         final byte[] endSegment = {
-                key[i * 3 + 0],
+                key[i * 3],
                 key[i * 3 + 1],
                 0,
         };

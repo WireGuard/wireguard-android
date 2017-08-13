@@ -24,23 +24,23 @@ enum Attribute {
 
     static {
         map = new HashMap<>(Attribute.values().length);
-        for (Attribute key : Attribute.values())
+        for (final Attribute key : Attribute.values())
             map.put(key.getToken(), key);
     }
 
-    public static Attribute match(String line) {
+    public static Attribute match(final String line) {
         return map.get(line.split("\\s|=")[0]);
     }
 
     private final String token;
     private final Pattern pattern;
 
-    Attribute(String token) {
-        this.pattern = Pattern.compile(token + "\\s*=\\s*(\\S.*)");
+    Attribute(final String token) {
+        pattern = Pattern.compile(token + "\\s*=\\s*(\\S.*)");
         this.token = token;
     }
 
-    public String composeWith(String value) {
+    public String composeWith(final String value) {
         return token + " = " + value + "\n";
     }
 
@@ -48,7 +48,7 @@ enum Attribute {
         return token;
     }
 
-    public String parseFrom(String line) {
+    public String parseFrom(final String line) {
         final Matcher matcher = pattern.matcher(line);
         if (matcher.matches())
             return matcher.group(1);

@@ -17,7 +17,7 @@ public class Keypair {
         return privateKey;
     }
 
-    private static byte[] generatePublicKey(byte[] privateKey) {
+    private static byte[] generatePublicKey(final byte[] privateKey) {
         final byte[] publicKey = new byte[KeyEncoding.KEY_LENGTH];
         Curve25519.eval(publicKey, 0, privateKey, null);
         return publicKey;
@@ -30,12 +30,12 @@ public class Keypair {
         this(generatePrivateKey());
     }
 
-    private Keypair(byte[] privateKey) {
+    private Keypair(final byte[] privateKey) {
         this.privateKey = privateKey;
         publicKey = generatePublicKey(privateKey);
     }
 
-    public Keypair(String privateKey) {
+    public Keypair(final String privateKey) {
         this(KeyEncoding.keyFromBase64(privateKey));
     }
 

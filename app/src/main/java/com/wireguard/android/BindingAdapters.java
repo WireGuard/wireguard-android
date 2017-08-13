@@ -9,11 +9,14 @@ import android.widget.ListView;
  * Static methods for use by generated code in the Android data binding library.
  */
 
+@SuppressWarnings("unused")
 public final class BindingAdapters {
     @BindingAdapter({"items", "layout"})
-    public static <K, V> void arrayMapBinding(ListView view, ObservableArrayMap<K, V> oldMap,
-                                              int oldLayoutId, ObservableArrayMap<K, V> newMap,
-                                              int newLayoutId) {
+    public static <K, V> void arrayMapBinding(final ListView view,
+                                              final ObservableArrayMap<K, V> oldMap,
+                                              final int oldLayoutId,
+                                              final ObservableArrayMap<K, V> newMap,
+                                              final int newLayoutId) {
         // Remove any existing binding when there is no new map.
         if (newMap == null) {
             view.setAdapter(null);
@@ -37,8 +40,9 @@ public final class BindingAdapters {
     }
 
     @BindingAdapter({"items", "layout"})
-    public static <T> void listBinding(ListView view, ObservableList<T> oldList, int oldLayoutId,
-                                       ObservableList<T> newList, int newLayoutId) {
+    public static <T> void listBinding(final ListView view,
+                                       final ObservableList<T> oldList, final int oldLayoutId,
+                                       final ObservableList<T> newList, final int newLayoutId) {
         // Remove any existing binding when there is no new list.
         if (newList == null) {
             view.setAdapter(null);
@@ -61,5 +65,6 @@ public final class BindingAdapters {
     }
 
     private BindingAdapters() {
+        // Prevent instantiation.
     }
 }

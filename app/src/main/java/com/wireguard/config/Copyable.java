@@ -6,4 +6,5 @@ package com.wireguard.config;
 
 public interface Copyable<T> {
     T copy();
+    void copyFrom(T source);
 }

@@ -22,8 +22,9 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
     private ObservableList<T> list;
     private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
 
-    ObservableListAdapter(Context context, int layoutId, ObservableList<T> list) {
-        this.layoutInflater = LayoutInflater.from(context);
+    ObservableListAdapter(final Context context, final int layoutId, final ObservableList<T> list) {
+        super();
+        layoutInflater = LayoutInflater.from(context);
         this.layoutId = layoutId;
         setList(list);
     }
@@ -34,17 +35,17 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
     }
 
     @Override
-    public T getItem(int position) {
+    public T getItem(final int position) {
         return list != null ? list.get(position) : null;
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
@@ -53,7 +54,7 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         return binding.getRoot();
     }
 
-    public void setList(ObservableList<T> newList) {
+    public void setList(final ObservableList<T> newList) {
         if (list != null)
             list.removeOnListChangedCallback(callback);
         list = newList;
@@ -67,12 +68,13 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
 
         private final WeakReference<ObservableListAdapter<U>> weakAdapter;
 
-        private OnListChangedCallback(ObservableListAdapter<U> adapter) {
+        private OnListChangedCallback(final ObservableListAdapter<U> adapter) {
+            super();
             weakAdapter = new WeakReference<>(adapter);
         }
 
         @Override
-        public void onChanged(ObservableList<U> sender) {
+        public void onChanged(final ObservableList<U> sender) {
             final ObservableListAdapter<U> adapter = weakAdapter.get();
             if (adapter != null)
                 adapter.notifyDataSetChanged();
@@ -81,24 +83,26 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         }
 
         @Override
-        public void onItemRangeChanged(ObservableList<U> sender, int positionStart, int itemCount) {
+        public void onItemRangeChanged(final ObservableList<U> sender, final int positionStart,
+                                       final int itemCount) {
             onChanged(sender);
         }
 
         @Override
-        public void onItemRangeInserted(ObservableList<U> sender, int positionStart,
-                                        int itemCount) {
+        public void onItemRangeInserted(final ObservableList<U> sender, final int positionStart,
+                                        final int itemCount) {
             onChanged(sender);
         }
 
         @Override
-        public void onItemRangeMoved(ObservableList<U> sender, int fromPosition, int toPosition,
-                                     int itemCount) {
+        public void onItemRangeMoved(final ObservableList<U> sender, final int fromPosition,
+                                     final int toPosition, final int itemCount) {
             onChanged(sender);
         }
 
         @Override
-        public void onItemRangeRemoved(ObservableList<U> sender, int positionStart, int itemCount) {
+        public void onItemRangeRemoved(final ObservableList<U> sender, final int positionStart,
+                                       final int itemCount) {
             onChanged(sender);
         }
     }

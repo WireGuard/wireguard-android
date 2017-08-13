@@ -12,14 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.DarkActionBar">
-        <activity
-            android:name=".ProfileDetailActivity"
-            android:label=""
-            android:parentActivityName=".ProfileListActivity" />
-        <activity
-            android:name=".ProfileEditActivity"
-            android:label="@string/edit_activity_title" />
-        <activity android:name=".ProfileListActivity">
+        <activity android:name=".ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +30,7 @@
         </receiver>
 
         <service
-            android:name=".ProfileService"
+            android:name=".VpnService"
             android:exported="false" />
     </application>
 

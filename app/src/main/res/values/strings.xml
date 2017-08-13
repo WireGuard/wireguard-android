@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WireGuard</string>
+    <string name="config_name">Configuration name</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
+    <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
-    <string name="edit_activity_title">Edit WireGuard Profile</string>
-    <string name="placeholder_text">No profile selected</string>
-    <string name="profile_name">Profile name</string>
+    <string name="generate">Generate</string>
+    <string name="hint_automatic">(auto)</string>
+    <string name="hint_generated">(generated)</string>
+    <string name="hint_optional">(optional)</string>
+    <string name="hint_random">(random)</string>
+    <string name="listen_port">Listen port</string>
+    <string name="mtu">MTU</string>
+    <string name="placeholder_text">No configuration selected</string>
+    <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>

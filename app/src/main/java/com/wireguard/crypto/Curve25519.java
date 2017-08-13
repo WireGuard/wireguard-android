@@ -38,6 +38,7 @@ import java.util.Arrays;
  *
  * References: http://cr.yp.to/ecdh.html, RFC 7748
  */
+@SuppressWarnings("ALL")
 public final class Curve25519 {
 
 	// Numbers modulo 2^255 - 19 are broken up into ten 26-bit words.
