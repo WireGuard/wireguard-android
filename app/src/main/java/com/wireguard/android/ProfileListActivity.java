@@ -34,10 +34,9 @@ public class ProfileListActivity extends ProfileActivity {
                 transaction.remove(detailFragment);
         }
         transaction.commit();
+        onProfileSelected(getCurrentProfile());
         if (isEditing())
             startEditing();
-        else
-            onProfileSelected(getCurrentProfile());
     }
 
     @Override
@@ -62,8 +61,8 @@ public class ProfileListActivity extends ProfileActivity {
             if (isEditing())
                 getFragmentManager().popBackStack();
             setIsEditing(false);
-            updateLayout(profile);
             setCurrentProfile(profile);
+            updateLayout();
         } else if (profile != null) {
             final Intent intent = new Intent(this, ProfileDetailActivity.class);
             intent.putExtra(KEY_PROFILE_NAME, profile);
@@ -75,7 +74,7 @@ public class ProfileListActivity extends ProfileActivity {
     private void startEditing() {
         if (isSplitLayout) {
             setIsEditing(true);
-            updateLayout(getCurrentProfile());
+            updateLayout();
         } else if (getCurrentProfile() != null) {
             final Intent intent = new Intent(this, ProfileEditActivity.class);
             intent.putExtra(KEY_PROFILE_NAME, getCurrentProfile());
@@ -85,8 +84,9 @@ public class ProfileListActivity extends ProfileActivity {
         }
     }
 
-    public void updateLayout(String profile) {
+    private void updateLayout() {
         final Fragment fragment = getFragmentManager().findFragmentById(R.id.fragment_container);
+        final String profile = getCurrentProfile();
         if (isEditing()) {
             if (fragment instanceof ProfileEditFragment) {
                 final ProfileEditFragment editFragment = (ProfileEditFragment) fragment;
