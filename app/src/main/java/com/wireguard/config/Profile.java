@@ -32,15 +32,15 @@ public class Profile extends BaseObservable implements Copyable<Profile>, Observ
 
     public Profile(String name) {
         super();
+        if (!isNameValid(name))
+            throw new IllegalArgumentException();
         this.name = name;
     }
 
     private Profile(Profile original)
             throws IOException {
         this(original.getName());
-        final byte configBytes[] = original.toString().getBytes(StandardCharsets.UTF_8);
-        final ByteArrayInputStream configStream = new ByteArrayInputStream(configBytes);
-        parseFrom(configStream);
+        parseFrom(original);
     }
 
     public Profile copy() {
@@ -88,6 +88,13 @@ public class Profile extends BaseObservable implements Copyable<Profile>, Observ
                 }
             }
         }
+    }
+
+    public void parseFrom(Profile profile)
+            throws IOException {
+        final byte configBytes[] = profile.toString().getBytes(StandardCharsets.UTF_8);
+        final ByteArrayInputStream configStream = new ByteArrayInputStream(configBytes);
+        parseFrom(configStream);
     }
 
     public void setIsConnected(boolean isConnected) {
