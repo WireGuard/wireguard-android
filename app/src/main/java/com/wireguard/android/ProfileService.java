@@ -54,46 +54,6 @@ public class ProfileService extends Service {
         return START_STICKY;
     }
 
-    private class ProfileAdder extends AsyncTask<Void, Void, Boolean> {
-        private final Profile profile;
-        private final boolean shouldConnect;
-
-        private ProfileAdder(Profile profile, boolean shouldConnect) {
-            super();
-            if (profiles.get(profile.getName()) != null)
-                throw new IllegalStateException("Profile already exists: " + profile.getName());
-            this.profile = profile;
-            this.shouldConnect = shouldConnect;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            Log.i(TAG, "Adding profile " + profile.getName());
-            try {
-                final String configFile = profile.getName() + ".conf";
-                if (new File(getFilesDir(), configFile).exists())
-                    throw new IOException("Refusing to overwrite existing profile configuration");
-                final FileOutputStream stream = openFileOutput(configFile, MODE_PRIVATE);
-                stream.write(profile.toString().getBytes(StandardCharsets.UTF_8));
-                stream.close();
-                return true;
-            } catch (IOException e) {
-                Log.e(TAG, "Could not create profile " + profile.getName(), e);
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (!result)
-                return;
-            profile.setIsConnected(false);
-            profiles.put(profile.getName(), profile);
-            if (shouldConnect)
-                new ProfileConnecter(profile).execute();
-        }
-    }
-
     private class ProfileConnecter extends AsyncTask<Void, Void, Boolean> {
         private final Profile profile;
 
@@ -184,14 +144,10 @@ public class ProfileService extends Service {
 
     private class ProfileRemover extends AsyncTask<Void, Void, Boolean> {
         private final Profile profile;
-        private final Profile replaceWith;
-        private final boolean shouldConnect;
 
-        private ProfileRemover(Profile profile, Profile replaceWith, Boolean shouldConnect) {
+        private ProfileRemover(Profile profile) {
             super();
             this.profile = profile;
-            this.replaceWith = replaceWith;
-            this.shouldConnect = shouldConnect != null ? shouldConnect : false;
         }
 
         @Override
@@ -211,8 +167,70 @@ public class ProfileService extends Service {
             if (!result)
                 return;
             profiles.remove(profile.getName());
-            if (replaceWith != null)
-                new ProfileAdder(replaceWith, shouldConnect).execute();
+        }
+    }
+
+    private class ProfileUpdater extends AsyncTask<Void, Void, Boolean> {
+        private final String newName;
+        private Profile newProfile;
+        private final String oldName;
+        private final Boolean shouldConnect;
+
+        private ProfileUpdater(String oldName, Profile newProfile, Boolean shouldConnect) {
+            super();
+            this.newName = newProfile.getName();
+            this.newProfile = newProfile;
+            this.oldName = oldName;
+            this.shouldConnect = shouldConnect;
+            if (profiles.values().contains(newProfile))
+                throw new IllegalArgumentException("Profile " + newName + " modified directly");
+            if (!newName.equals(oldName) && profiles.get(newName) != null)
+                throw new IllegalStateException("Profile " + newName + " already exists");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Log.i(TAG, (oldName == null ? "Adding" : "Updating") + " profile " + newName);
+            final File newFile = new File(getFilesDir(), newName + ".conf");
+            final File oldFile = new File(getFilesDir(), oldName + ".conf");
+            if (!newName.equals(oldName) && newFile.exists()) {
+                Log.w(TAG, "Refusing to overwrite existing profile configuration");
+                return false;
+            }
+            try {
+                final FileOutputStream stream = openFileOutput(oldFile.getName(), MODE_PRIVATE);
+                stream.write(newProfile.toString().getBytes(StandardCharsets.UTF_8));
+                stream.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Could not save configuration for profile " + oldName, e);
+                return false;
+            }
+            if (!newName.equals(oldName) && !oldFile.renameTo(newFile)) {
+                Log.e(TAG, "Could not rename " + oldFile.getName() + " to " + newFile.getName());
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result)
+                return;
+            final Profile oldProfile = profiles.remove(oldName);
+            if (oldProfile != null) {
+                try {
+                    oldProfile.parseFrom(newProfile);
+                    oldProfile.setName(newName);
+                    newProfile = oldProfile;
+                } catch (IOException e) {
+                    Log.e(TAG, "Could not replace profile " + oldName + " with " + newName, e);
+                    return;
+                }
+            }
+            newProfile.setIsConnected(false);
+            profiles.put(newName, newProfile);
+            if (shouldConnect)
+                new ProfileConnecter(newProfile).execute();
         }
     }
 
@@ -251,7 +269,7 @@ public class ProfileService extends Service {
                 return;
             if (profile.getIsConnected())
                 new ProfileDisconnecter(profile).execute();
-            new ProfileRemover(profile, null, null).execute();
+            new ProfileRemover(profile).execute();
         }
 
         @Override
@@ -263,9 +281,9 @@ public class ProfileService extends Service {
                 final boolean wasConnected = oldProfile.getIsConnected();
                 if (wasConnected)
                     new ProfileDisconnecter(oldProfile).execute();
-                new ProfileRemover(oldProfile, newProfile, wasConnected).execute();
+                new ProfileUpdater(oldName, newProfile, wasConnected).execute();
             } else {
-                new ProfileAdder(newProfile, false).execute();
+                new ProfileUpdater(null, newProfile, false).execute();
             }
         }
     }
