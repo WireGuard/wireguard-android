@@ -78,6 +78,7 @@ public class ConfigActivity extends BaseConfigActivity {
             final FragmentTransaction transaction = fm.beginTransaction();
             if (!isSplitLayout)
                 transaction.addToBackStack(TAG_DETAIL);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             transaction.replace(containerId, detailFragment, TAG_DETAIL);
             transaction.commit();
         } else {
@@ -120,6 +121,7 @@ public class ConfigActivity extends BaseConfigActivity {
                 }
                 final FragmentTransaction transaction = fm.beginTransaction();
                 transaction.addToBackStack(TAG_EDIT);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.replace(containerId, editFragment, TAG_EDIT);
                 transaction.commit();
                 isEditing = true;
