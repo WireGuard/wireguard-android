@@ -34,7 +34,10 @@ abstract class BaseConfigActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Trigger starting the service as early as possible
-        bindService(new Intent(this, VpnService.class), callbacks, Context.BIND_AUTO_CREATE);
+        if (VpnService.getInstance() != null)
+            onServiceAvailable();
+        else
+            bindService(new Intent(this, VpnService.class), callbacks, Context.BIND_AUTO_CREATE);
         // Restore the saved configuration if there is one; otherwise grab it from the intent.
         if (savedInstanceState != null)
             initialConfig = savedInstanceState.getString(KEY_CURRENT_CONFIG);

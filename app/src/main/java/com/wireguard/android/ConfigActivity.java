@@ -15,17 +15,22 @@ import com.wireguard.config.Config;
  */
 
 public class ConfigActivity extends BaseConfigActivity {
-    private int containerId;
+    private ConfigDetailFragment detailFragment;
+    private ConfigEditFragment editFragment;
     private final FragmentManager fm = getFragmentManager();
     private boolean isEditing;
     private boolean isServiceAvailable;
     private boolean isSplitLayout;
     private boolean isStateSaved;
+    private ConfigListFragment listFragment;
+    private int mainContainer;
+    private final PlaceholderFragment placeholderFragment = new PlaceholderFragment();
+    private boolean updateWasSkipped;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Make sure the current config is cleared when going back to the list.
+        // Ensure the current config is cleared when going back to the single-fragment-layout list.
         if (isEditing)
             isEditing = false;
         else
@@ -34,96 +39,49 @@ public class ConfigActivity extends BaseConfigActivity {
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.config_activity);
         isSplitLayout = findViewById(R.id.detail_fragment) != null;
-        if (isSplitLayout)
-            containerId = R.id.detail_fragment;
-        else
-            containerId = R.id.master_fragment;
+        mainContainer = isSplitLayout ? R.id.detail_fragment : R.id.master_fragment;
+        Log.d(getClass().getSimpleName(), "onCreate isSplitLayout=" + isSplitLayout);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
-        if (!isServiceAvailable || isStateSaved)
+        Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" + (config != null ?
+                config.getName() : null) + " fragment=" + fm.findFragmentById(mainContainer) +
+                (!isServiceAvailable || isStateSaved ? " SKIPPING" : ""));
+        // Avoid performing fragment transactions when it would be illegal or the service is null.
+        if (!isServiceAvailable || isStateSaved) {
+            // Signal that updates need to be performed once the activity is resumed.
+            updateWasSkipped = true;
             return;
-        final Fragment currentFragment = fm.findFragmentById(containerId);
-        Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" +
-                (config != null ? config.getName() : null) + " fragment=" + currentFragment);
-        if (currentFragment instanceof ConfigDetailFragment) {
-            // Handle the case when the split layout is switching from one config to another.
-            final ConfigDetailFragment detailFragment = (ConfigDetailFragment) currentFragment;
-            if (detailFragment.getCurrentConfig() != config)
-                detailFragment.setCurrentConfig(config);
-        } else if (currentFragment instanceof ConfigEditFragment) {
-            // Handle the case when ConfigEditFragment is finished updating a config.
-            fm.popBackStack();
-            isEditing = false;
-            final ConfigDetailFragment detailFragment =
-                    (ConfigDetailFragment) fm.findFragmentByTag(TAG_DETAIL);
-            if (detailFragment.getCurrentConfig() != config)
-                detailFragment.setCurrentConfig(config);
-        } else if (config != null) {
-            // Handle the single-fragment-layout case and the case when a placeholder is replaced.
-            ConfigDetailFragment detailFragment =
-                    (ConfigDetailFragment) fm.findFragmentByTag(TAG_DETAIL);
-            if (detailFragment != null) {
-                detailFragment.setCurrentConfig(config);
-            } else {
-                detailFragment = new ConfigDetailFragment();
-                final Bundle arguments = new Bundle();
-                arguments.putString(KEY_CURRENT_CONFIG, config.getName());
-                detailFragment.setArguments(arguments);
-            }
-            final FragmentTransaction transaction = fm.beginTransaction();
-            if (!isSplitLayout)
-                transaction.addToBackStack(TAG_DETAIL);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            transaction.replace(containerId, detailFragment, TAG_DETAIL);
-            transaction.commit();
         } else {
-            if (isSplitLayout) {
-                // Handle the split layout case when there is no config, so a placeholder is shown.
-                PlaceholderFragment placeholderFragment =
-                        (PlaceholderFragment) fm.findFragmentByTag(TAG_PLACEHOLDER);
-                if (placeholderFragment == null)
-                    placeholderFragment = new PlaceholderFragment();
-                final FragmentTransaction transaction = fm.beginTransaction();
-                transaction.replace(containerId, placeholderFragment, TAG_PLACEHOLDER);
-                transaction.commit();
-            }
+            // Now that an update is being performed, reset the flag.
+            updateWasSkipped = false;
         }
         // If the config change came from the intent or ConfigEditFragment, forward it to the list.
-        ConfigListFragment listFragment = (ConfigListFragment) fm.findFragmentByTag(TAG_LIST);
-        if (listFragment == null) {
-            listFragment = new ConfigListFragment();
-            final FragmentTransaction transaction = fm.beginTransaction();
-            transaction.replace(R.id.master_fragment, listFragment, TAG_LIST);
-            transaction.commit();
-        }
+        // listFragment is guaranteed not to be null at this point by onServiceAvailable().
         if (listFragment.getCurrentConfig() != config)
             listFragment.setCurrentConfig(config);
+        if (isEditing) {
+            fm.popBackStackImmediate();
+            isEditing = false;
+        }
+        if (config != null) {
+            final boolean shouldPush = !isSplitLayout &&
+                    fm.findFragmentById(mainContainer) instanceof ConfigListFragment;
+            switchToFragment(mainContainer, TAG_DETAIL, shouldPush);
+        } else if (isSplitLayout) {
+            switchToFragment(mainContainer, TAG_PLACEHOLDER, false);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_edit:
-                ConfigEditFragment editFragment =
-                        (ConfigEditFragment) fm.findFragmentByTag(TAG_EDIT);
-                if (editFragment != null) {
-                    editFragment.setCurrentConfig(getCurrentConfig());
-                } else {
-                    editFragment = new ConfigEditFragment();
-                    final Bundle arguments = new Bundle();
-                    arguments.putString(KEY_CURRENT_CONFIG, getCurrentConfig().getName());
-                    editFragment.setArguments(arguments);
-                }
-                final FragmentTransaction transaction = fm.beginTransaction();
-                transaction.addToBackStack(TAG_EDIT);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.replace(containerId, editFragment, TAG_EDIT);
-                transaction.commit();
+                switchToFragment(mainContainer, TAG_EDIT, true);
                 isEditing = true;
                 return true;
             case R.id.menu_action_save:
@@ -141,7 +99,8 @@ public class ConfigActivity extends BaseConfigActivity {
     public void onPostResume() {
         super.onPostResume();
         isStateSaved = false;
-        onCurrentConfigChanged(getCurrentConfig());
+        if (updateWasSkipped)
+            onCurrentConfigChanged(getCurrentConfig());
     }
 
     @Override
@@ -152,9 +111,11 @@ public class ConfigActivity extends BaseConfigActivity {
             fm.popBackStackImmediate(bottomEntryId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
         if (isSplitLayout) {
-            final Fragment oldFragment = fm.findFragmentById(containerId);
-            if (oldFragment != null)
+            final Fragment oldFragment = fm.findFragmentById(mainContainer);
+            if (oldFragment != null) {
                 fm.beginTransaction().remove(oldFragment).commit();
+                fm.executePendingTransactions();
+            }
         }
         isStateSaved = true;
         super.onSaveInstanceState(outState);
@@ -162,8 +123,53 @@ public class ConfigActivity extends BaseConfigActivity {
 
     @Override
     protected void onServiceAvailable() {
-        // Create the initial fragment set.
         isServiceAvailable = true;
+        // Create the initial fragment set.
+        final Fragment masterFragment = fm.findFragmentById(R.id.master_fragment);
+        if (masterFragment instanceof ConfigListFragment)
+            listFragment = (ConfigListFragment) masterFragment;
+        else
+            switchToFragment(R.id.master_fragment, TAG_LIST, false);
+        // This must run even if no update was skipped, so the restored config gets applied.
         onCurrentConfigChanged(getCurrentConfig());
+    }
+
+    private void switchToFragment(final int container, final String tag, final boolean push) {
+        final Fragment fragment;
+        if (tag.equals(TAG_PLACEHOLDER)) {
+            fragment = placeholderFragment;
+        } else {
+            final BaseConfigFragment configFragment;
+            switch (tag) {
+                case TAG_DETAIL:
+                    if (detailFragment == null)
+                        detailFragment = new ConfigDetailFragment();
+                    configFragment = detailFragment;
+                    break;
+                case TAG_EDIT:
+                    if (editFragment == null)
+                        editFragment = new ConfigEditFragment();
+                    configFragment = editFragment;
+                    break;
+                case TAG_LIST:
+                    if (listFragment == null)
+                        listFragment = new ConfigListFragment();
+                    configFragment = listFragment;
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+            if (configFragment.getCurrentConfig() != getCurrentConfig())
+                configFragment.setCurrentConfig(getCurrentConfig());
+            fragment = configFragment;
+        }
+        if (fm.findFragmentById(container) != fragment) {
+            final FragmentTransaction transaction = fm.beginTransaction();
+            if (push) {
+                transaction.addToBackStack(null);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            }
+            transaction.replace(container, fragment, null).commit();
+        }
     }
 }
