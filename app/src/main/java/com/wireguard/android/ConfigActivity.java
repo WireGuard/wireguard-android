@@ -15,11 +15,12 @@ import com.wireguard.config.Config;
  */
 
 public class ConfigActivity extends BaseConfigActivity {
-    private boolean canAddFragments;
     private int containerId;
     private final FragmentManager fm = getFragmentManager();
     private boolean isEditing;
+    private boolean isServiceAvailable;
     private boolean isSplitLayout;
+    private boolean isStateSaved;
 
     @Override
     public void onBackPressed() {
@@ -44,7 +45,7 @@ public class ConfigActivity extends BaseConfigActivity {
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
-        if (!canAddFragments)
+        if (!isServiceAvailable || isStateSaved)
             return;
         final Fragment currentFragment = fm.findFragmentById(containerId);
         Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" +
@@ -135,6 +136,13 @@ public class ConfigActivity extends BaseConfigActivity {
     }
 
     @Override
+    public void onPostResume() {
+        super.onPostResume();
+        isStateSaved = false;
+        onCurrentConfigChanged(getCurrentConfig());
+    }
+
+    @Override
     public void onSaveInstanceState(final Bundle outState) {
         // We cannot save fragments that might switch between containers if the layout changes.
         if (fm.getBackStackEntryCount() > 0) {
@@ -146,13 +154,14 @@ public class ConfigActivity extends BaseConfigActivity {
             if (oldFragment != null)
                 fm.beginTransaction().remove(oldFragment).commit();
         }
+        isStateSaved = true;
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onServiceAvailable() {
         // Create the initial fragment set.
-        canAddFragments = true;
+        isServiceAvailable = true;
         onCurrentConfigChanged(getCurrentConfig());
     }
 }
