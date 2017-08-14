@@ -23,7 +23,7 @@ public class ConfigListFragment extends BaseConfigFragment {
         final ConfigListFragmentBinding binding =
                 ConfigListFragmentBinding.inflate(inflater, parent, false);
         binding.setConfigs(VpnService.getInstance().getConfigs());
-        final ListView listView = (ListView) binding.getRoot();
+        final ListView listView = binding.getRoot().findViewById(R.id.config_list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
