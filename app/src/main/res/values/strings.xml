@@ -6,6 +6,7 @@
     <string name="disconnected">Disconnected</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
+    <string name="edit_activity_title">Add WireGuard Configuration</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>

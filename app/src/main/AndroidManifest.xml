@@ -20,6 +20,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ConfigAddActivity"
+            android:label="@string/edit_activity_title" />
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/settings" />
 
