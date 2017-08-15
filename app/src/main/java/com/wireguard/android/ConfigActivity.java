@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wireguard.config.Config;
@@ -46,6 +47,12 @@ public class ConfigActivity extends BaseConfigActivity {
         mainContainer = isSplitLayout ? R.id.detail_fragment : R.id.master_fragment;
         Log.d(getClass().getSimpleName(), "onCreate isSplitLayout=" + isSplitLayout);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override

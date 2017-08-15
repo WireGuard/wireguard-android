@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.Menu;
 
 import com.wireguard.config.Config;
 
@@ -43,12 +42,6 @@ abstract class BaseConfigActivity extends Activity {
             initialConfig = savedInstanceState.getString(KEY_CURRENT_CONFIG);
         else
             initialConfig = getIntent().getStringExtra(KEY_CURRENT_CONFIG);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     protected abstract void onCurrentConfigChanged(Config config);
