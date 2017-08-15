@@ -73,6 +73,10 @@ public class ConfigActivity extends BaseConfigActivity {
         // listFragment is guaranteed not to be null at this point by onServiceAvailable().
         if (listFragment.getCurrentConfig() != config)
             listFragment.setCurrentConfig(config);
+        // Update the activity's title if the list of configurations is not visible.
+        if (!isSplitLayout)
+            setTitle(config != null ? config.getName() : getString(R.string.app_name));
+        // Update the fragment in the main container.
         if (isEditing) {
             fm.popBackStackImmediate();
             isEditing = false;
