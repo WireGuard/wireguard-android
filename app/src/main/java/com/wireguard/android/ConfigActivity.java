@@ -139,6 +139,7 @@ public class ConfigActivity extends BaseConfigActivity {
 
     @Override
     protected void onServiceAvailable() {
+        super.onServiceAvailable();
         isServiceAvailable = true;
         // Create the initial fragment set.
         final Fragment masterFragment = fm.findFragmentById(R.id.master_fragment);

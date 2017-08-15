@@ -32,16 +32,16 @@ abstract class BaseConfigActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Trigger starting the service as early as possible
-        if (VpnService.getInstance() != null)
-            onServiceAvailable();
-        else
-            bindService(new Intent(this, VpnService.class), callbacks, Context.BIND_AUTO_CREATE);
         // Restore the saved configuration if there is one; otherwise grab it from the intent.
         if (savedInstanceState != null)
             initialConfig = savedInstanceState.getString(KEY_CURRENT_CONFIG);
         else
             initialConfig = getIntent().getStringExtra(KEY_CURRENT_CONFIG);
+        // Trigger starting the service as early as possible
+        if (VpnService.getInstance() != null)
+            onServiceAvailable();
+        else
+            bindService(new Intent(this, VpnService.class), callbacks, Context.BIND_AUTO_CREATE);
     }
 
     protected abstract void onCurrentConfigChanged(Config config);
@@ -53,7 +53,11 @@ abstract class BaseConfigActivity extends Activity {
             outState.putString(KEY_CURRENT_CONFIG, currentConfig.getName());
     }
 
-    protected abstract void onServiceAvailable();
+    protected void onServiceAvailable() {
+        // Make sure the subclass activity is initialized before setting its config.
+        if (initialConfig != null && currentConfig == null)
+            setCurrentConfig(VpnService.getInstance().get(initialConfig));
+    }
 
     public void setCurrentConfig(final Config config) {
         currentConfig = config;
@@ -65,11 +69,7 @@ abstract class BaseConfigActivity extends Activity {
         public void onServiceConnected(final ComponentName component, final IBinder binder) {
             // We don't actually need a binding, only notification that the service is started.
             unbindService(callbacks);
-            // Tell the subclass that it is now safe to use the service.
             onServiceAvailable();
-            // Make sure the subclass activity is initialized before setting its config.
-            if (initialConfig != null && currentConfig == null)
-                setCurrentConfig(VpnService.getInstance().get(initialConfig));
         }
 
         @Override
