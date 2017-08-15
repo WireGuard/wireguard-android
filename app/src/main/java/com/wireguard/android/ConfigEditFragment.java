@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.wireguard.android.databinding.ConfigEditFragmentBinding;
 import com.wireguard.config.Config;
@@ -73,7 +74,15 @@ public class ConfigEditFragment extends BaseConfigFragment {
 
     private void saveConfig() {
         // FIXME: validate input
-        VpnService.getInstance().update(getCurrentConfig().getName(), localConfig);
+        try {
+            if (getCurrentConfig() != null)
+                VpnService.getInstance().update(getCurrentConfig().getName(), localConfig);
+            else
+                VpnService.getInstance().add(localConfig);
+        } catch (final IllegalStateException e) {
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
         // Hide the keyboard; it rarely goes away on its own.
         final BaseConfigActivity activity = (BaseConfigActivity) getActivity();
         final View focusedView = activity.getCurrentFocus();
@@ -83,7 +92,7 @@ public class ConfigEditFragment extends BaseConfigFragment {
             inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        // Tell the activity to go back to the detail view.
+        // Tell the activity to finish itself or go back to the detail view.
         activity.setCurrentConfig(localConfig);
     }
 }
