@@ -35,6 +35,8 @@ public class ConfigActivity extends BaseConfigActivity {
             isEditing = false;
         else
             setCurrentConfig(null);
+        if (!isSplitLayout && fm.getBackStackEntryCount() == 0 && getActionBar() != null)
+            getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
@@ -80,6 +82,9 @@ public class ConfigActivity extends BaseConfigActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.menu_action_edit:
                 switchToFragment(mainContainer, TAG_EDIT, true);
                 isEditing = true;
@@ -168,6 +173,8 @@ public class ConfigActivity extends BaseConfigActivity {
             if (push) {
                 transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                if (!isSplitLayout && getActionBar() != null)
+                    getActionBar().setDisplayHomeAsUpEnabled(true);
             }
             transaction.replace(container, fragment, null).commit();
         }
