@@ -2,10 +2,12 @@ package com.wireguard.android;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.ObservableArrayMap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.wireguard.config.Config;
@@ -23,7 +25,9 @@ import java.util.List;
  * Service that handles config state coordination and all background processing for the application.
  */
 
-public class VpnService extends Service {
+public class VpnService extends Service
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final String KEY_PRIMARY_CONFIG = "primary_config";
     private static final String TAG = "VpnService";
 
     private static VpnService instance;
@@ -34,6 +38,8 @@ public class VpnService extends Service {
 
     private final IBinder binder = new Binder();
     private final ObservableArrayMap<String, Config> configurations = new ObservableArrayMap<>();
+    private SharedPreferences preferences;
+    private Config primaryConfig;
     private RootShell rootShell;
 
     /**
@@ -113,6 +119,26 @@ public class VpnService extends Service {
                 return name.endsWith(".conf");
             }
         }));
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences preferences,
+                                          final String key) {
+        Log.i(TAG, "Preference change trigger!");
+        if (!KEY_PRIMARY_CONFIG.equals(key))
+            return;
+        final String name = preferences.getString(key, null);
+        if (primaryConfig != null && !primaryConfig.getName().equals(name)) {
+            primaryConfig.setIsPrimary(false);
+            primaryConfig = null;
+        }
+        if (primaryConfig == null && name != null) {
+            primaryConfig = configurations.get(name);
+            if (primaryConfig != null)
+                primaryConfig.setIsPrimary(true);
+        }
     }
 
     @Override
@@ -244,6 +270,12 @@ public class VpnService extends Service {
                 return;
             for (final Config config : configs)
                 configurations.put(config.getName(), config);
+            final String primaryName = preferences.getString(KEY_PRIMARY_CONFIG, null);
+            if (primaryName != null) {
+                primaryConfig = configurations.get(primaryName);
+                if (primaryConfig != null)
+                    primaryConfig.setIsPrimary(true);
+            }
         }
     }
 
@@ -271,6 +303,9 @@ public class VpnService extends Service {
             if (!result)
                 return;
             configurations.remove(config.getName());
+            // This will get picked up by the preference change listener.
+            if (primaryConfig == config)
+                preferences.edit().putString(KEY_PRIMARY_CONFIG, null).apply();
         }
     }
 
