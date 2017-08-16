@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.support.annotation.NonNull;
 
 import com.wireguard.android.BR;
 
@@ -19,7 +20,8 @@ import java.util.regex.Pattern;
  * Represents a wg-quick configuration file, its name, and its connection state.
  */
 
-public class Config extends BaseObservable implements Copyable<Config>, Observable {
+public class Config extends BaseObservable
+        implements Comparable<Config>, Copyable<Config>, Observable {
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9_=+.-]{1,16}$");
 
     private static boolean isNameValid(final String name) {
@@ -30,6 +32,11 @@ public class Config extends BaseObservable implements Copyable<Config>, Observab
     private boolean isEnabled;
     private String name;
     private final ObservableList<Peer> peers = new ObservableArrayList<>();
+
+    @Override
+    public int compareTo(@NonNull final Config config) {
+        return getName().compareTo(config.getName());
+    }
 
     @Override
     public Config copy() {
