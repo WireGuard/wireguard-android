@@ -4,4 +4,9 @@
         android:key="primary_config"
         android:summary="@string/primary_config_summary"
         android:title="@string/primary_config" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="restore_on_boot"
+        android:summary="@string/restore_on_boot_summary"
+        android:title="@string/restore_on_boot" />
 </PreferenceScreen>
