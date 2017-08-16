@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="com.wireguard.android.VpnService" />
+
         <variable
             name="item"
             type="com.wireguard.config.Config" />
@@ -19,16 +21,20 @@
             style="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/config_switch"
             android:text="@{item.name}" />
 
         <TextView
-            style="?android:attr/textAppearanceMedium"
+            android:id="@+id/config_switch"
+            style="?android:attr/textAppearanceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/config_name"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/config_name"
-            android:text="@{item.isEnabled ? @string/connected : @string/disconnected}"
-            android:textAlignment="textEnd"
-            android:textColor="@{item.isEnabled ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
+            android:gravity="center_vertical"
+            android:onClick="@{() -> item.enabled ? VpnService.instance.disable(item.name) : VpnService.instance.enable(item.name)}"
+            android:text="@string/toggle"
+            android:textColor="@{item.enabled ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
     </RelativeLayout>
 </layout>
