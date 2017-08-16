@@ -20,5 +20,13 @@
         android:background="?android:attr/colorPrimary"
         android:paddingEnd="0dp"
         android:paddingStart="4dp"
-        tools:ignore="InconsistentLayout" />
+        tools:ignore="InconsistentLayout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground"
+            android:gravity="center"
+            android:text="@string/placeholder_text" />
+    </FrameLayout>
 </LinearLayout>

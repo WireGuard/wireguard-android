@@ -25,7 +25,6 @@ public class ConfigActivity extends BaseConfigActivity {
     private boolean isStateSaved;
     private ConfigListFragment listFragment;
     private int mainContainer;
-    private final PlaceholderFragment placeholderFragment = new PlaceholderFragment();
     private boolean wasUpdateSkipped;
 
     @Override
@@ -153,34 +152,34 @@ public class ConfigActivity extends BaseConfigActivity {
     }
 
     private void switchToFragment(final int container, final String tag, final boolean push) {
-        final Fragment fragment;
         if (tag.equals(TAG_PLACEHOLDER)) {
-            fragment = placeholderFragment;
-        } else {
-            final BaseConfigFragment configFragment;
-            switch (tag) {
-                case TAG_DETAIL:
-                    if (detailFragment == null)
-                        detailFragment = new ConfigDetailFragment();
-                    configFragment = detailFragment;
-                    break;
-                case TAG_EDIT:
-                    if (editFragment == null)
-                        editFragment = new ConfigEditFragment();
-                    configFragment = editFragment;
-                    break;
-                case TAG_LIST:
-                    if (listFragment == null)
-                        listFragment = new ConfigListFragment();
-                    configFragment = listFragment;
-                    break;
-                default:
-                    throw new IllegalArgumentException();
-            }
-            if (configFragment.getCurrentConfig() != getCurrentConfig())
-                configFragment.setCurrentConfig(getCurrentConfig());
-            fragment = configFragment;
+            final Fragment oldFragment = fm.findFragmentById(container);
+            if (oldFragment != null)
+                fm.beginTransaction().remove(oldFragment).commit();
+            return;
         }
+        final BaseConfigFragment fragment;
+        switch (tag) {
+            case TAG_DETAIL:
+                if (detailFragment == null)
+                    detailFragment = new ConfigDetailFragment();
+                fragment = detailFragment;
+                break;
+            case TAG_EDIT:
+                if (editFragment == null)
+                    editFragment = new ConfigEditFragment();
+                fragment = editFragment;
+                break;
+            case TAG_LIST:
+                if (listFragment == null)
+                    listFragment = new ConfigListFragment();
+                fragment = listFragment;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        if (fragment.getCurrentConfig() != getCurrentConfig())
+            fragment.setCurrentConfig(getCurrentConfig());
         if (fm.findFragmentById(container) != fragment) {
             final FragmentTransaction transaction = fm.beginTransaction();
             if (push) {
