@@ -31,13 +31,15 @@ public class ConfigActivity extends BaseConfigActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Ensure the current config is cleared when going back to the single-fragment-layout list.
+        if ((isEditing && isSplitLayout) || (!isEditing && !isSplitLayout)) {
+            if (getActionBar() != null)
+                getActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        // Ensure the current config is cleared when going back to the single-pane-layout list.
         if (isEditing)
             isEditing = false;
         else
             setCurrentConfig(null);
-        if (!isSplitLayout && fm.getBackStackEntryCount() == 0 && getActionBar() != null)
-            getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
@@ -77,10 +79,8 @@ public class ConfigActivity extends BaseConfigActivity {
         if (!isSplitLayout)
             setTitle(config != null ? config.getName() : getString(R.string.app_name));
         // Update the fragment in the main container.
-        if (isEditing) {
-            fm.popBackStackImmediate();
-            isEditing = false;
-        }
+        if (isEditing)
+            onBackPressed();
         if (config != null) {
             final boolean shouldPush = !isSplitLayout &&
                     fm.findFragmentById(mainContainer) instanceof ConfigListFragment;
@@ -97,8 +97,8 @@ public class ConfigActivity extends BaseConfigActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_action_edit:
-                switchToFragment(mainContainer, TAG_EDIT, true);
                 isEditing = true;
+                switchToFragment(mainContainer, TAG_EDIT, true);
                 return true;
             case R.id.menu_action_save:
                 // This menu item is handled by the current fragment.
@@ -186,7 +186,7 @@ public class ConfigActivity extends BaseConfigActivity {
             if (push) {
                 transaction.addToBackStack(null);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                if (!isSplitLayout && getActionBar() != null)
+                if (getActionBar() != null && (!isSplitLayout || isEditing))
                     getActionBar().setDisplayHomeAsUpEnabled(true);
             }
             transaction.replace(container, fragment, null).commit();
