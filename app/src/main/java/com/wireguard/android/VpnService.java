@@ -18,8 +18,10 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service that handles config state coordination and all background processing for the application.
@@ -27,7 +29,9 @@ import java.util.List;
 
 public class VpnService extends Service
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final String KEY_ENABLED_CONFIGS = "enabled_configs";
     private static final String KEY_PRIMARY_CONFIG = "primary_config";
+    private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String TAG = "VpnService";
 
     private static VpnService instance;
@@ -38,6 +42,7 @@ public class VpnService extends Service
 
     private final IBinder binder = new Binder();
     private final ObservableArrayMap<String, Config> configurations = new ObservableArrayMap<>();
+    private final Set<String> enabledConfigs = new HashSet<>();
     private SharedPreferences preferences;
     private Config primaryConfig;
     private RootShell rootShell;
@@ -205,6 +210,8 @@ public class VpnService extends Service
             if (!result)
                 return;
             config.setIsEnabled(false);
+            enabledConfigs.remove(config.getName());
+            preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
         }
     }
 
@@ -227,6 +234,8 @@ public class VpnService extends Service
             if (!result)
                 return;
             config.setIsEnabled(true);
+            enabledConfigs.add(config.getName());
+            preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
         }
     }
 
@@ -275,6 +284,17 @@ public class VpnService extends Service
                 primaryConfig = configurations.get(primaryName);
                 if (primaryConfig != null)
                     primaryConfig.setIsPrimary(true);
+            }
+            if (preferences.getBoolean(KEY_RESTORE_ON_BOOT, false)) {
+                final Set<String> configsToEnable =
+                        preferences.getStringSet(KEY_ENABLED_CONFIGS, null);
+                if (configsToEnable != null) {
+                    for (final String name : configsToEnable) {
+                        final Config config = configurations.get(name);
+                        if (config != null && !config.isEnabled())
+                            new ConfigEnabler(config).execute();
+                    }
+                }
             }
         }
     }
