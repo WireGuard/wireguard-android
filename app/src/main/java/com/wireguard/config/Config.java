@@ -30,6 +30,7 @@ public class Config extends BaseObservable
 
     private final Interface iface = new Interface();
     private boolean isEnabled;
+    private boolean isPrimary;
     private String name;
     private final ObservableList<Peer> peers = new ObservableArrayList<>();
 
@@ -73,6 +74,11 @@ public class Config extends BaseObservable
         return isEnabled;
     }
 
+    @Bindable
+    public boolean isPrimary() {
+        return isPrimary;
+    }
+
     public void parseFrom(final InputStream stream)
             throws IOException {
         peers.clear();
@@ -100,6 +106,11 @@ public class Config extends BaseObservable
     public void setIsEnabled(final boolean isEnabled) {
         this.isEnabled = isEnabled;
         notifyPropertyChanged(BR.enabled);
+    }
+
+    public void setIsPrimary(final boolean isPrimary) {
+        this.isPrimary = isPrimary;
+        notifyPropertyChanged(BR.primary);
     }
 
     public void setName(final String name) {
