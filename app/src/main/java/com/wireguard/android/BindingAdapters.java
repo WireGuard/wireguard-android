@@ -3,7 +3,10 @@ package com.wireguard.android;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayMap;
 import android.databinding.ObservableList;
+import android.graphics.Typeface;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -62,6 +65,11 @@ public final class BindingAdapters {
             // Changing the list only requires modifying the existing adapter.
             adapter.setList(newList);
         }
+    }
+
+    @BindingAdapter({"android:textStyle"})
+    public static void textStyleBinding(final TextView view, final Typeface typeface) {
+        view.setTypeface(typeface);
     }
 
     private BindingAdapters() {
