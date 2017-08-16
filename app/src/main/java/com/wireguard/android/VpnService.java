@@ -288,8 +288,9 @@ public class VpnService extends Service {
             this.oldConfig = oldConfig;
             this.shouldConnect = shouldConnect;
             newName = newConfig.getName();
-            oldName = oldConfig.getName();
-            if (isRename() && configurations.containsKey(newName))
+            // When adding a config, "old file" and "new file" are the same thing.
+            oldName = oldConfig != null ? oldConfig.getName() : newName;
+            if (isAddOrRename() && configurations.containsKey(newName))
                 throw new IllegalStateException("Config " + newName + " already exists");
         }
 
@@ -298,7 +299,7 @@ public class VpnService extends Service {
             Log.i(TAG, (oldConfig == null ? "Adding" : "Updating") + " config " + newName);
             final File newFile = new File(getFilesDir(), newName + ".conf");
             final File oldFile = new File(getFilesDir(), oldName + ".conf");
-            if (isRename() && newFile.exists()) {
+            if (isAddOrRename() && newFile.exists()) {
                 Log.w(TAG, "Refusing to overwrite existing config configuration");
                 return false;
             }
@@ -317,8 +318,12 @@ public class VpnService extends Service {
             return true;
         }
 
+        private boolean isAddOrRename() {
+            return oldConfig == null || !newName.equals(oldName);
+        }
+
         private boolean isRename() {
-            return oldConfig != null && !newConfig.getName().equals(oldConfig.getName());
+            return oldConfig != null && !newName.equals(oldName);
         }
 
         @Override
