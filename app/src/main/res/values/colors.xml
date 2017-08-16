@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
+    <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
+</resources>
