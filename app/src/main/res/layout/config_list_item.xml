@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.graphics.Typeface" />
+
         <import type="com.wireguard.android.VpnService" />
 
         <variable
@@ -23,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/config_switch"
-            android:text="@{item.name}" />
+            android:text="@{item.name}"
+            android:textStyle="@{item.primary ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT}" />
 
         <TextView
             android:id="@+id/config_switch"
