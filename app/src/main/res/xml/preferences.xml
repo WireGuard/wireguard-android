@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.wireguard.android.ConfigListPreference
+        android:key="primary_config"
+        android:summary="@string/primary_config_summary"
+        android:title="@string/primary_config" />
+</PreferenceScreen>
