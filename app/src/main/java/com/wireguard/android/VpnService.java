@@ -178,7 +178,7 @@ public class VpnService extends Service {
         protected void onPostExecute(final Boolean result) {
             if (!result)
                 return;
-            config.setEnabled(false);
+            config.setIsEnabled(false);
         }
     }
 
@@ -200,7 +200,7 @@ public class VpnService extends Service {
         protected void onPostExecute(final Boolean result) {
             if (!result)
                 return;
-            config.setEnabled(true);
+            config.setIsEnabled(true);
         }
     }
 
@@ -228,7 +228,7 @@ public class VpnService extends Service {
                 try {
                     final Config config = new Config();
                     config.parseFrom(openFileInput(fileName));
-                    config.setEnabled(interfaces.contains(configName));
+                    config.setIsEnabled(interfaces.contains(configName));
                     config.setName(configName);
                     configs.add(config);
                 } catch (IllegalArgumentException | IOException e) {
@@ -335,7 +335,7 @@ public class VpnService extends Service {
                 oldConfig.copyFrom(newConfig);
                 newConfig = oldConfig;
             }
-            newConfig.setEnabled(false);
+            newConfig.setIsEnabled(false);
             configurations.put(newName, newConfig);
             if (shouldConnect)
                 new ConfigEnabler(newConfig).execute();

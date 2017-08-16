@@ -90,7 +90,7 @@ public class Config extends BaseObservable implements Copyable<Config>, Observab
         }
     }
 
-    public void setEnabled(final boolean isEnabled) {
+    public void setIsEnabled(final boolean isEnabled) {
         this.isEnabled = isEnabled;
         notifyPropertyChanged(BR.enabled);
     }
