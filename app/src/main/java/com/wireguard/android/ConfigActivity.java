@@ -26,7 +26,7 @@ public class ConfigActivity extends BaseConfigActivity {
     private ConfigListFragment listFragment;
     private int mainContainer;
     private final PlaceholderFragment placeholderFragment = new PlaceholderFragment();
-    private boolean updateWasSkipped;
+    private boolean wasUpdateSkipped;
 
     @Override
     public void onBackPressed() {
@@ -63,11 +63,11 @@ public class ConfigActivity extends BaseConfigActivity {
         // Avoid performing fragment transactions when it would be illegal or the service is null.
         if (!isServiceAvailable || isStateSaved) {
             // Signal that updates need to be performed once the activity is resumed.
-            updateWasSkipped = true;
+            wasUpdateSkipped = true;
             return;
         } else {
             // Now that an update is being performed, reset the flag.
-            updateWasSkipped = false;
+            wasUpdateSkipped = false;
         }
         // If the config change came from the intent or ConfigEditFragment, forward it to the list.
         // listFragment is guaranteed not to be null at this point by onServiceAvailable().
@@ -107,15 +107,16 @@ public class ConfigActivity extends BaseConfigActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void onPostResume() {
         super.onPostResume();
+        final boolean wasStateSaved = isStateSaved;
         isStateSaved = false;
-        if (updateWasSkipped)
+        if (wasStateSaved || wasUpdateSkipped)
             onCurrentConfigChanged(getCurrentConfig());
     }
 
