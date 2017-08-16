@@ -154,12 +154,6 @@
                 android:inputType="number"
                 android:text="@={config.interface.mtu}"
                 android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/dns_server_text"
-                android:text="@{config.toString()}" />
         </RelativeLayout>
     </ScrollView>
 </layout>

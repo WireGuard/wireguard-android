@@ -6,11 +6,12 @@
     </plurals>
     <string name="app_name">WireGuard</string>
     <string name="config_name">Configuration name</string>
-    <string name="connected">Connected</string>
-    <string name="disconnected">Disconnected</string>
+    <string name="delete">Delete</string>
+    <string name="disabled">Disabled</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
     <string name="edit_activity_title">Add WireGuard Configuration</string>
+    <string name="enabled">Enabled</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
@@ -23,5 +24,6 @@
     <string name="public_key">Public key</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>
-    <string name="delete">Delete</string>
+    <string name="status">Status</string>
+    <string name="toggle">Toggle</string>
 </resources>
