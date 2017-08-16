@@ -1,6 +1,7 @@
 package com.wireguard.android;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +17,6 @@ import com.wireguard.config.Config;
 
 public class ConfigDetailFragment extends BaseConfigFragment {
     private ConfigDetailFragmentBinding binding;
-
-    @Override
-    protected void onCurrentConfigChanged(final Config config) {
-        if (binding != null)
-            binding.setConfig(config);
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -40,5 +35,13 @@ public class ConfigDetailFragment extends BaseConfigFragment {
         binding = ConfigDetailFragmentBinding.inflate(inflater, parent, false);
         binding.setConfig(getCurrentConfig());
         return binding.getRoot();
+    }
+
+    @Override
+    protected void onCurrentConfigChanged(final Config config) {
+        Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" +
+                (config != null ? config.getName() : null));
+        if (binding != null)
+            binding.setConfig(config);
     }
 }
