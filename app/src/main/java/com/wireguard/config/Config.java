@@ -127,4 +127,12 @@ public class Config extends BaseObservable
             sb.append('\n').append(peer);
         return sb.toString();
     }
+
+    public String validate() {
+        if (name == null || !isNameValid(name))
+            return "This configuration does not have a valid name.";
+        if (iface.getPublicKey() == null)
+            return "This configuration does not have a valid keypair.";
+        return null;
+    }
 }
