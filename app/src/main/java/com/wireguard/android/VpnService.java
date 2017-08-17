@@ -3,7 +3,6 @@ package com.wireguard.android;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.ObservableArrayMap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -29,9 +28,9 @@ import java.util.Set;
 
 public class VpnService extends Service
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String KEY_ENABLED_CONFIGS = "enabled_configs";
-    private static final String KEY_PRIMARY_CONFIG = "primary_config";
-    private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
+    public static final String KEY_ENABLED_CONFIGS = "enabled_configs";
+    public static final String KEY_PRIMARY_CONFIG = "primary_config";
+    public static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String TAG = "VpnService";
 
     private static VpnService instance;
@@ -44,7 +43,7 @@ public class VpnService extends Service
     private final ObservableTreeMap<String, Config> configurations = new ObservableTreeMap<>();
     private final Set<String> enabledConfigs = new HashSet<>();
     private SharedPreferences preferences;
-    private Config primaryConfig;
+    private String primaryName;
     private RootShell rootShell;
 
     /**
@@ -129,21 +128,29 @@ public class VpnService extends Service
     }
 
     @Override
+    public void onDestroy() {
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences,
                                           final String key) {
-        Log.i(TAG, "Preference change trigger!");
         if (!KEY_PRIMARY_CONFIG.equals(key))
             return;
-        final String name = preferences.getString(key, null);
-        if (primaryConfig != null && !primaryConfig.getName().equals(name)) {
-            primaryConfig.setIsPrimary(false);
-            primaryConfig = null;
+        final String newName = preferences.getString(key, null);
+        if (primaryName != null && !primaryName.equals(newName)) {
+            final Config oldConfig = configurations.get(primaryName);
+            if (oldConfig != null)
+                oldConfig.setIsPrimary(false);
         }
-        if (primaryConfig == null && name != null) {
-            primaryConfig = configurations.get(name);
-            if (primaryConfig != null)
-                primaryConfig.setIsPrimary(true);
+        if (newName != null && !newName.equals(primaryName)) {
+            final Config newConfig = configurations.get(newName);
+            if (newConfig != null)
+                newConfig.setIsPrimary(true);
+            else
+                preferences.edit().remove(KEY_PRIMARY_CONFIG).apply();
         }
+        primaryName = newName;
     }
 
     @Override
@@ -279,12 +286,8 @@ public class VpnService extends Service
                 return;
             for (final Config config : configs)
                 configurations.put(config.getName(), config);
-            final String primaryName = preferences.getString(KEY_PRIMARY_CONFIG, null);
-            if (primaryName != null) {
-                primaryConfig = configurations.get(primaryName);
-                if (primaryConfig != null)
-                    primaryConfig.setIsPrimary(true);
-            }
+            // Run the handler to avoid duplicating the code here.
+            onSharedPreferenceChanged(preferences, KEY_PRIMARY_CONFIG);
             if (preferences.getBoolean(KEY_RESTORE_ON_BOOT, false)) {
                 final Set<String> configsToEnable =
                         preferences.getStringSet(KEY_ENABLED_CONFIGS, null);
@@ -323,9 +326,10 @@ public class VpnService extends Service
             if (!result)
                 return;
             configurations.remove(config.getName());
-            // This will get picked up by the preference change listener.
-            if (primaryConfig == config)
-                preferences.edit().putString(KEY_PRIMARY_CONFIG, null).apply();
+            if (config.getName().equals(primaryName)) {
+                // This will get picked up by the preference change listener.
+                preferences.edit().remove(KEY_PRIMARY_CONFIG).apply();
+            }
         }
     }
 
@@ -391,6 +395,8 @@ public class VpnService extends Service
             }
             newConfig.setIsEnabled(false);
             configurations.put(newName, newConfig);
+            if (isRename() && oldName.equals(primaryName))
+                preferences.edit().putString(KEY_PRIMARY_CONFIG, newName).apply();
             if (shouldConnect)
                 new ConfigEnabler(newConfig).execute();
         }
