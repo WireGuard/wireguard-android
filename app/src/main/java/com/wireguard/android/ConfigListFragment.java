@@ -78,7 +78,10 @@ public class ConfigListFragment extends BaseConfigFragment {
 
     private void setConfigChecked(final Config config) {
         if (config != null) {
-            final int position = VpnService.getInstance().getConfigs().indexOfKey(config.getName());
+            @SuppressWarnings("unchecked")
+            final ObservableMapAdapter<String, Config> adapter =
+                    (ObservableMapAdapter<String, Config>) listView.getAdapter();
+            final int position = adapter.getItemPosition(config.getName());
             if (position >= 0)
                 listView.setItemChecked(position, true);
         } else {
