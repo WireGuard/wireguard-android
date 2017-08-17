@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,17 @@ import java.util.List;
 
 public class ConfigListFragment extends BaseConfigFragment {
     private ListView listView;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        inflater.inflate(R.menu.config_list, menu);
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup parent,

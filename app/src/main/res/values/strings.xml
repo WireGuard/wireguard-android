@@ -4,6 +4,7 @@
         <item quantity="one">%d configuration selected</item>
         <item quantity="other">%d configurations selected</item>
     </plurals>
+    <string name="add">Add</string>
     <string name="app_name">WireGuard</string>
     <string name="config_name">Configuration name</string>
     <string name="delete">Delete</string>
