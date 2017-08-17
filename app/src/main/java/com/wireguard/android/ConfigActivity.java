@@ -95,6 +95,9 @@ public class ConfigActivity extends BaseConfigActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_action_add:
+                startActivity(new Intent(this, ConfigAddActivity.class));
+                return true;
             case R.id.menu_action_edit:
                 isEditing = true;
                 switchToFragment(mainContainer, TAG_EDIT, true);
