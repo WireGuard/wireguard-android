@@ -1,12 +1,15 @@
 package com.wireguard.android;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.service.quicksettings.TileService;
 import android.util.Log;
 
 import com.wireguard.config.Config;
@@ -137,11 +140,13 @@ public class VpnService extends Service
                                           final String key) {
         if (!KEY_PRIMARY_CONFIG.equals(key))
             return;
+        boolean changed = false;
         final String newName = preferences.getString(key, null);
         if (primaryName != null && !primaryName.equals(newName)) {
             final Config oldConfig = configurations.get(primaryName);
             if (oldConfig != null)
                 oldConfig.setIsPrimary(false);
+            changed = true;
         }
         if (newName != null && !newName.equals(primaryName)) {
             final Config newConfig = configurations.get(newName);
@@ -149,8 +154,11 @@ public class VpnService extends Service
                 newConfig.setIsPrimary(true);
             else
                 preferences.edit().remove(KEY_PRIMARY_CONFIG).apply();
+            changed = true;
         }
         primaryName = newName;
+        if (changed)
+            updateTile();
     }
 
     @Override
@@ -198,6 +206,13 @@ public class VpnService extends Service
         new ConfigUpdater(oldConfig, config, wasEnabled).execute();
     }
 
+    private void updateTile() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+            return;
+        Log.v(TAG, "Requesting quick tile update");
+        TileService.requestListeningState(this, new ComponentName(this, QuickTileService.class));
+    }
+
     private class ConfigDisabler extends AsyncTask<Void, Void, Boolean> {
         private final Config config;
 
@@ -219,6 +234,8 @@ public class VpnService extends Service
             config.setIsEnabled(false);
             enabledConfigs.remove(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
+            if (config.getName().equals(primaryName))
+                updateTile();
         }
     }
 
@@ -243,6 +260,8 @@ public class VpnService extends Service
             config.setIsEnabled(true);
             enabledConfigs.add(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
+            if (config.getName().equals(primaryName))
+                updateTile();
         }
     }
 

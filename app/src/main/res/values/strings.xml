@@ -18,6 +18,7 @@
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
     <string name="listen_port">Listen port</string>
+    <string name="loading">Loading</string>
     <string name="mtu">MTU</string>
     <string name="placeholder_text">No configuration selected</string>
     <string name="primary_config">Primary configuration</string>
