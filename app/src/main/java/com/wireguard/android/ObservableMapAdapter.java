@@ -48,7 +48,7 @@ class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter imple
     public long getItemId(final int position) {
         if (map == null || position < 0 || position >= map.size())
             return -1;
-        return getKeys().get(position).hashCode();
+        return map.get(getKeys().get(position)).hashCode();
     }
 
     public int getItemPosition(final K key) {
