@@ -21,7 +21,6 @@ abstract class BaseConfigActivity extends Activity {
     protected static final String TAG_LIST = "list";
     protected static final String TAG_PLACEHOLDER = "placeholder";
 
-    private final ServiceConnection callbacks = new ServiceConnectionCallbacks();
     private Config currentConfig;
     private String initialConfig;
 
@@ -41,7 +40,8 @@ abstract class BaseConfigActivity extends Activity {
         if (VpnService.getInstance() != null)
             onServiceAvailable();
         else
-            bindService(new Intent(this, VpnService.class), callbacks, Context.BIND_AUTO_CREATE);
+            bindService(new Intent(this, VpnService.class), new ServiceConnectionCallbacks(),
+                    Context.BIND_AUTO_CREATE);
     }
 
     protected abstract void onCurrentConfigChanged(Config config);
@@ -68,7 +68,7 @@ abstract class BaseConfigActivity extends Activity {
         @Override
         public void onServiceConnected(final ComponentName component, final IBinder binder) {
             // We don't actually need a binding, only notification that the service is started.
-            unbindService(callbacks);
+            unbindService(this);
             onServiceAvailable();
         }
 
