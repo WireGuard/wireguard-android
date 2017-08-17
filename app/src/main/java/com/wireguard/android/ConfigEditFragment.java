@@ -73,7 +73,11 @@ public class ConfigEditFragment extends BaseConfigFragment {
     }
 
     private void saveConfig() {
-        // FIXME: validate input
+        final String errorMessage = localConfig.validate();
+        if (errorMessage != null) {
+            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+            return;
+        }
         try {
             if (getCurrentConfig() != null)
                 VpnService.getInstance().update(getCurrentConfig().getName(), localConfig);
