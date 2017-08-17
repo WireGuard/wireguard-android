@@ -338,7 +338,6 @@ public class VpnService extends Service
 
         private ConfigUpdater(final Config oldConfig, final Config newConfig,
                               final Boolean shouldConnect) {
-            super();
             this.newConfig = newConfig;
             this.oldConfig = oldConfig;
             this.shouldConnect = shouldConnect;
