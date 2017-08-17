@@ -18,6 +18,7 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
     private String listenPort;
     private Keypair keypair;
     private String mtu;
+    private String privateKey;
 
     @Override
     public Interface copy() {
@@ -31,12 +32,13 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
         address = source.address;
         dns = source.dns;
         listenPort = source.listenPort;
-        keypair = source.keypair;
+        setPrivateKey(source.privateKey);
         mtu = source.mtu;
     }
 
     public void generateKeypair() {
         keypair = new Keypair();
+        privateKey = keypair.getPrivateKey();
         notifyPropertyChanged(BR.privateKey);
         notifyPropertyChanged(BR.publicKey);
     }
@@ -63,7 +65,7 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
 
     @Bindable
     public String getPrivateKey() {
-        return keypair != null ? keypair.getPrivateKey() : null;
+        return privateKey;
     }
 
     @Bindable
@@ -82,7 +84,7 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
         else if (key == Attribute.MTU)
             mtu = key.parseFrom(line);
         else if (key == Attribute.PRIVATE_KEY)
-            keypair = new Keypair(key.parseFrom(line));
+            setPrivateKey(key.parseFrom(line));
         else
             throw new IllegalArgumentException(line);
     }
@@ -115,12 +117,16 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
         notifyPropertyChanged(BR.mtu);
     }
 
-    public void setPrivateKey(final String privateKey) {
-        if (privateKey != null && !privateKey.isEmpty()) {
-            // Avoid exceptions from Keypair while the user is typing.
-            if (privateKey.length() != KeyEncoding.KEY_LENGTH_BASE64)
-                return;
-            keypair = new Keypair(privateKey);
+    public void setPrivateKey(String privateKey) {
+        if (privateKey != null && privateKey.isEmpty())
+            privateKey = null;
+        this.privateKey = privateKey;
+        if (privateKey != null && privateKey.length() == KeyEncoding.KEY_LENGTH_BASE64) {
+            try {
+                keypair = new Keypair(privateKey);
+            } catch (final IllegalArgumentException ignored) {
+                keypair = null;
+            }
         } else {
             keypair = null;
         }
@@ -139,8 +145,8 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
         if (mtu != null)
             sb.append(Attribute.MTU.composeWith(mtu));
-        if (keypair != null)
-            sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
+        if (privateKey != null)
+            sb.append(Attribute.PRIVATE_KEY.composeWith(privateKey));
         return sb.toString();
     }
 }
