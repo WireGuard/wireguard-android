@@ -41,7 +41,7 @@ public class VpnService extends Service
     }
 
     private final IBinder binder = new Binder();
-    private final ObservableArrayMap<String, Config> configurations = new ObservableArrayMap<>();
+    private final ObservableTreeMap<String, Config> configurations = new ObservableTreeMap<>();
     private final Set<String> enabledConfigs = new HashSet<>();
     private SharedPreferences preferences;
     private Config primaryConfig;
@@ -103,7 +103,7 @@ public class VpnService extends Service
      *
      * @return The set of known configurations.
      */
-    public ObservableArrayMap<String, Config> getConfigs() {
+    public ObservableSortedMap<String, Config> getConfigs() {
         return configurations;
     }
 

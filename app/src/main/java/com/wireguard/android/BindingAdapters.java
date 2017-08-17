@@ -67,6 +67,33 @@ public final class BindingAdapters {
         }
     }
 
+    @BindingAdapter({"items", "layout"})
+    public static <K extends Comparable<K>, V> void sortedMapBinding(final ListView view,
+                                         final ObservableSortedMap<K, V> oldMap,
+                                         final int oldLayoutId,
+                                         final ObservableSortedMap<K, V> newMap,
+                                         final int newLayoutId) {
+        // Remove any existing binding when there is no new map.
+        if (newMap == null) {
+            view.setAdapter(null);
+            return;
+        }
+        // The ListAdapter interface is not generic, so this cannot be checked.
+        @SuppressWarnings("unchecked")
+        ObservableMapAdapter<K, V> adapter = (ObservableMapAdapter<K, V>) view.getAdapter();
+        // If the layout changes, any existing adapter must be replaced.
+        if (newLayoutId != oldLayoutId)
+            adapter = null;
+        // Add a new binding if there was none, or if it must be replaced due to a layout change.
+        if (adapter == null) {
+            adapter = new ObservableMapAdapter<>(view.getContext(), newLayoutId, newMap);
+            view.setAdapter(adapter);
+        } else if (newMap != oldMap) {
+            // Changing the list only requires modifying the existing adapter.
+            adapter.setMap(newMap);
+        }
+    }
+
     @BindingAdapter({"android:textStyle"})
     public static void textStyleBinding(final TextView view, final Typeface typeface) {
         view.setTypeface(typeface);
