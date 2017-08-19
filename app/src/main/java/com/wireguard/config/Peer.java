@@ -12,13 +12,22 @@ import com.android.databinding.library.baseAdapters.BR;
 
 public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
     private String allowedIPs;
+    private Config config;
     private String endpoint;
     private String persistentKeepalive;
     private String publicKey;
 
+    public Peer(final Config config) {
+        this.config = config;
+    }
+
     @Override
     public Peer copy() {
-        final Peer copy = new Peer();
+        return copy(config);
+    }
+
+    public Peer copy(final Config config) {
+        final Peer copy = new Peer(config);
         copy.copyFrom(this);
         return copy;
     }
@@ -63,6 +72,11 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
             publicKey = key.parseFrom(line);
         else
             throw new IllegalArgumentException(line);
+    }
+
+    public void removeSelf() {
+        config.getPeers().remove(this);
+        config = null;
     }
 
     public void setAllowedIPs(String allowedIPs) {

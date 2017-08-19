@@ -34,6 +34,18 @@ public class Config extends BaseObservable
     private String name;
     private final ObservableList<Peer> peers = new ObservableArrayList<>();
 
+    public Peer addPeer() {
+        final Peer peer = new Peer(this);
+        peers.add(peer);
+        return peer;
+    }
+
+    private Peer addPeer(final Peer peer) {
+        final Peer copy = peer.copy(this);
+        peers.add(copy);
+        return copy;
+    }
+
     @Override
     public int compareTo(@NonNull final Config config) {
         return getName().compareTo(config.getName());
@@ -53,7 +65,7 @@ public class Config extends BaseObservable
         name = source.name;
         peers.clear();
         for (final Peer peer : source.peers)
-            peers.add(peer.copy());
+            addPeer(peer);
     }
 
     public Interface getInterface() {
@@ -92,8 +104,7 @@ public class Config extends BaseObservable
                 if ("[Interface]".equals(line)) {
                     currentPeer = null;
                 } else if ("[Peer]".equals(line)) {
-                    currentPeer = new Peer();
-                    peers.add(currentPeer);
+                    currentPeer = addPeer();
                 } else if (currentPeer == null) {
                     iface.parseFrom(line);
                 } else {
