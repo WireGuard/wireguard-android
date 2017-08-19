@@ -31,8 +31,7 @@ public final class BindingAdapters {
             adapter = null;
         // Add a new binding if there was none, or if it must be replaced due to a layout change.
         if (adapter == null) {
-            adapter = new ObservableListAdapter<>(view.getContext(), newLayoutId, newList);
-            view.setAdapter(adapter);
+            view.setAdapter(new ObservableListAdapter<>(view.getContext(), newLayoutId, newList));
         } else if (newList != oldList) {
             // Changing the list only requires modifying the existing adapter.
             adapter.setList(newList);
@@ -40,11 +39,9 @@ public final class BindingAdapters {
     }
 
     @BindingAdapter({"items", "layout"})
-    public static <K extends Comparable<K>, V> void sortedMapBinding(final ListView view,
-                                         final ObservableSortedMap<K, V> oldMap,
-                                         final int oldLayoutId,
-                                         final ObservableSortedMap<K, V> newMap,
-                                         final int newLayoutId) {
+    public static <K extends Comparable<K>, V> void sortedMapBinding(
+            final ListView view, final ObservableSortedMap<K, V> oldMap, final int oldLayoutId,
+            final ObservableSortedMap<K, V> newMap, final int newLayoutId) {
         // Remove any existing binding when there is no new map.
         if (newMap == null) {
             view.setAdapter(null);
@@ -58,8 +55,7 @@ public final class BindingAdapters {
             adapter = null;
         // Add a new binding if there was none, or if it must be replaced due to a layout change.
         if (adapter == null) {
-            adapter = new ObservableMapAdapter<>(view.getContext(), newLayoutId, newMap);
-            view.setAdapter(adapter);
+            view.setAdapter(new ObservableMapAdapter<>(view.getContext(), newLayoutId, newMap));
         } else if (newMap != oldMap) {
             // Changing the list only requires modifying the existing adapter.
             adapter.setMap(newMap);

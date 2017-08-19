@@ -1,7 +1,6 @@
 package com.wireguard.android;
 
 import android.content.res.Resources;
-import android.databinding.ObservableArrayMap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
