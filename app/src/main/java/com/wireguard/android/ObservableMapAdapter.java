@@ -86,6 +86,7 @@ class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter imple
         if (map != null) {
             map.addOnMapChangedCallback(callback);
         }
+        notifyDataSetChanged();
     }
 
     private static class OnMapChangedCallback<K extends Comparable<K>, V>

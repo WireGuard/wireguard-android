@@ -4,7 +4,6 @@ import android.databinding.MapChangeRegistry;
 import android.databinding.ObservableMap;
 import android.support.annotation.NonNull;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
