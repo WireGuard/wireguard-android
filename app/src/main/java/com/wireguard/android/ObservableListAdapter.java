@@ -23,7 +23,6 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
     private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
 
     ObservableListAdapter(final Context context, final int layoutId, final ObservableList<T> list) {
-        super();
         layoutInflater = LayoutInflater.from(context);
         this.layoutId = layoutId;
         setList(list);
@@ -61,6 +60,7 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         if (list != null) {
             list.addOnListChangedCallback(callback);
         }
+        notifyDataSetChanged();
     }
 
     private static class OnListChangedCallback<U>
@@ -69,7 +69,6 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         private final WeakReference<ObservableListAdapter<U>> weakAdapter;
 
         private OnListChangedCallback(final ObservableListAdapter<U> adapter) {
-            super();
             weakAdapter = new WeakReference<>(adapter);
         }
 
