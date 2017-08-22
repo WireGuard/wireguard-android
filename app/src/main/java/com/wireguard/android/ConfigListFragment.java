@@ -75,7 +75,7 @@ public class ConfigListFragment extends BaseConfigFragment {
         Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" +
                 (config != null ? config.getName() : null));
         final BaseConfigActivity activity = ((BaseConfigActivity) getActivity());
-        if (activity != null && activity.getCurrentConfig() != config)
+        if (activity != null)
             activity.setCurrentConfig(config);
         if (listView != null)
             setConfigChecked(config);

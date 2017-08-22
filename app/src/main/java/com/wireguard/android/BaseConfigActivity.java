@@ -16,10 +16,6 @@ import com.wireguard.config.Config;
 
 abstract class BaseConfigActivity extends Activity {
     protected static final String KEY_CURRENT_CONFIG = "currentConfig";
-    protected static final String TAG_DETAIL = "detail";
-    protected static final String TAG_EDIT = "edit";
-    protected static final String TAG_LIST = "list";
-    protected static final String TAG_PLACEHOLDER = "placeholder";
 
     private Config currentConfig;
     private String initialConfig;
@@ -60,6 +56,8 @@ abstract class BaseConfigActivity extends Activity {
     }
 
     public void setCurrentConfig(final Config config) {
+        if (currentConfig == config)
+            return;
         currentConfig = config;
         onCurrentConfigChanged(currentConfig);
     }

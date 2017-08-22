@@ -41,6 +41,8 @@ abstract class BaseConfigFragment extends Fragment {
     }
 
     public void setCurrentConfig(final Config config) {
+        if (currentConfig == config)
+            return;
         currentConfig = config;
         onCurrentConfigChanged(currentConfig);
     }
