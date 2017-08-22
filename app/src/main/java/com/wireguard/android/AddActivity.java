@@ -10,11 +10,11 @@ import com.wireguard.config.Config;
  * Standalone activity for creating configurations.
  */
 
-public class ConfigAddActivity extends BaseConfigActivity {
+public class AddActivity extends BaseConfigActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.config_add_activity);
+        setContentView(R.layout.add_activity);
     }
 
     @Override
