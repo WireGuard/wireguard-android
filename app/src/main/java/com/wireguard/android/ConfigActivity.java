@@ -169,7 +169,7 @@ public class ConfigActivity extends BaseConfigActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_action_add:
-                startActivity(new Intent(this, ConfigAddActivity.class));
+                startActivity(new Intent(this, AddActivity.class));
                 return true;
             case R.id.menu_action_edit:
                 // Try to make the editing fragment visible.
