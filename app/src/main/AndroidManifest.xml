@@ -21,7 +21,8 @@
         </activity>
         <activity
             android:name=".AddActivity"
-            android:label="@string/add_activity_title" />
+            android:label="@string/add_activity_title"
+            android:parentActivityName=".ConfigActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings">
