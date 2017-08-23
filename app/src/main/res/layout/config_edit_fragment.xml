@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="com.wireguard.android.KeyInputFilter" />
+
+        <import type="com.wireguard.android.NameInputFilter" />
 
         <variable
             name="config"
@@ -32,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/config_name_label"
                 android:inputType="textCapWords"
-                android:text="@={config.name}" />
+                android:text="@={config.name}"
+                app:filter="@{NameInputFilter.newInstance()}" />
 
             <TextView
                 android:id="@+id/private_key_label"
@@ -50,7 +56,8 @@
                 android:layout_below="@+id/private_key_label"
                 android:layout_toStartOf="@+id/generate_private_key_button"
                 android:inputType="textVisiblePassword"
-                android:text="@={config.interface.privateKey}" />
+                android:text="@={config.interface.privateKey}"
+                app:filter="@{KeyInputFilter.newInstance()}" />
 
             <Button
                 android:id="@+id/generate_private_key_button"

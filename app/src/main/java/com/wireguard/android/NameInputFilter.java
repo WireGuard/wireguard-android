@@ -4,15 +4,15 @@ import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
-import com.wireguard.crypto.KeyEncoding;
+import com.wireguard.config.Config;
 
 /**
- * InputFilter for entering WireGuard private/public keys encoded with base64.
+ * InputFilter for entering WireGuard configuration names (Linux interface names).
  */
 
-public class KeyInputFilter implements InputFilter {
-    public static KeyInputFilter newInstance() {
-        return new KeyInputFilter();
+public class NameInputFilter implements InputFilter {
+    public static NameInputFilter newInstance() {
+        return new NameInputFilter();
     }
 
     @Override
@@ -26,11 +26,10 @@ public class KeyInputFilter implements InputFilter {
         for (int sIndex = sStart; sIndex < sEnd; ++sIndex) {
             final char c = source.charAt(sIndex);
             final int dIndex = dStart + (sIndex - sStart);
-            // Restrict characters to the base64 character set.
+            // Restrict characters to those valid in interfaces.
             // Ensure adding this character does not push the length over the limit.
-            if (((dIndex + 1 < KeyEncoding.KEY_LENGTH_BASE64 && isAllowed(c)) ||
-                    (dIndex + 1 == KeyEncoding.KEY_LENGTH_BASE64 && c == '=')) &&
-                    dLength + (sIndex - sStart) < KeyEncoding.KEY_LENGTH_BASE64) {
+            if ((dIndex < Config.NAME_MAX_LENGTH && isAllowed(c)) &&
+                    dLength + (sIndex - sStart) < Config.NAME_MAX_LENGTH) {
                 ++rIndex;
             } else {
                 if (replacement == null)
@@ -42,6 +41,6 @@ public class KeyInputFilter implements InputFilter {
     }
 
     private boolean isAllowed(final char c) {
-        return Character.isLetterOrDigit(c) || c == '+' || c == '/';
+        return Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) >= 0;
     }
 }

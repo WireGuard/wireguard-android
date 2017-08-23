@@ -4,7 +4,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayMap;
 import android.databinding.ObservableList;
 import android.graphics.Typeface;
-import android.widget.EditText;
+import android.text.InputFilter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,8 +62,13 @@ public final class BindingAdapters {
         }
     }
 
+    @BindingAdapter({"filter"})
+    public static void setFilter(final TextView view, final InputFilter filter) {
+        view.setFilters(new InputFilter[]{filter});
+    }
+
     @BindingAdapter({"android:textStyle"})
-    public static void textStyleBinding(final TextView view, final Typeface typeface) {
+    public static void setTextStyle(final TextView view, final Typeface typeface) {
         view.setTypeface(typeface);
     }
 
