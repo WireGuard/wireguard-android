@@ -22,10 +22,11 @@ import java.util.regex.Pattern;
 
 public class Config extends BaseObservable
         implements Comparable<Config>, Copyable<Config>, Observable {
+    public static final int NAME_MAX_LENGTH = 16;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9_=+.-]{1,16}$");
 
     private static boolean isNameValid(final String name) {
-        return PATTERN.matcher(name).matches();
+        return name.length() <= NAME_MAX_LENGTH && PATTERN.matcher(name).matches();
     }
 
     private final Interface iface = new Interface();

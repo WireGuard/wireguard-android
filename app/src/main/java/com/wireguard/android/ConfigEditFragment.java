@@ -2,8 +2,6 @@ package com.wireguard.android;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.LoginFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.wireguard.android.databinding.ConfigEditFragmentBinding;
@@ -45,18 +42,6 @@ public class ConfigEditFragment extends BaseConfigFragment {
                              final Bundle savedInstanceState) {
         final ConfigEditFragmentBinding binding =
                 ConfigEditFragmentBinding.inflate(inflater, parent, false);
-        final EditText configNameText = binding.getRoot().findViewById(R.id.config_name_text);
-        configNameText.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(16),
-                new LoginFilter.UsernameFilterGeneric() {
-                    @Override
-                    public boolean isAllowed(final char c) {
-                        return Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) != -1;
-                    }
-                }
-        });
-        final EditText privateKeyText = binding.getRoot().findViewById(R.id.private_key_text);
-        privateKeyText.setFilters(new InputFilter[]{new KeyInputFilter()});
         binding.setConfig(localConfig);
         return binding.getRoot();
     }
