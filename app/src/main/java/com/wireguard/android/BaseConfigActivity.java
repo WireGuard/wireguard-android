@@ -16,22 +16,33 @@ import com.wireguard.config.Config;
 
 abstract class BaseConfigActivity extends Activity {
     protected static final String KEY_CURRENT_CONFIG = "currentConfig";
+    protected static final String KEY_IS_EDITING = "isEditing";
 
     private Config currentConfig;
     private String initialConfig;
+    private boolean isEditing;
+    private boolean wasEditing;
 
     protected Config getCurrentConfig() {
         return currentConfig;
+    }
+
+    protected boolean isEditing() {
+        return isEditing;
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Restore the saved configuration if there is one; otherwise grab it from the intent.
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             initialConfig = savedInstanceState.getString(KEY_CURRENT_CONFIG);
-        else
-            initialConfig = getIntent().getStringExtra(KEY_CURRENT_CONFIG);
+            wasEditing = savedInstanceState.getBoolean(KEY_IS_EDITING, false);
+        } else {
+            final Intent intent = getIntent();
+            initialConfig = intent.getStringExtra(KEY_CURRENT_CONFIG);
+            wasEditing = intent.getBooleanExtra(KEY_IS_EDITING, false);
+        }
         // Trigger starting the service as early as possible
         if (VpnService.getInstance() != null)
             onServiceAvailable();
@@ -42,24 +53,35 @@ abstract class BaseConfigActivity extends Activity {
 
     protected abstract void onCurrentConfigChanged(Config config);
 
+    protected abstract void onEditingStateChanged(boolean isEditing);
+
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (currentConfig != null)
             outState.putString(KEY_CURRENT_CONFIG, currentConfig.getName());
+        outState.putBoolean(KEY_IS_EDITING, isEditing);
     }
 
     protected void onServiceAvailable() {
         // Make sure the subclass activity is initialized before setting its config.
         if (initialConfig != null && currentConfig == null)
             setCurrentConfig(VpnService.getInstance().get(initialConfig));
+        setIsEditing(wasEditing);
     }
 
     public void setCurrentConfig(final Config config) {
         if (currentConfig == config)
             return;
         currentConfig = config;
-        onCurrentConfigChanged(currentConfig);
+        onCurrentConfigChanged(config);
+    }
+
+    public void setIsEditing(final boolean isEditing) {
+        if (this.isEditing == isEditing)
+            return;
+        this.isEditing = isEditing;
+        onEditingStateChanged(isEditing);
     }
 
     private class ServiceConnectionCallbacks implements ServiceConnection {

@@ -22,7 +22,6 @@ public class ConfigActivity extends BaseConfigActivity {
 
     private final FragmentManager fm = getFragmentManager();
     private final FragmentCache fragments = new FragmentCache(fm);
-    private boolean isEditing;
     private boolean isLayoutFinished;
     private boolean isServiceAvailable;
     private boolean isSplitLayout;
@@ -98,7 +97,7 @@ public class ConfigActivity extends BaseConfigActivity {
     private void moveToState(final Config config, final boolean shouldBeEditing) {
         // Update the saved state.
         setCurrentConfig(config);
-        isEditing = shouldBeEditing;
+        setIsEditing(shouldBeEditing);
         // Avoid performing fragment transactions when the app is not fully initialized.
         if (!isLayoutFinished || !isServiceAvailable || isStateSaved)
             return;
@@ -129,12 +128,12 @@ public class ConfigActivity extends BaseConfigActivity {
     public void onBackPressed() {
         super.onBackPressed();
         // The visible fragment is now the one that was on top of the back stack, if there was one.
-        if (isEditing)
+        if (isEditing())
             visibleFragmentTag = TAG_DETAIL;
         else if (!isSplitLayout && TAG_DETAIL.equals(visibleFragmentTag))
             visibleFragmentTag = TAG_LIST;
         // If the user went back from the detail screen to the list, clear the current config.
-        moveToState(isEditing ? getCurrentConfig() : null, false);
+        moveToState(isEditing() ? getCurrentConfig() : null, false);
     }
 
     @Override
@@ -144,7 +143,7 @@ public class ConfigActivity extends BaseConfigActivity {
         isSplitLayout = findViewById(R.id.detail_fragment) != null;
         mainContainer = isSplitLayout ? R.id.detail_fragment : R.id.master_fragment;
         isLayoutFinished = true;
-        moveToState(getCurrentConfig(), isEditing);
+        moveToState(getCurrentConfig(), isEditing());
     }
 
     @Override
@@ -162,6 +161,12 @@ public class ConfigActivity extends BaseConfigActivity {
     }
 
     @Override
+    protected void onEditingStateChanged(final boolean isEditing) {
+        Log.d(getClass().getSimpleName(), "onEditingStateChanged: isEditing=" + isEditing);
+        moveToState(getCurrentConfig(), isEditing);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -173,7 +178,7 @@ public class ConfigActivity extends BaseConfigActivity {
                 return true;
             case R.id.menu_action_edit:
                 // Try to make the editing fragment visible.
-                moveToState(getCurrentConfig(), true);
+                setIsEditing(true);
                 return true;
             case R.id.menu_action_save:
                 // This menu item is handled by the editing fragment.
@@ -191,7 +196,7 @@ public class ConfigActivity extends BaseConfigActivity {
         super.onPostResume();
         // Allow changes to fragments.
         isStateSaved = false;
-        moveToState(getCurrentConfig(), isEditing);
+        moveToState(getCurrentConfig(), isEditing());
     }
 
     @Override
@@ -209,7 +214,7 @@ public class ConfigActivity extends BaseConfigActivity {
         super.onServiceAvailable();
         // Allow creating fragments.
         isServiceAvailable = true;
-        moveToState(getCurrentConfig(), isEditing);
+        moveToState(getCurrentConfig(), isEditing());
     }
 
     private static class FragmentCache {
