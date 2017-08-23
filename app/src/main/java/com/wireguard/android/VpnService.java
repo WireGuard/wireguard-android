@@ -353,27 +353,27 @@ public class VpnService extends Service
     }
 
     private class ConfigUpdater extends AsyncTask<Void, Void, Boolean> {
-        private Config newConfig;
+        private Config knownConfig;
+        private final Config newConfig;
         private final String newName;
-        private final Config oldConfig;
         private final String oldName;
         private final Boolean shouldConnect;
 
-        private ConfigUpdater(final Config oldConfig, final Config newConfig,
+        private ConfigUpdater(final Config knownConfig, final Config newConfig,
                               final Boolean shouldConnect) {
-            this.newConfig = newConfig;
-            this.oldConfig = oldConfig;
-            this.shouldConnect = shouldConnect;
+            this.knownConfig = knownConfig;
+            this.newConfig = newConfig.copy();
             newName = newConfig.getName();
             // When adding a config, "old file" and "new file" are the same thing.
-            oldName = oldConfig != null ? oldConfig.getName() : newName;
+            oldName = knownConfig != null ? knownConfig.getName() : newName;
+            this.shouldConnect = shouldConnect;
             if (isAddOrRename() && configurations.containsKey(newName))
                 throw new IllegalStateException("Config " + newName + " already exists");
         }
 
         @Override
         protected Boolean doInBackground(final Void... voids) {
-            Log.i(TAG, (oldConfig == null ? "Adding" : "Updating") + " config " + newName);
+            Log.i(TAG, (knownConfig == null ? "Adding" : "Updating") + " config " + newName);
             final File newFile = new File(getFilesDir(), newName + ".conf");
             final File oldFile = new File(getFilesDir(), oldName + ".conf");
             if (isAddOrRename() && newFile.exists()) {
@@ -396,28 +396,29 @@ public class VpnService extends Service
         }
 
         private boolean isAddOrRename() {
-            return oldConfig == null || !newName.equals(oldName);
+            return knownConfig == null || !newName.equals(oldName);
         }
 
         private boolean isRename() {
-            return oldConfig != null && !newName.equals(oldName);
+            return knownConfig != null && !newName.equals(oldName);
         }
 
         @Override
         protected void onPostExecute(final Boolean result) {
             if (!result)
                 return;
-            if (oldConfig != null) {
+            if (knownConfig != null)
                 configurations.remove(oldName);
-                oldConfig.copyFrom(newConfig);
-                newConfig = oldConfig;
-            }
-            newConfig.setIsEnabled(false);
-            configurations.put(newName, newConfig);
-            if (isRename() && oldName.equals(primaryName))
+            if (knownConfig == null)
+                knownConfig = new Config();
+            knownConfig.copyFrom(newConfig);
+            knownConfig.setIsEnabled(false);
+            knownConfig.setIsPrimary(oldName != null && oldName.equals(primaryName));
+            configurations.put(newName, knownConfig);
+            if (isRename() && oldName != null && oldName.equals(primaryName))
                 preferences.edit().putString(KEY_PRIMARY_CONFIG, newName).apply();
             if (shouldConnect)
-                new ConfigEnabler(newConfig).execute();
+                new ConfigEnabler(knownConfig).execute();
         }
     }
 }
