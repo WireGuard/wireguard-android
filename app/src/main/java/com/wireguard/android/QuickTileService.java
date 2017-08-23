@@ -38,6 +38,7 @@ public class QuickTileService extends TileService {
         if (service == null)
             bindService(new Intent(this, VpnService.class), new ServiceConnectionCallbacks(),
                     Context.BIND_AUTO_CREATE);
+        TileService.requestListeningState(this, new ComponentName(this, getClass()));
     }
 
     @Override
