@@ -17,14 +17,14 @@ import java.lang.ref.WeakReference;
  */
 
 class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
+    private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
     private final int layoutId;
     private final LayoutInflater layoutInflater;
     private ObservableList<T> list;
-    private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
 
     ObservableListAdapter(final Context context, final int layoutId, final ObservableList<T> list) {
-        layoutInflater = LayoutInflater.from(context);
         this.layoutId = layoutId;
+        layoutInflater = LayoutInflater.from(context);
         setList(list);
     }
 

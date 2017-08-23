@@ -19,16 +19,16 @@ import java.util.Collections;
  */
 
 class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter implements ListAdapter {
+    private final OnMapChangedCallback<K, V> callback = new OnMapChangedCallback<>(this);
     private ArrayList<K> keys;
     private final int layoutId;
     private final LayoutInflater layoutInflater;
     private ObservableSortedMap<K, V> map;
-    private final OnMapChangedCallback<K, V> callback = new OnMapChangedCallback<>(this);
 
     ObservableMapAdapter(final Context context, final int layoutId,
                          final ObservableSortedMap<K, V> map) {
-        layoutInflater = LayoutInflater.from(context);
         this.layoutId = layoutId;
+        layoutInflater = LayoutInflater.from(context);
         setMap(map);
     }
 
