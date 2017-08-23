@@ -61,12 +61,21 @@ public class Config extends BaseObservable
 
     @Override
     public void copyFrom(final Config source) {
-        iface.copyFrom(source.iface);
-        isEnabled = source.isEnabled;
-        name = source.name;
-        peers.clear();
-        for (final Peer peer : source.peers)
-            addPeer(peer);
+        if (source != null) {
+            iface.copyFrom(source.iface);
+            isEnabled = source.isEnabled;
+            isPrimary = source.isPrimary;
+            name = source.name;
+            peers.clear();
+            for (final Peer peer : source.peers)
+                addPeer(peer);
+        } else {
+            iface.copyFrom(null);
+            isEnabled = false;
+            isPrimary = false;
+            name = null;
+            peers.clear();
+        }
     }
 
     public Interface getInterface() {

@@ -29,11 +29,19 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
 
     @Override
     public void copyFrom(final Interface source) {
-        address = source.address;
-        dns = source.dns;
-        listenPort = source.listenPort;
-        setPrivateKey(source.privateKey);
-        mtu = source.mtu;
+        if (source != null) {
+            address = source.address;
+            dns = source.dns;
+            listenPort = source.listenPort;
+            mtu = source.mtu;
+            setPrivateKey(source.privateKey);
+        } else {
+            address = null;
+            dns = null;
+            listenPort = null;
+            mtu = null;
+            setPrivateKey(null);
+        }
     }
 
     public void generateKeypair() {
