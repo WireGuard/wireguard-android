@@ -17,6 +17,7 @@ enum Attribute {
     LISTEN_PORT("ListenPort"),
     MTU("MTU"),
     PERSISTENT_KEEPALIVE("PersistentKeepalive"),
+    PRE_SHARED_KEY("PresharedKey"),
     PRIVATE_KEY("PrivateKey"),
     PUBLIC_KEY("PublicKey");
 

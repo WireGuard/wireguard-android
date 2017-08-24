@@ -29,6 +29,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
     private final Config config;
     private String endpoint;
     private String persistentKeepalive;
+    private String preSharedKey;
     private String publicKey;
 
     public Peer(final Config config) {
@@ -40,6 +41,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
         config = null;
         endpoint = in.readString();
         persistentKeepalive = in.readString();
+        preSharedKey = in.readString();
         publicKey = in.readString();
     }
 
@@ -59,6 +61,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
         allowedIPs = source.allowedIPs;
         endpoint = source.endpoint;
         persistentKeepalive = source.persistentKeepalive;
+        preSharedKey = source.preSharedKey;
         publicKey = source.publicKey;
         notifyChange();
     }
@@ -84,6 +87,11 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
     }
 
     @Bindable
+    public String getPreSharedKey() {
+        return preSharedKey;
+    }
+
+    @Bindable
     public String getPublicKey() {
         return publicKey;
     }
@@ -96,6 +104,8 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
             setEndpoint(key.parseFrom(line));
         else if (key == Attribute.PERSISTENT_KEEPALIVE)
             setPersistentKeepalive(key.parseFrom(line));
+        else if (key == Attribute.PRE_SHARED_KEY)
+            setPreSharedKey(key.parseFrom(line));
         else if (key == Attribute.PUBLIC_KEY)
             setPublicKey(key.parseFrom(line));
         else
@@ -128,6 +138,13 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
         notifyPropertyChanged(BR.persistentKeepalive);
     }
 
+    public void setPreSharedKey(String preSharedKey) {
+        if (preSharedKey != null && preSharedKey.isEmpty())
+            preSharedKey = null;
+        this.preSharedKey = preSharedKey;
+        notifyPropertyChanged(BR.preSharedKey);
+    }
+
     public void setPublicKey(String publicKey) {
         if (publicKey != null && publicKey.isEmpty())
             publicKey = null;
@@ -143,6 +160,8 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
             sb.append(Attribute.ENDPOINT.composeWith(endpoint));
         if (persistentKeepalive != null)
             sb.append(Attribute.PERSISTENT_KEEPALIVE.composeWith(persistentKeepalive));
+        if (preSharedKey != null)
+            sb.append(Attribute.PRE_SHARED_KEY.composeWith(preSharedKey));
         if (publicKey != null)
             sb.append(Attribute.PUBLIC_KEY.composeWith(publicKey));
         return sb.toString();
@@ -153,6 +172,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
         dest.writeString(allowedIPs);
         dest.writeString(endpoint);
         dest.writeString(persistentKeepalive);
+        dest.writeString(preSharedKey);
         dest.writeString(publicKey);
     }
 }
