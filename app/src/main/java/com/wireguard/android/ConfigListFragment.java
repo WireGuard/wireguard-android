@@ -44,8 +44,7 @@ public class ConfigListFragment extends BaseConfigFragment {
         final ConfigListFragmentBinding binding =
                 ConfigListFragmentBinding.inflate(inflater, parent, false);
         binding.setConfigs(VpnService.getInstance().getConfigs());
-        final View root = binding.getRoot();
-        listView = root.findViewById(R.id.config_list);
+        listView = binding.configList;
         listView.setMultiChoiceModeListener(new ConfigListModeListener());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,7 +66,7 @@ public class ConfigListFragment extends BaseConfigFragment {
         });
         binding.executePendingBindings();
         setConfigChecked(getCurrentConfig());
-        return root;
+        return binding.getRoot();
     }
 
     @Override
