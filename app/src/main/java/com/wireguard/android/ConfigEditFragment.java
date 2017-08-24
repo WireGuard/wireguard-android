@@ -1,6 +1,8 @@
 package com.wireguard.android;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +24,18 @@ import com.wireguard.config.Config;
 public class ConfigEditFragment extends BaseConfigFragment {
     private static final String KEY_MODIFIED_CONFIG = "modifiedConfig";
     private static final String KEY_ORIGINAL_NAME = "originalName";
+
+    public static void copyPublicKey(final Context context, final String publicKey) {
+        if (publicKey == null || publicKey.isEmpty())
+            return;
+        final ClipboardManager clipboard =
+                (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        final String description =
+                context.getResources().getString(R.string.public_key_description);
+        clipboard.setPrimaryClip(ClipData.newPlainText(description, publicKey));
+        final String message = context.getResources().getString(R.string.public_key_copied_message);
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 
     private Config localConfig;
     private String originalName;

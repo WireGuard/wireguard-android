@@ -34,6 +34,8 @@
     <string name="primary_config_summary">This configuration will be controlled by the quick settings tile</string>
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
+    <string name="public_key_copied_message">Public key copied to clipboard</string>
+    <string name="public_key_description">WireGuard public key</string>
     <string name="restore_on_boot">Restore on boot</string>
     <string name="restore_on_boot_summary">Restore previously enabled configurations on boot</string>
     <string name="save">Save</string>

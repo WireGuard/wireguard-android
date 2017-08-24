@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.wireguard.android.ConfigEditFragment" />
+
         <import type="com.wireguard.android.KeyInputFilter" />
 
         <import type="com.wireguard.android.NameInputFilter" />
@@ -107,6 +109,7 @@
                     android:focusable="false"
                     android:hint="@string/hint_generated"
                     android:maxLines="1"
+                    android:onClick="@{(view) -> ConfigEditFragment.copyPublicKey(view.getContext(), config.interface.publicKey)}"
                     android:text="@{config.interface.publicKey}" />
 
                 <TextView
