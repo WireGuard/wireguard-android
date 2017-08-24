@@ -3,22 +3,50 @@ package com.wireguard.config;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.Observable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.wireguard.android.BR;
-import com.wireguard.crypto.Keypair;
 import com.wireguard.crypto.KeyEncoding;
+import com.wireguard.crypto.Keypair;
 
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block).
  */
 
-public class Interface extends BaseObservable implements Copyable<Interface>, Observable {
+public class Interface extends BaseObservable
+        implements Copyable<Interface>, Observable, Parcelable {
+    public static final Parcelable.Creator<Interface> CREATOR
+            = new Parcelable.Creator<Interface>() {
+        @Override
+        public Interface createFromParcel(final Parcel in) {
+            return new Interface(in);
+        }
+
+        @Override
+        public Interface[] newArray(final int size) {
+            return new Interface[size];
+        }
+    };
+
     private String address;
     private String dns;
     private String listenPort;
     private Keypair keypair;
     private String mtu;
     private String privateKey;
+
+    public Interface() {
+        // Do nothing.
+    }
+
+    protected Interface(final Parcel in) {
+        address = in.readString();
+        dns = in.readString();
+        listenPort = in.readString();
+        mtu = in.readString();
+        setPrivateKey(in.readString());
+    }
 
     @Override
     public Interface copy() {
@@ -43,6 +71,11 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
             setPrivateKey(null);
         }
         notifyChange();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public void generateKeypair() {
@@ -157,5 +190,14 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
         if (privateKey != null)
             sb.append(Attribute.PRIVATE_KEY.composeWith(privateKey));
         return sb.toString();
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(address);
+        dest.writeString(dns);
+        dest.writeString(listenPort);
+        dest.writeString(mtu);
+        dest.writeString(privateKey);
     }
 }

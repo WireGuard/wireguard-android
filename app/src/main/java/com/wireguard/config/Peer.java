@@ -3,6 +3,8 @@ package com.wireguard.config;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.Observable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.android.databinding.library.baseAdapters.BR;
 
@@ -10,7 +12,19 @@ import com.android.databinding.library.baseAdapters.BR;
  * Represents the configuration for a WireGuard peer (a [Peer] block).
  */
 
-public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
+public class Peer extends BaseObservable implements Copyable<Peer>, Observable, Parcelable {
+    public static final Parcelable.Creator<Peer> CREATOR = new Parcelable.Creator<Peer>() {
+        @Override
+        public Peer createFromParcel(final Parcel in) {
+            return new Peer(in);
+        }
+
+        @Override
+        public Peer[] newArray(final int size) {
+            return new Peer[size];
+        }
+    };
+
     private String allowedIPs;
     private final Config config;
     private String endpoint;
@@ -19,6 +33,14 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
 
     public Peer(final Config config) {
         this.config = config;
+    }
+
+    protected Peer(final Parcel in) {
+        allowedIPs = in.readString();
+        config = null;
+        endpoint = in.readString();
+        persistentKeepalive = in.readString();
+        publicKey = in.readString();
     }
 
     @Override
@@ -39,6 +61,11 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
         persistentKeepalive = source.persistentKeepalive;
         publicKey = source.publicKey;
         notifyChange();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Bindable
@@ -119,5 +146,13 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
         if (publicKey != null)
             sb.append(Attribute.PUBLIC_KEY.composeWith(publicKey));
         return sb.toString();
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(allowedIPs);
+        dest.writeString(endpoint);
+        dest.writeString(persistentKeepalive);
+        dest.writeString(publicKey);
     }
 }
