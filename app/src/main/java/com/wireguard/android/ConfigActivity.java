@@ -25,7 +25,7 @@ public class ConfigActivity extends BaseConfigActivity {
     private final FragmentCache fragments = new FragmentCache(fm);
     private boolean isLayoutFinished;
     private boolean isServiceAvailable;
-    private boolean isSplitLayout;
+    private boolean isSingleLayout;
     private boolean isStateSaved;
     private int mainContainer;
     private String visibleFragmentTag;
@@ -41,7 +41,7 @@ public class ConfigActivity extends BaseConfigActivity {
         // Sanity check.
         if (tag == null && config != null)
             throw new IllegalArgumentException("Cannot set a config on a null fragment");
-        if ((tag == null && !isSplitLayout) || (TAG_LIST.equals(tag) && isSplitLayout))
+        if ((tag == null && isSingleLayout) || (TAG_LIST.equals(tag) && !isSingleLayout))
             throw new IllegalArgumentException("Requested tag " + tag + " does not match layout");
         // First tear down fragments as necessary.
         if (tag == null || TAG_LIST.equals(tag) || (TAG_DETAIL.equals(tag)
@@ -55,7 +55,7 @@ public class ConfigActivity extends BaseConfigActivity {
                 // Recompute the visible fragment.
                 if (TAG_EDIT.equals(visibleFragmentTag))
                     visibleFragmentTag = TAG_DETAIL;
-                else if (!isSplitLayout && TAG_DETAIL.equals(visibleFragmentTag))
+                else if (isSingleLayout && TAG_DETAIL.equals(visibleFragmentTag))
                     visibleFragmentTag = TAG_LIST;
                 else
                     throw new IllegalStateException();
@@ -82,7 +82,7 @@ public class ConfigActivity extends BaseConfigActivity {
                     editorState = null;
                 }
                 final FragmentTransaction transaction = fm.beginTransaction();
-                if (TAG_EDIT.equals(tag) || (!isSplitLayout && TAG_DETAIL.equals(tag))) {
+                if (TAG_EDIT.equals(tag) || (isSingleLayout && TAG_DETAIL.equals(tag))) {
                     transaction.addToBackStack(null);
                     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 }
@@ -113,19 +113,19 @@ public class ConfigActivity extends BaseConfigActivity {
         if (fm.findFragmentById(R.id.master_fragment) == null)
             fm.beginTransaction().add(R.id.master_fragment, listFragment, TAG_LIST).commit();
         // In the single-pane layout, the main container starts holding the list fragment.
-        if (!isSplitLayout && visibleFragmentTag == null)
+        if (isSingleLayout && visibleFragmentTag == null)
             visibleFragmentTag = TAG_LIST;
         // Forward any config changes to the list (they may have come from the intent or editing).
         listFragment.setCurrentConfig(config);
         // Ensure the correct main fragment is visible, adjusting the back stack as necessary.
         moveToFragment(config, shouldBeEditing ? TAG_EDIT :
-                (config != null ? TAG_DETAIL : (isSplitLayout ? null : TAG_LIST)));
+                (config != null ? TAG_DETAIL : (isSingleLayout ? TAG_LIST : null)));
         // Show the current config as the title if the list of configurations is not visible.
-        setTitle(!isSplitLayout && config != null ? config.getName() : getString(R.string.app_name));
+        setTitle(isSingleLayout && config != null ? config.getName() : getString(R.string.app_name));
         // Show or hide the action bar back button if the back stack is not empty.
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(config != null &&
-                    (!isSplitLayout || shouldBeEditing));
+                    (isSingleLayout || shouldBeEditing));
         }
     }
 
@@ -135,7 +135,7 @@ public class ConfigActivity extends BaseConfigActivity {
         // The visible fragment is now the one that was on top of the back stack, if there was one.
         if (isEditing())
             visibleFragmentTag = TAG_DETAIL;
-        else if (!isSplitLayout && TAG_DETAIL.equals(visibleFragmentTag))
+        else if (isSingleLayout && TAG_DETAIL.equals(visibleFragmentTag))
             visibleFragmentTag = TAG_LIST;
         // If the user went back from the detail screen to the list, clear the current config.
         moveToState(isEditing() ? getCurrentConfig() : null, false);
@@ -147,8 +147,8 @@ public class ConfigActivity extends BaseConfigActivity {
         if (savedInstanceState != null)
             editorState = savedInstanceState.getParcelable(KEY_EDITOR_STATE);
         setContentView(R.layout.config_activity);
-        isSplitLayout = findViewById(R.id.detail_fragment) != null;
-        mainContainer = isSplitLayout ? R.id.detail_fragment : R.id.master_fragment;
+        isSingleLayout = findViewById(R.id.detail_fragment) == null;
+        mainContainer = isSingleLayout ? R.id.master_fragment : R.id.detail_fragment;
         isLayoutFinished = true;
         moveToState(getCurrentConfig(), isEditing());
     }
@@ -214,7 +214,7 @@ public class ConfigActivity extends BaseConfigActivity {
                 // For the case where the activity is restarted.
                 outState.putParcelable(KEY_EDITOR_STATE, editorState);
             }
-            moveToFragment(null, isSplitLayout ? null : TAG_LIST);
+            moveToFragment(null, isSingleLayout ? TAG_LIST : null);
         }
         // Prevent further changes to fragments.
         isStateSaved = true;
