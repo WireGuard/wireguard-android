@@ -95,6 +95,9 @@ public class ConfigActivity extends BaseConfigActivity {
      * @param shouldBeEditing Whether or not the config should be in the editing state.
      */
     private void moveToState(final Config config, final boolean shouldBeEditing) {
+        Log.d(getClass().getSimpleName(), "moveToState: config=" +
+                (config != null ? config.getName() : null) + " shouldBeEditing=" + shouldBeEditing);
+
         // Update the saved state.
         setCurrentConfig(config);
         setIsEditing(shouldBeEditing);
