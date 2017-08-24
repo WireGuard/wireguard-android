@@ -76,6 +76,7 @@ public class Config extends BaseObservable
             name = null;
             peers.clear();
         }
+        notifyChange();
     }
 
     public Interface getInterface() {
@@ -116,9 +117,9 @@ public class Config extends BaseObservable
                 } else if ("[Peer]".equals(line)) {
                     currentPeer = addPeer();
                 } else if (currentPeer == null) {
-                    iface.parseFrom(line);
+                    iface.parse(line);
                 } else {
-                    currentPeer.parseFrom(line);
+                    currentPeer.parse(line);
                 }
             }
         }

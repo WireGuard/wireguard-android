@@ -12,7 +12,7 @@ import com.android.databinding.library.baseAdapters.BR;
 
 public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
     private String allowedIPs;
-    private Config config;
+    private final Config config;
     private String endpoint;
     private String persistentKeepalive;
     private String publicKey;
@@ -38,6 +38,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
         endpoint = source.endpoint;
         persistentKeepalive = source.persistentKeepalive;
         publicKey = source.publicKey;
+        notifyChange();
     }
 
     @Bindable
@@ -60,23 +61,23 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable {
         return publicKey;
     }
 
-    public void parseFrom(final String line) {
+    public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
-            allowedIPs = key.parseFrom(line);
+            setAllowedIPs(key.parseFrom(line));
         else if (key == Attribute.ENDPOINT)
-            endpoint = key.parseFrom(line);
+            setEndpoint(key.parseFrom(line));
         else if (key == Attribute.PERSISTENT_KEEPALIVE)
-            persistentKeepalive = key.parseFrom(line);
+            setPersistentKeepalive(key.parseFrom(line));
         else if (key == Attribute.PUBLIC_KEY)
-            publicKey = key.parseFrom(line);
+            setPublicKey(key.parseFrom(line));
         else
             throw new IllegalArgumentException(line);
     }
 
     public void removeSelf() {
-        config.getPeers().remove(this);
-        config = null;
+        if (!config.getPeers().remove(this))
+            throw new IllegalStateException("This peer was already removed from its config");
     }
 
     public void setAllowedIPs(String allowedIPs) {
