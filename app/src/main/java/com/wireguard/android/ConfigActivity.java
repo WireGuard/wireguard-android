@@ -106,10 +106,8 @@ public class ConfigActivity extends BaseConfigActivity {
             return;
         // Ensure the list is present in the master pane. It will be restored on activity restarts!
         final BaseConfigFragment listFragment = fragments.get(TAG_LIST);
-        if (fm.findFragmentById(R.id.master_fragment) == null) {
+        if (fm.findFragmentById(R.id.master_fragment) == null)
             fm.beginTransaction().add(R.id.master_fragment, listFragment, TAG_LIST).commit();
-            fm.executePendingTransactions();
-        }
         // In the single-pane layout, the main container starts holding the list fragment.
         if (!isSplitLayout && visibleFragmentTag == null)
             visibleFragmentTag = TAG_LIST;
