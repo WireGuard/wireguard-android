@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -103,9 +102,6 @@ public class ConfigActivity extends BaseConfigActivity {
      * @param shouldBeEditing Whether or not the config should be in the editing state.
      */
     private void moveToState(final Config config, final boolean shouldBeEditing) {
-        Log.d(getClass().getSimpleName(), "moveToState: config=" +
-                (config != null ? config.getName() : null) + " shouldBeEditing=" + shouldBeEditing);
-
         // Update the saved state.
         setCurrentConfig(config);
         setIsEditing(shouldBeEditing);
@@ -165,15 +161,12 @@ public class ConfigActivity extends BaseConfigActivity {
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
-        Log.d(getClass().getSimpleName(), "onCurrentConfigChanged: config=" +
-                (config != null ? config.getName() : null));
         // Abandon editing a config when the current config changes.
         moveToState(config, false);
     }
 
     @Override
     protected void onEditingStateChanged(final boolean isEditing) {
-        Log.d(getClass().getSimpleName(), "onEditingStateChanged: isEditing=" + isEditing);
         moveToState(getCurrentConfig(), isEditing);
     }
 

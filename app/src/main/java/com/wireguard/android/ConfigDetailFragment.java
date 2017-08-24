@@ -1,7 +1,6 @@
 package com.wireguard.android;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,8 +38,6 @@ public class ConfigDetailFragment extends BaseConfigFragment {
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
-        Log.d(getClass().getSimpleName(), "onCurrentConfigChanged config=" +
-                (config != null ? config.getName() : null));
         if (binding != null)
             binding.setConfig(config);
     }
