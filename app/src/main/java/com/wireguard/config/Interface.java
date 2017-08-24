@@ -42,6 +42,7 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
             mtu = null;
             setPrivateKey(null);
         }
+        notifyChange();
     }
 
     public void generateKeypair() {
@@ -81,16 +82,16 @@ public class Interface extends BaseObservable implements Copyable<Interface>, Ob
         return keypair != null ? keypair.getPublicKey() : null;
     }
 
-    public void parseFrom(final String line) {
+    public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
-            address = key.parseFrom(line);
+            setAddress(key.parseFrom(line));
         else if (key == Attribute.DNS)
-            dns = key.parseFrom(line);
+            setDns(key.parseFrom(line));
         else if (key == Attribute.LISTEN_PORT)
-            listenPort = key.parseFrom(line);
+            setListenPort(key.parseFrom(line));
         else if (key == Attribute.MTU)
-            mtu = key.parseFrom(line);
+            setMtu(key.parseFrom(line));
         else if (key == Attribute.PRIVATE_KEY)
             setPrivateKey(key.parseFrom(line));
         else
