@@ -63,7 +63,8 @@ public class ConfigActivity extends BaseConfigActivity {
             }
         }
         // Now build up intermediate entries in the back stack as necessary.
-        if (TAG_EDIT.equals(tag) && !TAG_DETAIL.equals(visibleFragmentTag))
+        if (TAG_EDIT.equals(tag) && !TAG_EDIT.equals(visibleFragmentTag) &&
+                !TAG_DETAIL.equals(visibleFragmentTag))
             moveToFragment(config, TAG_DETAIL);
         // Finally, set the main container's content to the new top-level fragment.
         if (tag == null) {
