@@ -130,6 +130,7 @@
             android:layout_alignBaseline="@+id/endpoint_text"
             android:layout_alignParentEnd="true"
             android:layout_alignStart="@+id/persistent_keepalive_label"
+            android:hint="@string/hint_optional"
             android:inputType="number"
             android:text="@={item.persistentKeepalive}"
             android:textAlignment="center" />
