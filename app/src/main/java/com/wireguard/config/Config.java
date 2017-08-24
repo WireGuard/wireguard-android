@@ -5,6 +5,8 @@ import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.wireguard.android.BR;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -21,7 +25,18 @@ import java.util.regex.Pattern;
  */
 
 public class Config extends BaseObservable
-        implements Comparable<Config>, Copyable<Config>, Observable {
+        implements Comparable<Config>, Copyable<Config>, Observable, Parcelable {
+    public static final Parcelable.Creator<Config> CREATOR = new Parcelable.Creator<Config>() {
+        @Override
+        public Config createFromParcel(final Parcel in) {
+            return new Config(in);
+        }
+
+        @Override
+        public Config[] newArray(final int size) {
+            return new Config[size];
+        }
+    };
     public static final int NAME_MAX_LENGTH = 16;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9_=+.-]{1,16}$");
 
@@ -29,11 +44,25 @@ public class Config extends BaseObservable
         return name.length() <= NAME_MAX_LENGTH && PATTERN.matcher(name).matches();
     }
 
-    private final Interface iface = new Interface();
+    private final Interface iface;
     private boolean isEnabled;
     private boolean isPrimary;
     private String name;
     private final ObservableList<Peer> peers = new ObservableArrayList<>();
+
+    public Config() {
+        iface = new Interface();
+    }
+
+    protected Config(final Parcel in) {
+        iface = in.readParcelable(Interface.class.getClassLoader());
+        name = in.readString();
+        // The flattened peers must be recreated to associate them with this config.
+        final List<Peer> flattenedPeers = new LinkedList<>();
+        in.readTypedList(flattenedPeers, Peer.CREATOR);
+        for (final Peer peer : flattenedPeers)
+            addPeer(peer);
+    }
 
     public Peer addPeer() {
         final Peer peer = new Peer(this);
@@ -63,20 +92,21 @@ public class Config extends BaseObservable
     public void copyFrom(final Config source) {
         if (source != null) {
             iface.copyFrom(source.iface);
-            isEnabled = source.isEnabled;
-            isPrimary = source.isPrimary;
             name = source.name;
             peers.clear();
             for (final Peer peer : source.peers)
                 addPeer(peer);
         } else {
             iface.copyFrom(null);
-            isEnabled = false;
-            isPrimary = false;
             name = null;
             peers.clear();
         }
         notifyChange();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public Interface getInterface() {
@@ -156,5 +186,12 @@ public class Config extends BaseObservable
         if (iface.getPublicKey() == null)
             return "This configuration does not have a valid keypair.";
         return null;
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeParcelable(iface, flags);
+        dest.writeString(name);
+        dest.writeTypedList(peers);
     }
 }
