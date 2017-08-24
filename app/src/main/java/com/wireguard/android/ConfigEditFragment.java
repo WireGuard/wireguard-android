@@ -1,5 +1,6 @@
 package com.wireguard.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,16 +20,38 @@ import com.wireguard.config.Config;
  */
 
 public class ConfigEditFragment extends BaseConfigFragment {
-    private final Config localConfig = new Config();
+    private static final String KEY_MODIFIED_CONFIG = "modifiedConfig";
+    private static final String KEY_ORIGINAL_NAME = "originalName";
+
+    private Config localConfig;
+    private String originalName;
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
+        // Only discard modifications when the config *they are based on* changes.
+        if (config == null || config.getName().equals(originalName) || localConfig == null)
+            return;
         localConfig.copyFrom(config);
+        originalName = config.getName();
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Restore more saved information.
+        if (savedInstanceState != null) {
+            localConfig = savedInstanceState.getParcelable(KEY_MODIFIED_CONFIG);
+            originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
+        } else if (getArguments() != null) {
+            final Bundle arguments = getArguments();
+            localConfig = arguments.getParcelable(KEY_MODIFIED_CONFIG);
+            originalName = arguments.getString(KEY_ORIGINAL_NAME);
+        }
+        if (localConfig == null) {
+            localConfig = new Config();
+            originalName = null;
+        }
+        onCurrentConfigChanged(getCurrentConfig());
         setHasOptionsMenu(true);
     }
 
@@ -47,33 +70,52 @@ public class ConfigEditFragment extends BaseConfigFragment {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Reset changes to the config when the user cancels editing. See also the comment below.
+        if (isRemoving())
+            localConfig.copyFrom(getCurrentConfig());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_save:
                 saveConfig();
                 return true;
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // When ConfigActivity unwinds the back stack, isRemoving() is true, so localConfig will be
+        // reset. Since outState is not serialized yet, it resets the saved config too. Avoid this
+        // by copying the local config. originalName is fine because it is replaced, not modified.
+        outState.putParcelable(KEY_MODIFIED_CONFIG, localConfig.copy());
+        outState.putString(KEY_ORIGINAL_NAME, originalName);
     }
 
     private void saveConfig() {
         final String errorMessage = localConfig.validate();
+        final VpnService service = VpnService.getInstance();
         if (errorMessage != null) {
             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
             return;
         }
         try {
             if (getCurrentConfig() != null)
-                VpnService.getInstance().update(getCurrentConfig().getName(), localConfig);
+                service.update(getCurrentConfig().getName(), localConfig);
             else
-                VpnService.getInstance().add(localConfig);
+                service.add(localConfig);
         } catch (final IllegalStateException e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }
         // Hide the keyboard; it rarely goes away on its own.
-        final BaseConfigActivity activity = (BaseConfigActivity) getActivity();
+        final Activity activity = getActivity();
         final View focusedView = activity.getCurrentFocus();
         if (focusedView != null) {
             final InputMethodManager inputManager =
@@ -82,6 +124,6 @@ public class ConfigEditFragment extends BaseConfigFragment {
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
         // Tell the activity to finish itself or go back to the detail view.
-        activity.setCurrentConfig(localConfig);
+        ((BaseConfigActivity) activity).setIsEditing(false);
     }
 }
