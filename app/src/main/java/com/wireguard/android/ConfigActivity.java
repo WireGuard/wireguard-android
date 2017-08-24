@@ -16,10 +16,12 @@ import com.wireguard.config.Config;
  */
 
 public class ConfigActivity extends BaseConfigActivity {
+    private static final String KEY_EDITOR_STATE = "editorState";
     private static final String TAG_DETAIL = "detail";
     private static final String TAG_EDIT = "edit";
     private static final String TAG_LIST = "list";
 
+    private Fragment.SavedState editorState;
     private final FragmentManager fm = getFragmentManager();
     private final FragmentCache fragments = new FragmentCache(fm);
     private boolean isLayoutFinished;
@@ -74,6 +76,11 @@ public class ConfigActivity extends BaseConfigActivity {
         } else if (!TAG_LIST.equals(tag)) {
             final BaseConfigFragment fragment = fragments.get(tag);
             if (!tag.equals(visibleFragmentTag)) {
+                // Restore any saved editor state the first time its fragment is added.
+                if (TAG_EDIT.equals(tag) && editorState != null) {
+                    fragment.setInitialSavedState(editorState);
+                    editorState = null;
+                }
                 final FragmentTransaction transaction = fm.beginTransaction();
                 if (TAG_EDIT.equals(tag) || (!isSplitLayout && TAG_DETAIL.equals(tag))) {
                     transaction.addToBackStack(null);
@@ -140,6 +147,8 @@ public class ConfigActivity extends BaseConfigActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+            editorState = savedInstanceState.getParcelable(KEY_EDITOR_STATE);
         setContentView(R.layout.config_activity);
         isSplitLayout = findViewById(R.id.detail_fragment) != null;
         mainContainer = isSplitLayout ? R.id.detail_fragment : R.id.master_fragment;
@@ -203,8 +212,16 @@ public class ConfigActivity extends BaseConfigActivity {
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         // We cannot save fragments that might switch between containers if the layout changes.
-        if (isLayoutFinished && isServiceAvailable && !isStateSaved)
+        if (isLayoutFinished && isServiceAvailable && !isStateSaved) {
+            // Save the editor state before destroying it.
+            if (TAG_EDIT.equals(visibleFragmentTag)) {
+                // For the case where the activity is resumed.
+                editorState = fm.saveFragmentInstanceState(fragments.get(TAG_EDIT));
+                // For the case where the activity is restarted.
+                outState.putParcelable(KEY_EDITOR_STATE, editorState);
+            }
             moveToFragment(null, isSplitLayout ? null : TAG_LIST);
+        }
         // Prevent further changes to fragments.
         isStateSaved = true;
         super.onSaveInstanceState(outState);
