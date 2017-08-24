@@ -62,10 +62,27 @@
             app:filter="@{KeyInputFilter.newInstance()}" />
 
         <TextView
-            android:id="@+id/allowed_ips_label"
+            android:id="@+id/pre_shared_key_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/public_key_text"
+            android:labelFor="@+id/pre_shared_key_text"
+            android:text="@string/pre_shared_key" />
+
+        <EditText
+            android:id="@+id/pre_shared_key_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pre_shared_key_label"
+            android:hint="@string/hint_optional"
+            android:inputType="textNoSuggestions"
+            android:text="@={item.preSharedKey}" />
+
+        <TextView
+            android:id="@+id/allowed_ips_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pre_shared_key_text"
             android:labelFor="@+id/allowed_ips_text"
             android:text="@string/allowed_ips" />
 
