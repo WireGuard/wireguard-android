@@ -9,4 +9,5 @@ import java.util.SortedMap;
  */
 
 public interface ObservableSortedMap<K, V> extends ObservableMap<K, V>, SortedMap<K, V> {
+    // No additional methods.
 }
