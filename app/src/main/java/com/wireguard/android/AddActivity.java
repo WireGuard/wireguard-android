@@ -19,8 +19,13 @@ public class AddActivity extends BaseConfigActivity {
 
     @Override
     protected void onCurrentConfigChanged(final Config config) {
-        // This is the result of ConfigEditFragment signalling that a configuration was created.
-        if (config != null)
+        // Do nothing (this never happens).
+    }
+
+    @Override
+    protected void onEditingStateChanged(final boolean isEditing) {
+        // Go back to the main activity once the new configuration is created.
+        if (!isEditing)
             finish();
     }
 
@@ -28,10 +33,14 @@ public class AddActivity extends BaseConfigActivity {
     protected void onServiceAvailable() {
         super.onServiceAvailable();
         final FragmentManager fm = getFragmentManager();
-        if (fm.findFragmentById(R.id.master_fragment) == null) {
+        ConfigEditFragment fragment = (ConfigEditFragment) fm.findFragmentById(R.id.master_fragment);
+        if (fragment == null) {
+            fragment = new ConfigEditFragment();
             final FragmentTransaction transaction = fm.beginTransaction();
-            transaction.add(R.id.master_fragment, new ConfigEditFragment());
+            transaction.add(R.id.master_fragment, fragment);
             transaction.commit();
         }
+        // Prime the state for the fragment to tell us it is finished.
+        setIsEditing(true);
     }
 }
