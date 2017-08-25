@@ -13,6 +13,7 @@ import android.service.quicksettings.TileService;
 import android.util.Log;
 
 import com.wireguard.config.Config;
+import com.wireguard.config.Peer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -367,8 +368,15 @@ public class VpnService extends Service
             // When adding a config, "old file" and "new file" are the same thing.
             oldName = knownConfig != null ? knownConfig.getName() : newName;
             this.shouldConnect = shouldConnect;
+            if (newName == null || !Config.isNameValid(newName))
+                throw new IllegalArgumentException("This configuration does not have a valid name");
             if (isAddOrRename() && configurations.containsKey(newName))
-                throw new IllegalStateException("Config " + newName + " already exists");
+                throw new IllegalStateException("Configuration " + newName + " already exists");
+            if (newConfig.getInterface().getPublicKey() == null)
+                throw new IllegalArgumentException("This configuration must have a valid keypair");
+            for (final Peer peer : newConfig.getPeers())
+                if (peer.getPublicKey() == null || peer.getPublicKey().isEmpty())
+                    throw new IllegalArgumentException("Each peer must have a valid public key");
         }
 
         @Override

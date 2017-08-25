@@ -40,7 +40,7 @@ public class Config extends BaseObservable
     public static final int NAME_MAX_LENGTH = 16;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9_=+.-]{1,16}$");
 
-    private static boolean isNameValid(final String name) {
+    public static boolean isNameValid(final String name) {
         return name.length() <= NAME_MAX_LENGTH && PATTERN.matcher(name).matches();
     }
 
@@ -178,14 +178,6 @@ public class Config extends BaseObservable
         for (final Peer peer : peers)
             sb.append('\n').append(peer);
         return sb.toString();
-    }
-
-    public String validate() {
-        if (name == null || !isNameValid(name))
-            return "This configuration does not have a valid name.";
-        if (iface.getPublicKey() == null)
-            return "This configuration does not have a valid keypair.";
-        return null;
     }
 
     @Override
