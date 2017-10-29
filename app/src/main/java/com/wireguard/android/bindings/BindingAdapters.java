@@ -17,6 +17,11 @@ import com.wireguard.android.R;
 
 @SuppressWarnings("unused")
 public final class BindingAdapters {
+    @BindingAdapter({"filter"})
+    public static void setFilter(final TextView view, final InputFilter filter) {
+        view.setFilters(new InputFilter[]{filter});
+    }
+
     @BindingAdapter({"items", "layout"})
     public static <T> void setItems(final LinearLayout view,
                                     final ObservableList<T> oldList, final int oldLayoutId,
@@ -92,11 +97,6 @@ public final class BindingAdapters {
         }
         // Either the list changed, or this is an entirely new listener because the layout changed.
         adapter.setMap(newMap);
-    }
-
-    @BindingAdapter({"filter"})
-    public static void setFilter(final TextView view, final InputFilter filter) {
-        view.setFilters(new InputFilter[]{filter});
     }
 
     @BindingAdapter({"android:textStyle"})
