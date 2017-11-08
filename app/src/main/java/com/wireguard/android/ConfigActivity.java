@@ -16,6 +16,7 @@ import com.wireguard.config.Config;
 
 public class ConfigActivity extends BaseConfigActivity {
     private static final String KEY_EDITOR_STATE = "editorState";
+    private static final int REQUEST_IMPORT = 1;
     private static final String TAG_DETAIL = "detail";
     private static final String TAG_EDIT = "edit";
     private static final String TAG_LIST = "list";
@@ -130,6 +131,16 @@ public class ConfigActivity extends BaseConfigActivity {
     }
 
     @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == REQUEST_IMPORT) {
+            if (resultCode == RESULT_OK)
+                VpnService.getInstance().importFrom(data.getData());
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         // The visible fragment is now the one that was on top of the back stack, if there was one.
@@ -183,6 +194,12 @@ public class ConfigActivity extends BaseConfigActivity {
             case R.id.menu_action_edit:
                 // Try to make the editing fragment visible.
                 setIsEditing(true);
+                return true;
+            case R.id.menu_action_import:
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                startActivityForResult(intent, REQUEST_IMPORT);
                 return true;
             case R.id.menu_action_save:
                 // This menu item is handled by the editing fragment.

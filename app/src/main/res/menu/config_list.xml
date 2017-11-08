@@ -6,4 +6,10 @@
         android:icon="@drawable/ic_action_add"
         android:showAsAction="always"
         android:title="@string/add" />
+    <item
+        android:id="@+id/menu_action_import"
+        android:alphabeticShortcut="o"
+        android:icon="@drawable/ic_open"
+        android:showAsAction="ifRoom"
+        android:title="@string/import_config" />
 </menu>
