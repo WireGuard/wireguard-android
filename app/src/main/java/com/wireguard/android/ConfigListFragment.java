@@ -89,7 +89,7 @@ public class ConfigListFragment extends BaseConfigFragment {
             @SuppressWarnings("unchecked")
             final ObservableMapAdapter<String, Config> adapter =
                     (ObservableMapAdapter<String, Config>) listView.getAdapter();
-            final int position = adapter.getItemPosition(config.getName());
+            final int position = adapter.getPosition(config.getName());
             if (position >= 0)
                 listView.setItemChecked(position, true);
         } else {

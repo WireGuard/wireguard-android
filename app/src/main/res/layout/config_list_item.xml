@@ -8,6 +8,10 @@
         <import type="com.wireguard.android.VpnService" />
 
         <variable
+            name="key"
+            type="String" />
+
+        <variable
             name="item"
             type="com.wireguard.config.Config" />
     </data>
@@ -27,7 +31,7 @@
             android:layout_toStartOf="@+id/config_switch"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{item.name}"
+            android:text="@{key}"
             android:textStyle="@{item.primary ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT}" />
 
         <TextView
