@@ -2,8 +2,10 @@ package com.wireguard.android;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -21,7 +23,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -110,6 +115,10 @@ public class VpnService extends Service
      */
     public ObservableSortedMap<String, Config> getConfigs() {
         return configurations;
+    }
+
+    public void importFrom(final Uri... uris) {
+        new ConfigImporter().execute(uris);
     }
 
     @Override
@@ -265,6 +274,47 @@ public class VpnService extends Service
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
             if (config.getName().equals(primaryName))
                 updateTile();
+        }
+    }
+
+    private class ConfigImporter extends AsyncTask<Uri, Void, List<File>> {
+        @Override
+        protected List<File> doInBackground(final Uri... uris) {
+            final ContentResolver contentResolver = getContentResolver();
+            final List<File> files = new ArrayList<>(uris.length);
+            for (final Uri uri : uris) {
+                if (isCancelled())
+                    return null;
+                String name = Uri.decode(uri.getLastPathSegment());
+                if (name.indexOf('/') >= 0)
+                    name = name.substring(name.lastIndexOf('/'));
+                if (!name.endsWith(".conf"))
+                    name = name + ".conf";
+                final File output = new File(getFilesDir(), name);
+                if (output.exists()) {
+                    Log.w(getClass().getSimpleName(), "Config file for " + uri + " already exists");
+                    continue;
+                }
+                try (final InputStream in = contentResolver.openInputStream(uri);
+                     final OutputStream out = new FileOutputStream(output, false)) {
+                    if (in == null)
+                        throw new IOException("Failed to open input");
+                    // FIXME: This is a rather arbitrary size.
+                    final byte[] buffer = new byte[4096];
+                    int bytes;
+                    while ((bytes = in.read(buffer)) != -1)
+                        out.write(buffer, 0, bytes);
+                    files.add(output);
+                } catch (final IOException e) {
+                    Log.w(getClass().getSimpleName(), "Failed to import config from " + uri, e);
+                }
+            }
+            return files;
+        }
+
+        @Override
+        protected void onPostExecute(final List<File> files) {
+            new ConfigLoader().execute(files.toArray(new File[files.size()]));
         }
     }
 
