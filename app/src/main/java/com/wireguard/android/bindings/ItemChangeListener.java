@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.bindings;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
@@ -6,6 +6,8 @@ import android.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.wireguard.android.BR;
 
 import java.lang.ref.WeakReference;
 

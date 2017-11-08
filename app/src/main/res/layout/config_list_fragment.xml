@@ -7,7 +7,7 @@
         <!--suppress AndroidDomInspection -->
         <variable
             name="configs"
-            type="com.wireguard.android.ObservableSortedMap&lt;String, com.wireguard.config.Config&gt;" />
+            type="com.wireguard.android.bindings.ObservableSortedMap&lt;String, com.wireguard.config.Config&gt;" />
     </data>
 
     <ListView

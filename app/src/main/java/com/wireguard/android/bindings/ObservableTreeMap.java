@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.bindings;
 
 import android.databinding.MapChangeRegistry;
 import android.databinding.ObservableMap;

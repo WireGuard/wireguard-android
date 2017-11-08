@@ -12,6 +12,8 @@ import android.preference.PreferenceManager;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
+import com.wireguard.android.bindings.ObservableSortedMap;
+import com.wireguard.android.bindings.ObservableTreeMap;
 import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
 

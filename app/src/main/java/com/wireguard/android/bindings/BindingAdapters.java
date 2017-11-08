@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.bindings;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableList;
@@ -8,6 +8,8 @@ import android.text.InputFilter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.wireguard.android.R;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
