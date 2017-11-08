@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.bindings;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
+import com.wireguard.android.BR;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,8 @@ import java.util.Collections;
  * A generic ListAdapter backed by a TreeMap that adds observability.
  */
 
-class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter implements ListAdapter {
+public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter
+        implements ListAdapter {
     private final OnMapChangedCallback<K, V> callback = new OnMapChangedCallback<>(this);
     private ArrayList<K> keys;
     private final int layoutId;

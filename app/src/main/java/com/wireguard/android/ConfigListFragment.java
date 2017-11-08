@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.wireguard.android.bindings.ObservableMapAdapter;
 import com.wireguard.android.databinding.ConfigListFragmentBinding;
 import com.wireguard.config.Config;
 
