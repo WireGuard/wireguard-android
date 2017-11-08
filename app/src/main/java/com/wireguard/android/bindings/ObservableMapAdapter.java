@@ -44,20 +44,18 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
     public V getItem(final int position) {
         if (map == null || position < 0 || position >= map.size())
             return null;
-        return map.get(getKeys().get(position));
+        return map.get(getKey(position));
     }
 
     @Override
     public long getItemId(final int position) {
         if (map == null || position < 0 || position >= map.size())
             return -1;
-        return map.get(getKeys().get(position)).hashCode();
+        return getItem(position).hashCode();
     }
 
-    public int getItemPosition(final K key) {
-        if (map == null)
-            return -1;
-        return Collections.binarySearch(getKeys(), key);
+    private K getKey(final int position) {
+        return getKeys().get(position);
     }
 
     private ArrayList<K> getKeys() {
@@ -66,11 +64,18 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         return keys;
     }
 
+    public int getPosition(final K key) {
+        if (map == null || key == null)
+            return -1;
+        return Collections.binarySearch(getKeys(), key);
+    }
+
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
+        binding.setVariable(BR.key, getKey(position));
         binding.setVariable(BR.item, getItem(position));
         binding.executePendingBindings();
         return binding.getRoot();
@@ -81,7 +86,7 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         return true;
     }
 
-    public void setMap(final ObservableSortedMap<K, V> newMap) {
+    void setMap(final ObservableSortedMap<K, V> newMap) {
         if (map != null)
             map.removeOnMapChangedCallback(callback);
         keys = null;

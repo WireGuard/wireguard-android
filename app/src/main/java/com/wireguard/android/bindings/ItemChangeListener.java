@@ -37,7 +37,7 @@ class ItemChangeListener<T> {
         return binding.getRoot();
     }
 
-    public void setList(final ObservableList<T> newList) {
+    void setList(final ObservableList<T> newList) {
         if (list != null)
             list.removeOnListChangedCallback(callback);
         list = newList;
