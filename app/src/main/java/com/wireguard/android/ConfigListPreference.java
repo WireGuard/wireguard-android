@@ -4,6 +4,8 @@ import android.content.Context;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 
+import com.wireguard.android.backends.VpnService;
+
 import java.util.Set;
 
 /**

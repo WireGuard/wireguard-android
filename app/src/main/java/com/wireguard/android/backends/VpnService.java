@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.backends;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
+import com.wireguard.android.QuickTileService;
 import com.wireguard.android.bindings.ObservableSortedMap;
 import com.wireguard.android.bindings.ObservableTreeMap;
 import com.wireguard.config.Config;
@@ -45,17 +46,16 @@ public class VpnService extends Service
     private static final String TAG = "VpnService";
 
     private static VpnService instance;
-
-    public static VpnService getInstance() {
-        return instance;
-    }
-
     private final IBinder binder = new Binder();
     private final ObservableTreeMap<String, Config> configurations = new ObservableTreeMap<>();
     private final Set<String> enabledConfigs = new HashSet<>();
     private SharedPreferences preferences;
     private String primaryName;
     private RootShell rootShell;
+
+    public static VpnService getInstance() {
+        return instance;
+    }
 
     /**
      * Add a new configuration to the set of known configurations. The configuration will initially
@@ -406,11 +406,11 @@ public class VpnService extends Service
     }
 
     private class ConfigUpdater extends AsyncTask<Void, Void, Boolean> {
-        private Config knownConfig;
         private final Config newConfig;
         private final String newName;
         private final String oldName;
         private final Boolean shouldConnect;
+        private Config knownConfig;
 
         private ConfigUpdater(final Config knownConfig, final Config newConfig,
                               final Boolean shouldConnect) {

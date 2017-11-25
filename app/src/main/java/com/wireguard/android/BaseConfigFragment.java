@@ -3,6 +3,7 @@ package com.wireguard.android;
 import android.app.Fragment;
 import android.os.Bundle;
 
+import com.wireguard.android.backends.VpnService;
 import com.wireguard.config.Config;
 
 /**

@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.DarkActionBar">
+
+        <activity
+            android:name=".AddActivity"
+            android:label="@string/add_activity_title"
+            android:parentActivityName=".ConfigActivity" />
         <activity android:name=".ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AddActivity"
-            android:label="@string/add_activity_title"
-            android:parentActivityName=".ConfigActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings">
@@ -44,12 +45,13 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="true" />
         </service>
         <service
-            android:name=".VpnService"
+            android:name=".backends.VpnService"
             android:exported="false" />
     </application>
 

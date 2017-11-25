@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.wireguard.android.backends.VpnService;
 import com.wireguard.config.Config;
 
 /**
