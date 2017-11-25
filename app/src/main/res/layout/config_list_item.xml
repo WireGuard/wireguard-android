@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background_anim"
+        android:descendantFocusability="blocksDescendants"
         android:padding="16dp">
 
         <TextView
@@ -34,16 +35,13 @@
             android:text="@{key}"
             android:textStyle="@{item.primary ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT}" />
 
-        <TextView
+        <Switch
             android:id="@+id/config_switch"
-            style="?android:attr/textAppearanceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/config_name"
             android:layout_alignParentEnd="true"
-            android:gravity="center_vertical"
-            android:onClick="@{() -> item.enabled ? VpnService.instance.disable(item.name) : VpnService.instance.enable(item.name)}"
-            android:text="@string/toggle"
-            android:textColor="@{item.enabled ? @android:color/holo_green_dark : @android:color/holo_red_dark}" />
+            android:checked="@{item.enabled}"
+            android:onCheckedChanged="@{(v, checked) -> checked ? VpnService.instance.enable(item.name) : VpnService.instance.disable(item.name)}" />
     </RelativeLayout>
 </layout>
