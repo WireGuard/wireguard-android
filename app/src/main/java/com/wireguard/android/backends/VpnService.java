@@ -241,9 +241,9 @@ public class VpnService extends Service
 
         @Override
         protected void onPostExecute(final Boolean result) {
+            config.setIsEnabled(!result);
             if (!result)
                 return;
-            config.setIsEnabled(false);
             enabledConfigs.remove(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
             if (config.getName().equals(primaryName))
@@ -267,9 +267,9 @@ public class VpnService extends Service
 
         @Override
         protected void onPostExecute(final Boolean result) {
+            config.setIsEnabled(result);
             if (!result)
                 return;
-            config.setIsEnabled(true);
             enabledConfigs.add(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
             if (config.getName().equals(primaryName))
