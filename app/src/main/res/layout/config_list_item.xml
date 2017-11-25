@@ -5,7 +5,7 @@
 
         <import type="android.graphics.Typeface" />
 
-        <import type="com.wireguard.android.VpnService" />
+        <import type="com.wireguard.android.backends.VpnService" />
 
         <variable
             name="key"

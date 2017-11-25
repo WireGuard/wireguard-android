@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
+import com.wireguard.android.backends.VpnService;
 import com.wireguard.config.Config;
 
 @TargetApi(Build.VERSION_CODES.N)

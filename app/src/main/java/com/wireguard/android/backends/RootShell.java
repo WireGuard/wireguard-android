@@ -1,4 +1,4 @@
-package com.wireguard.android;
+package com.wireguard.android.backends;
 
 import android.content.Context;
 import android.util.Log;

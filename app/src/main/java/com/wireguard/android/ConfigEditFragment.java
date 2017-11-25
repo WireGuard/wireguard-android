@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.wireguard.android.backends.VpnService;
 import com.wireguard.android.databinding.ConfigEditFragmentBinding;
 import com.wireguard.config.Config;
 

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.wireguard.android.backends.VpnService;
+
 public class BootCompletedReceiver extends BroadcastReceiver {
 
     @Override
