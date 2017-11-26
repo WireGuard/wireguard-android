@@ -369,6 +369,11 @@ public class VpnService extends Service
                     config.setName(configName);
                     configs.add(config);
                 } catch (IllegalArgumentException | IOException e) {
+                    try {
+                        file.delete();
+                    } catch (Exception e2) {
+                        Log.w(TAG, "Could not remove " + fileName, e2);
+                    }
                     Log.w(TAG, "Failed to load config from " + fileName, e);
                 }
             }
