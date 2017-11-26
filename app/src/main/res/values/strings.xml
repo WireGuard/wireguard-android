@@ -23,7 +23,6 @@
     <string name="hint_random">(random)</string>
     <string name="iface">Interface</string>
     <string name="listen_port">Listen port</string>
-    <string name="loading">Loading</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
     <string name="peer">Peer</string>

@@ -17,6 +17,7 @@
             android:name=".AddActivity"
             android:label="@string/add_activity_title"
             android:parentActivityName=".ConfigActivity" />
+
         <activity android:name=".ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,9 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/settings">
+            android:label="@string/settings"
+            android:parentActivityName=".ConfigActivity">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
