@@ -5,12 +5,14 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.OpenableColumns;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
@@ -285,11 +287,32 @@ public class VpnService extends Service
             for (final Uri uri : uris) {
                 if (isCancelled())
                     return null;
-                String name = Uri.decode(uri.getLastPathSegment());
-                if (name.indexOf('/') >= 0)
-                    name = name.substring(name.lastIndexOf('/'));
+                String name = null;
+                if ("file".equals(uri.getScheme())) {
+                    name = uri.getLastPathSegment();
+                } else {
+                    final String[] columns = {OpenableColumns.DISPLAY_NAME};
+                    try (final Cursor cursor =
+                                 getContentResolver().query(uri, columns, null, null, null)) {
+                        if (cursor != null && cursor.moveToFirst() && !cursor.isNull(0)) {
+                            name = cursor.getString(0);
+                            Log.v(getClass().getSimpleName(), "Got name via cursor");
+                        }
+                    }
+                    if (name == null) {
+                        name = Uri.decode(uri.getLastPathSegment());
+                        if (name.indexOf('/') >= 0)
+                            name = name.substring(name.lastIndexOf('/') + 1);
+                        Log.v(getClass().getSimpleName(), "Got name from urlencoded path");
+                    }
+                }
                 if (!name.endsWith(".conf"))
                     name = name + ".conf";
+                if (!Config.isNameValid(name.substring(0, name.length() - 5))) {
+                    Log.v(getClass().getSimpleName(), "Detected name is not valid: " + name);
+                    name = "ImportedConfig.conf";
+                }
+                Log.d(getClass().getSimpleName(), "Mapped URI " + uri + " to file name " + name);
                 final File output = new File(getFilesDir(), name);
                 if (output.exists()) {
                     Log.w(getClass().getSimpleName(), "Config file for " + uri + " already exists");
