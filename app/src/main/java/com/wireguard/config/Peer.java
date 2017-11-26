@@ -104,7 +104,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
             setEndpoint(key.parseFrom(line));
         else if (key == Attribute.PERSISTENT_KEEPALIVE)
             setPersistentKeepalive(key.parseFrom(line));
-        else if (key == Attribute.PRE_SHARED_KEY)
+        else if (key == Attribute.PRESHARED_KEY)
             setPreSharedKey(key.parseFrom(line));
         else if (key == Attribute.PUBLIC_KEY)
             setPublicKey(key.parseFrom(line));
@@ -161,7 +161,7 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
         if (persistentKeepalive != null)
             sb.append(Attribute.PERSISTENT_KEEPALIVE.composeWith(persistentKeepalive));
         if (preSharedKey != null)
-            sb.append(Attribute.PRE_SHARED_KEY.composeWith(preSharedKey));
+            sb.append(Attribute.PRESHARED_KEY.composeWith(preSharedKey));
         if (publicKey != null)
             sb.append(Attribute.PUBLIC_KEY.composeWith(publicKey));
         return sb.toString();

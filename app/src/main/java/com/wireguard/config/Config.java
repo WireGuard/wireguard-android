@@ -139,18 +139,26 @@ public class Config extends BaseObservable
                 new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             Peer currentPeer = null;
             String line;
+            boolean inInterfaceSection = false;
             while ((line = reader.readLine()) != null) {
-                if (line.isEmpty())
+                if (line.isEmpty() || line.startsWith("#"))
                     continue;
                 if ("[Interface]".equals(line)) {
                     currentPeer = null;
+                    inInterfaceSection = true;
                 } else if ("[Peer]".equals(line)) {
                     currentPeer = addPeer();
-                } else if (currentPeer == null) {
+                    inInterfaceSection = false;
+                } else if (inInterfaceSection) {
                     iface.parse(line);
-                } else {
+                } else if (currentPeer != null) {
                     currentPeer.parse(line);
+                } else {
+                    throw new IllegalArgumentException("Invalid configuration line: " + line);
                 }
+            }
+            if (!inInterfaceSection && currentPeer == null) {
+                throw new IllegalArgumentException("Did not find any config information");
             }
         }
     }
