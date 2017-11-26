@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -35,13 +36,13 @@
             android:text="@{key}"
             android:textStyle="@{item.primary ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT}" />
 
-        <Switch
+        <com.wireguard.android.widgets.ToggleSwitch
             android:id="@+id/config_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/config_name"
             android:layout_alignParentEnd="true"
-            android:checked="@{item.enabled}"
-            android:onCheckedChanged="@{(v, checked) -> checked ? VpnService.instance.enable(item.name) : VpnService.instance.disable(item.name)}" />
+            app:checked="@{item.enabled}"
+            app:onBeforeCheckedChanged="@{(v, checked) -> checked ? VpnService.instance.enable(item.name) : VpnService.instance.disable(item.name)}" />
     </RelativeLayout>
 </layout>

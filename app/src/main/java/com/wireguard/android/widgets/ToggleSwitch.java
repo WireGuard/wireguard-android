@@ -21,43 +21,52 @@ import android.util.AttributeSet;
 import android.widget.Switch;
 
 public class ToggleSwitch extends Switch {
+    private boolean hasPendingStateChange;
+    private OnBeforeCheckedChangeListener listener;
 
-    private ToggleSwitch.OnBeforeCheckedChangeListener mOnBeforeListener;
-
-    public static interface OnBeforeCheckedChangeListener {
-        public boolean onBeforeCheckedChanged(ToggleSwitch toggleSwitch, boolean checked);
+    public interface OnBeforeCheckedChangeListener {
+        void onBeforeCheckedChanged(ToggleSwitch toggleSwitch, boolean checked);
     }
 
-    public ToggleSwitch(Context context) {
+    public ToggleSwitch(final Context context) {
         super(context);
     }
 
-    public ToggleSwitch(Context context, AttributeSet attrs) {
+    public ToggleSwitch(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ToggleSwitch(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ToggleSwitch(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public ToggleSwitch(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ToggleSwitch(final Context context, final AttributeSet attrs, final int defStyleAttr,
+                        final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setOnBeforeCheckedChangeListener(OnBeforeCheckedChangeListener listener) {
-        mOnBeforeListener = listener;
+    public void setOnBeforeCheckedChangeListener(final OnBeforeCheckedChangeListener listener) {
+        this.listener = listener;
     }
 
     @Override
-    public void setChecked(boolean checked) {
-        if (mOnBeforeListener != null
-                && mOnBeforeListener.onBeforeCheckedChanged(this, checked)) {
-            return;
+    public void setChecked(final boolean checked) {
+        if (listener != null) {
+            if (!isEnabled())
+                return;
+            setEnabled(false);
+            hasPendingStateChange = true;
+            listener.onBeforeCheckedChanged(this, checked);
+        } else {
+            super.setChecked(checked);
         }
-        super.setChecked(checked);
     }
 
-    public void setCheckedInternal(boolean checked) {
+    public void setCheckedInternal(final boolean checked) {
+        if (hasPendingStateChange) {
+            setEnabled(true);
+            hasPendingStateChange = false;
+        }
         super.setChecked(checked);
     }
 }
