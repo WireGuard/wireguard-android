@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
+import com.wireguard.android.widgets.ToggleSwitch;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -17,6 +18,11 @@ import com.wireguard.android.R;
 
 @SuppressWarnings("unused")
 public final class BindingAdapters {
+    @BindingAdapter({"app:checked"})
+    public static void setChecked(final ToggleSwitch view, final boolean checked) {
+        view.setCheckedInternal(checked);
+    }
+
     @BindingAdapter({"filter"})
     public static void setFilter(final TextView view, final InputFilter filter) {
         view.setFilters(new InputFilter[]{filter});
@@ -97,6 +103,13 @@ public final class BindingAdapters {
         }
         // Either the list changed, or this is an entirely new listener because the layout changed.
         adapter.setMap(newMap);
+    }
+
+    @BindingAdapter({"app:onBeforeCheckedChanged"})
+    public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
+                                                 final ToggleSwitch.OnBeforeCheckedChangeListener
+                                                         listener) {
+        view.setOnBeforeCheckedChangeListener(listener);
     }
 
     @BindingAdapter({"android:textStyle"})
