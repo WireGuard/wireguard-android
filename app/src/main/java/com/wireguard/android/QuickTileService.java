@@ -29,6 +29,8 @@ public class QuickTileService extends TileService {
                 service.disable(config.getName());
             else
                 service.enable(config.getName());
+        } else {
+            startActivityAndCollapse(new Intent(this, ConfigActivity.class));
         }
     }
 
@@ -60,8 +62,8 @@ public class QuickTileService extends TileService {
             }
         } else {
             tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_disabled));
-            tile.setLabel(getString(R.string.loading));
-            tile.setState(Tile.STATE_UNAVAILABLE);
+            tile.setLabel(getString(R.string.app_name));
+            tile.setState(Tile.STATE_INACTIVE);
         }
         tile.updateTile();
     }
