@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wireguard.android.QuickTileService;
 import com.wireguard.android.bindings.ObservableSortedMap;
@@ -279,7 +280,7 @@ public class VpnService extends Service
         }
     }
 
-    private class ConfigImporter extends AsyncTask<Uri, Void, List<File>> {
+    private class ConfigImporter extends AsyncTask<Uri, String, List<File>> {
         @Override
         protected List<File> doInBackground(final Uri... uris) {
             final ContentResolver contentResolver = getContentResolver();
@@ -310,12 +311,14 @@ public class VpnService extends Service
                     name = name + ".conf";
                 if (!Config.isNameValid(name.substring(0, name.length() - 5))) {
                     Log.v(getClass().getSimpleName(), "Detected name is not valid: " + name);
-                    name = "ImportedConfig.conf";
+                    publishProgress(name + ": Invalid config filename");
+                    continue;
                 }
                 Log.d(getClass().getSimpleName(), "Mapped URI " + uri + " to file name " + name);
                 final File output = new File(getFilesDir(), name);
                 if (output.exists()) {
-                    Log.w(getClass().getSimpleName(), "Config file for " + uri + " already exists");
+                    Log.w(getClass().getSimpleName(), "Config file " + name + " already exists");
+                    publishProgress(name + " already exists");
                     continue;
                 }
                 try (final InputStream in = contentResolver.openInputStream(uri);
@@ -330,9 +333,15 @@ public class VpnService extends Service
                     files.add(output);
                 } catch (final IOException e) {
                     Log.w(getClass().getSimpleName(), "Failed to import config from " + uri, e);
+                    publishProgress(name + ": " + e.getMessage());
                 }
             }
             return files;
+        }
+
+        @Override
+        protected void onProgressUpdate(final String... errors) {
+            Toast.makeText(getApplicationContext(), errors[0], Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -341,7 +350,7 @@ public class VpnService extends Service
         }
     }
 
-    private class ConfigLoader extends AsyncTask<File, Void, List<Config>> {
+    private class ConfigLoader extends AsyncTask<File, String, List<Config>> {
         @Override
         protected List<Config> doInBackground(final File... files) {
             final List<Config> configs = new LinkedList<>();
@@ -375,9 +384,15 @@ public class VpnService extends Service
                         Log.w(TAG, "Could not remove " + fileName, e2);
                     }
                     Log.w(TAG, "Failed to load config from " + fileName, e);
+                    publishProgress(fileName + ": " + e.getMessage());
                 }
             }
             return configs;
+        }
+
+        @Override
+        protected void onProgressUpdate(final String... errors) {
+            Toast.makeText(getApplicationContext(), errors[0], Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -453,7 +468,7 @@ public class VpnService extends Service
             if (isAddOrRename() && configurations.containsKey(newName))
                 throw new IllegalStateException("Configuration " + newName + " already exists");
             if (newConfig.getInterface().getPublicKey() == null)
-                throw new IllegalArgumentException("This configuration must have a valid keypair");
+                throw new IllegalArgumentException("This configuration needs a valid private key");
             for (final Peer peer : newConfig.getPeers())
                 if (peer.getPublicKey() == null || peer.getPublicKey().isEmpty())
                     throw new IllegalArgumentException("Each peer must have a valid public key");
