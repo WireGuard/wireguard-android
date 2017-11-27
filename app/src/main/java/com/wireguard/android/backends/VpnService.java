@@ -17,7 +17,9 @@ import android.service.quicksettings.TileService;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.wireguard.android.NotSupportedActivity;
 import com.wireguard.android.QuickTileService;
+import com.wireguard.android.R;
 import com.wireguard.android.bindings.ObservableSortedMap;
 import com.wireguard.android.bindings.ObservableTreeMap;
 import com.wireguard.config.Config;
@@ -245,8 +247,11 @@ public class VpnService extends Service
         @Override
         protected void onPostExecute(final Boolean result) {
             config.setIsEnabled(!result);
-            if (!result)
+            if (!result) {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_down),
+                        Toast.LENGTH_SHORT).show();
                 return;
+            }
             enabledConfigs.remove(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
             if (config.getName().equals(primaryName))
@@ -254,7 +259,7 @@ public class VpnService extends Service
         }
     }
 
-    private class ConfigEnabler extends AsyncTask<Void, Void, Boolean> {
+    private class ConfigEnabler extends AsyncTask<Void, Void, Integer> {
         private final Config config;
 
         private ConfigEnabler(final Config config) {
@@ -262,17 +267,43 @@ public class VpnService extends Service
         }
 
         @Override
-        protected Boolean doInBackground(final Void... voids) {
+        protected Integer doInBackground(final Void... voids) {
+            if (!new File("/sys/module/wireguard").exists())
+                return -0xfff0001;
+            if (!existsInUsualSuspects("wg") || !existsInUsualSuspects("wg-quick"))
+                return -0xfff0002;
             Log.i(TAG, "Running wg-quick up for " + config.getName());
             final File configFile = new File(getFilesDir(), config.getName() + ".conf");
-            return rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'") == 0;
+            return rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
+        }
+
+        private boolean existsInUsualSuspects(final String file) {
+            return new File("/system/bin/" + file).exists() ||
+                    new File("/system/xbin/" + file).exists() ||
+                    new File("/system/sbin/" + file).exists() ||
+                    new File("/bin/" + file).exists() ||
+                    new File("/xbin/" + file).exists() ||
+                    new File("/sbin/" + file).exists() ||
+                    new File("/usr/bin/" + file).exists() ||
+                    new File("/usr/xbin/" + file).exists() ||
+                    new File("/usr/sbin/" + file).exists();
         }
 
         @Override
-        protected void onPostExecute(final Boolean result) {
-            config.setIsEnabled(result);
-            if (!result)
+        protected void onPostExecute(final Integer ret) {
+            config.setIsEnabled(ret == 0);
+            if (ret != 0) {
+                if (ret == -0xfff0001) {
+                    startActivity(new Intent(getApplicationContext(), NotSupportedActivity.class));
+                } else if (ret == -0xfff0002) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_missing),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_up),
+                            Toast.LENGTH_SHORT).show();
+                }
                 return;
+            }
             enabledConfigs.add(config.getName());
             preferences.edit().putStringSet(KEY_ENABLED_CONFIGS, enabledConfigs).apply();
             if (config.getName().equals(primaryName))
@@ -378,10 +409,8 @@ public class VpnService extends Service
                     config.setName(configName);
                     configs.add(config);
                 } catch (IllegalArgumentException | IOException e) {
-                    try {
-                        file.delete();
-                    } catch (Exception e2) {
-                        Log.w(TAG, "Could not remove " + fileName, e2);
+                    if (!file.delete()) {
+                        Log.e(TAG, "Could not delete configuration for config " + configName);
                     }
                     Log.w(TAG, "Failed to load config from " + fileName, e);
                     publishProgress(fileName + ": " + e.getMessage());
