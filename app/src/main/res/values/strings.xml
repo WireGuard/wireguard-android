@@ -29,8 +29,24 @@
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
-    <string name="not_supported">WireGuard Not Supported</string>
-    <string name="not_supported_message"><![CDATA[<p>Your Android device does not currently support the WireGuard kernel module. Please talk to the manufacturer of your Android device or the author of your device\'s ROM about supporting the WireGuard kernel module.</p><br><p>Fortunately, the WireGuard development team is currently in the process of implementing support for WireGuard in a way that will work on all Android devices. This means that while you may not be able to use WireGuard today, in several weeks, things may very well be available for you.</p>]]></string>
+    <string name="not_supported">WireGuard Not Installed</string>
+    <string name="not_supported_message"><![CDATA[
+        <h3>Come back later!</h3><br>
+
+        <p>Your Android device does not <em>currently</em> have the WireGuard kernel module. Please
+        talk to the manufacturer of your Android device or the author of your device\'s ROM about
+        including the WireGuard kernel module.</p><br>
+
+        <p>Fortunately, we are in the process of implementing support for WireGuard in a way that
+        will work on all devices, without any need for the kernel module. This means that while you
+        may not be able to use WireGuard today, you will very likely be able to use WireGuard in
+        several weeks. Things are looking up!</p><br>
+
+        <p>Sorry for the wait. In the mean time, you may stay up to date on the latest project news
+        by <a href="https://lists.zx2c4.com/mailman/listinfo/wireguard">subscribing to our mailing
+        list</a>. General information about the project is available from
+        <a href="https://www.wireguard.com/">WireGuard.com</a>.</p>
+    ]]></string>
     <string name="peer">Peer</string>
     <string name="persistent_keepalive">Persistent keepalive</string>
     <string name="placeholder_text">No configuration selected</string>
