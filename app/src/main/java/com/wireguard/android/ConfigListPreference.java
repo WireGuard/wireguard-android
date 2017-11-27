@@ -34,4 +34,6 @@ public class ConfigListPreference extends ListPreference {
     public ConfigListPreference(final Context context) {
         this(context, null);
     }
+
+    public void show() { showDialog(null); }
 }
