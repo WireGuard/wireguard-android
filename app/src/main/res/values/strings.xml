@@ -29,7 +29,7 @@
     <string name="persistent_keepalive">Persistent keepalive</string>
     <string name="placeholder_text">No configuration selected</string>
     <string name="pre_shared_key">Pre-shared key</string>
-    <string name="primary_config">Primary configuration</string>
+    <string name="primary_config">Quick tile configuration</string>
     <string name="primary_config_summary">This configuration will be controlled by the quick settings tile</string>
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>

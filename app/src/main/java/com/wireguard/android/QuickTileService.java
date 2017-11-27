@@ -30,7 +30,13 @@ public class QuickTileService extends TileService {
             else
                 service.enable(config.getName());
         } else {
-            startActivityAndCollapse(new Intent(this, ConfigActivity.class));
+            if (service != null && service.getConfigs().isEmpty()) {
+                startActivityAndCollapse(new Intent(this, ConfigActivity.class));
+            } else {
+                final Intent intent = new Intent(this, SettingsActivity.class);
+                intent.putExtra("showQuickTile", true);
+                startActivityAndCollapse(intent);
+            }
         }
     }
 

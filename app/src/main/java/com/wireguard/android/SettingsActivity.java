@@ -10,7 +10,11 @@ public class SettingsActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(android.R.id.content, new SettingsFragment()).commit();
+        final Bundle args = new Bundle();
+        args.putBoolean("showQuickTile", getIntent().getBooleanExtra("showQuickTile", false));
+        final SettingsFragment fragment = new SettingsFragment();
+        fragment.setArguments(args);
+        transaction.replace(android.R.id.content, fragment).commit();
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -18,6 +22,8 @@ public class SettingsActivity extends Activity {
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+            if (getArguments().getBoolean("showQuickTile"))
+                ((ConfigListPreference) findPreference("primary_config")).show();
         }
     }
 }
