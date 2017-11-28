@@ -1,18 +1,9 @@
-### Do not use this code.
+# Android GUI for [WireGuard](https://www.wireguard.com/)
 
-This is not a complete implementation of WireGuard. If you're interested in using WireGuard, use
-the implementation for Linux [found here](https://git.zx2c4.com/WireGuard/) and described on the
-[main wireguard website](https://www.wireguard.com/). There is no group of users that should be
-using the code in this repository here under any circumstances at the moment, not even beta testers
-or dare devils. It simply isn't complete. However, if you're interested in assisting with the
-Android development of WireGuard and contributing to this repository, by all means dig in and help
-out. But users: stay far away, at least for now.
+##### [Test this app on the Play Store](https://play.google.com/apps/testing/com.wireguard.android).
 
--------
+This is a work in progress Android GUI for [WireGuard](https://www.wireguard.com/). The ultimate goal is to [opportunistically use the kernel implementation](https://git.zx2c4.com/android_kernel_wireguard/about/), and fallback to using the non-root userspace implementation. At the time of writing, this only supports using the kernel module, but this should change in the near future.
 
-# Android Implementation of WireGuard
-
-This is a work in progress for implementing WireGuard for Android.
 
 ## License
 
