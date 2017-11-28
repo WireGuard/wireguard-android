@@ -4,7 +4,7 @@
         <item quantity="one">%d configuration selected</item>
         <item quantity="other">%d configurations selected</item>
     </plurals>
-    <string name="add">Add</string>
+    <string name="add">Add empty config</string>
     <string name="add_activity_title">New WireGuard configuration</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
@@ -25,7 +25,7 @@
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
     <string name="iface">Interface</string>
-    <string name="import_config">Import</string>
+    <string name="import_config">Import config from file</string>
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
