@@ -18,7 +18,7 @@ public class AddActivity extends BaseConfigActivity {
     }
 
     @Override
-    protected void onCurrentConfigChanged(final Config config) {
+    protected void onCurrentConfigChanged(final Config oldConfig, final Config newConfig) {
         // Do nothing (this never happens).
     }
 

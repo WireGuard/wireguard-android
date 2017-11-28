@@ -52,7 +52,7 @@ abstract class BaseConfigActivity extends Activity {
                     Context.BIND_AUTO_CREATE);
     }
 
-    protected abstract void onCurrentConfigChanged(Config config);
+    protected abstract void onCurrentConfigChanged(Config oldCconfig, Config newConfig);
 
     protected abstract void onEditingStateChanged(boolean isEditing);
 
@@ -74,8 +74,9 @@ abstract class BaseConfigActivity extends Activity {
     public void setCurrentConfig(final Config config) {
         if (currentConfig == config)
             return;
+        final Config oldConfig = currentConfig;
         currentConfig = config;
-        onCurrentConfigChanged(config);
+        onCurrentConfigChanged(oldConfig, config);
     }
 
     public void setIsEditing(final boolean isEditing) {

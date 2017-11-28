@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.databinding.Observable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ public class ConfigActivity extends BaseConfigActivity {
     private boolean isSingleLayout;
     private boolean isStateSaved;
     private int mainContainer;
+    private Observable.OnPropertyChangedCallback nameChangeCallback;
     private String visibleFragmentTag;
 
     /**
@@ -161,6 +163,11 @@ public class ConfigActivity extends BaseConfigActivity {
         setContentView(R.layout.config_activity);
         isSingleLayout = findViewById(R.id.detail_fragment) == null;
         mainContainer = isSingleLayout ? R.id.master_fragment : R.id.detail_fragment;
+        if (isSingleLayout) {
+            nameChangeCallback = new ConfigNameChangeCallback();
+            if (getCurrentConfig() != null)
+                getCurrentConfig().addOnPropertyChangedCallback(nameChangeCallback);
+        }
         isLayoutFinished = true;
         moveToState(getCurrentConfig(), isEditing());
     }
@@ -172,9 +179,13 @@ public class ConfigActivity extends BaseConfigActivity {
     }
 
     @Override
-    protected void onCurrentConfigChanged(final Config config) {
+    protected void onCurrentConfigChanged(final Config oldConfig, final Config newConfig) {
+        if (nameChangeCallback != null && oldConfig != null)
+            oldConfig.removeOnPropertyChangedCallback(nameChangeCallback);
         // Abandon editing a config when the current config changes.
-        moveToState(config, false);
+        moveToState(newConfig, false);
+        if (nameChangeCallback != null && newConfig != null)
+            newConfig.addOnPropertyChangedCallback(nameChangeCallback);
     }
 
     @Override
@@ -245,6 +256,17 @@ public class ConfigActivity extends BaseConfigActivity {
         // Allow creating fragments.
         isServiceAvailable = true;
         moveToState(getCurrentConfig(), isEditing());
+    }
+
+    private class ConfigNameChangeCallback extends Observable.OnPropertyChangedCallback {
+        @Override
+        public void onPropertyChanged(final Observable sender, final int propertyId) {
+            if (sender != getCurrentConfig())
+                sender.removeOnPropertyChangedCallback(this);
+            if (propertyId != 0 && propertyId != BR.name)
+                return;
+            setTitle(getCurrentConfig().getName());
+        }
     }
 
     private static class FragmentCache {
