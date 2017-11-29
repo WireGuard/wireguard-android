@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion "27.0.0"
+    buildToolsVersion '27.0.1'
     buildTypes {
         release {
             minifyEnabled false
@@ -13,11 +13,11 @@ android {
         enabled true
     }
     defaultConfig {
-        applicationId "com.wireguard.android"
+        applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 100
-        versionName "0.1.0"
+        versionName '0.1.0'
     }
 }
 
