@@ -37,7 +37,7 @@
                 android:id="@+id/add_from_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_action_save"
+                app:fab_icon="@drawable/ic_action_open"
                 app:fab_size="mini"
                 app:fab_title="@string/add_from_file" />
 
