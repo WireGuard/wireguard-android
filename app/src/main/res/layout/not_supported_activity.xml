@@ -9,6 +9,7 @@
             android:id="@+id/not_supported_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp" />
+            android:padding="32dp"
+            android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
     </ScrollView>
 </layout>
