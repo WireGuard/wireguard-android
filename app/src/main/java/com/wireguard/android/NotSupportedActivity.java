@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 
 import com.wireguard.android.databinding.NotSupportedActivityBinding;
 
@@ -21,6 +22,7 @@ public class NotSupportedActivity extends Activity {
             messageText = Html.fromHtml(messageHtml, Html.FROM_HTML_MODE_COMPACT);
         else
             messageText = Html.fromHtml(messageHtml);
+        binding.notSupportedMessage.setMovementMethod(LinkMovementMethod.getInstance());
         binding.notSupportedMessage.setText(messageText);
     }
 }
