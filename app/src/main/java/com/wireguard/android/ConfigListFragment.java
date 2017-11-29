@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.wireguard.android.backends.VpnService;
 import com.wireguard.android.bindings.ObservableMapAdapter;
@@ -93,12 +92,7 @@ public class ConfigListFragment extends BaseConfigFragment {
             @Override
             @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(final View view, final MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN &&
-                        binding.configList.pointToPosition((int) event.getX(), (int) event.getY())
-                                == ListView.INVALID_POSITION) {
-                    binding.addMenu.collapse();
-                    return true;
-                }
+                binding.addMenu.collapse();
                 return false;
             }
         });
