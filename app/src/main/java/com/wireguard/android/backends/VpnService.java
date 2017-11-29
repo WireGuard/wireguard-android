@@ -261,6 +261,17 @@ public class VpnService extends Service
 
     private class ConfigEnabler extends AsyncTask<Void, Void, Integer> {
         private final Config config;
+        private final String[] paths = {
+                "/system/xbin",
+                "/system/sbin",
+                "/system/bin",
+                "/sbin",
+                "/bin",
+                "/xbin",
+                "/usr/sbin",
+                "/usr/bin",
+                "/usr/xbin",
+        };
 
         private ConfigEnabler(final Config config) {
             this.config = config;
@@ -270,23 +281,18 @@ public class VpnService extends Service
         protected Integer doInBackground(final Void... voids) {
             if (!new File("/sys/module/wireguard").exists())
                 return -0xfff0001;
-            if (!existsInUsualSuspects("wg") || !existsInUsualSuspects("wg-quick"))
+            if (!existsInPath("wg") || !existsInPath("wg-quick"))
                 return -0xfff0002;
             Log.i(TAG, "Running wg-quick up for " + config.getName());
             final File configFile = new File(getFilesDir(), config.getName() + ".conf");
             return rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
         }
 
-        private boolean existsInUsualSuspects(final String file) {
-            return new File("/system/xbin/" + file).exists() ||
-                    new File("/system/sbin/" + file).exists() ||
-                    new File("/system/bin/" + file).exists() ||
-                    new File("/sbin/" + file).exists() ||
-                    new File("/bin/" + file).exists() ||
-                    new File("/xbin/" + file).exists() ||
-                    new File("/usr/sbin/" + file).exists() ||
-                    new File("/usr/bin/" + file).exists() ||
-                    new File("/usr/xbin/" + file).exists();
+        private boolean existsInPath(final String file) {
+            for (final String path : paths)
+                if (new File(path, file).exists())
+                    return true;
+            return false;
         }
 
         @Override
