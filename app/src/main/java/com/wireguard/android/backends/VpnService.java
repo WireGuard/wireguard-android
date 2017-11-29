@@ -278,15 +278,15 @@ public class VpnService extends Service
         }
 
         private boolean existsInUsualSuspects(final String file) {
-            return new File("/system/bin/" + file).exists() ||
-                    new File("/system/xbin/" + file).exists() ||
+            return new File("/system/xbin/" + file).exists() ||
                     new File("/system/sbin/" + file).exists() ||
+                    new File("/system/bin/" + file).exists() ||
+                    new File("/sbin/" + file).exists() ||
                     new File("/bin/" + file).exists() ||
                     new File("/xbin/" + file).exists() ||
-                    new File("/sbin/" + file).exists() ||
+                    new File("/usr/sbin/" + file).exists() ||
                     new File("/usr/bin/" + file).exists() ||
-                    new File("/usr/xbin/" + file).exists() ||
-                    new File("/usr/sbin/" + file).exists();
+                    new File("/usr/xbin/" + file).exists();
         }
 
         @Override
