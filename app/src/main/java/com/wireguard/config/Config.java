@@ -158,7 +158,7 @@ public class Config extends BaseObservable
                 }
             }
             if (!inInterfaceSection && currentPeer == null) {
-                throw new IllegalArgumentException("Did not find any config information");
+                throw new IllegalArgumentException("Could not find any config information");
             }
         }
     }
