@@ -1,12 +1,15 @@
 package com.wireguard.android;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,28 +29,49 @@ import java.util.List;
  */
 
 public class ConfigListFragment extends BaseConfigFragment {
-    private ListView listView;
+    private static final int REQUEST_IMPORT = 1;
+
+    private ConfigListFragmentBinding binding;
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == REQUEST_IMPORT) {
+            if (resultCode == Activity.RESULT_OK)
+                VpnService.getInstance().importFrom(data.getData());
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.config_list, menu);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup parent,
                              final Bundle savedInstanceState) {
-        final ConfigListFragmentBinding binding =
-                ConfigListFragmentBinding.inflate(inflater, parent, false);
+        binding = ConfigListFragmentBinding.inflate(inflater, parent, false);
         binding.setConfigs(VpnService.getInstance().getConfigs());
-        listView = binding.configList;
-        listView.setMultiChoiceModeListener(new ConfigListModeListener());
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        binding.addFromFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                startActivityForResult(intent, REQUEST_IMPORT);
+                binding.addMenu.collapse();
+            }
+        });
+        binding.addFromScratch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                startActivity(new Intent(getActivity(), AddActivity.class));
+                binding.addMenu.collapse();
+            }
+        });
+        binding.configList.setMultiChoiceModeListener(new ConfigListModeListener());
+        binding.configList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
                                     final int position, final long id) {
@@ -55,14 +79,27 @@ public class ConfigListFragment extends BaseConfigFragment {
                 setCurrentConfig(config);
             }
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        binding.configList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, final View view,
                                            final int position, final long id) {
                 setConfigChecked(null);
-                listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-                listView.setItemChecked(position, true);
+                binding.configList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+                binding.configList.setItemChecked(position, true);
                 return true;
+            }
+        });
+        binding.configList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            @SuppressLint("ClickableViewAccessibility")
+            public boolean onTouch(final View view, final MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN &&
+                        binding.configList.pointToPosition((int) event.getX(), (int) event.getY())
+                                == ListView.INVALID_POSITION) {
+                    binding.addMenu.collapse();
+                    return true;
+                }
+                return false;
             }
         });
         binding.executePendingBindings();
@@ -75,29 +112,36 @@ public class ConfigListFragment extends BaseConfigFragment {
         final BaseConfigActivity activity = ((BaseConfigActivity) getActivity());
         if (activity != null)
             activity.setCurrentConfig(config);
-        if (listView != null)
+        if (binding != null)
             setConfigChecked(config);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        listView = null;
+        binding = null;
     }
 
     private void setConfigChecked(final Config config) {
         if (config != null) {
-            @SuppressWarnings("unchecked")
-            final ObservableMapAdapter<String, Config> adapter =
-                    (ObservableMapAdapter<String, Config>) listView.getAdapter();
+            @SuppressWarnings("unchecked") final ObservableMapAdapter<String, Config> adapter =
+                    (ObservableMapAdapter<String, Config>) binding.configList.getAdapter();
             final int position = adapter.getPosition(config.getName());
             if (position >= 0)
-                listView.setItemChecked(position, true);
+                binding.configList.setItemChecked(position, true);
         } else {
-            final int position = listView.getCheckedItemPosition();
+            final int position = binding.configList.getCheckedItemPosition();
             if (position >= 0)
-                listView.setItemChecked(position, false);
+                binding.configList.setItemChecked(position, false);
         }
+    }
+
+    public boolean tryCollapseMenu() {
+        if (binding != null && binding.addMenu.isExpanded()) {
+            binding.addMenu.collapse();
+            return true;
+        }
+        return false;
     }
 
     private class ConfigListModeListener implements AbsListView.MultiChoiceModeListener {
@@ -124,11 +168,11 @@ public class ConfigListFragment extends BaseConfigFragment {
         public void onItemCheckedStateChanged(final ActionMode mode, final int position,
                                               final long id, final boolean checked) {
             if (checked)
-                configsToRemove.add((Config) listView.getItemAtPosition(position));
+                configsToRemove.add((Config) binding.configList.getItemAtPosition(position));
             else
-                configsToRemove.remove(listView.getItemAtPosition(position));
+                configsToRemove.remove(binding.configList.getItemAtPosition(position));
             final int count = configsToRemove.size();
-            final Resources resources = listView.getContext().getResources();
+            final Resources resources = binding.getRoot().getContext().getResources();
             mode.setTitle(resources.getQuantityString(R.plurals.list_delete_title, count, count));
         }
 
@@ -141,10 +185,10 @@ public class ConfigListFragment extends BaseConfigFragment {
         @Override
         public void onDestroyActionMode(final ActionMode mode) {
             configsToRemove.clear();
-            listView.post(new Runnable() {
+            binding.configList.post(new Runnable() {
                 @Override
                 public void run() {
-                    listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+                    binding.configList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                     // Restore the previous selection (before entering the action mode).
                     setConfigChecked(getCurrentConfig());
                 }

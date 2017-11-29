@@ -10,11 +10,45 @@
             type="com.wireguard.android.bindings.ObservableSortedMap&lt;String, com.wireguard.config.Config&gt;" />
     </data>
 
-    <ListView
-        android:id="@+id/config_list"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:choiceMode="singleChoice"
-        app:items="@{configs}"
-        app:layout="@{@layout/config_list_item}" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/config_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            app:items="@{configs}"
+            app:layout="@{@layout/config_list_item}" />
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/add_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            app:fab_labelStyle="@style/fab_label"
+            app:fab_labelsPosition="left">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_from_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_action_save"
+                app:fab_size="mini"
+                app:fab_title="@string/add_from_file" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_from_scratch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_action_edit"
+                app:fab_size="mini"
+                app:fab_title="@string/add_from_scratch" />
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    </RelativeLayout>
 </layout>
