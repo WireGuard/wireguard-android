@@ -22,5 +22,6 @@ android {
 }
 
 dependencies {
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
