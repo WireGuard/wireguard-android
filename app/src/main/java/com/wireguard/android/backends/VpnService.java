@@ -283,9 +283,14 @@ public class VpnService extends Service
                 return -0xfff0001;
             if (!existsInPath("wg") || !existsInPath("wg-quick"))
                 return -0xfff0002;
+            if (!existsInPath("su"))
+                return -0xfff0003;
             Log.i(TAG, "Running wg-quick up for " + config.getName());
             final File configFile = new File(getFilesDir(), config.getName() + ".conf");
-            return rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
+            final int ret = rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
+            if (ret == 13 /* EPERM */)
+                return -0xfff0003;
+            return ret;
         }
 
         private boolean existsInPath(final String file) {
@@ -303,6 +308,9 @@ public class VpnService extends Service
                     startActivity(new Intent(getApplicationContext(), NotSupportedActivity.class));
                 } else if (ret == -0xfff0002) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_missing),
+                            Toast.LENGTH_LONG).show();
+                } else if (ret == -0xfff0003) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_su),
                             Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_up),
