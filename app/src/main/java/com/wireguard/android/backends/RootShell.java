@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Helper class for running commands as root.
@@ -22,6 +24,7 @@ class RootShell {
      */
     private static final String SETUP_TEMPLATE = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
     private static final String TAG = "RootShell";
+    private static final Pattern ERRNO_EXTRACTOR = Pattern.compile("error=(\\d+)");
 
     private final byte[] setupCommands;
     private final String shell;
@@ -80,6 +83,9 @@ class RootShell {
             Log.d(TAG, "Session completed with exit value " + exitValue);
         } catch (IOException | InterruptedException | NumberFormatException e) {
             Log.w(TAG, "Session failed with exception", e);
+            final Matcher match = ERRNO_EXTRACTOR.matcher(e.toString());
+            if (match.find())
+                exitValue = Integer.valueOf(match.group(1));
         }
         return exitValue;
     }
