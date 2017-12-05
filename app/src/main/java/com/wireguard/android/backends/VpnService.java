@@ -261,17 +261,6 @@ public class VpnService extends Service
 
     private class ConfigEnabler extends AsyncTask<Void, Void, Integer> {
         private final Config config;
-        private final String[] paths = {
-                "/system/xbin",
-                "/system/sbin",
-                "/system/bin",
-                "/sbin",
-                "/bin",
-                "/xbin",
-                "/usr/sbin",
-                "/usr/bin",
-                "/usr/xbin",
-        };
 
         private ConfigEnabler(final Config config) {
             this.config = config;
@@ -281,19 +270,21 @@ public class VpnService extends Service
         protected Integer doInBackground(final Void... voids) {
             if (!new File("/sys/module/wireguard").exists())
                 return -0xfff0001;
-            if (!existsInPath("wg") || !existsInPath("wg-quick"))
-                return -0xfff0002;
             if (!existsInPath("su"))
-                return -0xfff0003;
+                return -0xfff0002;
             Log.i(TAG, "Running wg-quick up for " + config.getName());
             final File configFile = new File(getFilesDir(), config.getName() + ".conf");
             final int ret = rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
             if (ret == 13 /* EPERM */)
-                return -0xfff0003;
+                return -0xfff0002;
             return ret;
         }
 
         private boolean existsInPath(final String file) {
+            final String pathEnv = System.getenv("PATH");
+            if (pathEnv == null)
+                return false;
+            final String[] paths = pathEnv.split(":");
             for (final String path : paths)
                 if (new File(path, file).exists())
                     return true;
@@ -307,9 +298,6 @@ public class VpnService extends Service
                 if (ret == -0xfff0001) {
                     startActivity(new Intent(getApplicationContext(), NotSupportedActivity.class));
                 } else if (ret == -0xfff0002) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.error_missing),
-                            Toast.LENGTH_LONG).show();
-                } else if (ret == -0xfff0003) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_su),
                             Toast.LENGTH_LONG).show();
                 } else {

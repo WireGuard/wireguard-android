@@ -22,7 +22,7 @@ class RootShell {
      * Setup commands that are run at the beginning of each root shell. The trap command ensures
      * access to the return value of the last command, since su itself always exits with 0.
      */
-    private static final String SETUP_TEMPLATE = "export TMPDIR=%s\ntrap 'echo $?' EXIT\n";
+    private static final String SETUP_TEMPLATE = "export PATH=\"%s/bin:$PATH\"; export TMPDIR=\"%s/temp\"; trap 'echo $?' EXIT; mkdir -p \"%s/bin\" \"%s/temp\"; ln -fs \"%s/libwg.so\" \"%s/bin/wg\" || exit 99; ln -fs \"%s/libwg-quick.so\" \"%s/bin/wg-quick\" || exit 99;";
     private static final String TAG = "RootShell";
     private static final Pattern ERRNO_EXTRACTOR = Pattern.compile("error=(\\d+)");
 
@@ -35,7 +35,8 @@ class RootShell {
 
     RootShell(final Context context, final String shell) {
         final String tmpdir = context.getCacheDir().getPath();
-        setupCommands = String.format(SETUP_TEMPLATE, tmpdir).getBytes(StandardCharsets.UTF_8);
+        final String fakelibdir = context.getApplicationInfo().nativeLibraryDir;
+        setupCommands = String.format(SETUP_TEMPLATE, tmpdir, tmpdir, tmpdir, tmpdir, fakelibdir, tmpdir, fakelibdir, tmpdir).getBytes(StandardCharsets.UTF_8);
         this.shell = shell;
     }
 

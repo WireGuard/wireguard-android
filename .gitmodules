@@ -1,0 +1,9 @@
+[submodule "app/tools/libmnl"]
+	path = app/tools/libmnl
+	url = https://git.netfilter.org/libmnl/
+[submodule "app/tools/wireguard"]
+	path = app/tools/wireguard
+	url = https://git.zx2c4.com/WireGuard
+[submodule "app/tools/wireguard-android-integration"]
+	path = app/tools/wireguard-android-integration
+	url = https://git.zx2c4.com/android_kernel_wireguard

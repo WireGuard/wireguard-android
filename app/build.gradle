@@ -19,6 +19,11 @@ android {
         versionCode 100
         versionName '0.1.0'
     }
+    externalNativeBuild {
+        cmake {
+            path 'tools/CMakeLists.txt'
+        }
+    }
 }
 
 dependencies {
