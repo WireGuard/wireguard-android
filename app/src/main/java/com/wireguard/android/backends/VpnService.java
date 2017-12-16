@@ -14,6 +14,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.service.quicksettings.TileService;
+import android.system.ErrnoException;
+import android.system.OsConstants;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,7 +50,7 @@ public class VpnService extends Service
     public static final String KEY_ENABLED_CONFIGS = "enabled_configs";
     public static final String KEY_PRIMARY_CONFIG = "primary_config";
     public static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
-    private static final String TAG = "VpnService";
+    private static final String TAG = "WireGuard/VpnService";
 
     private static VpnService instance;
     private final IBinder binder = new Binder();
@@ -275,7 +277,7 @@ public class VpnService extends Service
             Log.i(TAG, "Running wg-quick up for " + config.getName());
             final File configFile = new File(getFilesDir(), config.getName() + ".conf");
             final int ret = rootShell.run(null, "wg-quick up '" + configFile.getPath() + "'");
-            if (ret == 13 /* EPERM */)
+            if (ret == OsConstants.EACCES)
                 return -0xfff0002;
             return ret;
         }
