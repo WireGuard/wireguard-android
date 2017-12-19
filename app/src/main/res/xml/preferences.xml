@@ -9,4 +9,8 @@
         android:key="restore_on_boot"
         android:summary="@string/restore_on_boot_summary"
         android:title="@string/restore_on_boot" />
+    <Preference
+        android:key="install_cmd_line_tools"
+        android:summary="@string/install_cmd_line_tools_summary"
+        android:title="@string/install_cmd_line_tools" />
 </PreferenceScreen>

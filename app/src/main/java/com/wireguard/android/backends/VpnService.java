@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.service.quicksettings.TileService;
-import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.util.Log;
 import android.widget.Toast;
