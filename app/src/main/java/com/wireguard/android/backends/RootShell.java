@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
  * Helper class for running commands as root.
  */
 
-class RootShell {
+public class RootShell {
     /**
      * Setup commands that are run at the beginning of each root shell. The trap command ensures
      * access to the return value of the last command, since su itself always exits with 0.
@@ -33,23 +33,23 @@ class RootShell {
 
     private final String preamble;
 
-    RootShell(final Context context) {
+    public RootShell(final Context context) {
         final String binDir = context.getCacheDir().getPath() + "/bin";
         final String tmpDir = context.getCacheDir().getPath() + "/tmp";
+        final String libDir = context.getApplicationInfo().nativeLibraryDir;
 
         new File(binDir).mkdirs();
         new File(tmpDir).mkdirs();
 
-        preamble = String.format("export PATH=\"%s:$PATH\" TMPDIR=\"%s\";", binDir, tmpDir);
-
-        final String libDir = context.getApplicationInfo().nativeLibraryDir;
-        String symlinkCommand = "set -ex;";
+        StringBuilder builder = new StringBuilder();
         for (final String[] libraryNamedExecutable : libraryNamedExecutables) {
-            final String args = "'" + libDir + "/" + libraryNamedExecutable[0] + "' '" + binDir + "/" + libraryNamedExecutable[1] + "'";
-            symlinkCommand += "ln -f " + args + " || ln -sf " + args + ";";
+            final String arg1 = "'" + libDir + "/" + libraryNamedExecutable[0] + "'";
+            final String arg2 = "'" + binDir + "/" + libraryNamedExecutable[1] + "'";
+            builder.append(String.format("[ %s -ef %s ] || ln -sf %s %s || exit 31;", arg1, arg2, arg1, arg2));
         }
-        if (run(null, symlinkCommand) != 0)
-            Log.e(TAG, "Unable to establish symlinks for important executables.");
+        builder.append(String.format("export PATH=\"%s:$PATH\" TMPDIR=\"%s\";", binDir, tmpDir));
+
+        preamble = builder.toString();
     }
 
     /**
@@ -60,7 +60,7 @@ class RootShell {
      * @param command  Command to run as root.
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    int run(final List<String> output, final String command) {
+    public int run(final List<String> output, final String command) {
         int exitValue = -1;
         try {
             final ProcessBuilder builder = new ProcessBuilder();

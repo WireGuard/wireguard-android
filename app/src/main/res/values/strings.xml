@@ -60,6 +60,12 @@
     <string name="public_key_description">WireGuard public key</string>
     <string name="restore_on_boot">Restore on boot</string>
     <string name="restore_on_boot_summary">Restore previously enabled configurations on boot</string>
+    <string name="install_cmd_line_tools">Install command line tools</string>
+    <string name="install_cmd_line_tools_summary">Install optional tools for scripting into /system/xbin</string>
+    <string name="install_cmd_line_tools_success">wg and wg-quick installed into /system/xbin</string>
+    <string name="install_cmd_line_tools_progress">Installing wg and wg-quick into /system/xbin</string>
+    <string name="install_cmd_line_tools_already">wg and wg-quick are already installed</string>
+    <string name="install_cmd_line_tools_failure">Command line tools could not be installed</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>
     <string name="status">Status</string>
