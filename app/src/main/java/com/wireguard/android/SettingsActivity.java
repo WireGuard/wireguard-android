@@ -64,12 +64,12 @@ public class SettingsActivity extends Activity {
                 final String arg1 = "'" + libDir + "/" + libraryNamedExecutable[0] + "'";
                 final String arg2 = "'/system/xbin/" + libraryNamedExecutable[1] + "'";
 
-                cmd.append(String.format("diff %s %s && ", arg1, arg2));
+                cmd.append(String.format("cmp -s %s %s && ", arg1, arg2));
             }
             cmd.append("exit 114;");
 
-            cmd.append("trap 'mount -o remount,ro /system' EXIT;");
-            cmd.append("mount -o remount,rw /system;");
+            cmd.append("trap 'mount -o ro,remount /system' EXIT;");
+            cmd.append("mount -o rw,remount /system;");
 
             for (final String[] libraryNamedExecutable : libraryNamedExecutables) {
                 final String arg1 = "'" + libDir + "/" + libraryNamedExecutable[0] + "'";
