@@ -21,8 +21,8 @@ import android.widget.Toast;
 import com.wireguard.android.NotSupportedActivity;
 import com.wireguard.android.QuickTileService;
 import com.wireguard.android.R;
-import com.wireguard.android.bindings.ObservableSortedMap;
-import com.wireguard.android.bindings.ObservableTreeMap;
+import com.wireguard.android.databinding.ObservableSortedMap;
+import com.wireguard.android.databinding.ObservableTreeMap;
 import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
 
