@@ -1,4 +1,4 @@
-package com.wireguard.android.bindings;
+package com.wireguard.android.databinding;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
