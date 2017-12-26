@@ -492,11 +492,11 @@ static void cmd_up(const char *iface, const char *config, unsigned int mtu, cons
 
 	add_if(iface);
 	set_config(iface, config);
-	set_mtu(iface, mtu);
 	set_addr(iface, addrs);
 	up_if(&netid, iface);
 	set_dnses(netid, dnses);
 	set_routes(iface, netid);
+	set_mtu(iface, mtu);
 
 	free(cleanup_iface);
 	cleanup_iface = NULL;
