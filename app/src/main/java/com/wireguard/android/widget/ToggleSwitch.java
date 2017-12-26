@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wireguard.android.widgets;
+package com.wireguard.android.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

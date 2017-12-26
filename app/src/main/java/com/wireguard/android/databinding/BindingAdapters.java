@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
-import com.wireguard.android.widgets.ToggleSwitch;
+import com.wireguard.android.widget.ToggleSwitch;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
