@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.wireguard.android.model.Tunnel.State" />
+
+        <variable
+            name="collection"
+            type="com.wireguard.android.model.TunnelCollection" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.model.Tunnel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background_anim"
+        android:descendantFocusability="blocksDescendants"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tunnel_name"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/tunnel_switch"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{key}" />
+
+        <com.wireguard.android.widget.ToggleSwitch
+            android:id="@+id/tunnel_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tunnel_name"
+            android:layout_alignParentEnd="true"
+            android:enabled="@{item.state != State.UNKNOWN}"
+            app:checked="@{item.state == State.UP}"
+            app:onBeforeCheckedChanged="@{() -> item.setState(State.TOGGLE)}" />
+    </RelativeLayout>
+</layout>

@@ -2,7 +2,6 @@ package com.wireguard.config;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.Observable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,8 +11,8 @@ import com.android.databinding.library.baseAdapters.BR;
  * Represents the configuration for a WireGuard peer (a [Peer] block).
  */
 
-public class Peer extends BaseObservable implements Copyable<Peer>, Observable, Parcelable {
-    public static final Parcelable.Creator<Peer> CREATOR = new Parcelable.Creator<Peer>() {
+public class Peer extends BaseObservable implements Parcelable {
+    public static final Creator<Peer> CREATOR = new Creator<Peer>() {
         @Override
         public Peer createFromParcel(final Parcel in) {
             return new Peer(in);
@@ -26,44 +25,25 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
     };
 
     private String allowedIPs;
-    private final Config config;
     private String endpoint;
     private String persistentKeepalive;
     private String preSharedKey;
     private String publicKey;
 
-    public Peer(final Config config) {
-        this.config = config;
+    public Peer() {
+        // Do nothing.
     }
 
-    protected Peer(final Parcel in) {
+    private Peer(final Parcel in) {
         allowedIPs = in.readString();
-        config = null;
         endpoint = in.readString();
         persistentKeepalive = in.readString();
         preSharedKey = in.readString();
         publicKey = in.readString();
     }
 
-    @Override
-    public Peer copy() {
-        return copy(config);
-    }
-
-    public Peer copy(final Config config) {
-        final Peer copy = new Peer(config);
-        copy.copyFrom(this);
-        return copy;
-    }
-
-    @Override
-    public void copyFrom(final Peer source) {
-        allowedIPs = source.allowedIPs;
-        endpoint = source.endpoint;
-        persistentKeepalive = source.persistentKeepalive;
-        preSharedKey = source.preSharedKey;
-        publicKey = source.publicKey;
-        notifyChange();
+    public static Peer newInstance() {
+        return new Peer();
     }
 
     @Override
@@ -99,22 +79,17 @@ public class Peer extends BaseObservable implements Copyable<Peer>, Observable, 
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
-            setAllowedIPs(key.parseFrom(line));
+            setAllowedIPs(key.parse(line));
         else if (key == Attribute.ENDPOINT)
-            setEndpoint(key.parseFrom(line));
+            setEndpoint(key.parse(line));
         else if (key == Attribute.PERSISTENT_KEEPALIVE)
-            setPersistentKeepalive(key.parseFrom(line));
+            setPersistentKeepalive(key.parse(line));
         else if (key == Attribute.PRESHARED_KEY)
-            setPreSharedKey(key.parseFrom(line));
+            setPreSharedKey(key.parse(line));
         else if (key == Attribute.PUBLIC_KEY)
-            setPublicKey(key.parseFrom(line));
+            setPublicKey(key.parse(line));
         else
             throw new IllegalArgumentException(line);
-    }
-
-    public void removeSelf() {
-        if (!config.getPeers().remove(this))
-            throw new IllegalStateException("This peer was already removed from its config");
     }
 
     public void setAllowedIPs(String allowedIPs) {

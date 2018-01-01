@@ -17,16 +17,14 @@
 package com.wireguard.android.widget;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.Switch;
 
 public class ToggleSwitch extends Switch {
     private boolean hasPendingStateChange;
+    private boolean isRestoringState;
     private OnBeforeCheckedChangeListener listener;
-
-    public interface OnBeforeCheckedChangeListener {
-        void onBeforeCheckedChanged(ToggleSwitch toggleSwitch, boolean checked);
-    }
 
     public ToggleSwitch(final Context context) {
         super(context);
@@ -45,21 +43,25 @@ public class ToggleSwitch extends Switch {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setOnBeforeCheckedChangeListener(final OnBeforeCheckedChangeListener listener) {
-        this.listener = listener;
+    @Override
+    public void onRestoreInstanceState(final Parcelable state) {
+        isRestoringState = true;
+        super.onRestoreInstanceState(state);
+        isRestoringState = false;
+
     }
 
     @Override
     public void setChecked(final boolean checked) {
-        if (listener != null) {
-            if (!isEnabled())
-                return;
-            setEnabled(false);
-            hasPendingStateChange = true;
-            listener.onBeforeCheckedChanged(this, checked);
-        } else {
+        if (isRestoringState || listener == null) {
             super.setChecked(checked);
+            return;
         }
+        if (hasPendingStateChange)
+            return;
+        hasPendingStateChange = true;
+        setEnabled(false);
+        listener.onBeforeCheckedChanged(this, checked);
     }
 
     public void setCheckedInternal(final boolean checked) {
@@ -68,5 +70,13 @@ public class ToggleSwitch extends Switch {
             hasPendingStateChange = false;
         }
         super.setChecked(checked);
+    }
+
+    public void setOnBeforeCheckedChangeListener(final OnBeforeCheckedChangeListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnBeforeCheckedChangeListener {
+        void onBeforeCheckedChanged(ToggleSwitch toggleSwitch, boolean checked);
     }
 }

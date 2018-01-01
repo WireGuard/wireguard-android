@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 
 import com.wireguard.android.BR;
 
@@ -18,7 +17,7 @@ import java.lang.ref.WeakReference;
  * A generic ListAdapter backed by an ObservableList.
  */
 
-class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
+class ObservableListAdapter<T> extends BaseAdapter {
     private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
     private final int layoutId;
     private final LayoutInflater layoutInflater;
@@ -54,6 +53,7 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
+        binding.setVariable(BR.collection, list);
         binding.setVariable(BR.item, getItem(position));
         binding.executePendingBindings();
         return binding.getRoot();
@@ -74,7 +74,7 @@ class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
         notifyDataSetChanged();
     }
 
-    private static class OnListChangedCallback<U>
+    private static final class OnListChangedCallback<U>
             extends ObservableList.OnListChangedCallback<ObservableList<U>> {
 
         private final WeakReference<ObservableListAdapter<U>> weakAdapter;

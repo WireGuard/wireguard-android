@@ -32,6 +32,7 @@ class ItemChangeListener<T> {
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, container, false);
+        binding.setVariable(BR.collection, list);
         binding.setVariable(BR.item, list.get(position));
         binding.executePendingBindings();
         return binding.getRoot();
@@ -49,7 +50,7 @@ class ItemChangeListener<T> {
         }
     }
 
-    private static class OnListChangedCallback<T>
+    private static final class OnListChangedCallback<T>
             extends ObservableList.OnListChangedCallback<ObservableList<T>> {
 
         private final WeakReference<ItemChangeListener<T>> weakListener;
