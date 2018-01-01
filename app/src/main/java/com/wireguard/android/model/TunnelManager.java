@@ -70,7 +70,11 @@ public final class TunnelManager {
         Log.v(TAG, "Requested delete tunnel " + tunnel.getName() + " state=" + tunnel.getState());
         return backend.setState(tunnel, State.DOWN)
                 .thenCompose(x -> configStore.delete(tunnel.getName()))
-                .thenAccept(x -> tunnels.remove(tunnel.getName()));
+                .thenAccept(x -> {
+                    tunnels.remove(tunnel.getName());
+                    if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
+                        preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
+                });
     }
 
     public TunnelCollection getTunnels() {
