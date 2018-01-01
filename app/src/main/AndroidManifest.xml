@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.wireguard.android"
     android:installLocation="internalOnly">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:extractNativeLibs="true"
+        android:name=".Application"
         android:allowBackup="false"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Material.Light.DarkActionBar">
+        android:theme="@android:style/Theme.Material.Light.DarkActionBar"
+        tools:ignore="UnusedAttribute">
 
-        <activity
-            android:name=".AddActivity"
-            android:label="@string/add_activity_title"
-            android:parentActivityName=".ConfigActivity" />
+        <activity android:name=".activity.MainActivity">
 
-        <activity android:name=".ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,17 +32,17 @@
         </activity>
 
         <activity
-            android:name=".NotSupportedActivity"
-            android:label="@string/not_supported"
-            android:parentActivityName=".ConfigActivity" />
+            android:name=".activity.SettingsActivity"
+            android:label="@string/settings" />
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".ConfigActivity" />
+            android:name=".activity.TunnelCreatorActivity"
+            android:label="@string/add_activity_title" />
 
-        <receiver android:name=".BootCompletedReceiver">
+        <receiver android:name=".BootShutdownReceiver">
+
             <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
@@ -51,17 +51,14 @@
             android:name=".QuickTileService"
             android:icon="@drawable/ic_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.service.quicksettings.ACTIVE_TILE"
-                android:value="true" />
+                android:value="false" />
         </service>
-        <service
-            android:name=".backends.VpnService"
-            android:exported="false" />
     </application>
-
 </manifest>

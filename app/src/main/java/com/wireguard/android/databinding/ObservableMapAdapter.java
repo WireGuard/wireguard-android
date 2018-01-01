@@ -8,28 +8,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 
 import com.wireguard.android.BR;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A generic ListAdapter backed by a TreeMap that adds observability.
  */
 
-public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter
-        implements ListAdapter {
+public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapter {
     private final OnMapChangedCallback<K, V> callback = new OnMapChangedCallback<>(this);
-    private ArrayList<K> keys;
     private final int layoutId;
     private final LayoutInflater layoutInflater;
-    private ObservableSortedMap<K, V> map;
+    private List<K> keys;
+    private ObservableNavigableMap<K, V> map;
 
     ObservableMapAdapter(final Context context, final int layoutId,
-                         final ObservableSortedMap<K, V> map) {
+                         final ObservableNavigableMap<K, V> map) {
         this.layoutId = layoutId;
         layoutInflater = LayoutInflater.from(context);
         setMap(map);
@@ -51,14 +50,17 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
     public long getItemId(final int position) {
         if (map == null || position < 0 || position >= map.size())
             return -1;
-        return getItem(position).hashCode();
+        //final V item = getItem(position);
+        //return item != null ? item.hashCode() : -1;
+        final K key = getKey(position);
+        return key.hashCode();
     }
 
     private K getKey(final int position) {
         return getKeys().get(position);
     }
 
-    private ArrayList<K> getKeys() {
+    private List<K> getKeys() {
         if (keys == null)
             keys = new ArrayList<>(map.keySet());
         return keys;
@@ -75,6 +77,7 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
         if (binding == null)
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, parent, false);
+        binding.setVariable(BR.collection, map);
         binding.setVariable(BR.key, getKey(position));
         binding.setVariable(BR.item, getItem(position));
         binding.executePendingBindings();
@@ -86,7 +89,7 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         return true;
     }
 
-    void setMap(final ObservableSortedMap<K, V> newMap) {
+    void setMap(final ObservableNavigableMap<K, V> newMap) {
         if (map != null)
             map.removeOnMapChangedCallback(callback);
         keys = null;
@@ -97,8 +100,8 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         notifyDataSetChanged();
     }
 
-    private static class OnMapChangedCallback<K extends Comparable<K>, V>
-            extends ObservableMap.OnMapChangedCallback<ObservableSortedMap<K, V>, K, V> {
+    private static final class OnMapChangedCallback<K extends Comparable<K>, V>
+            extends ObservableMap.OnMapChangedCallback<ObservableNavigableMap<K, V>, K, V> {
 
         private final WeakReference<ObservableMapAdapter<K, V>> weakAdapter;
 
@@ -107,7 +110,7 @@ public class ObservableMapAdapter<K extends Comparable<K>, V> extends BaseAdapte
         }
 
         @Override
-        public void onMapChanged(final ObservableSortedMap<K, V> sender, final K key) {
+        public void onMapChanged(final ObservableNavigableMap<K, V> sender, final K key) {
             final ObservableMapAdapter<K, V> adapter = weakAdapter.get();
             if (adapter != null) {
                 adapter.keys = null;

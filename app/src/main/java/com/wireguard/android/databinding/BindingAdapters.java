@@ -12,13 +12,22 @@ import android.widget.TextView;
 import com.wireguard.android.R;
 import com.wireguard.android.widget.ToggleSwitch;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 /**
  * Static methods for use by generated code in the Android data binding library.
  */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class BindingAdapters {
-    @BindingAdapter({"app:checked"})
+    private BindingAdapters() {
+        // Prevent instantiation.
+    }
+
+    @BindingAdapter({"checked"})
     public static void setChecked(final ToggleSwitch view, final boolean checked) {
         view.setCheckedInternal(checked);
     }
@@ -80,9 +89,9 @@ public final class BindingAdapters {
 
     @BindingAdapter({"items", "layout"})
     public static <K extends Comparable<K>, V> void setItems(final ListView view,
-                                                             final ObservableSortedMap<K, V> oldMap,
+                                                             final ObservableNavigableMap<K, V> oldMap,
                                                              final int oldLayoutId,
-                                                             final ObservableSortedMap<K, V> newMap,
+                                                             final ObservableNavigableMap<K, V> newMap,
                                                              final int newLayoutId) {
         if (oldMap == newMap && oldLayoutId == newLayoutId)
             return;
@@ -105,19 +114,26 @@ public final class BindingAdapters {
         adapter.setMap(newMap);
     }
 
-    @BindingAdapter({"app:onBeforeCheckedChanged"})
+    @BindingAdapter({"onBeforeCheckedChanged"})
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
                                                  final ToggleSwitch.OnBeforeCheckedChangeListener
                                                          listener) {
         view.setOnBeforeCheckedChangeListener(listener);
     }
 
+    @BindingAdapter({"android:text"})
+    public static void setText(final TextView view, final Instant instant) {
+        if (instant == null || Instant.EPOCH.equals(instant)) {
+            view.setText(R.string.never);
+        } else {
+            final ZoneId defaultZone = ZoneId.systemDefault();
+            final ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, defaultZone);
+            view.setText(zonedDateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+        }
+    }
+
     @BindingAdapter({"android:textStyle"})
     public static void setTextStyle(final TextView view, final Typeface typeface) {
         view.setTypeface(typeface);
-    }
-
-    private BindingAdapters() {
-        // Prevent instantiation.
     }
 }

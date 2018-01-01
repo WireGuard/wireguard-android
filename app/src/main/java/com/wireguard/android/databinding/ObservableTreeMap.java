@@ -12,14 +12,8 @@ import java.util.TreeMap;
  * views. This behavior is in line with that of ObservableArrayMap.
  */
 
-public class ObservableTreeMap<K, V> extends TreeMap<K, V> implements ObservableSortedMap<K, V> {
+public class ObservableTreeMap<K, V> extends TreeMap<K, V> implements ObservableNavigableMap<K, V> {
     private transient MapChangeRegistry listeners;
-
-    @Override
-    public void clear() {
-        super.clear();
-        notifyChange(null);
-    }
 
     @Override
     public void addOnMapChangedCallback(
@@ -27,6 +21,12 @@ public class ObservableTreeMap<K, V> extends TreeMap<K, V> implements Observable
         if (listeners == null)
             listeners = new MapChangeRegistry();
         listeners.add(listener);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        notifyChange(null);
     }
 
     private void notifyChange(final K key) {
@@ -51,8 +51,7 @@ public class ObservableTreeMap<K, V> extends TreeMap<K, V> implements Observable
     @Override
     public V remove(final Object key) {
         final V oldValue = super.remove(key);
-        @SuppressWarnings("unchecked")
-        final K k = (K) key;
+        @SuppressWarnings("unchecked") final K k = (K) key;
         notifyChange(k);
         return oldValue;
     }

@@ -2,7 +2,6 @@ package com.wireguard.config;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.Observable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,10 +13,8 @@ import com.wireguard.crypto.Keypair;
  * Represents the configuration for a WireGuard interface (an [Interface] block).
  */
 
-public class Interface extends BaseObservable
-        implements Copyable<Interface>, Observable, Parcelable {
-    public static final Parcelable.Creator<Interface> CREATOR
-            = new Parcelable.Creator<Interface>() {
+public class Interface extends BaseObservable implements Parcelable {
+    public static final Creator<Interface> CREATOR = new Creator<Interface>() {
         @Override
         public Interface createFromParcel(final Parcel in) {
             return new Interface(in);
@@ -31,8 +28,8 @@ public class Interface extends BaseObservable
 
     private String address;
     private String dns;
-    private String listenPort;
     private Keypair keypair;
+    private String listenPort;
     private String mtu;
     private String privateKey;
 
@@ -40,37 +37,12 @@ public class Interface extends BaseObservable
         // Do nothing.
     }
 
-    protected Interface(final Parcel in) {
+    private Interface(final Parcel in) {
         address = in.readString();
         dns = in.readString();
         listenPort = in.readString();
         mtu = in.readString();
         setPrivateKey(in.readString());
-    }
-
-    @Override
-    public Interface copy() {
-        final Interface copy = new Interface();
-        copy.copyFrom(this);
-        return copy;
-    }
-
-    @Override
-    public void copyFrom(final Interface source) {
-        if (source != null) {
-            address = source.address;
-            dns = source.dns;
-            listenPort = source.listenPort;
-            mtu = source.mtu;
-            setPrivateKey(source.privateKey);
-        } else {
-            address = null;
-            dns = null;
-            listenPort = null;
-            mtu = null;
-            setPrivateKey(null);
-        }
-        notifyChange();
     }
 
     @Override
@@ -118,15 +90,15 @@ public class Interface extends BaseObservable
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
-            setAddress(key.parseFrom(line));
+            setAddress(key.parse(line));
         else if (key == Attribute.DNS)
-            setDns(key.parseFrom(line));
+            setDns(key.parse(line));
         else if (key == Attribute.LISTEN_PORT)
-            setListenPort(key.parseFrom(line));
+            setListenPort(key.parse(line));
         else if (key == Attribute.MTU)
-            setMtu(key.parseFrom(line));
+            setMtu(key.parse(line));
         else if (key == Attribute.PRIVATE_KEY)
-            setPrivateKey(key.parseFrom(line));
+            setPrivateKey(key.parse(line));
         else
             throw new IllegalArgumentException(line);
     }

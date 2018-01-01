@@ -1,40 +1,57 @@
 package com.wireguard.android;
 
 import android.annotation.TargetApi;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.databinding.Observable;
+import android.databinding.Observable.OnPropertyChangedCallback;
+import android.databinding.ObservableMap.OnMapChangedCallback;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.wireguard.android.backends.VpnService;
-import com.wireguard.config.Config;
+import com.wireguard.android.Application.ApplicationComponent;
+import com.wireguard.android.activity.MainActivity;
+import com.wireguard.android.activity.SettingsActivity;
+import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.model.TunnelCollection;
+import com.wireguard.android.model.TunnelManager;
+
+import java.util.Objects;
+
+/**
+ * Service that maintains the application's custom Quick Settings tile. This service is bound by the
+ * system framework as necessary to update the appearance of the tile in the system UI, and to
+ * forward click events to the application.
+ */
 
 @TargetApi(Build.VERSION_CODES.N)
-public class QuickTileService extends TileService {
-    private Config config;
+public class QuickTileService extends TileService implements OnSharedPreferenceChangeListener {
+    private static final String TAG = QuickTileService.class.getSimpleName();
+
+    private final OnTunnelStateChangedCallback tunnelCallback = new OnTunnelStateChangedCallback();
+    private final OnTunnelMapChangedCallback tunnelMapCallback = new OnTunnelMapChangedCallback();
     private SharedPreferences preferences;
-    private VpnService service;
+    private Tunnel tunnel;
+    private TunnelManager tunnelManager;
 
     @Override
     public void onClick() {
-        if (service != null && config != null) {
-            if (config.isEnabled())
-                service.disable(config.getName());
-            else
-                service.enable(config.getName());
+        if (tunnel != null) {
+            tunnel.setState(State.TOGGLE).handle(this::onToggleFinished);
         } else {
-            if (service != null && service.getConfigs().isEmpty()) {
-                startActivityAndCollapse(new Intent(this, ConfigActivity.class));
+            if (tunnelManager.getTunnels().isEmpty()) {
+                // Prompt the user to create or import a tunnel configuration.
+                startActivityAndCollapse(new Intent(this, MainActivity.class));
             } else {
+                // Prompt the user to select a tunnel for use with the quick settings tile.
                 final Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra("showQuickTile", true);
+                intent.putExtra(SettingsActivity.KEY_SHOW_QUICK_TILE_SETTINGS, true);
                 startActivityAndCollapse(intent);
             }
         }
@@ -42,50 +59,101 @@ public class QuickTileService extends TileService {
 
     @Override
     public void onCreate() {
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        service = VpnService.getInstance();
-        if (service == null)
-            bindService(new Intent(this, VpnService.class), new ServiceConnectionCallbacks(),
-                    Context.BIND_AUTO_CREATE);
-        TileService.requestListeningState(this, new ComponentName(this, getClass()));
+        super.onCreate();
+        final ApplicationComponent component = Application.getComponent();
+        preferences = component.getPreferences();
+        tunnelManager = component.getTunnelManager();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
+        if (!TunnelManager.KEY_PRIMARY_TUNNEL.equals(key))
+            return;
+        updateTile();
     }
 
     @Override
     public void onStartListening() {
-        // Since this is an active tile, this only gets called when we want to update the tile.
+        preferences.registerOnSharedPreferenceChangeListener(this);
+        tunnelManager.getTunnels().addOnMapChangedCallback(tunnelMapCallback);
+        if (tunnel != null)
+            tunnel.addOnPropertyChangedCallback(tunnelCallback);
+        updateTile();
+    }
+
+    @Override
+    public void onStopListening() {
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
+        tunnelManager.getTunnels().removeOnMapChangedCallback(tunnelMapCallback);
+        if (tunnel != null)
+            tunnel.removeOnPropertyChangedCallback(tunnelCallback);
+    }
+
+    @SuppressWarnings("unused")
+    private Void onToggleFinished(final State state, final Throwable throwable) {
+        if (throwable == null)
+            return null;
+        Log.e(TAG, "Cannot toggle tunnel", throwable);
+        final String message = "Cannot toggle tunnel: " + throwable.getCause().getMessage();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        return null;
+    }
+
+    private void updateTile() {
+        // Update the tunnel.
+        final String currentName = tunnel != null ? tunnel.getName() : null;
+        final String newName = preferences.getString(TunnelManager.KEY_PRIMARY_TUNNEL, null);
+        if (!Objects.equals(currentName, newName)) {
+            final TunnelCollection tunnels = tunnelManager.getTunnels();
+            final Tunnel newTunnel = newName != null ? tunnels.get(newName) : null;
+            if (tunnel != null)
+                tunnel.removeOnPropertyChangedCallback(tunnelCallback);
+            tunnel = newTunnel;
+            if (tunnel != null)
+                tunnel.addOnPropertyChangedCallback(tunnelCallback);
+        }
+        // Update the tile contents.
+        final String label;
+        final int state;
         final Tile tile = getQsTile();
-        final String configName = preferences.getString(VpnService.KEY_PRIMARY_CONFIG, null);
-        config = configName != null && service != null ? service.get(configName) : null;
-        if (config != null) {
-            tile.setLabel(config.getName());
-            final int state = config.isEnabled() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
-            if (tile.getState() != state) {
-                // The icon must be changed every time the state changes, or the color won't change.
-                final Integer iconResource = (state == Tile.STATE_ACTIVE) ?
-                        R.drawable.ic_tile : R.drawable.ic_tile_disabled;
-                tile.setIcon(Icon.createWithResource(this, iconResource));
-                tile.setState(state);
-            }
+        if (tunnel != null) {
+            label = tunnel.getName();
+            state = tunnel.getState() == Tunnel.State.UP ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
         } else {
-            tile.setIcon(Icon.createWithResource(this, R.drawable.ic_tile_disabled));
-            tile.setLabel(getString(R.string.app_name));
-            tile.setState(Tile.STATE_INACTIVE);
+            label = getString(R.string.app_name);
+            state = Tile.STATE_INACTIVE;
+        }
+        tile.setLabel(label);
+        if (tile.getState() != state) {
+            // The icon must be changed every time the state changes, or the shade will not change.
+            final Integer iconResource = (state == Tile.STATE_ACTIVE)
+                    ? R.drawable.ic_tile : R.drawable.ic_tile_disabled;
+            tile.setIcon(Icon.createWithResource(this, iconResource));
+            tile.setState(state);
         }
         tile.updateTile();
     }
 
-    private class ServiceConnectionCallbacks implements ServiceConnection {
+    private final class OnTunnelMapChangedCallback
+            extends OnMapChangedCallback<TunnelCollection, String, Tunnel> {
         @Override
-        public void onServiceConnected(final ComponentName component, final IBinder binder) {
-            // We don't actually need a binding, only notification that the service is started.
-            unbindService(this);
-            service = VpnService.getInstance();
+        public void onMapChanged(final TunnelCollection sender, final String key) {
+            if (!key.equals(preferences.getString(TunnelManager.KEY_PRIMARY_TUNNEL, null)))
+                return;
+            updateTile();
         }
+    }
 
+    private final class OnTunnelStateChangedCallback extends OnPropertyChangedCallback {
         @Override
-        public void onServiceDisconnected(final ComponentName component) {
-            // This can never happen; the service runs in the same thread as this service.
-            throw new IllegalStateException();
+        public void onPropertyChanged(final Observable sender, final int propertyId) {
+            if (!Objects.equals(sender, tunnel)) {
+                sender.removeOnPropertyChangedCallback(this);
+                return;
+            }
+            if (propertyId != 0 && propertyId != BR.state)
+                return;
+            updateTile();
         }
     }
 }

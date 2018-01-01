@@ -5,8 +5,8 @@
         <item quantity="other">%d configurations selected</item>
     </plurals>
     <string name="add_activity_title">New WireGuard configuration</string>
-    <string name="add_from_file">Add from file</string>
-    <string name="add_from_scratch">Add from scratch</string>
+    <string name="create_from_file">Add from file</string>
+    <string name="create_empty">Add from scratch</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
@@ -57,7 +57,7 @@
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
     <string name="public_key_copied_message">Public key copied to clipboard</string>
-    <string name="public_key_description">WireGuard public key</string>
+    <string name="public_key_description">Public key</string>
     <string name="restore_on_boot">Restore on boot</string>
     <string name="restore_on_boot_summary">Restore previously enabled configurations on boot</string>
     <string name="install_cmd_line_tools">Install command line tools</string>
@@ -70,4 +70,6 @@
     <string name="settings">Settings</string>
     <string name="status">Status</string>
     <string name="toggle">Toggle</string>
+    <string name="last_change">Last change</string>
+    <string name="never">never</string>
 </resources>
