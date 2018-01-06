@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="com.wireguard.android.util.ClipboardUtils" />
+
         <variable
             name="collection"
             type="android.databinding.ObservableList&lt;com.wireguard.config.Peer&gt;" />
@@ -46,8 +48,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/public_key_label"
+            android:contentDescription="@string/public_key_description"
             android:ellipsize="end"
             android:maxLines="1"
+            android:onClick="@{ClipboardUtils::copyTextView}"
             android:text="@{item.publicKey}" />
 
         <TextView
