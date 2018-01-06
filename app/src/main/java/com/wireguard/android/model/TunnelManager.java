@@ -48,14 +48,14 @@ public final class TunnelManager {
         this.preferences = preferences;
     }
 
-    private Tunnel add(final String name, final Config config) {
-        final Tunnel tunnel = new Tunnel(backend, configStore, name, config);
+    private Tunnel add(final String name, final Config config, final State state) {
+        final Tunnel tunnel = new Tunnel(backend, configStore, name, config, state);
         tunnels.add(tunnel);
         return tunnel;
     }
 
     private Tunnel add(final String name) {
-        return add(name, null);
+        return add(name, null, State.UNKNOWN);
     }
 
     public CompletionStage<Tunnel> create(final String name, final Config config) {
@@ -66,7 +66,8 @@ public final class TunnelManager {
             final String message = "Tunnel " + name + " already exists";
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
-        return configStore.create(name, config).thenApply(savedConfig -> add(name, savedConfig));
+        return configStore.create(name, config)
+                .thenApply(savedConfig -> add(name, savedConfig, State.DOWN));
     }
 
     public CompletionStage<Void> delete(final Tunnel tunnel) {

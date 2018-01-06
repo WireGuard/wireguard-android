@@ -31,15 +31,16 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     private final ConfigStore configStore;
     private final String name;
     private Config config;
-    private State state = State.UNKNOWN;
+    private State state;
     private Statistics statistics;
 
     Tunnel(@NonNull final Backend backend, @NonNull final ConfigStore configStore,
-           @NonNull final String name, @Nullable final Config config) {
+           @NonNull final String name, @Nullable final Config config, @NonNull final State state) {
         this.backend = backend;
         this.configStore = configStore;
         this.name = name;
         this.config = config;
+        this.state = state;
     }
 
     public static boolean isNameValid(final CharSequence name) {
