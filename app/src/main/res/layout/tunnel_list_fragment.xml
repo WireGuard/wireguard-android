@@ -4,13 +4,15 @@
 
     <data>
 
+        <import type="com.wireguard.android.model.Tunnel" />
+
         <variable
             name="fragment"
             type="com.wireguard.android.fragment.TunnelListFragment" />
 
         <variable
             name="tunnels"
-            type="com.wireguard.android.model.TunnelCollection" />
+            type="com.wireguard.android.util.KeyedObservableList&lt;String, Tunnel&gt;" />
     </data>
 
     <com.commonsware.cwac.crossport.design.widget.CoordinatorLayout

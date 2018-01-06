@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.databinding.Observable;
 import android.databinding.Observable.OnPropertyChangedCallback;
-import android.databinding.ObservableMap.OnMapChangedCallback;
+import android.databinding.ObservableList;
+import android.databinding.ObservableList.OnListChangedCallback;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
@@ -19,8 +20,8 @@ import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.TunnelCollection;
 import com.wireguard.android.model.TunnelManager;
+import com.wireguard.android.util.KeyedObservableList;
 
 import java.util.Objects;
 
@@ -33,9 +34,8 @@ import java.util.Objects;
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTileService extends TileService implements OnSharedPreferenceChangeListener {
     private static final String TAG = QuickTileService.class.getSimpleName();
-
+    private final OnTunnelListChangedCallback listCallback = new OnTunnelListChangedCallback();
     private final OnTunnelStateChangedCallback tunnelCallback = new OnTunnelStateChangedCallback();
-    private final OnTunnelMapChangedCallback tunnelMapCallback = new OnTunnelMapChangedCallback();
     private SharedPreferences preferences;
     private Tunnel tunnel;
     private TunnelManager tunnelManager;
@@ -75,7 +75,7 @@ public class QuickTileService extends TileService implements OnSharedPreferenceC
     @Override
     public void onStartListening() {
         preferences.registerOnSharedPreferenceChangeListener(this);
-        tunnelManager.getTunnels().addOnMapChangedCallback(tunnelMapCallback);
+        tunnelManager.getTunnels().addOnListChangedCallback(listCallback);
         if (tunnel != null)
             tunnel.addOnPropertyChangedCallback(tunnelCallback);
         updateTile();
@@ -84,7 +84,7 @@ public class QuickTileService extends TileService implements OnSharedPreferenceC
     @Override
     public void onStopListening() {
         preferences.unregisterOnSharedPreferenceChangeListener(this);
-        tunnelManager.getTunnels().removeOnMapChangedCallback(tunnelMapCallback);
+        tunnelManager.getTunnels().removeOnListChangedCallback(listCallback);
         if (tunnel != null)
             tunnel.removeOnPropertyChangedCallback(tunnelCallback);
     }
@@ -104,7 +104,7 @@ public class QuickTileService extends TileService implements OnSharedPreferenceC
         final String currentName = tunnel != null ? tunnel.getName() : null;
         final String newName = preferences.getString(TunnelManager.KEY_PRIMARY_TUNNEL, null);
         if (!Objects.equals(currentName, newName)) {
-            final TunnelCollection tunnels = tunnelManager.getTunnels();
+            final KeyedObservableList<String, Tunnel> tunnels = tunnelManager.getTunnels();
             final Tunnel newTunnel = newName != null ? tunnels.get(newName) : null;
             if (tunnel != null)
                 tunnel.removeOnPropertyChangedCallback(tunnelCallback);
@@ -134,12 +134,35 @@ public class QuickTileService extends TileService implements OnSharedPreferenceC
         tile.updateTile();
     }
 
-    private final class OnTunnelMapChangedCallback
-            extends OnMapChangedCallback<TunnelCollection, String, Tunnel> {
+    private final class OnTunnelListChangedCallback
+            extends OnListChangedCallback<ObservableList<Tunnel>> {
         @Override
-        public void onMapChanged(final TunnelCollection sender, final String key) {
-            if (!key.equals(preferences.getString(TunnelManager.KEY_PRIMARY_TUNNEL, null)))
-                return;
+        public void onChanged(final ObservableList<Tunnel> sender) {
+            updateTile();
+        }
+
+        @Override
+        public void onItemRangeChanged(final ObservableList<Tunnel> sender,
+                                       final int positionStart, final int itemCount) {
+            updateTile();
+        }
+
+        @Override
+        public void onItemRangeInserted(final ObservableList<Tunnel> sender,
+                                        final int positionStart, final int itemCount) {
+            // Do nothing.
+        }
+
+        @Override
+        public void onItemRangeMoved(final ObservableList<Tunnel> sender,
+                                     final int fromPosition, final int toPosition,
+                                     final int itemCount) {
+            // Do nothing.
+        }
+
+        @Override
+        public void onItemRangeRemoved(final ObservableList<Tunnel> sender,
+                                       final int positionStart, final int itemCount) {
             updateTile();
         }
     }

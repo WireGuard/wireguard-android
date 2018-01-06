@@ -5,19 +5,23 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
+import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.TunnelManager;
 
-import java.util.Set;
+import java9.util.stream.StreamSupport;
 
 /**
- * ListPreference that is automatically filled with the list of configurations.
+ * ListPreference that is automatically filled with the list of tunnels.
  */
 
 public class TunnelListPreference extends ListPreference {
     public TunnelListPreference(final Context context, final AttributeSet attrs,
                                 final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        final Set<String> entrySet = Application.getComponent().getTunnelManager().getTunnels().keySet();
-        final CharSequence[] entries = entrySet.toArray(new CharSequence[entrySet.size()]);
+        final TunnelManager tunnelManager = Application.getComponent().getTunnelManager();
+        final CharSequence[] entries = StreamSupport.stream(tunnelManager.getTunnels())
+                .map(Tunnel::getName)
+                .toArray(String[]::new);
         setEntries(entries);
         setEntryValues(entries);
     }

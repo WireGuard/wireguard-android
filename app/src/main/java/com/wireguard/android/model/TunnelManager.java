@@ -8,6 +8,8 @@ import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.KeyedObservableList;
+import com.wireguard.android.util.SortedKeyedObservableArrayList;
 import com.wireguard.config.Config;
 
 import java.util.Collections;
@@ -35,7 +37,8 @@ public final class TunnelManager {
     private final Backend backend;
     private final ConfigStore configStore;
     private final SharedPreferences preferences;
-    private final TunnelCollection tunnels = new TunnelCollection();
+    private final KeyedObservableList<String, Tunnel> tunnels =
+            new SortedKeyedObservableArrayList<>();
 
     @Inject
     public TunnelManager(final Backend backend, final ConfigStore configStore,
@@ -47,7 +50,7 @@ public final class TunnelManager {
 
     private Tunnel add(final String name, final Config config) {
         final Tunnel tunnel = new Tunnel(backend, configStore, name, config);
-        tunnels.put(name, tunnel);
+        tunnels.add(tunnel);
         return tunnel;
     }
 
@@ -71,13 +74,13 @@ public final class TunnelManager {
         return backend.setState(tunnel, State.DOWN)
                 .thenCompose(x -> configStore.delete(tunnel.getName()))
                 .thenAccept(x -> {
-                    tunnels.remove(tunnel.getName());
+                    tunnels.remove(tunnel);
                     if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
                         preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
                 });
     }
 
-    public TunnelCollection getTunnels() {
+    public KeyedObservableList<String, Tunnel> getTunnels() {
         return tunnels;
     }
 
@@ -105,7 +108,7 @@ public final class TunnelManager {
     }
 
     public CompletionStage<Void> saveState() {
-        final Set<String> runningTunnels = StreamSupport.stream(tunnels.values())
+        final Set<String> runningTunnels = StreamSupport.stream(tunnels)
                 .filter(tunnel -> tunnel.getState() == State.UP)
                 .map(Tunnel::getName)
                 .collect(Collectors.toUnmodifiableSet());
