@@ -16,8 +16,6 @@ import java.util.Objects;
  */
 
 public abstract class BaseActivity extends Activity {
-    private static final String TAG = BaseActivity.class.getSimpleName();
-
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
     private Tunnel selectedTunnel;
 

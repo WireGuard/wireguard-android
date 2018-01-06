@@ -24,7 +24,7 @@ import org.threeten.bp.format.DateTimeFormatter;
  * Static methods for use by generated code in the Android data binding library.
  */
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused"})
 public final class BindingAdapters {
     private BindingAdapters() {
         // Prevent instantiation.

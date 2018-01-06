@@ -35,8 +35,8 @@
         <h3>Come back later!</h3><br>
 
         <p>Your Android device does not <em>currently</em> have the WireGuard kernel module. Please
-        talk to the manufacturer of your Android device or the author of your device\'s ROM about
-        including the WireGuard kernel module.</p><br>
+        talk to the manufacturer of your Android device or the author of your device&rsquo;s ROM
+        about including the WireGuard kernel module.</p><br>
 
         <p>Fortunately, we are in the process of implementing support for WireGuard in a way that
         will work on all devices, without any need for the kernel module. This means that while you
