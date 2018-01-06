@@ -38,10 +38,22 @@
                 <TextView
                     android:id="@+id/interface_title"
                     style="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/tunnel_switch"
                     android:text="@string/iface" />
+
+                <com.wireguard.android.widget.ToggleSwitch
+                    android:id="@+id/tunnel_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/interface_title"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="@{tunnel.state != State.UNKNOWN}"
+                    app:checked="@{tunnel.state == State.UP}"
+                    app:onBeforeCheckedChanged="@{() -> tunnel.setState(State.TOGGLE)}" />
 
                 <TextView
                     android:id="@+id/interface_name_label"
@@ -61,56 +73,10 @@
                     android:text="@{tunnel.name}" />
 
                 <TextView
-                    android:id="@+id/status_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/interface_name_text"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/status_text"
-                    android:text="@string/status" />
-
-                <TextView
-                    android:id="@+id/status_text"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/status_label"
-                    android:layout_toStartOf="@+id/tunnel_switch"
-                    android:text="@{tunnel.state.name}" />
-
-                <com.wireguard.android.widget.ToggleSwitch
-                    android:id="@+id/tunnel_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/status_text"
-                    android:layout_alignParentEnd="true"
-                    android:enabled="@{tunnel.state != State.UNKNOWN}"
-                    app:checked="@{tunnel.state == State.UP}"
-                    app:onBeforeCheckedChanged="@{() -> tunnel.setState(State.TOGGLE)}" />
-
-                <TextView
-                    android:id="@+id/last_change_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/status_text"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/last_change_text"
-                    android:text="@string/last_change" />
-
-                <TextView
-                    android:id="@+id/last_change_text"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/last_change_label"
-                    android:text="@{tunnel.lastStateChange}" />
-
-                <TextView
                     android:id="@+id/public_key_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/last_change_text"
+                    android:layout_below="@id/interface_name_text"
                     android:layout_marginTop="8dp"
                     android:labelFor="@+id/public_key_text"
                     android:text="@string/public_key" />
