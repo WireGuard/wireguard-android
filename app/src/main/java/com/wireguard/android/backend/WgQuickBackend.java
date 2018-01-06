@@ -12,12 +12,15 @@ import com.wireguard.config.Config;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;
+import java9.util.stream.Collectors;
+import java9.util.stream.Stream;
 
 /**
  * Created by samuel on 12/19/17.
@@ -53,24 +56,22 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public CompletionStage<State> getState(final Tunnel tunnel) {
-        Log.v(TAG, "Requested state for tunnel " + tunnel.getName());
+    public CompletionStage<Set<String>> enumerate() {
         return asyncWorker.supplyAsync(() -> {
             final List<String> output = new LinkedList<>();
-            final State state;
-            if (rootShell.run(output, "wg show interfaces") != 0) {
-                state = State.UNKNOWN;
-            } else if (output.isEmpty()) {
-                // There are no running interfaces.
-                state = State.DOWN;
-            } else {
-                // wg puts all interface names on the same line. Split them into separate elements.
-                final String[] names = output.get(0).split(" ");
-                state = Arrays.asList(names).contains(tunnel.getName()) ? State.UP : State.DOWN;
-            }
-            Log.v(TAG, "Got state " + state + " for tunnel " + tunnel.getName());
-            return state;
+            // Don't throw an exception here or nothing will show up in the UI.
+            if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
+                return Collections.emptySet();
+            // wg puts all interface names on the same line. Split them into separate elements.
+            return Stream.of(output.get(0).split(" "))
+                    .collect(Collectors.toUnmodifiableSet());
         });
+    }
+
+    @Override
+    public CompletionStage<State> getState(final Tunnel tunnel) {
+        Log.v(TAG, "Requested state for tunnel " + tunnel.getName());
+        return enumerate().thenApply(set -> set.contains(tunnel.getName()) ? State.UP : State.DOWN);
     }
 
     @Override
