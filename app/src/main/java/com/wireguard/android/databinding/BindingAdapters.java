@@ -41,12 +41,12 @@ public final class BindingAdapters {
     }
 
     @BindingAdapter({"items", "layout"})
-    public static <T> void setItems(final LinearLayout view,
-                                    final ObservableList<T> oldList, final int oldLayoutId,
-                                    final ObservableList<T> newList, final int newLayoutId) {
+    public static <E> void setItems(final LinearLayout view,
+                                    final ObservableList<E> oldList, final int oldLayoutId,
+                                    final ObservableList<E> newList, final int newLayoutId) {
         if (oldList == newList && oldLayoutId == newLayoutId)
             return;
-        ItemChangeListener<T> listener = ListenerUtil.getListener(view, R.id.item_change_listener);
+        ItemChangeListener<E> listener = ListenerUtil.getListener(view, R.id.item_change_listener);
         // If the layout changes, any existing listener must be replaced.
         if (listener != null && oldList != null && oldLayoutId != newLayoutId) {
             listener.setList(null);
