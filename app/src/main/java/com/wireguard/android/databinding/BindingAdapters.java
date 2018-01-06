@@ -13,6 +13,7 @@ import com.wireguard.android.R;
 import com.wireguard.android.util.Keyed;
 import com.wireguard.android.util.KeyedObservableList;
 import com.wireguard.android.widget.ToggleSwitch;
+import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
@@ -92,8 +93,7 @@ public final class BindingAdapters {
 
     @BindingAdapter({"onBeforeCheckedChanged"})
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
-                                                 final ToggleSwitch.OnBeforeCheckedChangeListener
-                                                         listener) {
+                                                 final OnBeforeCheckedChangeListener listener) {
         view.setOnBeforeCheckedChangeListener(listener);
     }
 
