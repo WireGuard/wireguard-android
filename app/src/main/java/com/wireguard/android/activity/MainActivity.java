@@ -120,9 +120,8 @@ public class MainActivity extends BaseActivity {
 
 
     @Override
-    protected Tunnel onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
         moveToState(newTunnel != null ? State.DETAIL : State.LIST);
-        return newTunnel;
     }
 
     private enum State {

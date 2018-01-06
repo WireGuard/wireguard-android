@@ -53,7 +53,7 @@ public abstract class BaseActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    protected abstract Tunnel onSelectedTunnelChanged(Tunnel oldTunnel, Tunnel newTunnel);
+    protected abstract void onSelectedTunnelChanged(Tunnel oldTunnel, Tunnel newTunnel);
 
     public void removeOnSelectedTunnelChangedListener(
             final OnSelectedTunnelChangedListener listener) {
@@ -64,11 +64,9 @@ public abstract class BaseActivity extends Activity {
         final Tunnel oldTunnel = selectedTunnel;
         if (Objects.equals(oldTunnel, tunnel))
             return;
-        // Give the activity a chance to override the tunnel change.
-        selectedTunnel = onSelectedTunnelChanged(oldTunnel, tunnel);
-        if (Objects.equals(oldTunnel, selectedTunnel))
-            return;
-        selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, selectedTunnel);
+        selectedTunnel = tunnel;
+        onSelectedTunnelChanged(oldTunnel, tunnel);
+        selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, tunnel);
     }
 
     public interface OnSelectedTunnelChangedListener {
