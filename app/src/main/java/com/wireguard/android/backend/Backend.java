@@ -5,6 +5,8 @@ import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.config.Config;
 
+import java.util.Set;
+
 import java9.util.concurrent.CompletionStage;
 
 /**
@@ -24,6 +26,14 @@ public interface Backend {
      * thread.
      */
     CompletionStage<Config> applyConfig(Tunnel tunnel, Config config);
+
+    /**
+     * Enumerate the names of currently-running tunnels.
+     *
+     * @return A future completed when the set of running tunnel names is available. This future
+     * will always be completed on the main thread.
+     */
+    CompletionStage<Set<String>> enumerate();
 
     /**
      * Get the actual state of a tunnel, asynchronously.
