@@ -87,13 +87,11 @@ public final class TunnelManager {
 
     public void onCreate() {
         Log.v(TAG, "onCreate triggered");
-        configStore.enumerate()
-                .thenApply(names -> StreamSupport.stream(names)
-                        .map(this::add)
-                        .map(Tunnel::getStateAsync)
-                        .toArray(CompletableFuture[]::new))
-                .thenCompose(CompletableFuture::allOf)
-                .whenComplete(ExceptionLoggers.E);
+        configStore.enumerate().thenAcceptBoth(backend.enumerate(), (names, running) -> {
+            for (final String name : names) {
+                add(name, null, running.contains(name) ? State.UP : State.DOWN);
+            }
+        }).whenComplete(ExceptionLoggers.D);
     }
 
     public CompletionStage<Void> restoreState() {
