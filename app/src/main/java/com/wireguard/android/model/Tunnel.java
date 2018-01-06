@@ -9,6 +9,7 @@ import com.wireguard.android.BR;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.Keyed;
 import com.wireguard.config.Config;
 
 import org.threeten.bp.Instant;
@@ -23,7 +24,7 @@ import java9.util.concurrent.CompletionStage;
  * Encapsulates the volatile and nonvolatile state of a WireGuard tunnel.
  */
 
-public class Tunnel extends BaseObservable implements Comparable<Tunnel> {
+public class Tunnel extends BaseObservable implements Keyed<String> {
     public static final int NAME_MAX_LENGTH = 16;
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,16}");
     private static final String TAG = Tunnel.class.getSimpleName();
@@ -48,11 +49,6 @@ public class Tunnel extends BaseObservable implements Comparable<Tunnel> {
         return name != null && NAME_PATTERN.matcher(name).matches();
     }
 
-    @Override
-    public int compareTo(@NonNull final Tunnel tunnel) {
-        return name.compareTo(tunnel.name);
-    }
-
     @Bindable
     public Config getConfig() {
         if (config == null)
@@ -64,6 +60,11 @@ public class Tunnel extends BaseObservable implements Comparable<Tunnel> {
         if (config == null)
             return configStore.load(name).thenApply(this::setConfigInternal);
         return CompletableFuture.completedFuture(config);
+    }
+
+    @Override
+    public String getKey() {
+        return name;
     }
 
     @Bindable

@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
+import com.wireguard.android.util.Keyed;
+import com.wireguard.android.util.KeyedObservableList;
 import com.wireguard.android.widget.ToggleSwitch;
 
 import org.threeten.bp.Instant;
@@ -63,14 +65,15 @@ public final class BindingAdapters {
     }
 
     @BindingAdapter({"items", "layout"})
-    public static <T> void setItems(final ListView view,
-                                    final ObservableList<T> oldList, final int oldLayoutId,
-                                    final ObservableList<T> newList, final int newLayoutId) {
+    public static <K, E extends Keyed<? extends K>>
+    void setItems(final ListView view,
+                  final KeyedObservableList<K, E> oldList, final int oldLayoutId,
+                  final KeyedObservableList<K, E> newList, final int newLayoutId) {
         if (oldList == newList && oldLayoutId == newLayoutId)
             return;
         // The ListAdapter interface is not generic, so this cannot be checked.
-        @SuppressWarnings("unchecked")
-        ObservableListAdapter<T> adapter = (ObservableListAdapter<T>) view.getAdapter();
+        @SuppressWarnings("unchecked") KeyedObservableListAdapter<K, E> adapter =
+                (KeyedObservableListAdapter<K, E>) view.getAdapter();
         // If the layout changes, any existing adapter must be replaced.
         if (adapter != null && oldList != null && oldLayoutId != newLayoutId) {
             adapter.setList(null);
@@ -80,7 +83,7 @@ public final class BindingAdapters {
         if (newList == null || newLayoutId == 0)
             return;
         if (adapter == null) {
-            adapter = new ObservableListAdapter<>(view.getContext(), newLayoutId, newList);
+            adapter = new KeyedObservableListAdapter<>(view.getContext(), newLayoutId, newList);
             view.setAdapter(adapter);
         }
         // Either the list changed, or this is an entirely new listener because the layout changed.
