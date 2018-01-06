@@ -90,33 +90,6 @@ public final class BindingAdapters {
         adapter.setList(newList);
     }
 
-    @BindingAdapter({"items", "layout"})
-    public static <K extends Comparable<K>, V> void setItems(final ListView view,
-                                                             final ObservableNavigableMap<K, V> oldMap,
-                                                             final int oldLayoutId,
-                                                             final ObservableNavigableMap<K, V> newMap,
-                                                             final int newLayoutId) {
-        if (oldMap == newMap && oldLayoutId == newLayoutId)
-            return;
-        // The ListAdapter interface is not generic, so this cannot be checked.
-        @SuppressWarnings("unchecked")
-        ObservableMapAdapter<K, V> adapter = (ObservableMapAdapter<K, V>) view.getAdapter();
-        // If the layout changes, any existing adapter must be replaced.
-        if (adapter != null && oldMap != null && oldLayoutId != newLayoutId) {
-            adapter.setMap(null);
-            adapter = null;
-        }
-        // Avoid setting an adapter when there is no new list or layout.
-        if (newMap == null || newLayoutId == 0)
-            return;
-        if (adapter == null) {
-            adapter = new ObservableMapAdapter<>(view.getContext(), newLayoutId, newMap);
-            view.setAdapter(adapter);
-        }
-        // Either the list changed, or this is an entirely new listener because the layout changed.
-        adapter.setMap(newMap);
-    }
-
     @BindingAdapter({"onBeforeCheckedChanged"})
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
                                                  final ToggleSwitch.OnBeforeCheckedChangeListener
