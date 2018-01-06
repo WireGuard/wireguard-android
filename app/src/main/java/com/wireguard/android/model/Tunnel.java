@@ -6,13 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.wireguard.android.BR;
-import com.wireguard.android.backend.Backend;
-import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.Keyed;
 import com.wireguard.config.Config;
 
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import java9.util.concurrent.CompletableFuture;
@@ -25,19 +22,16 @@ import java9.util.concurrent.CompletionStage;
 public class Tunnel extends BaseObservable implements Keyed<String> {
     public static final int NAME_MAX_LENGTH = 16;
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,16}");
-    private static final String TAG = Tunnel.class.getSimpleName();
 
-    private final Backend backend;
-    private final ConfigStore configStore;
+    private final TunnelManager manager;
     private final String name;
     private Config config;
     private State state;
     private Statistics statistics;
 
-    Tunnel(@NonNull final Backend backend, @NonNull final ConfigStore configStore,
-           @NonNull final String name, @Nullable final Config config, @NonNull final State state) {
-        this.backend = backend;
-        this.configStore = configStore;
+    Tunnel(@NonNull final TunnelManager manager, @NonNull final String name,
+           @Nullable final Config config, @NonNull final State state) {
+        this.manager = manager;
         this.name = name;
         this.config = config;
         this.state = state;
@@ -47,16 +41,20 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return name != null && NAME_PATTERN.matcher(name).matches();
     }
 
+    public CompletionStage<Void> delete() {
+        return manager.delete(this);
+    }
+
     @Bindable
     public Config getConfig() {
         if (config == null)
-            getConfigAsync().whenComplete(ExceptionLoggers.D);
+            manager.getTunnelConfig(this).whenComplete(ExceptionLoggers.E);
         return config;
     }
 
     public CompletionStage<Config> getConfigAsync() {
         if (config == null)
-            return configStore.load(name).thenApply(this::setConfigInternal);
+            return manager.getTunnelConfig(this);
         return CompletableFuture.completedFuture(config);
     }
 
@@ -65,7 +63,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return name;
     }
 
-    @Bindable
     public String getName() {
         return name;
     }
@@ -73,13 +70,13 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     @Bindable
     public State getState() {
         if (state == State.UNKNOWN)
-            getStateAsync().whenComplete(ExceptionLoggers.D);
+            manager.getTunnelState(this).whenComplete(ExceptionLoggers.E);
         return state;
     }
 
     public CompletionStage<State> getStateAsync() {
         if (state == State.UNKNOWN)
-            return backend.getState(this).thenApply(this::setStateInternal);
+            return manager.getTunnelState(this);
         return CompletableFuture.completedFuture(state);
     }
 
@@ -87,61 +84,47 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     public Statistics getStatistics() {
         // FIXME: Check age of statistics.
         if (statistics == null)
-            getStatisticsAsync().whenComplete(ExceptionLoggers.D);
+            manager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E);
         return statistics;
     }
 
     public CompletionStage<Statistics> getStatisticsAsync() {
         // FIXME: Check age of statistics.
         if (statistics == null)
-            return backend.getStatistics(this).thenApply(this::setStatisticsInternal);
+            return manager.getTunnelStatistics(this);
         return CompletableFuture.completedFuture(statistics);
     }
 
-    private void onStateChanged(final State oldState, final State newState) {
-        if (newState != State.UP)
-            setStatisticsInternal(null);
-    }
-
-    public CompletionStage<Config> setConfig(@NonNull final Config config) {
-        if (!config.equals(this.config)) {
-            return backend.applyConfig(this, config)
-                    .thenCompose(cfg -> configStore.save(name, cfg))
-                    .thenApply(this::setConfigInternal);
-        }
-        return CompletableFuture.completedFuture(this.config);
-    }
-
-    private Config setConfigInternal(final Config config) {
-        if (Objects.equals(this.config, config))
-            return config;
+    Config onConfigChanged(final Config config) {
         this.config = config;
         notifyPropertyChanged(BR.config);
         return config;
     }
 
-    public CompletionStage<State> setState(@NonNull final State state) {
-        if (state != this.state)
-            return backend.setState(this, state)
-                    .thenApply(this::setStateInternal);
-        return CompletableFuture.completedFuture(this.state);
-    }
-
-    private State setStateInternal(final State state) {
-        if (Objects.equals(this.state, state))
-            return state;
-        onStateChanged(this.state, state);
+    State onStateChanged(final State state) {
+        if (state != State.UP)
+            onStatisticsChanged(null);
         this.state = state;
         notifyPropertyChanged(BR.state);
         return state;
     }
 
-    private Statistics setStatisticsInternal(final Statistics statistics) {
-        if (Objects.equals(this.statistics, statistics))
-            return statistics;
+    Statistics onStatisticsChanged(final Statistics statistics) {
         this.statistics = statistics;
         notifyPropertyChanged(BR.statistics);
         return statistics;
+    }
+
+    public CompletionStage<Config> setConfig(@NonNull final Config config) {
+        if (!config.equals(this.config))
+            return manager.setTunnelConfig(this, config);
+        return CompletableFuture.completedFuture(this.config);
+    }
+
+    public CompletionStage<State> setState(@NonNull final State state) {
+        if (state != this.state)
+            return manager.setTunnelState(this, state);
+        return CompletableFuture.completedFuture(this.state);
     }
 
     public enum State {

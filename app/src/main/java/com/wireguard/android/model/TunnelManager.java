@@ -1,12 +1,12 @@
 package com.wireguard.android.model;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.KeyedObservableList;
 import com.wireguard.android.util.SortedKeyedObservableArrayList;
@@ -49,36 +49,37 @@ public final class TunnelManager {
     }
 
     private Tunnel add(final String name, final Config config, final State state) {
-        final Tunnel tunnel = new Tunnel(backend, configStore, name, config, state);
+        final Tunnel tunnel = new Tunnel(this, name, config, state);
         tunnels.add(tunnel);
         return tunnel;
     }
 
-    private Tunnel add(final String name) {
-        return add(name, null, State.UNKNOWN);
-    }
-
     public CompletionStage<Tunnel> create(final String name, final Config config) {
-        Log.v(TAG, "Requested create tunnel " + name + " with config\n" + config);
         if (!Tunnel.isNameValid(name))
             return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
         if (tunnels.containsKey(name)) {
             final String message = "Tunnel " + name + " already exists";
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
-        return configStore.create(name, config)
-                .thenApply(savedConfig -> add(name, savedConfig, State.DOWN));
+        return configStore.create(name, config).thenApply(cfg -> add(name, cfg, State.DOWN));
     }
 
-    public CompletionStage<Void> delete(final Tunnel tunnel) {
-        Log.v(TAG, "Requested delete tunnel " + tunnel.getName() + " state=" + tunnel.getState());
-        return backend.setState(tunnel, State.DOWN)
+    CompletionStage<Void> delete(final Tunnel tunnel) {
+        return setTunnelState(tunnel, State.DOWN)
                 .thenCompose(x -> configStore.delete(tunnel.getName()))
-                .thenAccept(x -> {
-                    tunnels.remove(tunnel);
-                    if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
-                        preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
-                });
+                .thenAccept(x -> remove(tunnel));
+    }
+
+    CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
+        return configStore.load(tunnel.getName()).thenApply(tunnel::onConfigChanged);
+    }
+
+    CompletionStage<State> getTunnelState(final Tunnel tunnel) {
+        return backend.getState(tunnel).thenApply(tunnel::onStateChanged);
+    }
+
+    CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
+        return backend.getStatistics(tunnel).thenApply(tunnel::onStatisticsChanged);
     }
 
     public KeyedObservableList<String, Tunnel> getTunnels() {
@@ -86,12 +87,16 @@ public final class TunnelManager {
     }
 
     public void onCreate() {
-        Log.v(TAG, "onCreate triggered");
         configStore.enumerate().thenAcceptBoth(backend.enumerate(), (names, running) -> {
-            for (final String name : names) {
+            for (final String name : names)
                 add(name, null, running.contains(name) ? State.UP : State.DOWN);
-            }
-        }).whenComplete(ExceptionLoggers.D);
+        }).whenComplete(ExceptionLoggers.E);
+    }
+
+    private void remove(final Tunnel tunnel) {
+        if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
+            preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
+        tunnels.remove(tunnel);
     }
 
     public CompletionStage<Void> restoreState() {
@@ -113,5 +118,16 @@ public final class TunnelManager {
                 .collect(Collectors.toUnmodifiableSet());
         preferences.edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).apply();
         return CompletableFuture.completedFuture(null);
+    }
+
+    CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
+        return backend.applyConfig(tunnel, config)
+                .thenCompose(cfg -> configStore.save(tunnel.getName(), cfg))
+                .thenApply(tunnel::onConfigChanged);
+    }
+
+    CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
+        return backend.setState(tunnel, state)
+                .thenApply(tunnel::onStateChanged);
     }
 }

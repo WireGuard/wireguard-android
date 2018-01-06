@@ -198,7 +198,7 @@ public class TunnelListFragment extends BaseFragment {
                 case R.id.menu_action_delete:
                     final CompletableFuture[] futures = getCheckedPositions()
                             .mapToObj(pos -> (Tunnel) tunnelList.getItemAtPosition(pos))
-                            .map(tunnelManager::delete)
+                            .map(Tunnel::delete)
                             .toArray(CompletableFuture[]::new);
                     CompletableFuture.allOf(futures)
                             .thenApply(x -> futures.length)
