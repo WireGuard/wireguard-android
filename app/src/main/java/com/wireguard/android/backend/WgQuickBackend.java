@@ -86,7 +86,7 @@ public final class WgQuickBackend implements Backend {
             final String stateName = resolveState(currentState, state).name().toLowerCase();
             final File file = new File(context.getFilesDir(), tunnel.getName() + ".conf");
             final String path = file.getAbsolutePath();
-            // FIXME: Assumes file layout from FIleConfigStore. Use a temporary file.
+            // FIXME: Assumes file layout from FileConfigStore. Use a temporary file.
             if (rootShell.run(null, String.format("wg-quick %s '%s'", stateName, path)) != 0)
                 throw new IOException("wg-quick failed");
             return tunnel;
