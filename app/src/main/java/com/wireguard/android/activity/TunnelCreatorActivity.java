@@ -21,8 +21,7 @@ public class TunnelCreatorActivity extends BaseActivity {
     }
 
     @Override
-    protected Tunnel onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
         finish();
-        return null;
     }
 }
