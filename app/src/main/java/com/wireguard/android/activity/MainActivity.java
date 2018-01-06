@@ -53,14 +53,9 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         state = nextState;
-        if (state.layer > 1) {
-            if (getActionBar() != null)
-                getActionBar().setDisplayHomeAsUpEnabled(true);
-        } else {
-            if (getActionBar() != null)
-                getActionBar().setDisplayHomeAsUpEnabled(false);
+        if (state.layer <= State.LIST.layer)
             setSelectedTunnel(null);
-        }
+        updateActionBar();
         return true;
     }
 
@@ -82,6 +77,7 @@ public class MainActivity extends BaseActivity {
                 initialState = State.valueOf(getIntent().getStringExtra(KEY_STATE));
             moveToState(initialState);
         }
+        updateActionBar();
     }
 
     @Override
@@ -122,6 +118,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
         moveToState(newTunnel != null ? State.DETAIL : State.LIST);
+    }
+
+    private void updateActionBar() {
+        if (getActionBar() != null)
+            getActionBar().setDisplayHomeAsUpEnabled(state.layer > State.LIST.layer);
     }
 
     private enum State {
