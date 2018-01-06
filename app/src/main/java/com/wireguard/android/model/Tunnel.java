@@ -12,8 +12,6 @@ import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.Keyed;
 import com.wireguard.config.Config;
 
-import org.threeten.bp.Instant;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -33,7 +31,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     private final ConfigStore configStore;
     private final String name;
     private Config config;
-    private Instant lastStateChange = Instant.EPOCH;
     private State state = State.UNKNOWN;
     private Statistics statistics;
 
@@ -65,11 +62,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     @Override
     public String getKey() {
         return name;
-    }
-
-    @Bindable
-    public Instant getLastStateChange() {
-        return lastStateChange;
     }
 
     @Bindable
@@ -106,10 +98,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     }
 
     private void onStateChanged(final State oldState, final State newState) {
-        if (oldState != State.UNKNOWN) {
-            lastStateChange = Instant.now();
-            notifyPropertyChanged(BR.lastStateChange);
-        }
         if (newState != State.UP)
             setStatisticsInternal(null);
     }
