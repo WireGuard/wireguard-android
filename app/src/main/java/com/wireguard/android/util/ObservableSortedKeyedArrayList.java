@@ -5,7 +5,11 @@ import android.support.annotation.NonNull;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.Spliterator;
 
 /**
  * KeyedArrayList that enforces uniqueness and sorted order across the set of keys. This class uses
@@ -14,9 +18,28 @@ import java.util.List;
  * key still require O(n) time.
  */
 
-public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
-        E extends Keyed<? extends K>> extends ObservableKeyedArrayList<K, E> {
-    private final transient List<K> keyList = new KeyList<>(this);
+public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
+        extends ObservableKeyedArrayList<K, E> implements ObservableSortedKeyedList<K, E> {
+    private final Comparator<? super K> comparator;
+    private final transient KeyList<K, E> keyList = new KeyList<>(this);
+
+    public ObservableSortedKeyedArrayList() {
+        comparator = null;
+    }
+
+    public ObservableSortedKeyedArrayList(final Comparator<? super K> comparator) {
+        this.comparator = comparator;
+    }
+
+    public ObservableSortedKeyedArrayList(final Collection<? extends E> c) {
+        this();
+        addAll(c);
+    }
+
+    public ObservableSortedKeyedArrayList(final SortedKeyedList<K, E> other) {
+        this(other.comparator());
+        addAll(other);
+    }
 
     @Override
     public boolean add(final E e) {
@@ -57,14 +80,45 @@ public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
         return true;
     }
 
+    @Override
+    public Comparator<? super K> comparator() {
+        return comparator;
+    }
+
+    @Override
+    public K firstKey() {
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return get(0).getKey();
+    }
+
     private int getInsertionPoint(final E e) {
-        return -Collections.binarySearch(keyList, e.getKey()) - 1;
+        if (comparator != null) {
+            return -Collections.binarySearch(keyList, e.getKey(), comparator) - 1;
+        } else {
+            @SuppressWarnings("unchecked") final List<Comparable<? super K>> list =
+                    (List<Comparable<? super K>>) keyList;
+            return -Collections.binarySearch(list, e.getKey()) - 1;
+        }
     }
 
     @Override
     public int indexOfKey(final K key) {
-        final int index = Collections.binarySearch(keyList, key);
+        final int index;
+        if (comparator != null) {
+            index = Collections.binarySearch(keyList, key, comparator);
+        } else {
+            @SuppressWarnings("unchecked") final List<Comparable<? super K>> list =
+                    (List<Comparable<? super K>>) keyList;
+            index = Collections.binarySearch(list, key);
+        }
         return index >= 0 ? index : -1;
+    }
+
+    @Override
+    @NonNull
+    public Set<K> keySet() {
+        return keyList;
     }
 
     @Override
@@ -74,8 +128,23 @@ public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
     }
 
     @Override
+    public K lastKey() {
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return get(size() - 1).getKey();
+    }
+
+    @Override
     public E set(final int index, final E e) {
-        if (e.getKey().compareTo(get(index).getKey()) != 0) {
+        final int order;
+        if (comparator != null) {
+            order = comparator.compare(e.getKey(), get(index).getKey());
+        } else {
+            @SuppressWarnings("unchecked") final Comparable<? super K> key =
+                    (Comparable<? super K>) e.getKey();
+            order = key.compareTo(get(index).getKey());
+        }
+        if (order != 0) {
             // Allow replacement if the new key would be inserted adjacent to the replaced element.
             final int insertionPoint = getInsertionPoint(e);
             if (insertionPoint < index || insertionPoint > index + 1)
@@ -84,8 +153,14 @@ public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
         return super.set(index, e);
     }
 
-    private static final class KeyList<K extends Comparable<? super K>,
-            E extends Keyed<? extends K>> extends AbstractList<K> {
+    @Override
+    @NonNull
+    public Collection<E> values() {
+        return this;
+    }
+
+    private static final class KeyList<K, E extends Keyed<? extends K>>
+            extends AbstractList<K> implements Set<K> {
         private final ObservableSortedKeyedArrayList<K, E> list;
 
         private KeyList(final ObservableSortedKeyedArrayList<K, E> list) {
@@ -100,6 +175,11 @@ public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
         @Override
         public int size() {
             return list.size();
+        }
+
+        @Override
+        public Spliterator<K> spliterator() {
+            return super.spliterator();
         }
     }
 }
