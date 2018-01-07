@@ -1,12 +1,14 @@
 package com.wireguard.android.model;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.util.ObservableSortedKeyedArrayList;
@@ -38,6 +40,7 @@ public final class TunnelManager {
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
     private static final String TAG = TunnelManager.class.getSimpleName();
 
+    private final AsyncWorker asyncWorker;
     private final Backend backend;
     private final ConfigStore configStore;
     private final SharedPreferences preferences;
@@ -45,45 +48,55 @@ public final class TunnelManager {
             new ObservableSortedKeyedArrayList<>(COMPARATOR);
 
     @Inject
-    public TunnelManager(final Backend backend, final ConfigStore configStore,
-                         final SharedPreferences preferences) {
+    public TunnelManager(final AsyncWorker asyncWorker, final Backend backend,
+                         final ConfigStore configStore, final SharedPreferences preferences) {
+        this.asyncWorker = asyncWorker;
         this.backend = backend;
         this.configStore = configStore;
         this.preferences = preferences;
     }
 
-    private Tunnel add(final String name, final Config config, final State state) {
+    private Tunnel addToList(final String name, final Config config, final State state) {
         final Tunnel tunnel = new Tunnel(this, name, config, state);
         tunnels.add(tunnel);
         return tunnel;
     }
 
-    public CompletionStage<Tunnel> create(final String name, final Config config) {
+    public CompletionStage<Tunnel> create(@NonNull final String name, final Config config) {
         if (!Tunnel.isNameValid(name))
             return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
         if (tunnels.containsKey(name)) {
             final String message = "Tunnel " + name + " already exists";
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
-        return configStore.create(name, config).thenApply(cfg -> add(name, cfg, State.DOWN));
+        return asyncWorker.supplyAsync(() -> configStore.create(name, config))
+                .thenApply(savedConfig -> addToList(name, savedConfig, State.DOWN));
     }
 
     CompletionStage<Void> delete(final Tunnel tunnel) {
-        return setTunnelState(tunnel, State.DOWN)
-                .thenCompose(x -> configStore.delete(tunnel.getName()))
-                .thenAccept(x -> remove(tunnel));
+        return asyncWorker.runAsync(() -> {
+            backend.setState(tunnel, State.DOWN);
+            configStore.delete(tunnel.getName());
+        }).thenAccept(x -> {
+            if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
+                preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
+            tunnels.remove(tunnel);
+        });
     }
 
     CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
-        return configStore.load(tunnel.getName()).thenApply(tunnel::onConfigChanged);
+        return asyncWorker.supplyAsync(() -> configStore.load(tunnel.getName()))
+                .thenApply(tunnel::onConfigChanged);
     }
 
     CompletionStage<State> getTunnelState(final Tunnel tunnel) {
-        return backend.getState(tunnel).thenApply(tunnel::onStateChanged);
+        return asyncWorker.supplyAsync(() -> backend.getState(tunnel))
+                .thenApply(tunnel::onStateChanged);
     }
 
     CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
-        return backend.getStatistics(tunnel).thenApply(tunnel::onStatisticsChanged);
+        return asyncWorker.supplyAsync(() -> backend.getStatistics(tunnel))
+                .thenApply(tunnel::onStatisticsChanged);
     }
 
     public ObservableKeyedList<String, Tunnel> getTunnels() {
@@ -91,16 +104,14 @@ public final class TunnelManager {
     }
 
     public void onCreate() {
-        configStore.enumerate().thenAcceptBoth(backend.enumerate(), (names, running) -> {
-            for (final String name : names)
-                add(name, null, running.contains(name) ? State.UP : State.DOWN);
-        }).whenComplete(ExceptionLoggers.E);
+        asyncWorker.supplyAsync(configStore::enumerate)
+                .thenAcceptBoth(asyncWorker.supplyAsync(backend::enumerate), this::onTunnelsLoaded)
+                .whenComplete(ExceptionLoggers.E);
     }
 
-    private void remove(final Tunnel tunnel) {
-        if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
-            preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
-        tunnels.remove(tunnel);
+    private void onTunnelsLoaded(final Set<String> present, final Set<String> running) {
+        for (final String name : present)
+            addToList(name, null, running.contains(name) ? State.UP : State.DOWN);
     }
 
     public CompletionStage<Void> restoreState() {
@@ -125,13 +136,14 @@ public final class TunnelManager {
     }
 
     CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
-        return backend.applyConfig(tunnel, config)
-                .thenCompose(cfg -> configStore.save(tunnel.getName(), cfg))
-                .thenApply(tunnel::onConfigChanged);
+        return asyncWorker.supplyAsync(() -> {
+            final Config appliedConfig = backend.applyConfig(tunnel, config);
+            return configStore.save(tunnel.getName(), appliedConfig);
+        }).thenApply(tunnel::onConfigChanged);
     }
 
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
-        return backend.setState(tunnel, state)
+        return asyncWorker.supplyAsync(() -> backend.setState(tunnel, state))
                 .thenApply(tunnel::onStateChanged);
     }
 }
