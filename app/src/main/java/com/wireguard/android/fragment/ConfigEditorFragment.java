@@ -38,6 +38,7 @@ public class ConfigEditorFragment extends BaseFragment {
     private ConfigEditorFragmentBinding binding;
     private boolean isViewStateRestored;
     private Config localConfig = new Config();
+    private Tunnel localTunnel;
     private String originalName;
 
     private static <T extends Parcelable> T copyParcelable(final T original) {
@@ -49,21 +50,6 @@ public class ConfigEditorFragment extends BaseFragment {
         final T copy = parcel.readParcelable(original.getClass().getClassLoader());
         parcel.recycle();
         return copy;
-    }
-
-    private void onConfigCreated(final Tunnel tunnel, final Throwable throwable) {
-        if (throwable != null) {
-            Log.e(TAG, "Cannot create tunnel", throwable);
-            final String message = "Cannot create tunnel: "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
-            if (binding != null) {
-                final CoordinatorLayout container = binding.mainContainer;
-                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
-            }
-        } else {
-            Log.d(TAG, "Successfully created tunnel " + tunnel.getName());
-            onFinished(tunnel);
-        }
     }
 
     private void onConfigLoaded(final Config config) {
@@ -82,8 +68,8 @@ public class ConfigEditorFragment extends BaseFragment {
                 Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
             }
         } else {
-            Log.d(TAG, "Successfully saved configuration for " + getSelectedTunnel().getName());
-            onFinished(getSelectedTunnel());
+            Log.d(TAG, "Successfully saved configuration for " + localTunnel.getName());
+            onFinished();
         }
     }
 
@@ -107,6 +93,7 @@ public class ConfigEditorFragment extends BaseFragment {
             originalName = null;
             localName.set("");
         }
+        localTunnel = getSelectedTunnel();
         setHasOptionsMenu(true);
     }
 
@@ -130,7 +117,7 @@ public class ConfigEditorFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    private void onFinished(final Tunnel tunnel) {
+    private void onFinished() {
         // Hide the keyboard; it rarely goes away on its own.
         final Activity activity = getActivity();
         final View focusedView = activity.getCurrentFocus();
@@ -143,8 +130,11 @@ public class ConfigEditorFragment extends BaseFragment {
         }
         // Tell the activity to finish itself or go back to the detail view.
         getActivity().runOnUiThread(() -> {
-            setSelectedTunnel(null);
-            setSelectedTunnel(tunnel);
+            // The selected tunnel has to actually change, but we have to remember this one.
+            final Tunnel savedTunnel = localTunnel;
+            if (savedTunnel == getSelectedTunnel())
+                setSelectedTunnel(null);
+            setSelectedTunnel(savedTunnel);
         });
     }
 
@@ -152,15 +142,19 @@ public class ConfigEditorFragment extends BaseFragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_save:
-                if (getSelectedTunnel() != null) {
-                    Log.d(TAG, "Attempting to save config to " + getSelectedTunnel().getName());
-                    getSelectedTunnel().setConfig(localConfig)
-                            .whenComplete(this::onConfigSaved);
-                } else {
+                if (getSelectedTunnel() == null) {
                     Log.d(TAG, "Attempting to create new tunnel " + localName.get());
                     final TunnelManager manager = Application.getComponent().getTunnelManager();
                     manager.create(localName.get(), localConfig)
-                            .whenComplete(this::onConfigCreated);
+                            .whenComplete(this::onTunnelCreated);
+                } else if (!getSelectedTunnel().getName().equals(localName.get())) {
+                    Log.d(TAG, "Attempting to rename tunnel to " + localName.get());
+                    getSelectedTunnel().rename(localName.get())
+                            .whenComplete(this::onTunnelRenamed);
+                } else {
+                    Log.d(TAG, "Attempting to save config of " + getSelectedTunnel().getName());
+                    getSelectedTunnel().setConfig(localConfig)
+                            .whenComplete(this::onConfigSaved);
                 }
                 return true;
             default:
@@ -192,6 +186,43 @@ public class ConfigEditorFragment extends BaseFragment {
             originalName = null;
             localName.set("");
         }
+        localTunnel = newTunnel;
+    }
+
+    private void onTunnelCreated(final Tunnel tunnel, final Throwable throwable) {
+        if (throwable != null) {
+            Log.e(TAG, "Cannot create tunnel", throwable);
+            final String message = "Cannot create tunnel: "
+                    + ExceptionLoggers.unwrap(throwable).getMessage();
+            if (binding != null) {
+                final CoordinatorLayout container = binding.mainContainer;
+                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d(TAG, "Successfully created tunnel " + tunnel.getName());
+            localTunnel = tunnel;
+            onFinished();
+        }
+    }
+
+
+    private void onTunnelRenamed(final Tunnel tunnel, final Throwable throwable) {
+        if (throwable != null) {
+            Log.e(TAG, "Cannot rename tunnel", throwable);
+            final String message = "Cannot rename tunnel: "
+                    + ExceptionLoggers.unwrap(throwable).getMessage();
+            if (binding != null) {
+                final CoordinatorLayout container = binding.mainContainer;
+                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d(TAG, "Successfully renamed tunnel to " + tunnel.getName());
+            localTunnel = tunnel;
+            // Now save the rest of configuration changes.
+            Log.d(TAG, "Attempting to save config of " + tunnel.getName());
+            tunnel.setConfig(localConfig)
+                    .whenComplete(this::onConfigSaved);
+        }
     }
 
     @Override
@@ -199,8 +230,6 @@ public class ConfigEditorFragment extends BaseFragment {
         super.onViewStateRestored(savedInstanceState);
         binding.setConfig(localConfig);
         binding.setName(localName);
-        // FIXME: Remove this when renaming works.
-        binding.interfaceNameText.setEnabled(originalName == null);
         isViewStateRestored = true;
     }
 }
