@@ -10,7 +10,7 @@
 
         <variable
             name="collection"
-            type="com.wireguard.android.util.KeyedObservableList&lt;String, Tunnel&gt;" />
+            type="com.wireguard.android.util.ObservableKeyedList&lt;String, Tunnel&gt;" />
 
         <variable
             name="key"

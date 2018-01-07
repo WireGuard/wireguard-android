@@ -8,8 +8,8 @@ import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.KeyedObservableList;
-import com.wireguard.android.util.SortedKeyedObservableArrayList;
+import com.wireguard.android.util.ObservableKeyedList;
+import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.config.Config;
 
 import java.util.Collections;
@@ -37,8 +37,8 @@ public final class TunnelManager {
     private final Backend backend;
     private final ConfigStore configStore;
     private final SharedPreferences preferences;
-    private final KeyedObservableList<String, Tunnel> tunnels =
-            new SortedKeyedObservableArrayList<>();
+    private final ObservableKeyedList<String, Tunnel> tunnels =
+            new ObservableSortedKeyedArrayList<>();
 
     @Inject
     public TunnelManager(final Backend backend, final ConfigStore configStore,
@@ -82,7 +82,7 @@ public final class TunnelManager {
         return backend.getStatistics(tunnel).thenApply(tunnel::onStatisticsChanged);
     }
 
-    public KeyedObservableList<String, Tunnel> getTunnels() {
+    public ObservableKeyedList<String, Tunnel> getTunnels() {
         return tunnels;
     }
 

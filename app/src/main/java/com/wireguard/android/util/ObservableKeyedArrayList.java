@@ -14,8 +14,8 @@ import java.util.Objects;
  * operations, require O(n) time.
  */
 
-public class KeyedObservableArrayList<K, E extends Keyed<? extends K>>
-        extends ObservableArrayList<E> implements KeyedObservableList<K, E> {
+public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
+        extends ObservableArrayList<E> implements ObservableKeyedList<K, E> {
     @Override
     public boolean add(final E e) {
         if (e == null)

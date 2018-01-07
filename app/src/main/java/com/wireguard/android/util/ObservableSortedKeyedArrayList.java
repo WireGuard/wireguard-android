@@ -14,9 +14,8 @@ import java.util.List;
  * key still require O(n) time.
  */
 
-public class SortedKeyedObservableArrayList<K extends Comparable<? super K>,
-        E extends Keyed<? extends K>> extends KeyedObservableArrayList<K, E> {
-
+public class ObservableSortedKeyedArrayList<K extends Comparable<? super K>,
+        E extends Keyed<? extends K>> extends ObservableKeyedArrayList<K, E> {
     private final transient List<K> keyList = new KeyList<>(this);
 
     @Override
@@ -87,9 +86,9 @@ public class SortedKeyedObservableArrayList<K extends Comparable<? super K>,
 
     private static final class KeyList<K extends Comparable<? super K>,
             E extends Keyed<? extends K>> extends AbstractList<K> {
-        private final SortedKeyedObservableArrayList<K, E> list;
+        private final ObservableSortedKeyedArrayList<K, E> list;
 
-        private KeyList(final SortedKeyedObservableArrayList<K, E> list) {
+        private KeyList(final ObservableSortedKeyedArrayList<K, E> list) {
             this.list = list;
         }
 
