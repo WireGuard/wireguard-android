@@ -81,17 +81,15 @@ public class Application extends android.app.Application {
 
         @ApplicationScope
         @Provides
-        public static Backend getBackend(final AsyncWorker asyncWorker,
-                                         @ApplicationContext final Context context,
+        public static Backend getBackend(@ApplicationContext final Context context,
                                          final RootShell rootShell) {
-            return new WgQuickBackend(asyncWorker, context, rootShell);
+            return new WgQuickBackend(context, rootShell);
         }
 
         @ApplicationScope
         @Provides
-        public static ConfigStore getConfigStore(final AsyncWorker asyncWorker,
-                                                 @ApplicationContext final Context context) {
-            return new FileConfigStore(asyncWorker, context);
+        public static ConfigStore getConfigStore(@ApplicationContext final Context context) {
+            return new FileConfigStore(context);
         }
 
 
