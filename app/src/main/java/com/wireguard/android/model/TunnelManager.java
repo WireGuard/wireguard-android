@@ -85,18 +85,24 @@ public final class TunnelManager {
     }
 
     CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
-        return asyncWorker.supplyAsync(() -> configStore.load(tunnel.getName()))
-                .thenApply(tunnel::onConfigChanged);
+        final CompletionStage<Config> completion =
+                asyncWorker.supplyAsync(() -> configStore.load(tunnel.getName()));
+        completion.thenAccept(tunnel::onConfigChanged);
+        return completion;
     }
 
     CompletionStage<State> getTunnelState(final Tunnel tunnel) {
-        return asyncWorker.supplyAsync(() -> backend.getState(tunnel))
-                .thenApply(tunnel::onStateChanged);
+        final CompletionStage<State> completion =
+                asyncWorker.supplyAsync(() -> backend.getState(tunnel));
+        completion.thenAccept(tunnel::onStateChanged);
+        return completion;
     }
 
     CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
-        return asyncWorker.supplyAsync(() -> backend.getStatistics(tunnel))
-                .thenApply(tunnel::onStatisticsChanged);
+        final CompletionStage<Statistics> completion =
+                asyncWorker.supplyAsync(() -> backend.getStatistics(tunnel));
+        completion.thenAccept(tunnel::onStatisticsChanged);
+        return completion;
     }
 
     public ObservableKeyedList<String, Tunnel> getTunnels() {
@@ -136,14 +142,18 @@ public final class TunnelManager {
     }
 
     CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
-        return asyncWorker.supplyAsync(() -> {
+        final CompletionStage<Config> completion = asyncWorker.supplyAsync(() -> {
             final Config appliedConfig = backend.applyConfig(tunnel, config);
             return configStore.save(tunnel.getName(), appliedConfig);
-        }).thenApply(tunnel::onConfigChanged);
+        });
+        completion.thenAccept(tunnel::onConfigChanged);
+        return completion;
     }
 
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
-        return asyncWorker.supplyAsync(() -> backend.setState(tunnel, state))
-                .thenApply(tunnel::onStateChanged);
+        final CompletionStage<State> completion =
+                asyncWorker.supplyAsync(() -> backend.setState(tunnel, state));
+        completion.thenAccept(tunnel::onStateChanged);
+        return completion;
     }
 }
