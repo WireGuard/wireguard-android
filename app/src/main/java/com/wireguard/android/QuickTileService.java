@@ -21,7 +21,7 @@ import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.TunnelManager;
-import com.wireguard.android.util.KeyedObservableList;
+import com.wireguard.android.util.ObservableKeyedList;
 
 import java.util.Objects;
 
@@ -104,7 +104,7 @@ public class QuickTileService extends TileService implements OnSharedPreferenceC
         final String currentName = tunnel != null ? tunnel.getName() : null;
         final String newName = preferences.getString(TunnelManager.KEY_PRIMARY_TUNNEL, null);
         if (!Objects.equals(currentName, newName)) {
-            final KeyedObservableList<String, Tunnel> tunnels = tunnelManager.getTunnels();
+            final ObservableKeyedList<String, Tunnel> tunnels = tunnelManager.getTunnels();
             final Tunnel newTunnel = newName != null ? tunnels.get(newName) : null;
             if (tunnel != null)
                 tunnel.removeOnPropertyChangedCallback(tunnelCallback);

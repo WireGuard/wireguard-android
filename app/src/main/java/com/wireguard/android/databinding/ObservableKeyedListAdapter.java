@@ -11,22 +11,22 @@ import android.widget.BaseAdapter;
 
 import com.wireguard.android.BR;
 import com.wireguard.android.util.Keyed;
-import com.wireguard.android.util.KeyedObservableList;
+import com.wireguard.android.util.ObservableKeyedList;
 
 import java.lang.ref.WeakReference;
 
 /**
- * A generic {@code ListAdapter} backed by a {@code KeyedObservableList}.
+ * A generic {@code ListAdapter} backed by a {@code ObservableKeyedList}.
  */
 
-class KeyedObservableListAdapter<K, E extends Keyed<? extends K>> extends BaseAdapter {
+class ObservableKeyedListAdapter<K, E extends Keyed<? extends K>> extends BaseAdapter {
     private final OnListChangedCallback<E> callback = new OnListChangedCallback<>(this);
     private final int layoutId;
     private final LayoutInflater layoutInflater;
-    private KeyedObservableList<K, E> list;
+    private ObservableKeyedList<K, E> list;
 
-    KeyedObservableListAdapter(final Context context, final int layoutId,
-                               final KeyedObservableList<K, E> list) {
+    ObservableKeyedListAdapter(final Context context, final int layoutId,
+                               final ObservableKeyedList<K, E> list) {
         this.layoutId = layoutId;
         layoutInflater = LayoutInflater.from(context);
         setList(list);
@@ -72,7 +72,7 @@ class KeyedObservableListAdapter<K, E extends Keyed<? extends K>> extends BaseAd
         return true;
     }
 
-    void setList(final KeyedObservableList<K, E> newList) {
+    void setList(final ObservableKeyedList<K, E> newList) {
         if (list != null)
             list.removeOnListChangedCallback(callback);
         list = newList;
@@ -85,15 +85,15 @@ class KeyedObservableListAdapter<K, E extends Keyed<? extends K>> extends BaseAd
     private static final class OnListChangedCallback<E extends Keyed<?>>
             extends ObservableList.OnListChangedCallback<ObservableList<E>> {
 
-        private final WeakReference<KeyedObservableListAdapter<?, E>> weakAdapter;
+        private final WeakReference<ObservableKeyedListAdapter<?, E>> weakAdapter;
 
-        private OnListChangedCallback(final KeyedObservableListAdapter<?, E> adapter) {
+        private OnListChangedCallback(final ObservableKeyedListAdapter<?, E> adapter) {
             weakAdapter = new WeakReference<>(adapter);
         }
 
         @Override
         public void onChanged(final ObservableList<E> sender) {
-            final KeyedObservableListAdapter adapter = weakAdapter.get();
+            final ObservableKeyedListAdapter adapter = weakAdapter.get();
             if (adapter != null)
                 adapter.notifyDataSetChanged();
             else

@@ -12,7 +12,7 @@
 
         <variable
             name="tunnels"
-            type="com.wireguard.android.util.KeyedObservableList&lt;String, Tunnel&gt;" />
+            type="com.wireguard.android.util.ObservableKeyedList&lt;String, Tunnel&gt;" />
     </data>
 
     <com.commonsware.cwac.crossport.design.widget.CoordinatorLayout
