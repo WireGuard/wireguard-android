@@ -13,10 +13,12 @@ import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.config.Config;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import java9.util.Comparators;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;
 import java9.util.stream.Collectors;
@@ -30,6 +32,8 @@ import java9.util.stream.StreamSupport;
 public final class TunnelManager {
     public static final String KEY_PRIMARY_TUNNEL = "primary_config";
     public static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
+    private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
+            String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
     private static final String TAG = TunnelManager.class.getSimpleName();
@@ -38,7 +42,7 @@ public final class TunnelManager {
     private final ConfigStore configStore;
     private final SharedPreferences preferences;
     private final ObservableKeyedList<String, Tunnel> tunnels =
-            new ObservableSortedKeyedArrayList<>();
+            new ObservableSortedKeyedArrayList<>(COMPARATOR);
 
     @Inject
     public TunnelManager(final Backend backend, final ConfigStore configStore,
