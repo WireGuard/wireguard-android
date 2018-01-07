@@ -63,7 +63,7 @@ public class TunnelListFragment extends BaseFragment {
         if (activity == null)
             return;
         final ContentResolver contentResolver = activity.getContentResolver();
-        final CompletionStage<String> nameFuture = asyncWorker.supplyAsync(() -> {
+        final CompletionStage<String> nameStage = asyncWorker.supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
             String name = null;
             try (final Cursor cursor = contentResolver.query(uri, columns, null, null, null)) {
@@ -80,7 +80,7 @@ public class TunnelListFragment extends BaseFragment {
             return name;
         });
         asyncWorker.supplyAsync(() -> Config.from(contentResolver.openInputStream(uri)))
-                .thenCombine(nameFuture, (config, name) -> tunnelManager.create(name, config))
+                .thenCombine(nameStage, (config, name) -> tunnelManager.create(name, config))
                 .thenCompose(Function.identity())
                 .handle(this::onTunnelImportFinished);
     }
