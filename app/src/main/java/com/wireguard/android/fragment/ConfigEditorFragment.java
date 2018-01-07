@@ -34,7 +34,7 @@ public class ConfigEditorFragment extends BaseFragment {
     private static final String KEY_LOCAL_NAME = "local_name";
     private static final String TAG = ConfigEditorFragment.class.getSimpleName();
 
-    private final ObservableField<String> localName = new ObservableField<>();
+    private final ObservableField<String> localName = new ObservableField<>("");
     private ConfigEditorFragmentBinding binding;
     private boolean isViewStateRestored;
     private Config localConfig = new Config();
@@ -105,7 +105,7 @@ public class ConfigEditorFragment extends BaseFragment {
         } else if (getSelectedTunnel() == null && originalName != null) {
             localConfig = new Config();
             originalName = null;
-            localName.set(null);
+            localName.set("");
         }
         setHasOptionsMenu(true);
     }
@@ -184,13 +184,14 @@ public class ConfigEditorFragment extends BaseFragment {
             localConfig = null;
             newTunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
             originalName = newTunnel.getName();
+            localName.set(originalName);
         } else {
             localConfig = new Config();
             if (binding != null && isViewStateRestored)
                 binding.setConfig(localConfig);
             originalName = null;
+            localName.set("");
         }
-        localName.set(originalName);
     }
 
     @Override
