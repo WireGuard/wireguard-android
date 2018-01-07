@@ -12,7 +12,7 @@ import com.wireguard.config.Config;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +51,7 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public Set<String> enumerate() {
-        final List<String> output = new LinkedList<>();
+        final List<String> output = new ArrayList<>();
         // Don't throw an exception here or nothing will show up in the UI.
         if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
             return Collections.emptySet();
