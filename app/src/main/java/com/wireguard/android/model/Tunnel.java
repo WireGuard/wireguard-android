@@ -112,6 +112,12 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         notifyPropertyChanged(BR.statistics);
     }
 
+    public CompletionStage<Tunnel> rename(@NonNull final String name) {
+        if (!name.equals(this.name))
+            return manager.rename(this, name);
+        return CompletableFuture.completedFuture(this);
+    }
+
     public CompletionStage<Config> setConfig(@NonNull final Config config) {
         if (!config.equals(this.config))
             return manager.setTunnelConfig(this, config);

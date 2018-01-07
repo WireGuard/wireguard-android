@@ -120,6 +120,32 @@ public final class TunnelManager {
             addToList(name, null, running.contains(name) ? State.UP : State.DOWN);
     }
 
+    CompletionStage<Tunnel> rename(final Tunnel tunnel, final String name) {
+        if (!Tunnel.isNameValid(name))
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
+        if (tunnels.containsKey(name)) {
+            final String message = "Tunnel " + name + " already exists";
+            return CompletableFuture.failedFuture(new IllegalArgumentException(message));
+        }
+        final State originalState = tunnel.getState();
+        return asyncWorker.supplyAsync(() -> {
+            backend.setState(tunnel, State.DOWN);
+            final Config newConfig = configStore.create(name, tunnel.getConfig());
+            final Tunnel newTunnel = new Tunnel(this, name, newConfig, State.DOWN);
+            if (originalState == State.UP) {
+                backend.setState(newTunnel, originalState);
+                newTunnel.onStateChanged(originalState);
+            }
+            configStore.delete(tunnel.getName());
+            return newTunnel;
+        }).whenComplete((newTunnel, e) -> {
+            if (e != null)
+                return;
+            tunnels.remove(tunnel);
+            tunnels.add(newTunnel);
+        });
+    }
+
     public CompletionStage<Void> restoreState() {
         if (!preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
             return CompletableFuture.completedFuture(null);
