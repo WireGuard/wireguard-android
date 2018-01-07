@@ -37,8 +37,8 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         this.state = state;
     }
 
-    public static boolean isNameValid(final CharSequence name) {
-        return name != null && NAME_PATTERN.matcher(name).matches();
+    public static boolean isNameValid(@NonNull final CharSequence name) {
+        return NAME_PATTERN.matcher(name).matches();
     }
 
     public CompletionStage<Void> delete() {
