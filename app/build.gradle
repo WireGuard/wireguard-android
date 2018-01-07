@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     buildTypes {
         release {
             minifyEnabled false
