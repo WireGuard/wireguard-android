@@ -148,12 +148,13 @@ public class TunnelListFragment extends BaseFragment {
 
     private void onTunnelDeletionFinished(final Integer count, final Throwable throwable) {
         final String message;
+        final String plural = count == 1 ? "" : "s";
         if (throwable == null) {
-            message = "Successfully deleted " + count + " tunnels";
+            message = "Successfully deleted " + count + " tunnel" + plural;
         } else {
-            message = "Could not delete some tunnels: "
+            message = "Unable to delete tunnel" + plural + ": "
                     + ExceptionLoggers.unwrap(throwable).getMessage();
-            Log.e(TAG, "Cannot delete tunnel", throwable);
+            Log.e(TAG, "Cannot delete tunnel" + plural, throwable);
         }
         if (binding != null) {
             final CoordinatorLayout container = binding.mainContainer;
