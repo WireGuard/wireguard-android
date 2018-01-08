@@ -237,9 +237,10 @@ public final class TunnelManager extends BaseObservable {
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
         final CompletionStage<State> completion =
                 asyncWorker.supplyAsync(() -> backend.setState(tunnel, state));
-        completion.thenAccept(tunnel::onStateChanged);
-        completion.thenAccept(newState -> {
-            if (newState == State.UP)
+        completion.whenComplete((newState, e) -> {
+            // Ensure onStateChanged is always called (failure or not), and with the correct state.
+            tunnel.onStateChanged(e == null ? newState : tunnel.getState());
+            if (e == null && newState == State.UP)
                 setLastUsedTunnel(tunnel);
         });
         return completion;
