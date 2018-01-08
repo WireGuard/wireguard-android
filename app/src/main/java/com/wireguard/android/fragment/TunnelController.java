@@ -19,6 +19,7 @@ import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.RootShell;
 
 /**
  * Helper method shared by TunnelListFragment and TunnelDetailFragment.
@@ -60,6 +61,8 @@ public final class TunnelController {
                 // Make links work.
                 ((TextView) dialog.findViewById(android.R.id.message))
                         .setMovementMethod(LinkMovementMethod.getInstance());
+            } else if (throwable instanceof RootShell.NoRootException) {
+                Snackbar.make(view, R.string.error_rootshell, Snackbar.LENGTH_LONG).show();
             } else {
                 final String message =
                         context.getString(checked ? R.string.error_up : R.string.error_down) + ": "
