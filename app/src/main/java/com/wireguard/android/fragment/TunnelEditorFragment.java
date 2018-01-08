@@ -33,7 +33,7 @@ public class TunnelEditorFragment extends BaseFragment {
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_LOCAL_NAME = "local_name";
     private static final String KEY_ORIGINAL_NAME = "original_name";
-    private static final String TAG = TunnelEditorFragment.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
 
     private final ObservableField<String> localName = new ObservableField<>("");
     private TunnelEditorFragmentBinding binding;

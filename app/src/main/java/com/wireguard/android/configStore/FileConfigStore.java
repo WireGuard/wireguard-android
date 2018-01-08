@@ -21,7 +21,7 @@ import java9.util.stream.Stream;
  */
 
 public final class FileConfigStore implements ConfigStore {
-    private static final String TAG = FileConfigStore.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + FileConfigStore.class.getSimpleName();
 
     private final Context context;
 

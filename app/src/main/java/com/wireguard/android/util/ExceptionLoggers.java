@@ -14,7 +14,7 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
     D(Log.DEBUG),
     E(Log.ERROR);
 
-    private static final String TAG = ExceptionLoggers.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + ExceptionLoggers.class.getSimpleName();
 
     private final int priority;
 

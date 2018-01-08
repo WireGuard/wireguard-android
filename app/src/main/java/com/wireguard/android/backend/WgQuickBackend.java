@@ -25,7 +25,7 @@ import java9.util.stream.Stream;
  */
 
 public final class WgQuickBackend implements Backend {
-    private static final String TAG = WgQuickBackend.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
 
     private final Context context;
     private final RootShell rootShell;
