@@ -58,6 +58,16 @@ public class RootShell {
         preamble = builder.toString();
     }
 
+    private static boolean isExecutable(final String name) {
+        final String path = System.getenv("PATH");
+        if (path == null)
+            return false;
+        for (final String dir : path.split(":"))
+            if (new File(dir, name).canExecute())
+                return true;
+        return false;
+    }
+
     /**
      * Run a command in a root shell.
      *
@@ -68,6 +78,8 @@ public class RootShell {
      */
     public int run(final List<String> output, final String command) {
         int exitValue = -1;
+        if (!isExecutable("su"))
+            return OsConstants.EACCES;
         try {
             final ProcessBuilder builder = new ProcessBuilder();
             builder.environment().put("LANG", "C");
