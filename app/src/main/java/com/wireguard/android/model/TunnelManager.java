@@ -1,9 +1,12 @@
 package com.wireguard.android.model;
 
 import android.content.SharedPreferences;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 
 import com.wireguard.android.Application.ApplicationScope;
+import com.wireguard.android.BR;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
@@ -14,7 +17,6 @@ import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.config.Config;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
@@ -31,10 +33,10 @@ import java9.util.stream.StreamSupport;
  */
 
 @ApplicationScope
-public final class TunnelManager {
-    public static final String KEY_PRIMARY_TUNNEL = "primary_config";
+public final class TunnelManager extends BaseObservable {
     private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());
+    private static final String KEY_LAST_USED_TUNNEL = "last_used_tunnel";
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
     private static final String TAG = TunnelManager.class.getSimpleName();
@@ -45,6 +47,7 @@ public final class TunnelManager {
     private final SharedPreferences preferences;
     private final ObservableKeyedList<String, Tunnel> tunnels =
             new ObservableSortedKeyedArrayList<>(COMPARATOR);
+    private Tunnel lastUsedTunnel;
 
     @Inject
     public TunnelManager(final AsyncWorker asyncWorker, final Backend backend,
@@ -73,14 +76,36 @@ public final class TunnelManager {
     }
 
     CompletionStage<Void> delete(final Tunnel tunnel) {
+        final State originalState = tunnel.getState();
+        final boolean wasLastUsed = tunnel == lastUsedTunnel;
+        // Make sure nothing touches the tunnel.
+        if (wasLastUsed)
+            setLastUsedTunnel(null);
+        tunnels.remove(tunnel);
         return asyncWorker.runAsync(() -> {
-            backend.setState(tunnel, State.DOWN);
-            configStore.delete(tunnel.getName());
-        }).thenAccept(x -> {
-            if (tunnel.getName().equals(preferences.getString(KEY_PRIMARY_TUNNEL, null)))
-                preferences.edit().remove(KEY_PRIMARY_TUNNEL).apply();
-            tunnels.remove(tunnel);
+            if (originalState == State.UP)
+                backend.setState(tunnel, State.DOWN);
+            try {
+                configStore.delete(tunnel.getName());
+            } catch (final Exception e) {
+                if (originalState == State.UP)
+                    backend.setState(tunnel, originalState);
+                // Re-throw the exception to fail the completion.
+                throw e;
+            }
+        }).whenComplete((x, e) -> {
+            if (e == null)
+                return;
+            // Failure, put the tunnel back.
+            tunnels.add(tunnel);
+            if (wasLastUsed)
+                setLastUsedTunnel(tunnel);
         });
+    }
+
+    @Bindable
+    public Tunnel getLastUsedTunnel() {
+        return lastUsedTunnel;
     }
 
     CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
@@ -117,6 +142,9 @@ public final class TunnelManager {
     private void onTunnelsLoaded(final Set<String> present, final Set<String> running) {
         for (final String name : present)
             addToList(name, null, running.contains(name) ? State.UP : State.DOWN);
+        final String lastUsedName = preferences.getString(KEY_LAST_USED_TUNNEL, null);
+        if (lastUsedName != null)
+            setLastUsedTunnel(tunnels.get(lastUsedName));
     }
 
     CompletionStage<Tunnel> rename(final Tunnel tunnel, final String name) {
@@ -127,21 +155,42 @@ public final class TunnelManager {
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
         final State originalState = tunnel.getState();
+        final boolean wasLastUsed = tunnel == lastUsedTunnel;
+        // Make sure nothing touches the tunnel.
+        if (wasLastUsed)
+            setLastUsedTunnel(null);
+        tunnels.remove(tunnel);
         return asyncWorker.supplyAsync(() -> {
-            backend.setState(tunnel, State.DOWN);
+            if (originalState == State.UP)
+                backend.setState(tunnel, State.DOWN);
             final Config newConfig = configStore.create(name, tunnel.getConfig());
             final Tunnel newTunnel = new Tunnel(this, name, newConfig, State.DOWN);
-            if (originalState == State.UP) {
-                backend.setState(newTunnel, originalState);
-                newTunnel.onStateChanged(originalState);
+            try {
+                if (originalState == State.UP)
+                    backend.setState(newTunnel, originalState);
+                configStore.delete(tunnel.getName());
+            } catch (final Exception e) {
+                // Clean up.
+                configStore.delete(name);
+                if (originalState == State.UP)
+                    backend.setState(tunnel, originalState);
+                // Re-throw the exception to fail the completion.
+                throw e;
             }
-            configStore.delete(tunnel.getName());
             return newTunnel;
         }).whenComplete((newTunnel, e) -> {
-            if (e != null)
-                return;
-            tunnels.remove(tunnel);
-            tunnels.add(newTunnel);
+            if (e == null) {
+                // Success, add the new tunnel.
+                newTunnel.onStateChanged(originalState);
+                tunnels.add(newTunnel);
+                if (wasLastUsed)
+                    setLastUsedTunnel(newTunnel);
+            } else {
+                // Failure, put the old tunnel back.
+                tunnels.add(tunnel);
+                if (wasLastUsed)
+                    setLastUsedTunnel(tunnel);
+            }
         });
     }
 
@@ -166,6 +215,17 @@ public final class TunnelManager {
         return CompletableFuture.completedFuture(null);
     }
 
+    private void setLastUsedTunnel(final Tunnel tunnel) {
+        if (tunnel == lastUsedTunnel)
+            return;
+        lastUsedTunnel = tunnel;
+        notifyPropertyChanged(BR.lastUsedTunnel);
+        if (tunnel != null)
+            preferences.edit().putString(KEY_LAST_USED_TUNNEL, tunnel.getName()).apply();
+        else
+            preferences.edit().remove(KEY_LAST_USED_TUNNEL).apply();
+    }
+
     CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
         final CompletionStage<Config> completion = asyncWorker.supplyAsync(() -> {
             final Config appliedConfig = backend.applyConfig(tunnel, config);
@@ -179,6 +239,10 @@ public final class TunnelManager {
         final CompletionStage<State> completion =
                 asyncWorker.supplyAsync(() -> backend.setState(tunnel, state));
         completion.thenAccept(tunnel::onStateChanged);
+        completion.thenAccept(newState -> {
+            if (newState == State.UP)
+                setLastUsedTunnel(tunnel);
+        });
         return completion;
     }
 }
