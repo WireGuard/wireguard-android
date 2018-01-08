@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -29,10 +28,6 @@ import javax.inject.Inject;
 @ApplicationScope
 public class RootShell {
     private static final Pattern ERRNO_EXTRACTOR = Pattern.compile("error=(\\d+)");
-    /**
-     * Setup commands that are run at the beginning of each root shell. The trap command ensures
-     * access to the return value of the last command, since su itself always exits with 0.
-     */
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
     private static final String[][] libraryNamedExecutables = {
             {"libwg.so", "wg"},
@@ -179,7 +174,7 @@ public class RootShell {
                 ++beginEnds;
                 continue;
             }
-            if (line.startsWith(end) && line.length() > end.length()) {
+            if (line.startsWith(end) && line.length() > end.length() + 1) {
                 errnoStdout = Integer.valueOf(line.substring(end.length() + 1));
                 ++beginEnds;
                 break;
@@ -197,7 +192,7 @@ public class RootShell {
                 ++beginEnds;
                 continue;
             }
-            if (line.startsWith(end) && line.length() > end.length()) {
+            if (line.startsWith(end) && line.length() > end.length() + 1) {
                 errnoStderr = Integer.valueOf(line.substring(end.length() + 1));
                 ++beginEnds;
                 break;
