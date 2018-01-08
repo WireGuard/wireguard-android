@@ -22,25 +22,15 @@ import android.util.AttributeSet;
 import android.widget.Switch;
 
 public class ToggleSwitch extends Switch {
-    private boolean hasPendingStateChange;
     private boolean isRestoringState;
     private OnBeforeCheckedChangeListener listener;
-
-    public ToggleSwitch(final Context context) {
-        super(context);
-    }
 
     public ToggleSwitch(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ToggleSwitch(final Context context, final AttributeSet attrs, final int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public ToggleSwitch(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                        final int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+    public ToggleSwitch(final Context context) {
+        this(context, null);
     }
 
     @Override
@@ -48,28 +38,23 @@ public class ToggleSwitch extends Switch {
         isRestoringState = true;
         super.onRestoreInstanceState(state);
         isRestoringState = false;
-
     }
 
     @Override
     public void setChecked(final boolean checked) {
+        if (checked == isChecked())
+            return;
         if (isRestoringState || listener == null) {
             super.setChecked(checked);
             return;
         }
-        if (hasPendingStateChange)
-            return;
-        hasPendingStateChange = true;
         setEnabled(false);
         listener.onBeforeCheckedChanged(this, checked);
     }
 
     public void setCheckedInternal(final boolean checked) {
-        if (hasPendingStateChange) {
-            setEnabled(true);
-            hasPendingStateChange = false;
-        }
         super.setChecked(checked);
+        setEnabled(true);
     }
 
     public void setOnBeforeCheckedChangeListener(final OnBeforeCheckedChangeListener listener) {
