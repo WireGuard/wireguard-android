@@ -33,7 +33,6 @@ import java9.util.stream.StreamSupport;
 @ApplicationScope
 public final class TunnelManager {
     public static final String KEY_PRIMARY_TUNNEL = "primary_config";
-    public static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
     private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";

@@ -16,6 +16,8 @@ import java.util.Objects;
  */
 
 public abstract class BaseActivity extends Activity {
+    private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
+
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
     private Tunnel selectedTunnel;
 
@@ -33,9 +35,9 @@ public abstract class BaseActivity extends Activity {
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
         String savedTunnelName = null;
         if (savedInstanceState != null)
-            savedTunnelName = savedInstanceState.getString(TunnelManager.KEY_SELECTED_TUNNEL);
+            savedTunnelName = savedInstanceState.getString(KEY_SELECTED_TUNNEL);
         else if (getIntent() != null)
-            savedTunnelName = getIntent().getStringExtra(TunnelManager.KEY_SELECTED_TUNNEL);
+            savedTunnelName = getIntent().getStringExtra(KEY_SELECTED_TUNNEL);
         if (savedTunnelName != null) {
             final TunnelManager manager = Application.getComponent().getTunnelManager();
             selectedTunnel = manager.getTunnels().get(savedTunnelName);
@@ -47,7 +49,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         if (selectedTunnel != null)
-            outState.putString(TunnelManager.KEY_SELECTED_TUNNEL, selectedTunnel.getName());
+            outState.putString(KEY_SELECTED_TUNNEL, selectedTunnel.getName());
         super.onSaveInstanceState(outState);
     }
 

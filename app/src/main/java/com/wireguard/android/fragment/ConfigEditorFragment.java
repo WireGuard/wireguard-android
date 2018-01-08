@@ -32,6 +32,7 @@ import com.wireguard.config.Config;
 public class ConfigEditorFragment extends BaseFragment {
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_LOCAL_NAME = "local_name";
+    private static final String KEY_ORIGINAL_NAME = "original_name";
     private static final String TAG = ConfigEditorFragment.class.getSimpleName();
 
     private final ObservableField<String> localName = new ObservableField<>("");
@@ -79,7 +80,7 @@ public class ConfigEditorFragment extends BaseFragment {
         if (savedInstanceState != null) {
             localConfig = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
             localName.set(savedInstanceState.getString(KEY_LOCAL_NAME));
-            originalName = savedInstanceState.getString(TunnelManager.KEY_SELECTED_TUNNEL);
+            originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
         }
         // Erase the remains of creating or editing a different tunnel.
         if (getSelectedTunnel() != null && !getSelectedTunnel().getName().equals(originalName)) {
@@ -166,7 +167,7 @@ public class ConfigEditorFragment extends BaseFragment {
     public void onSaveInstanceState(final Bundle outState) {
         outState.putParcelable(KEY_LOCAL_CONFIG, localConfig);
         outState.putString(KEY_LOCAL_NAME, localName.get());
-        outState.putString(TunnelManager.KEY_SELECTED_TUNNEL, originalName);
+        outState.putString(KEY_ORIGINAL_NAME, originalName);
         super.onSaveInstanceState(outState);
     }
 
