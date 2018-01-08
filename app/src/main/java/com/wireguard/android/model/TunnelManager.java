@@ -197,22 +197,21 @@ public final class TunnelManager extends BaseObservable {
     public CompletionStage<Void> restoreState() {
         if (!preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
             return CompletableFuture.completedFuture(null);
-        final Set<String> tunnelsToEnable =
-                preferences.getStringSet(KEY_RUNNING_TUNNELS, Collections.emptySet());
-        final CompletableFuture[] futures = StreamSupport.stream(tunnelsToEnable)
-                .map(tunnels::get)
-                .map(tunnel -> tunnel.setState(State.UP))
-                .toArray(CompletableFuture[]::new);
-        return CompletableFuture.allOf(futures);
+        final Set<String> previouslyRunning = preferences.getStringSet(KEY_RUNNING_TUNNELS, null);
+        if (previouslyRunning == null)
+            return CompletableFuture.completedFuture(null);
+        return CompletableFuture.allOf(StreamSupport.stream(tunnels)
+                .filter(tunnel -> previouslyRunning.contains(tunnel.getName()))
+                .map(tunnel -> setTunnelState(tunnel, State.UP))
+                .toArray(CompletableFuture[]::new));
     }
 
-    public CompletionStage<Void> saveState() {
+    public void saveState() {
         final Set<String> runningTunnels = StreamSupport.stream(tunnels)
                 .filter(tunnel -> tunnel.getState() == State.UP)
                 .map(Tunnel::getName)
                 .collect(Collectors.toUnmodifiableSet());
         preferences.edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).apply();
-        return CompletableFuture.completedFuture(null);
     }
 
     private void setLastUsedTunnel(final Tunnel tunnel) {

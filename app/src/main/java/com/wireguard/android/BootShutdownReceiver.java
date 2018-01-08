@@ -22,7 +22,7 @@ public class BootShutdownReceiver extends BroadcastReceiver {
             tunnelManager.restoreState().whenComplete(ExceptionLoggers.D);
         } else if (Intent.ACTION_SHUTDOWN.equals(action)) {
             Log.d(TAG, "Broadcast receiver saving state (shutdown)");
-            tunnelManager.saveState().whenComplete(ExceptionLoggers.D);
+            tunnelManager.saveState();
         }
     }
 }
