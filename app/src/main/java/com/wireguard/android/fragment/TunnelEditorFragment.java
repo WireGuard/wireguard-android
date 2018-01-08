@@ -19,7 +19,7 @@ import com.commonsware.cwac.crossport.design.widget.CoordinatorLayout;
 import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.databinding.ConfigEditorFragmentBinding;
+import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
@@ -29,14 +29,14 @@ import com.wireguard.config.Config;
  * Fragment for editing a WireGuard configuration.
  */
 
-public class ConfigEditorFragment extends BaseFragment {
+public class TunnelEditorFragment extends BaseFragment {
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_LOCAL_NAME = "local_name";
     private static final String KEY_ORIGINAL_NAME = "original_name";
-    private static final String TAG = ConfigEditorFragment.class.getSimpleName();
+    private static final String TAG = TunnelEditorFragment.class.getSimpleName();
 
     private final ObservableField<String> localName = new ObservableField<>("");
-    private ConfigEditorFragmentBinding binding;
+    private TunnelEditorFragmentBinding binding;
     private boolean isViewStateRestored;
     private Config localConfig = new Config();
     private Tunnel localTunnel;
@@ -107,7 +107,7 @@ public class ConfigEditorFragment extends BaseFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        binding = ConfigEditorFragmentBinding.inflate(inflater, container, false);
+        binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
         binding.executePendingBindings();
         return binding.getRoot();
     }

@@ -7,7 +7,7 @@ import java9.util.function.BiConsumer;
 
 /**
  * Helpers for logging exceptions from asynchronous tasks. These can be passed to
- * {@code CompletionStage.handle()} at the end of an asynchronous future chain.
+ * {@code CompletionStage.whenComplete()} at the end of an asynchronous future chain.
  */
 
 public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {

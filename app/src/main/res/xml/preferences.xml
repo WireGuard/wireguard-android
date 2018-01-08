@@ -4,6 +4,6 @@
         android:defaultValue="false"
         android:key="restore_on_boot"
         android:summary="@string/restore_on_boot_summary"
-        android:title="@string/restore_on_boot" />
+        android:title="@string/restore_on_boot_title" />
     <com.wireguard.android.preference.ToolsInstallerPreference />
 </PreferenceScreen>

@@ -82,7 +82,7 @@ public class TunnelListFragment extends BaseFragment {
         asyncWorker.supplyAsync(() -> Config.from(contentResolver.openInputStream(uri)))
                 .thenCombine(nameStage, (config, name) -> tunnelManager.create(name, config))
                 .thenCompose(Function.identity())
-                .handle(this::onTunnelImportFinished);
+                .whenComplete(this::onTunnelImportFinished);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class TunnelListFragment extends BaseFragment {
         // Do nothing.
     }
 
-    private Void onTunnelDeletionFinished(final Integer count, final Throwable throwable) {
+    private void onTunnelDeletionFinished(final Integer count, final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = "Successfully deleted " + count + " tunnels";
@@ -155,10 +155,9 @@ public class TunnelListFragment extends BaseFragment {
             final CoordinatorLayout container = binding.mainContainer;
             Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
         }
-        return null;
     }
 
-    private Void onTunnelImportFinished(final Tunnel tunnel, final Throwable throwable) {
+    private void onTunnelImportFinished(final Tunnel tunnel, final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = "Successfully imported tunnel '" + tunnel.getName() + '\'';
@@ -171,7 +170,6 @@ public class TunnelListFragment extends BaseFragment {
             final CoordinatorLayout container = binding.mainContainer;
             Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
         }
-        return null;
     }
 
     @Override
@@ -202,7 +200,7 @@ public class TunnelListFragment extends BaseFragment {
                             .toArray(CompletableFuture[]::new);
                     CompletableFuture.allOf(futures)
                             .thenApply(x -> futures.length)
-                            .handle(TunnelListFragment.this::onTunnelDeletionFinished);
+                            .whenComplete(TunnelListFragment.this::onTunnelDeletionFinished);
                     mode.finish();
                     return true;
                 default:

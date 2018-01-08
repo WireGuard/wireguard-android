@@ -37,7 +37,7 @@
 
         <activity
             android:name=".activity.TunnelCreatorActivity"
-            android:label="@string/add_activity_title" />
+            android:label="@string/create_activity_title" />
 
         <receiver android:name=".BootShutdownReceiver">
 

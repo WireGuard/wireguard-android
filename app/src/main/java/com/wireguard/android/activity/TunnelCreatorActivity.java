@@ -2,7 +2,7 @@ package com.wireguard.android.activity;
 
 import android.os.Bundle;
 
-import com.wireguard.android.fragment.ConfigEditorFragment;
+import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;
 
 /**
@@ -15,7 +15,7 @@ public class TunnelCreatorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         if (getFragmentManager().findFragmentById(android.R.id.content) == null) {
             getFragmentManager().beginTransaction()
-                    .add(android.R.id.content, new ConfigEditorFragment())
+                    .add(android.R.id.content, new TunnelEditorFragment())
                     .commit();
         }
     }

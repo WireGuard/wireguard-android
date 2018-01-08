@@ -4,18 +4,16 @@
         <item quantity="one">%d configuration selected</item>
         <item quantity="other">%d configurations selected</item>
     </plurals>
-    <string name="add_activity_title">New WireGuard configuration</string>
-    <string name="create_from_file">Add from file</string>
-    <string name="create_empty">Add from scratch</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
+    <string name="create_activity_title">Create WireGuard Tunnel</string>
+    <string name="create_empty">Create from scratch</string>
+    <string name="create_from_file">Create from file</string>
     <string name="delete">Delete</string>
-    <string name="disabled">Disabled</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
-    <string name="enabled">Enabled</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Error bringing down WireGuard tunnel</string>
     <string name="error_su">WireGuard currently requires root access</string>
@@ -25,49 +23,41 @@
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
-    <string name="iface">Interface</string>
-    <string name="import_config">Import config from file</string>
+    <string name="interface_title">Interface</string>
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
-    <string name="not_supported">WireGuard Not Installed</string>
     <string name="not_supported_message"><![CDATA[
-        <h3>Come back later!</h3><br>
-
         <p>Your Android device does not <em>currently</em> have the WireGuard kernel module. Please
         talk to the manufacturer of your Android device or the author of your device&rsquo;s ROM
-        about including the WireGuard kernel module.</p><br>
+        about including the WireGuard kernel module.</p>
 
         <p>Fortunately, we are in the process of implementing support for WireGuard in a way that
         will work on all devices, without any need for the kernel module. This means that while you
         may not be able to use WireGuard today, you will very likely be able to use WireGuard in
-        several weeks. Things are looking up!</p><br>
+        several weeks. Things are looking up!</p>
 
         <p>Sorry for the wait. In the mean time, you may stay up to date on the latest project news
         by <a href="https://lists.zx2c4.com/mailman/listinfo/wireguard">subscribing to our mailing
-        list</a>. General information about the project is available from
+        list</a>. General information about the project is available at
         <a href="https://www.wireguard.com/">WireGuard.com</a>.</p>
     ]]></string>
+    <string name="not_supported_title">WireGuard not installed</string>
+    <string name="ok">OK</string>
     <string name="peer">Peer</string>
     <string name="persistent_keepalive">Persistent keepalive</string>
-    <string name="placeholder_text">No configuration selected</string>
     <string name="pre_shared_key">Pre-shared key</string>
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
-    <string name="public_key_copied_message">Public key copied to clipboard</string>
     <string name="public_key_description">Public key</string>
-    <string name="restore_on_boot">Restore on boot</string>
-    <string name="restore_on_boot_summary">Restore previously enabled configurations on boot</string>
+    <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
+    <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>
-    <string name="status">Status</string>
-    <string name="toggle">Toggle</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
     <string name="tools_installer_failure">Command line tools could not be installed (no root?)</string>
     <string name="tools_installer_initial">Install optional tools for scripting into the system partition</string>
     <string name="tools_installer_success">wg and wg-quick installed into the system partition</string>
     <string name="tools_installer_title">Install command line tools</string>
     <string name="tools_installer_working">Installing wg and wg-quick into the system partition</string>
-    <string name="last_change">Last change</string>
-    <string name="never">never</string>
 </resources>

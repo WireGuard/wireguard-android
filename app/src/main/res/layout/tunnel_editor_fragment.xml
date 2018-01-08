@@ -54,7 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:text="@string/iface" />
+                        android:text="@string/interface_title" />
 
                     <TextView
                         android:id="@+id/interface_name_label"
@@ -216,7 +216,7 @@
                     android:divider="@null"
                     android:orientation="vertical"
                     app:items="@{config.peers}"
-                    app:layout="@{@layout/config_editor_peer}"
+                    app:layout="@{@layout/tunnel_editor_peer}"
                     tools:ignore="UselessLeaf" />
 
                 <Button

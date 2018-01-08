@@ -3,7 +3,6 @@ package com.wireguard.android.databinding;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableList;
 import android.databinding.adapters.ListenerUtil;
-import android.graphics.Typeface;
 import android.text.InputFilter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,11 +13,6 @@ import com.wireguard.android.util.Keyed;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
-
-import org.threeten.bp.Instant;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -95,21 +89,5 @@ public final class BindingAdapters {
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
                                                  final OnBeforeCheckedChangeListener listener) {
         view.setOnBeforeCheckedChangeListener(listener);
-    }
-
-    @BindingAdapter({"android:text"})
-    public static void setText(final TextView view, final Instant instant) {
-        if (instant == null || Instant.EPOCH.equals(instant)) {
-            view.setText(R.string.never);
-        } else {
-            final ZoneId defaultZone = ZoneId.systemDefault();
-            final ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, defaultZone);
-            view.setText(zonedDateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-        }
-    }
-
-    @BindingAdapter({"android:textStyle"})
-    public static void setTextStyle(final TextView view, final Typeface typeface) {
-        view.setTypeface(typeface);
     }
 }
