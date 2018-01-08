@@ -1,7 +1,6 @@
 package com.wireguard.android.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import com.wireguard.android.R;
-import com.wireguard.android.preference.TunnelListPreference;
 import com.wireguard.android.util.RootShell;
 
 /**
@@ -17,16 +15,12 @@ import com.wireguard.android.util.RootShell;
  */
 
 public class SettingsActivity extends Activity {
-    public static final String KEY_SHOW_QUICK_TILE_SETTINGS = "show_quick_tile_settings";
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getFragmentManager().findFragmentById(android.R.id.content) == null) {
-            final Fragment fragment = new SettingsFragment();
-            fragment.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction()
-                    .add(android.R.id.content, fragment)
+                    .add(android.R.id.content, new SettingsFragment())
                     .commit();
         }
     }
@@ -41,8 +35,6 @@ public class SettingsActivity extends Activity {
                 new ToolsInstaller(preference).execute();
                 return true;
             });
-            if (getArguments() != null && getArguments().getBoolean(KEY_SHOW_QUICK_TILE_SETTINGS))
-                ((TunnelListPreference) findPreference("primary_config")).show();
         }
     }
 
