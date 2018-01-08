@@ -39,8 +39,8 @@ public abstract class BaseActivity extends Activity {
         else if (getIntent() != null)
             savedTunnelName = getIntent().getStringExtra(KEY_SELECTED_TUNNEL);
         if (savedTunnelName != null) {
-            final TunnelManager manager = Application.getComponent().getTunnelManager();
-            selectedTunnel = manager.getTunnels().get(savedTunnelName);
+            final TunnelManager tunnelManager = Application.getComponent().getTunnelManager();
+            selectedTunnel = tunnelManager.getTunnels().get(savedTunnelName);
         }
         // The selected tunnel must be set before the superclass method recreates fragments.
         super.onCreate(savedInstanceState);
