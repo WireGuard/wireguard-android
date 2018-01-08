@@ -15,6 +15,8 @@ import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.TunnelManager;
+import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.RootShell;
 
 import java.util.Objects;
 
@@ -66,8 +68,10 @@ public class QuickTileService extends TileService {
         if (throwable == null)
             return null;
         Log.e(TAG, "Cannot toggle tunnel", throwable);
-        final String message = "Cannot toggle tunnel: " + throwable.getCause().getMessage();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        final String message = throwable instanceof RootShell.NoRootException ?
+                getApplicationContext().getString(R.string.error_rootshell) :
+                getApplicationContext().getString(R.string.error_toggle) + ": " + throwable.getMessage();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         return null;
     }
 
