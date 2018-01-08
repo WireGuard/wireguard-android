@@ -69,15 +69,11 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
 
     @Bindable
     public State getState() {
-        if (state == State.UNKNOWN)
-            manager.getTunnelState(this).whenComplete(ExceptionLoggers.E);
         return state;
     }
 
     public CompletionStage<State> getStateAsync() {
-        if (state == State.UNKNOWN)
-            return manager.getTunnelState(this);
-        return CompletableFuture.completedFuture(state);
+        return manager.getTunnelState(this);
     }
 
     @Bindable
@@ -133,7 +129,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     public enum State {
         DOWN,
         TOGGLE,
-        UNKNOWN,
         UP
     }
 
