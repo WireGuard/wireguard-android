@@ -16,7 +16,6 @@
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Error bringing down WireGuard tunnel</string>
-    <string name="error_su">WireGuard currently requires root access</string>
     <string name="error_up">Error bringing up WireGuard tunnel</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
