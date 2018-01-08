@@ -38,8 +38,8 @@ public final class FileConfigStore implements ConfigStore {
         }
         try (FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
-            return config;
         }
+        return config;
     }
 
     @Override
@@ -78,7 +78,7 @@ public final class FileConfigStore implements ConfigStore {
         }
         try (FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
-            return config;
         }
+        return config;
     }
 }
