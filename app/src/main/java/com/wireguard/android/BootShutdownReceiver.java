@@ -9,7 +9,7 @@ import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
 
 public class BootShutdownReceiver extends BroadcastReceiver {
-    private static final String TAG = BootShutdownReceiver.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + BootShutdownReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(final Context context, final Intent intent) {

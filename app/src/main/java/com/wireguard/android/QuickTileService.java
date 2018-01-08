@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTileService extends TileService {
-    private static final String TAG = QuickTileService.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + QuickTileService.class.getSimpleName();
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
     private Tunnel tunnel;

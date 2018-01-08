@@ -24,7 +24,7 @@ import java9.util.stream.Stream;
 
 public class MainActivity extends BaseActivity {
     private static final String KEY_STATE = "fragment_state";
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + MainActivity.class.getSimpleName();
     private State state = State.EMPTY;
 
     private boolean moveToState(final State nextState) {

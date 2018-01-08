@@ -33,7 +33,7 @@ public class RootShell {
      * Setup commands that are run at the beginning of each root shell. The trap command ensures
      * access to the return value of the last command, since su itself always exits with 0.
      */
-    private static final String TAG = "WireGuard/RootShell";
+    private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
     private static final String[][] libraryNamedExecutables = {
             {"libwg.so", "wg"},
             {"libwg-quick.so", "wg-quick"}

@@ -53,7 +53,7 @@ import java9.util.stream.StreamSupport;
 
 public class TunnelListFragment extends BaseFragment {
     private static final int REQUEST_IMPORT = 1;
-    private static final String TAG = TunnelListFragment.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
 
     private final MultiChoiceModeListener actionModeListener = new ActionModeListener();
     private final ListViewCallbacks listViewCallbacks = new ListViewCallbacks();

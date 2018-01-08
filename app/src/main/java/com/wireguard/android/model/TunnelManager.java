@@ -39,7 +39,7 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_LAST_USED_TUNNEL = "last_used_tunnel";
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
-    private static final String TAG = TunnelManager.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + TunnelManager.class.getSimpleName();
 
     private final AsyncWorker asyncWorker;
     private final Backend backend;

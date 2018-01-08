@@ -26,7 +26,7 @@ import com.wireguard.android.util.RootShell;
  */
 
 public final class TunnelController {
-    private static final String TAG = TunnelController.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + TunnelController.class.getSimpleName();
 
     private TunnelController() {
         // Prevent instantiation.
