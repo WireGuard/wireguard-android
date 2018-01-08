@@ -9,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wireguard.android.R;
-import com.wireguard.android.fragment.ConfigEditorFragment;
 import com.wireguard.android.fragment.TunnelDetailFragment;
+import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.fragment.TunnelListFragment;
 import com.wireguard.android.model.Tunnel;
 
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity {
         EMPTY(null, 0),
         LIST(TunnelListFragment.class, 1),
         DETAIL(TunnelDetailFragment.class, 2),
-        EDITOR(ConfigEditorFragment.class, 3);
+        EDITOR(TunnelEditorFragment.class, 3);
 
         private final String fragment;
         private final int layer;
