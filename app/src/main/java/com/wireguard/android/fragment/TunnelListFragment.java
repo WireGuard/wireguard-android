@@ -38,10 +38,14 @@ import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
 
+import java.util.List;
+
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;
 import java9.util.function.Function;
+import java9.util.stream.Collectors;
 import java9.util.stream.IntStream;
+import java9.util.stream.StreamSupport;
 
 /**
  * Fragment containing a list of known WireGuard tunnels. It allows creating and deleting tunnels.
@@ -194,8 +198,11 @@ public class TunnelListFragment extends BaseFragment {
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_action_delete:
-                    final CompletableFuture[] futures = getCheckedPositions()
+                    // Must operate in two steps: positions change once we start deleting things.
+                    final List<Tunnel> tunnelsToDelete = getCheckedPositions()
                             .mapToObj(pos -> (Tunnel) tunnelList.getItemAtPosition(pos))
+                            .collect(Collectors.toList());
+                    final CompletableFuture[] futures = StreamSupport.stream(tunnelsToDelete)
                             .map(Tunnel::delete)
                             .toArray(CompletableFuture[]::new);
                     CompletableFuture.allOf(futures)
