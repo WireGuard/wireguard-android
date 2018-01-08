@@ -15,6 +15,7 @@ import com.wireguard.android.configStore.FileConfigStore;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
+import com.wireguard.android.util.ToolsInstaller;
 
 import java.util.concurrent.Executor;
 
@@ -55,6 +56,8 @@ public class Application extends android.app.Application {
         AsyncWorker getAsyncWorker();
 
         SharedPreferences getPreferences();
+
+        ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
     }
