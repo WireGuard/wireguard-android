@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/interface_name_label"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
                         android:text="@={name}"
                         app:filter="@{NameInputFilter.newInstance()}" />
 
@@ -90,7 +90,7 @@
                         android:layout_below="@+id/private_key_label"
                         android:layout_toStartOf="@+id/generate_private_key_button"
                         android:contentDescription="@string/public_key_description"
-                        android:inputType="textVisiblePassword"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
                         android:text="@={config.interface.privateKey}"
                         app:filter="@{KeyInputFilter.newInstance()}" />
 
@@ -142,7 +142,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/addresses_label"
                         android:layout_toStartOf="@+id/listen_port_text"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
                         android:text="@={config.interface.address}" />
 
                     <TextView
@@ -184,7 +184,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/dns_servers_label"
                         android:layout_toStartOf="@+id/mtu_text"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textNoSuggestions|textVisiblePassword"
                         android:text="@={config.interface.dns}" />
 
                     <TextView
