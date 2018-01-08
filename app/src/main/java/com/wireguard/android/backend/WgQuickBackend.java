@@ -1,6 +1,8 @@
 package com.wireguard.android.backend;
 
 import android.content.Context;
+import android.system.ErrnoException;
+import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.model.Tunnel;
@@ -10,7 +12,6 @@ import com.wireguard.android.util.RootShell;
 import com.wireguard.config.Config;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,18 +70,26 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public State setState(final Tunnel tunnel, final State state) throws IOException {
+    public State setState(final Tunnel tunnel, final State state) throws Exception {
         Log.v(TAG, "Requested state change to " + state + " for tunnel " + tunnel.getName());
         final State originalState = getState(tunnel);
         final State resolvedState = resolveState(originalState, state);
+        if (resolvedState == originalState)
+            return originalState;
+        final int result;
         if (resolvedState == State.UP) {
+            if (!new File("/sys/module/wireguard").exists())
+                throw new ErrnoException("WireGuard module not loaded", OsConstants.ENODEV);
             // FIXME: Assumes file layout from FileConfigStore. Use a temporary file.
             final File file = new File(context.getFilesDir(), tunnel.getName() + ".conf");
-            if (rootShell.run(null, String.format("wg-quick up '%s'", file.getAbsolutePath())) != 0)
-                throw new IOException("wg-quick failed");
+            result = rootShell.run(null, String.format("wg-quick up '%s'", file.getAbsolutePath()));
         } else {
-            if (rootShell.run(null, String.format("wg-quick down '%s'", tunnel.getName())) != 0)
-                throw new IOException("wg-quick failed");
+            result = rootShell.run(null, String.format("wg-quick down '%s'", tunnel.getName()));
+        }
+        if (result != 0) {
+            final String message = result == OsConstants.EACCES ?
+                    "Root access unavailable" : "wg-quick failed";
+            throw new Exception(message);
         }
         return getState(tunnel);
     }
