@@ -35,8 +35,6 @@ public final class WgQuickBackend implements Backend {
     }
 
     private static State resolveState(final State currentState, State requestedState) {
-        if (requestedState == State.UNKNOWN)
-            throw new IllegalArgumentException("Requested unknown state");
         if (requestedState == State.TOGGLE)
             requestedState = currentState == State.UP ? State.DOWN : State.UP;
         return requestedState;

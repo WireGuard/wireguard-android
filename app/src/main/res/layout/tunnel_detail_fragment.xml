@@ -51,7 +51,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/interface_title"
                     android:layout_alignParentEnd="true"
-                    android:enabled="@{tunnel.state != State.UNKNOWN}"
                     app:checked="@{tunnel.state == State.UP}"
                     app:onBeforeCheckedChanged="@{() -> tunnel.setState(State.TOGGLE)}" />
 

@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tunnel_name"
             android:layout_alignParentEnd="true"
-            android:enabled="@{item.state != State.UNKNOWN}"
             app:checked="@{item.state == State.UP}"
             app:onBeforeCheckedChanged="@{() -> item.setState(State.TOGGLE)}" />
     </RelativeLayout>
