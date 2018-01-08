@@ -65,6 +65,10 @@ public final class ToolsInstaller {
                     new File(installDir, names[1]),
                     new File(installDir, names[1])));
         }
-        return rootShell.run(null, script.toString());
+        try {
+            return rootShell.run(null, script.toString());
+        } catch (Exception e) {
+            return OsConstants.EACCES;
+        }
     }
 }

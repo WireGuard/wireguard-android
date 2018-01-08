@@ -52,8 +52,12 @@ public final class WgQuickBackend implements Backend {
     public Set<String> enumerate() {
         final List<String> output = new ArrayList<>();
         // Don't throw an exception here or nothing will show up in the UI.
-        if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
+        try {
+            if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
+                return Collections.emptySet();
+        } catch (Exception e) {
             return Collections.emptySet();
+        }
         // wg puts all interface names on the same line. Split them into separate elements.
         return Stream.of(output.get(0).split(" ")).collect(Collectors.toUnmodifiableSet());
     }
@@ -86,11 +90,8 @@ public final class WgQuickBackend implements Backend {
         } else {
             result = rootShell.run(null, String.format("wg-quick down '%s'", tunnel.getName()));
         }
-        if (result != 0) {
-            final String message = result == OsConstants.EACCES ?
-                    "Root access unavailable" : "wg-quick failed";
-            throw new Exception(message);
-        }
+        if (result != 0)
+            throw new Exception("wg-quick failed");
         return getState(tunnel);
     }
 }

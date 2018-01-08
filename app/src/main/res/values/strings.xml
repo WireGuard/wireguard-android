@@ -17,6 +17,7 @@
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Error bringing down WireGuard tunnel</string>
     <string name="error_up">Error bringing up WireGuard tunnel</string>
+    <string name="error_rootshell">Please obtain root access and try again</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>

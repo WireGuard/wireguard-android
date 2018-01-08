@@ -1,19 +1,22 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
+import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
 
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.io.OutputStreamWriter;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +41,11 @@ public class RootShell {
 
     private final String preamble;
 
+    private BufferedWriter stdin;
+    private BufferedReader stdout;
+    private BufferedReader stderr;
+    private Process process;
+
     @Inject
     public RootShell(@ApplicationContext final Context context) {
         final String binDir = context.getCacheDir().getPath() + "/bin";
@@ -54,6 +62,7 @@ public class RootShell {
             builder.append(String.format("[ %s -ef %s ] || ln -sf %s %s || exit 31;", arg1, arg2, arg1, arg2));
         }
         builder.append(String.format("export PATH=\"%s:$PATH\" TMPDIR=\"%s\";", binDir, tmpDir));
+        builder.append("id;\n");
 
         preamble = builder.toString();
     }
@@ -68,6 +77,63 @@ public class RootShell {
         return false;
     }
 
+    private void ensureRoot() throws Exception {
+        try {
+            if (process != null) {
+                process.exitValue();
+                process = null;
+            }
+        } catch (IllegalThreadStateException e) {
+            return;
+        }
+
+        if (!isExecutable("su"))
+            throw new NoRootException();
+
+        try {
+            final ProcessBuilder builder = new ProcessBuilder();
+            builder.environment().put("LANG", "C");
+            builder.command("su");
+            process = builder.start();
+            stdin = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8));
+            stdout = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+            stderr = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
+
+            Log.d(TAG, "New root shell, sending preamble: " + preamble);
+            stdin.write(preamble);
+            stdin.flush();
+            final String id = stdout.readLine();
+
+            try {
+                int errno = process.exitValue();
+                String line;
+                while ((line = stderr.readLine()) != null) {
+                   if (line.contains("Permission denied"))
+                       throw new NoRootException();
+                }
+                throw new ErrnoException("Unknown error when obtaining root access", errno);
+            } catch (IllegalThreadStateException e) {
+                // We're alive, so keep executing.
+            }
+
+            if (id == null || !id.contains("uid=0"))
+                throw new NoRootException();
+        } catch (Exception e) {
+            Log.w(TAG, "Session failed with exception", e);
+            process.destroy();
+            process = null;
+            final Matcher match = ERRNO_EXTRACTOR.matcher(e.toString());
+            if (match.find()) {
+                final int errno = Integer.valueOf(match.group(1));
+                if (errno == OsConstants.EACCES)
+                    throw new NoRootException();
+                else
+                    throw new ErrnoException("Unknown error when obtaining root access", errno);
+            }
+            throw e;
+        }
+    }
+
     /**
      * Run a command in a root shell.
      *
@@ -76,46 +142,74 @@ public class RootShell {
      * @param command Command to run as root.
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    public int run(final List<String> output, final String command) {
-        int exitValue = -1;
-        if (!isExecutable("su"))
-            return OsConstants.EACCES;
-        try {
-            final ProcessBuilder builder = new ProcessBuilder();
-            builder.environment().put("LANG", "C");
-            builder.command("su", "-c", preamble + command);
-            final Process process = builder.start();
-            Log.d(TAG, "Running: " + command);
-            final InputStream stdout = process.getInputStream();
-            final InputStream stderr = process.getErrorStream();
-            final BufferedReader stdoutReader =
-                    new BufferedReader(new InputStreamReader(stdout, StandardCharsets.UTF_8));
-            final BufferedReader stderrReader =
-                    new BufferedReader(new InputStreamReader(stderr, StandardCharsets.UTF_8));
-            String line;
-            while ((line = stdoutReader.readLine()) != null) {
-                if (output != null)
-                    output.add(line);
-                Log.v(TAG, "stdout: " + line);
+    public int run(final List<String> output, final String command) throws Exception {
+        ensureRoot();
+
+        StringBuilder builder = new StringBuilder();
+        final String marker = UUID.randomUUID().toString();
+        final String begin = marker + " begin";
+        final String end = marker + " end";
+
+        builder.append(String.format("echo '%s';", begin));
+        builder.append(String.format("echo '%s' >&2;", begin));
+
+        builder.append('(');
+        builder.append(command);
+        builder.append(");");
+
+        builder.append("ret=$?;");
+        builder.append(String.format("echo '%s' $ret;", end));
+        builder.append(String.format("echo '%s' $ret >&2;", end));
+
+        builder.append('\n');
+
+        Log.v(TAG, "executing: " + command);
+        stdin.write(builder.toString());
+        stdin.flush();
+
+        String line;
+        boolean first = true;
+        int errnoStdout = -1, errnoStderr = -2;
+        int beginEnds = 0;
+        while ((line = stdout.readLine()) != null) {
+            if (first) {
+                first = false;
+                if (!line.startsWith(begin))
+                    throw new ErrnoException("Could not find begin marker", OsConstants.EBADMSG);
+                ++beginEnds;
+                continue;
             }
-            int linesOfStderr = 0;
-            String stderrLast = null;
-            while ((line = stderrReader.readLine()) != null) {
-                ++linesOfStderr;
-                stderrLast = line;
-                Log.v(TAG, "stderr: " + line);
+            if (line.startsWith(end) && line.length() > end.length()) {
+                errnoStdout = Integer.valueOf(line.substring(end.length() + 1));
+                ++beginEnds;
+                break;
             }
-            exitValue = process.waitFor();
-            process.destroy();
-            if (exitValue == 1 && linesOfStderr == 1 && stderrLast.equals("Permission denied"))
-                exitValue = OsConstants.EACCES;
-            Log.d(TAG, "Exit status: " + exitValue);
-        } catch (IOException | InterruptedException e) {
-            Log.w(TAG, "Session failed with exception", e);
-            final Matcher match = ERRNO_EXTRACTOR.matcher(e.toString());
-            if (match.find())
-                exitValue = Integer.valueOf(match.group(1));
+            if (output != null)
+                output.add(line);
+            Log.v(TAG, "stdout: " + line);
         }
-        return exitValue;
+        first = true;
+        while ((line = stderr.readLine()) != null) {
+            if (first) {
+                first = false;
+                if (!line.startsWith(begin))
+                    throw new ErrnoException("Could not find begin marker", OsConstants.EBADMSG);
+                ++beginEnds;
+                continue;
+            }
+            if (line.startsWith(end) && line.length() > end.length()) {
+                errnoStderr = Integer.valueOf(line.substring(end.length() + 1));
+                ++beginEnds;
+                break;
+            }
+            Log.v(TAG, "stderr: " + line);
+        }
+        if (errnoStderr != errnoStdout || beginEnds != 4)
+            throw new ErrnoException("Incorrect errno reporting", OsConstants.EBADMSG);
+
+        return errnoStdout;
+    }
+
+    public class NoRootException extends Exception {
     }
 }
