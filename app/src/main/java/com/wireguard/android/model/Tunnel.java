@@ -129,7 +129,11 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     public enum State {
         DOWN,
         TOGGLE,
-        UP
+        UP;
+
+        public static State of(final boolean running) {
+            return running ? UP : DOWN;
+        }
     }
 
     public static class Statistics extends BaseObservable {
