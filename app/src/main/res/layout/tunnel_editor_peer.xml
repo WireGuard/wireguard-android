@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/public_key_label"
-            android:inputType="textVisiblePassword"
+            android:inputType="textNoSuggestions|textVisiblePassword"
             android:text="@={item.publicKey}"
             app:filter="@{KeyInputFilter.newInstance()}" />
 
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/pre_shared_key_label"
             android:hint="@string/hint_optional"
-            android:inputType="textNoSuggestions"
+            android:inputType="textNoSuggestions|textVisiblePassword"
             android:text="@={item.preSharedKey}" />
 
         <TextView
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/allowed_ips_label"
-            android:inputType="textNoSuggestions"
+            android:inputType="textNoSuggestions|textVisiblePassword"
             android:text="@={item.allowedIPs}" />
 
         <TextView
@@ -115,7 +115,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/endpoint_label"
             android:layout_toStartOf="@+id/persistent_keepalive_text"
-            android:inputType="textNoSuggestions"
+            android:inputType="textNoSuggestions|textVisiblePassword"
             android:text="@={item.endpoint}" />
 
         <TextView
