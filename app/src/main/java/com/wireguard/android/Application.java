@@ -55,8 +55,6 @@ public class Application extends android.app.Application {
     public interface ApplicationComponent {
         AsyncWorker getAsyncWorker();
 
-        SharedPreferences getPreferences();
-
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
