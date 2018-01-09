@@ -11,7 +11,11 @@ import com.wireguard.crypto.KeyEncoding;
  */
 
 public class KeyInputFilter implements InputFilter {
-    public static KeyInputFilter newInstance() {
+    private static boolean isAllowed(final char c) {
+        return Character.isLetterOrDigit(c) || c == '+' || c == '/';
+    }
+
+    public static InputFilter newInstance() {
         return new KeyInputFilter();
     }
 
@@ -39,9 +43,5 @@ public class KeyInputFilter implements InputFilter {
             }
         }
         return replacement;
-    }
-
-    private boolean isAllowed(final char c) {
-        return Character.isLetterOrDigit(c) || c == '+' || c == '/';
     }
 }

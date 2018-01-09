@@ -59,7 +59,8 @@ public class TunnelEditorFragment extends BaseFragment {
             binding.setConfig(localConfig);
     }
 
-    private void onConfigSaved(final Config config, final Throwable throwable) {
+    private void onConfigSaved(@SuppressWarnings("unused") final Config config,
+                               final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = getString(R.string.config_save_success, localTunnel.getName());

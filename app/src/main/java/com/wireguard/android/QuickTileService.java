@@ -28,6 +28,7 @@ import java.util.Objects;
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTileService extends TileService {
     private static final String TAG = "WireGuard/" + QuickTileService.class.getSimpleName();
+
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
     private Tunnel tunnel;
@@ -62,7 +63,8 @@ public class QuickTileService extends TileService {
         tunnelManager.removeOnPropertyChangedCallback(onTunnelChangedCallback);
     }
 
-    private void onToggleFinished(final State state, final Throwable throwable) {
+    private void onToggleFinished(@SuppressWarnings("unused") final State state,
+                                  final Throwable throwable) {
         if (throwable == null)
             return;
         final String error = ExceptionLoggers.unwrap(throwable).getMessage();

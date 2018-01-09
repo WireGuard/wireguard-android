@@ -6,11 +6,12 @@ import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;
 
 /**
- * Created by samuel on 12/29/17.
+ * Standalone activity for creating tunnels.
  */
 
 public class TunnelCreatorActivity extends BaseActivity {
     @Override
+    @SuppressWarnings("UnnecessaryFullyQualifiedName")
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getFragmentManager().findFragmentById(android.R.id.content) == null) {

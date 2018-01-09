@@ -6,11 +6,16 @@ package com.wireguard.crypto;
  * This is a specialized constant-time base64 implementation that resists side-channel attacks.
  */
 
-public class KeyEncoding {
+@SuppressWarnings("MagicNumber")
+public final class KeyEncoding {
     public static final int KEY_LENGTH = 32;
     public static final int KEY_LENGTH_BASE64 = 44;
     private static final String KEY_LENGTH_BASE64_EXCEPTION_MESSAGE =
             "WireGuard base64 keys must be 44 characters encoding 32 bytes";
+
+    private KeyEncoding() {
+        // Prevent instantiation.
+    }
 
     private static int decodeBase64(final char[] src, final int src_offset) {
         int val = 0;

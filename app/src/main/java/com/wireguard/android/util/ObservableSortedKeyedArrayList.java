@@ -23,6 +23,7 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     private final Comparator<? super K> comparator;
     private final transient KeyList<K, E> keyList = new KeyList<>(this);
 
+    @SuppressWarnings("WeakerAccess")
     public ObservableSortedKeyedArrayList() {
         comparator = null;
     }
@@ -178,6 +179,7 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
         }
 
         @Override
+        @SuppressWarnings("EmptyMethod")
         public Spliterator<K> spliterator() {
             return super.spliterator();
         }

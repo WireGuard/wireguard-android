@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.commonsware.cwac.crossport.design.widget.Snackbar;
 
 /**
- * Created by samuel on 12/30/17.
+ * Standalone utilities for interacting with the system clipboard.
  */
 
 public final class ClipboardUtils {
