@@ -2,6 +2,7 @@ package com.wireguard.android.preference;
 
 import android.content.Context;
 import android.preference.Preference;
+import android.support.annotation.NonNull;
 import android.system.OsConstants;
 import android.util.AttributeSet;
 
@@ -21,6 +22,7 @@ public class ToolsInstallerPreference extends Preference {
     private final ToolsInstaller toolsInstaller;
     private State state = State.INITIAL;
 
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ToolsInstallerPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final ApplicationComponent applicationComponent = Application.getComponent();
@@ -64,7 +66,7 @@ public class ToolsInstallerPreference extends Preference {
                 .thenAccept(this::setState);
     }
 
-    private void setState(final State state) {
+    private void setState(@NonNull final State state) {
         if (this.state == state)
             return;
         this.state = state;

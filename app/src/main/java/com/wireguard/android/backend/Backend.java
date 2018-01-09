@@ -28,7 +28,7 @@ public interface Backend {
      *
      * @return The set of running tunnel names.
      */
-    Set<String> enumerate() throws Exception;
+    Set<String> enumerate();
 
     /**
      * Get the actual state of a tunnel.

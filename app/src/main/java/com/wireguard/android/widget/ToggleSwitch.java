@@ -25,6 +25,7 @@ public class ToggleSwitch extends Switch {
     private boolean isRestoringState;
     private OnBeforeCheckedChangeListener listener;
 
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ToggleSwitch(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }

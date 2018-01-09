@@ -6,6 +6,7 @@ import java.security.SecureRandom;
  * Represents a Curve25519 keypair as used by WireGuard.
  */
 
+@SuppressWarnings("MagicNumber")
 public class Keypair {
     private final byte[] privateKey;
     private final byte[] publicKey;

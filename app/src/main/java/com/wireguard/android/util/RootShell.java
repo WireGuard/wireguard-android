@@ -9,14 +9,14 @@ import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.R;
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
-import java.io.OutputStreamWriter;
-import java.io.InputStreamReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,11 +38,10 @@ public class RootShell {
 
     private final String exceptionMessage;
     private final String preamble;
-
+    private Process process;
+    private BufferedReader stderr;
     private BufferedWriter stdin;
     private BufferedReader stdout;
-    private BufferedReader stderr;
-    private Process process;
 
     @Inject
     public RootShell(@ApplicationContext final Context context) {
@@ -141,7 +140,7 @@ public class RootShell {
      * @param command Command to run as root.
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    public int run(final List<String> output, final String command)
+    public int run(final Collection<String> output, final String command)
             throws ErrnoException, IOException, NoRootException {
         ensureRoot();
 

@@ -31,7 +31,7 @@ public interface ConfigStore {
      *
      * @return The set of present tunnel names.
      */
-    Set<String> enumerate() throws Exception;
+    Set<String> enumerate();
 
     /**
      * Load the configuration for the tunnel given by {@code name}.

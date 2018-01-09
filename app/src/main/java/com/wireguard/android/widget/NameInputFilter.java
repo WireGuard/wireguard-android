@@ -11,7 +11,11 @@ import com.wireguard.android.model.Tunnel;
  */
 
 public class NameInputFilter implements InputFilter {
-    public static NameInputFilter newInstance() {
+    private static boolean isAllowed(final char c) {
+        return Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) >= 0;
+    }
+
+    public static InputFilter newInstance() {
         return new NameInputFilter();
     }
 
@@ -38,9 +42,5 @@ public class NameInputFilter implements InputFilter {
             }
         }
         return replacement;
-    }
-
-    private boolean isAllowed(final char c) {
-        return Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) >= 0;
     }
 }
