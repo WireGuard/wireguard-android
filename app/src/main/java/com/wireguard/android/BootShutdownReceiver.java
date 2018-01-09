@@ -18,10 +18,10 @@ public class BootShutdownReceiver extends BroadcastReceiver {
             return;
         final TunnelManager tunnelManager = Application.getComponent().getTunnelManager();
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
-            Log.d(TAG, "Broadcast receiver restoring state (boot)");
+            Log.i(TAG, "Broadcast receiver restoring state (boot)");
             tunnelManager.restoreState().whenComplete(ExceptionLoggers.D);
         } else if (Intent.ACTION_SHUTDOWN.equals(action)) {
-            Log.d(TAG, "Broadcast receiver saving state (shutdown)");
+            Log.i(TAG, "Broadcast receiver saving state (shutdown)");
             tunnelManager.saveState();
         }
     }

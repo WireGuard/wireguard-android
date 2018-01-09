@@ -64,7 +64,6 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public State getState(final Tunnel tunnel) {
-        Log.v(TAG, "Requested state for tunnel " + tunnel.getName());
         return enumerate().contains(tunnel.getName()) ? State.UP : State.DOWN;
     }
 
@@ -75,12 +74,12 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public State setState(final Tunnel tunnel, State state) throws Exception {
-        Log.v(TAG, "Requested state change to " + state + " for tunnel " + tunnel.getName());
         final State originalState = getState(tunnel);
         if (state == State.TOGGLE)
             state = originalState == State.UP ? State.DOWN : State.UP;
         if (state == originalState)
             return originalState;
+        Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
         toolsInstaller.ensureToolsAvailable();
         final int result;
         if (state == State.UP) {
