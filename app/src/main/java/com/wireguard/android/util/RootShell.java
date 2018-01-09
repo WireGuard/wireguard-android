@@ -31,10 +31,6 @@ import javax.inject.Inject;
 public class RootShell {
     private static final Pattern ERRNO_EXTRACTOR = Pattern.compile("error=(\\d+)");
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
-    private static final String[][] libraryNamedExecutables = {
-            {"libwg.so", "wg"},
-            {"libwg-quick.so", "wg-quick"}
-    };
 
     private final String exceptionMessage;
     private final String preamble;
@@ -45,24 +41,15 @@ public class RootShell {
 
     @Inject
     public RootShell(@ApplicationContext final Context context) {
-        final String binDir = context.getCacheDir().getPath() + "/bin";
-        final String tmpDir = context.getCacheDir().getPath() + "/tmp";
-        final String libDir = context.getApplicationInfo().nativeLibraryDir;
+        final File binDir = new File(context.getCacheDir(), "bin");
+        final File tmpDir = new File(context.getCacheDir(), "tmp");
 
-        new File(binDir).mkdirs();
-        new File(tmpDir).mkdirs();
-
-        StringBuilder builder = new StringBuilder();
-        for (final String[] libraryNamedExecutable : libraryNamedExecutables) {
-            final String arg1 = "'" + libDir + "/" + libraryNamedExecutable[0] + "'";
-            final String arg2 = "'" + binDir + "/" + libraryNamedExecutable[1] + "'";
-            builder.append(String.format("[ %s -ef %s ] || ln -sf %s %s || exit 31;", arg1, arg2, arg1, arg2));
-        }
-        builder.append(String.format("export PATH=\"%s:$PATH\" TMPDIR=\"%s\";", binDir, tmpDir));
-        builder.append("id;\n");
+        if (!(binDir.isDirectory() || binDir.mkdirs())
+                || !(tmpDir.isDirectory() || tmpDir.mkdirs()))
+            throw new RuntimeException(new IOException("Cannot create binary dir/TMPDIR"));
 
         exceptionMessage = context.getString(R.string.error_root);
-        preamble = builder.toString();
+        preamble = String.format("export PATH=\"%s:$PATH\" TMPDIR='%s'; id;\n", binDir, tmpDir);
     }
 
     private static boolean isExecutable(final String name) {
