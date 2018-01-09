@@ -54,7 +54,8 @@ public final class WgQuickBackend implements Backend {
             toolsInstaller.ensureToolsAvailable();
             if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
                 return Collections.emptySet();
-        } catch (final Exception ignored) {
+        } catch (final Exception e) {
+            Log.w(TAG, "Unable to enumerate running tunnels", e);
             return Collections.emptySet();
         }
         // wg puts all interface names on the same line. Split them into separate elements.
