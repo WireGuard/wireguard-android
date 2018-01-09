@@ -123,18 +123,23 @@ public class RootShell {
     }
 
     public synchronized void start() throws IOException, NoRootException {
+        if (isRunning())
+            return;
+        if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
+            throw new FileNotFoundException("Could not create local binary directory");
+        if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
+            throw new FileNotFoundException("Could not create local temporary directory");
+        if (!isExecutableInPath(SU))
+            throw new NoRootException(deviceNotRootedMessage);
         try {
-            if (isRunning())
-                return;
-            if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
-                throw new FileNotFoundException("Could not create local binary directory");
-            if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
-                throw new FileNotFoundException("Could not create local temporary directory");
-            if (!isExecutableInPath(SU))
-                throw new NoRootException(deviceNotRootedMessage);
             final ProcessBuilder builder = new ProcessBuilder().command(SU);
             builder.environment().put("LC_ALL", "C");
-            process = builder.start();
+            try {
+                process = builder.start();
+            } catch (final IOException e) {
+                // A failure at this stage means the device isn't rooted.
+                throw new NoRootException(deviceNotRootedMessage, e);
+            }
             stdin = new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8);
             stdout = new BufferedReader(new InputStreamReader(process.getInputStream(),
                     StandardCharsets.UTF_8));
