@@ -29,13 +29,14 @@ public final class ToolsInstaller {
             new File("/system/xbin"),
             new File("/system/bin"),
     };
+    private static final File INSTALL_DIR = getInstallDir();
 
-    private final String nativeLibraryDir;
+    private final File nativeLibraryDir;
     private final RootShell rootShell;
 
     @Inject
     public ToolsInstaller(@ApplicationContext final Context context, final RootShell rootShell) {
-        nativeLibraryDir = context.getApplicationInfo().nativeLibraryDir;
+        nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
         this.rootShell = rootShell;
     }
 
@@ -50,23 +51,32 @@ public final class ToolsInstaller {
         return null;
     }
 
-    public int install() {
-        final File installDir = getInstallDir();
-        if (installDir == null)
-            return OsConstants.ENOENT;
-        final StringBuilder script = new StringBuilder("set -ex; ");
+    public boolean areInstalled() {
+        if (INSTALL_DIR == null)
+            return false;
+        final StringBuilder script = new StringBuilder();
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("cmp -s '%s' '%s' && ",
                     new File(nativeLibraryDir, names[0]),
-                    new File(installDir, names[1])));
+                    new File(INSTALL_DIR, names[1])));
         }
-        script.append("exit ").append(OsConstants.EALREADY).append("; ");
-        script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
+        script.append("exit ").append(OsConstants.EALREADY);
+        try {
+            return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
+        } catch (final ErrnoException | IOException | NoRootException ignored) {
+            return false;
+        }
+    }
+
+    public int install() {
+        if (INSTALL_DIR == null)
+            return OsConstants.ENOENT;
+        final StringBuilder script = new StringBuilder("set -ex"
+                + "; trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system");
         for (final String[] names : EXECUTABLES) {
-            script.append(String.format("cp %s %s; chmod 755 %s; ",
-                    new File(nativeLibraryDir, names[0]),
-                    new File(installDir, names[1]),
-                    new File(installDir, names[1])));
+            final File destination = new File(INSTALL_DIR, names[1]);
+            script.append(String.format("; cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' ",
+                    new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
         try {
             return rootShell.run(null, script.toString());
