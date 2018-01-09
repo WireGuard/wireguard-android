@@ -3,12 +3,14 @@ package com.wireguard.android.util;
 import android.content.Context;
 import android.system.ErrnoException;
 import android.system.OsConstants;
+import android.util.Log;
 
 import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.util.RootShell.NoRootException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -30,10 +32,12 @@ public final class ToolsInstaller {
             new File("/system/bin"),
     };
     private static final File INSTALL_DIR = getInstallDir();
+    private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
 
     private final File localBinaryDir;
     private final File nativeLibraryDir;
     private final RootShell rootShell;
+    private Boolean areToolsAvailable;
 
     @Inject
     public ToolsInstaller(@ApplicationContext final Context context, final RootShell rootShell) {
@@ -83,6 +87,30 @@ public final class ToolsInstaller {
         } catch (final ErrnoException | IOException | NoRootException ignored) {
             return false;
         }
+    }
+
+    public void ensureToolsAvailable() throws FileNotFoundException {
+        if (areToolsAvailable == null) {
+            synchronized (this) {
+                if (areToolsAvailable == null) {
+                    if (areInstalled()) {
+                        Log.d(TAG, "Tools are installed to /system");
+                        areToolsAvailable = true;
+                    } else if (areSymlinked()) {
+                        Log.d(TAG, "Tools were already symlinked into our private binary dir");
+                        areToolsAvailable = true;
+                    } else if (symlink() == OsConstants.EXIT_SUCCESS) {
+                        Log.d(TAG, "Tools are now symlinked into our private binary dir");
+                        areToolsAvailable = true;
+                    } else {
+                        Log.e(TAG, "For some reason, wg and wg-quick are not available at all");
+                        areToolsAvailable = false;
+                    }
+                }
+            }
+        }
+        if (!areToolsAvailable)
+            throw new FileNotFoundException("Required tools unavailable");
     }
 
     public int install() {
