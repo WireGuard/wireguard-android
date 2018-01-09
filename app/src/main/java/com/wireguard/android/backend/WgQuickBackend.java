@@ -35,12 +35,6 @@ public final class WgQuickBackend implements Backend {
         this.rootShell = rootShell;
     }
 
-    private static State resolveState(final State currentState, State requestedState) {
-        if (requestedState == State.TOGGLE)
-            requestedState = currentState == State.UP ? State.DOWN : State.UP;
-        return requestedState;
-    }
-
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) {
         if (tunnel.getState() == State.UP)
@@ -74,14 +68,15 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public State setState(final Tunnel tunnel, final State state) throws Exception {
+    public State setState(final Tunnel tunnel, State state) throws Exception {
         Log.v(TAG, "Requested state change to " + state + " for tunnel " + tunnel.getName());
         final State originalState = getState(tunnel);
-        final State resolvedState = resolveState(originalState, state);
-        if (resolvedState == originalState)
+        if (state == State.TOGGLE)
+            state = originalState == State.UP ? State.DOWN : State.UP;
+        if (state == originalState)
             return originalState;
         final int result;
-        if (resolvedState == State.UP) {
+        if (state == State.UP) {
             if (!new File("/sys/module/wireguard").exists())
                 throw new ErrnoException("WireGuard module not loaded", OsConstants.ENODEV);
             // FIXME: Assumes file layout from FileConfigStore. Use a temporary file.
