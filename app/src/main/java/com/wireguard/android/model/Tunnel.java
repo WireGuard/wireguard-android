@@ -91,21 +91,24 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return CompletableFuture.completedFuture(statistics);
     }
 
-    void onConfigChanged(final Config config) {
+    Config onConfigChanged(final Config config) {
         this.config = config;
         notifyPropertyChanged(BR.config);
+        return config;
     }
 
-    void onStateChanged(final State state) {
+    State onStateChanged(final State state) {
         if (state != State.UP)
             onStatisticsChanged(null);
         this.state = state;
         notifyPropertyChanged(BR.state);
+        return state;
     }
 
-    void onStatisticsChanged(final Statistics statistics) {
+    Statistics onStatisticsChanged(final Statistics statistics) {
         this.statistics = statistics;
         notifyPropertyChanged(BR.statistics);
+        return statistics;
     }
 
     public CompletionStage<Tunnel> rename(@NonNull final String name) {
