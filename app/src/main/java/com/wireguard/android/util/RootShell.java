@@ -112,38 +112,43 @@ public class RootShell {
     }
 
     public synchronized void start() throws IOException, NoRootException {
-        if (isRunning())
-            return;
-        if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
-            throw new FileNotFoundException("Could not create local binary directory");
-        if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
-            throw new FileNotFoundException("Could not create local temporary directory");
-        if (!isExecutableInPath(SU))
-            throw new NoRootException(deviceNotRootedMessage);
-        final ProcessBuilder builder = new ProcessBuilder().command(SU);
-        builder.environment().put("LC_ALL", "C");
-        process = builder.start();
-        stdin = new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8);
-        stdout = new BufferedReader(new InputStreamReader(process.getInputStream(),
-                StandardCharsets.UTF_8));
-        stderr = new BufferedReader(new InputStreamReader(process.getErrorStream(),
-                StandardCharsets.UTF_8));
-        stdin.write(preamble);
-        stdin.flush();
-        // Check that the shell started successfully.
-        final String uid = stdout.readLine();
-        if (!"0".equals(uid)) {
-            Log.w(TAG, "Root check did not return correct UID: " + uid);
-            throw new NoRootException(deviceNotRootedMessage);
-        }
-        if (!isRunning()) {
-            String line;
-            while ((line = stderr.readLine()) != null) {
-                Log.w(TAG, "Root check returned an error: " + line);
-                if (line.contains("Permission denied"))
-                    throw new NoRootException(deviceNotRootedMessage);
+        try {
+            if (isRunning())
+                return;
+            if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
+                throw new FileNotFoundException("Could not create local binary directory");
+            if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
+                throw new FileNotFoundException("Could not create local temporary directory");
+            if (!isExecutableInPath(SU))
+                throw new NoRootException(deviceNotRootedMessage);
+            final ProcessBuilder builder = new ProcessBuilder().command(SU);
+            builder.environment().put("LC_ALL", "C");
+            process = builder.start();
+            stdin = new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8);
+            stdout = new BufferedReader(new InputStreamReader(process.getInputStream(),
+                    StandardCharsets.UTF_8));
+            stderr = new BufferedReader(new InputStreamReader(process.getErrorStream(),
+                    StandardCharsets.UTF_8));
+            stdin.write(preamble);
+            stdin.flush();
+            // Check that the shell started successfully.
+            final String uid = stdout.readLine();
+            if (!"0".equals(uid)) {
+                Log.w(TAG, "Root check did not return correct UID: " + uid);
+                throw new NoRootException(deviceNotRootedMessage);
             }
-            throw new IOException("Shell failed to start: " + process.exitValue());
+            if (!isRunning()) {
+                String line;
+                while ((line = stderr.readLine()) != null) {
+                    Log.w(TAG, "Root check returned an error: " + line);
+                    if (line.contains("Permission denied"))
+                        throw new NoRootException(deviceNotRootedMessage);
+                }
+                throw new IOException("Shell failed to start: " + process.exitValue());
+            }
+        } catch (final IOException | NoRootException e) {
+            stop();
+            throw e;
         }
     }
 
