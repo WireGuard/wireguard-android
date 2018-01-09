@@ -81,30 +81,41 @@ public class RootShell {
             throws IOException, NoRootException {
         start();
         final String marker = UUID.randomUUID().toString();
-        final String script = '(' + command + "); ret=$?; echo " + marker + " $ret; "
-                + "echo " + marker + " $ret >&2\n";
-        Log.v(TAG, "executing: " + script);
+        final String script = "echo " + marker + "; echo " + marker + " >&2; (" + command +
+                "); ret=$?; echo " + marker + " $ret; echo " + marker + " $ret >&2\n";
+        Log.v(TAG, "executing: " + command);
         stdin.write(script);
         stdin.flush();
         String line;
         int errnoStdout = Integer.MIN_VALUE;
         int errnoStderr = Integer.MAX_VALUE;
+        int markersSeen = 0;
         while ((line = stdout.readLine()) != null) {
-            if (line.startsWith(marker) && line.length() > marker.length() + 1) {
-                errnoStdout = Integer.valueOf(line.substring(marker.length() + 1));
-                break;
+            if (line.startsWith(marker)) {
+                ++markersSeen;
+                if (line.length() > marker.length() + 1) {
+                    errnoStdout = Integer.valueOf(line.substring(marker.length() + 1));
+                    break;
+                }
+            } else if (markersSeen > 0) {
+                if (output != null)
+                    output.add(line);
+                Log.v(TAG, "stdout: " + line);
             }
-            if (output != null)
-                output.add(line);
-            Log.v(TAG, "stdout: " + line);
         }
         while ((line = stderr.readLine()) != null) {
-            if (line.startsWith(marker) && line.length() > marker.length() + 1) {
-                errnoStderr = Integer.valueOf(line.substring(marker.length() + 1));
-                break;
+            if (line.startsWith(marker)) {
+                ++markersSeen;
+                if (line.length() > marker.length() + 1) {
+                    errnoStderr = Integer.valueOf(line.substring(marker.length() + 1));
+                    break;
+                }
+            } else if (markersSeen > 2) {
+                Log.v(TAG, "stderr: " + line);
             }
-            Log.v(TAG, "stderr: " + line);
         }
+        if (markersSeen != 4)
+            throw new IOException("Expected 4 markers, received " + markersSeen);
         if (errnoStdout != errnoStderr)
             throw new IOException("Unable to read exit status");
         Log.v(TAG, "exit: " + errnoStdout);
