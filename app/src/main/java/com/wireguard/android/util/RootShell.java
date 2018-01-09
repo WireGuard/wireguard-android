@@ -127,7 +127,7 @@ public class RootShell {
      * @param command Command to run as root.
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    public int run(final Collection<String> output, final String command)
+    public synchronized int run(final Collection<String> output, final String command)
             throws ErrnoException, IOException, NoRootException {
         ensureRoot();
 
