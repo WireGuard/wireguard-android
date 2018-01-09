@@ -59,6 +59,13 @@ public class ToolsInstallerPreference extends Preference {
     }
 
     @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        asyncWorker.supplyAsync(toolsInstaller::areInstalled)
+                .thenAccept(installed -> setState(installed ? State.ALREADY : State.INITIAL));
+    }
+
+    @Override
     protected void onClick() {
         setState(State.WORKING);
         asyncWorker.supplyAsync(toolsInstaller::install)
