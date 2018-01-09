@@ -1,8 +1,6 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
-import android.system.ErrnoException;
-import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.Application.ApplicationContext;
@@ -10,16 +8,14 @@ import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.R;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -29,30 +25,29 @@ import javax.inject.Inject;
 
 @ApplicationScope
 public class RootShell {
-    private static final Pattern ERRNO_EXTRACTOR = Pattern.compile("error=(\\d+)");
+    private static final String SU = "su";
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
 
-    private final String exceptionMessage;
+    private final String deviceNotRootedMessage;
+    private final File localBinaryDir;
+    private final File localTemporaryDir;
     private final String preamble;
     private Process process;
     private BufferedReader stderr;
-    private BufferedWriter stdin;
+    private OutputStreamWriter stdin;
     private BufferedReader stdout;
 
     @Inject
     public RootShell(@ApplicationContext final Context context) {
-        final File binDir = new File(context.getCacheDir(), "bin");
-        final File tmpDir = new File(context.getCacheDir(), "tmp");
-
-        if (!(binDir.isDirectory() || binDir.mkdirs())
-                || !(tmpDir.isDirectory() || tmpDir.mkdirs()))
-            throw new RuntimeException(new IOException("Cannot create binary dir/TMPDIR"));
-
-        exceptionMessage = context.getString(R.string.error_root);
-        preamble = String.format("export PATH=\"%s:$PATH\" TMPDIR='%s'; id;\n", binDir, tmpDir);
+        deviceNotRootedMessage = context.getString(R.string.error_root);
+        final File cacheDir = context.getCacheDir();
+        localBinaryDir = new File(cacheDir, "bin");
+        localTemporaryDir = new File(cacheDir, "tmp");
+        preamble = String.format("export PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
+                localBinaryDir, localTemporaryDir);
     }
 
-    private static boolean isExecutable(final String name) {
+    private static boolean isExecutableInPath(final String name) {
         final String path = System.getenv("PATH");
         if (path == null)
             return false;
@@ -62,61 +57,18 @@ public class RootShell {
         return false;
     }
 
-    private void ensureRoot() throws ErrnoException, IOException, NoRootException {
+    public boolean isRunning() {
         try {
-            if (process != null) {
-                process.exitValue();
-                process = null;
+            // Throws an exception if the process hasn't finished yet.
+            synchronized (this) {
+                if (process != null)
+                    process.exitValue();
             }
-        } catch (IllegalThreadStateException e) {
-            return;
+        } catch (final IllegalThreadStateException ignored) {
+            // The existing process is still running.
+            return true;
         }
-
-        if (!isExecutable("su"))
-            throw new NoRootException(exceptionMessage);
-
-        try {
-            final ProcessBuilder builder = new ProcessBuilder();
-            builder.environment().put("LANG", "C");
-            builder.command("su");
-            process = builder.start();
-            stdin = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8));
-            stdout = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-            stderr = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8));
-
-            Log.d(TAG, "New root shell, sending preamble: " + preamble);
-            stdin.write(preamble);
-            stdin.flush();
-            final String id = stdout.readLine();
-
-            try {
-                int errno = process.exitValue();
-                String line;
-                while ((line = stderr.readLine()) != null) {
-                    if (line.contains("Permission denied"))
-                        throw new NoRootException(exceptionMessage);
-                }
-                throw new ErrnoException("Unknown error when obtaining root access", errno);
-            } catch (IllegalThreadStateException e) {
-                // We're alive, so keep executing.
-            }
-
-            if (id == null || !id.contains("uid=0"))
-                throw new NoRootException(exceptionMessage);
-        } catch (Exception e) {
-            Log.w(TAG, "Session failed with exception", e);
-            process.destroy();
-            process = null;
-            final Matcher match = ERRNO_EXTRACTOR.matcher(e.toString());
-            if (match.find()) {
-                final int errno = Integer.valueOf(match.group(1));
-                if (errno == OsConstants.EACCES)
-                    throw new NoRootException(exceptionMessage);
-                else
-                    throw new ErrnoException("Unknown error when obtaining root access", errno);
-            }
-            throw e;
-        }
+        return false;
     }
 
     /**
@@ -125,78 +77,92 @@ public class RootShell {
      * @param output  Lines read from stdout are appended to this list. Pass null if the
      *                output from the shell is not important.
      * @param command Command to run as root.
-     * @return The exit value of the last command run, or -1 if there was an internal error.
+     * @return The exit value of the command.
      */
     public synchronized int run(final Collection<String> output, final String command)
-            throws ErrnoException, IOException, NoRootException {
-        ensureRoot();
-
-        StringBuilder builder = new StringBuilder();
+            throws IOException, NoRootException {
+        start();
         final String marker = UUID.randomUUID().toString();
-        final String begin = marker + " begin";
-        final String end = marker + " end";
-
-        builder.append(String.format("echo '%s';", begin));
-        builder.append(String.format("echo '%s' >&2;", begin));
-
-        builder.append('(');
-        builder.append(command);
-        builder.append(");");
-
-        builder.append("ret=$?;");
-        builder.append(String.format("echo '%s' $ret;", end));
-        builder.append(String.format("echo '%s' $ret >&2;", end));
-
-        builder.append('\n');
-
-        Log.v(TAG, "executing: " + command);
-        stdin.write(builder.toString());
+        final String script = '(' + command + "); ret=$?; echo " + marker + " $ret; "
+                + "echo " + marker + " $ret >&2\n";
+        Log.v(TAG, "executing: " + script);
+        stdin.write(script);
         stdin.flush();
-
         String line;
-        boolean first = true;
-        int errnoStdout = -1, errnoStderr = -2;
-        int beginEnds = 0;
+        int errnoStdout = Integer.MIN_VALUE;
+        int errnoStderr = Integer.MAX_VALUE;
         while ((line = stdout.readLine()) != null) {
-            if (first) {
-                first = false;
-                if (!line.startsWith(begin))
-                    throw new ErrnoException("Could not find begin marker", OsConstants.EBADMSG);
-                ++beginEnds;
-                continue;
-            }
-            if (line.startsWith(end) && line.length() > end.length() + 1) {
-                errnoStdout = Integer.valueOf(line.substring(end.length() + 1));
-                ++beginEnds;
+            if (line.startsWith(marker) && line.length() > marker.length() + 1) {
+                errnoStdout = Integer.valueOf(line.substring(marker.length() + 1));
                 break;
             }
             if (output != null)
                 output.add(line);
             Log.v(TAG, "stdout: " + line);
         }
-        first = true;
         while ((line = stderr.readLine()) != null) {
-            if (first) {
-                first = false;
-                if (!line.startsWith(begin))
-                    throw new ErrnoException("Could not find begin marker", OsConstants.EBADMSG);
-                ++beginEnds;
-                continue;
-            }
-            if (line.startsWith(end) && line.length() > end.length() + 1) {
-                errnoStderr = Integer.valueOf(line.substring(end.length() + 1));
-                ++beginEnds;
+            if (line.startsWith(marker) && line.length() > marker.length() + 1) {
+                errnoStderr = Integer.valueOf(line.substring(marker.length() + 1));
                 break;
             }
             Log.v(TAG, "stderr: " + line);
         }
-        if (errnoStderr != errnoStdout || beginEnds != 4)
-            throw new ErrnoException("Incorrect errno reporting", OsConstants.EBADMSG);
-
+        if (errnoStdout != errnoStderr)
+            throw new IOException("Unable to read exit status");
+        Log.v(TAG, "exit: " + errnoStdout);
         return errnoStdout;
     }
 
+    public synchronized void start() throws IOException, NoRootException {
+        if (isRunning())
+            return;
+        if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
+            throw new FileNotFoundException("Could not create local binary directory");
+        if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
+            throw new FileNotFoundException("Could not create local temporary directory");
+        if (!isExecutableInPath(SU))
+            throw new NoRootException(deviceNotRootedMessage);
+        final ProcessBuilder builder = new ProcessBuilder().command(SU);
+        builder.environment().put("LC_ALL", "C");
+        process = builder.start();
+        stdin = new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8);
+        stdout = new BufferedReader(new InputStreamReader(process.getInputStream(),
+                StandardCharsets.UTF_8));
+        stderr = new BufferedReader(new InputStreamReader(process.getErrorStream(),
+                StandardCharsets.UTF_8));
+        stdin.write(preamble);
+        stdin.flush();
+        // Check that the shell started successfully.
+        final String uid = stdout.readLine();
+        if (!"0".equals(uid)) {
+            Log.w(TAG, "Root check did not return correct UID: " + uid);
+            throw new NoRootException(deviceNotRootedMessage);
+        }
+        if (!isRunning()) {
+            String line;
+            while ((line = stderr.readLine()) != null) {
+                Log.w(TAG, "Root check returned an error: " + line);
+                if (line.contains("Permission denied"))
+                    throw new NoRootException(deviceNotRootedMessage);
+            }
+            throw new IOException("Shell failed to start: " + process.exitValue());
+        }
+    }
+
+    public void stop() throws IOException {
+        synchronized (this) {
+            if (process != null) {
+                process.destroy();
+                process = null;
+            }
+        }
+    }
+
     public static class NoRootException extends Exception {
+        public NoRootException(final String message, final Throwable cause) {
+            super(message, cause);
+        }
+
         public NoRootException(final String message) {
             super(message);
         }
