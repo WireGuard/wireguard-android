@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 
-import com.gabrielittner.threetenbp.LazyThreeTen;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.configStore.ConfigStore;
@@ -47,7 +46,6 @@ public class Application extends android.app.Application {
                 .applicationModule(new ApplicationModule(this))
                 .build();
         component.getTunnelManager().onCreate();
-        LazyThreeTen.init(this);
     }
 
     @ApplicationScope
