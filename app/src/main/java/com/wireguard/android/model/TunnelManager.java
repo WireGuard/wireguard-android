@@ -110,24 +110,18 @@ public final class TunnelManager extends BaseObservable {
     }
 
     CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
-        final CompletionStage<Config> completion =
-                asyncWorker.supplyAsync(() -> configStore.load(tunnel.getName()));
-        completion.thenAccept(tunnel::onConfigChanged);
-        return completion;
+        return asyncWorker.supplyAsync(() -> configStore.load(tunnel.getName()))
+                .thenApply(tunnel::onConfigChanged);
     }
 
     CompletionStage<State> getTunnelState(final Tunnel tunnel) {
-        final CompletionStage<State> completion =
-                asyncWorker.supplyAsync(() -> backend.getState(tunnel));
-        completion.thenAccept(tunnel::onStateChanged);
-        return completion;
+        return asyncWorker.supplyAsync(() -> backend.getState(tunnel))
+                .thenApply(tunnel::onStateChanged);
     }
 
     CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
-        final CompletionStage<Statistics> completion =
-                asyncWorker.supplyAsync(() -> backend.getStatistics(tunnel));
-        completion.thenAccept(tunnel::onStatisticsChanged);
-        return completion;
+        return asyncWorker.supplyAsync(() -> backend.getStatistics(tunnel))
+                .thenApply(tunnel::onStatisticsChanged);
     }
 
     public ObservableKeyedList<String, Tunnel> getTunnels() {
@@ -227,23 +221,21 @@ public final class TunnelManager extends BaseObservable {
     }
 
     CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
-        final CompletionStage<Config> completion = asyncWorker.supplyAsync(() -> {
+        return asyncWorker.supplyAsync(() -> {
             final Config appliedConfig = backend.applyConfig(tunnel, config);
             return configStore.save(tunnel.getName(), appliedConfig);
-        });
-        completion.thenAccept(tunnel::onConfigChanged);
-        return completion;
+        }).thenApply(tunnel::onConfigChanged);
     }
 
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
-        final CompletionStage<State> completion =
-                asyncWorker.supplyAsync(() -> backend.setState(tunnel, state));
-        completion.whenComplete((newState, e) -> {
+        // Ensure the configuration is loaded before trying to use it.
+        return tunnel.getConfigAsync().thenCompose(x ->
+                asyncWorker.supplyAsync(() -> backend.setState(tunnel, state))
+        ).whenComplete((newState, e) -> {
             // Ensure onStateChanged is always called (failure or not), and with the correct state.
             tunnel.onStateChanged(e == null ? newState : tunnel.getState());
             if (e == null && newState == State.UP)
                 setLastUsedTunnel(tunnel);
         });
-        return completion;
     }
 }
