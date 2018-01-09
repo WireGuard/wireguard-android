@@ -198,6 +198,7 @@ public class TunnelEditorFragment extends BaseFragment {
         if (throwable == null) {
             message = getString(R.string.tunnel_create_success, tunnel.getName());
             Log.d(TAG, message);
+            localTunnel = tunnel;
             onFinished();
         } else {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
