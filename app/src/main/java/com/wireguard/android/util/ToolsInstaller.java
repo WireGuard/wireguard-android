@@ -66,7 +66,7 @@ public final class ToolsInstaller {
                     new File(nativeLibraryDir, names[0]),
                     new File(INSTALL_DIR, names[1])));
         }
-        script.append("exit ").append(OsConstants.EALREADY);
+        script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
             return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
         } catch (final ErrnoException | IOException | NoRootException ignored) {
@@ -81,7 +81,7 @@ public final class ToolsInstaller {
                     new File(nativeLibraryDir, names[0]),
                     new File(localBinaryDir, names[1])));
         }
-        script.append("exit ").append(OsConstants.EALREADY);
+        script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
             return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
         } catch (final ErrnoException | IOException | NoRootException ignored) {
@@ -116,11 +116,11 @@ public final class ToolsInstaller {
     public int install() {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
-        final StringBuilder script = new StringBuilder("set -ex"
-                + "; trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system");
+        final StringBuilder script = new StringBuilder("set -ex;");
+        script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
         for (final String[] names : EXECUTABLES) {
             final File destination = new File(INSTALL_DIR, names[1]);
-            script.append(String.format("; cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' ",
+            script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
         try {
@@ -135,9 +135,9 @@ public final class ToolsInstaller {
     }
 
     public int symlink() {
-        final StringBuilder script = new StringBuilder("set -ex");
+        final StringBuilder script = new StringBuilder("set -ex;");
         for (final String[] names : EXECUTABLES) {
-            script.append(String.format("; ln -fns '%s' '%s'",
+            script.append(String.format("ln -fns '%s' '%s'; ",
                     new File(nativeLibraryDir, names[0]),
                     new File(localBinaryDir, names[1])));
         }
