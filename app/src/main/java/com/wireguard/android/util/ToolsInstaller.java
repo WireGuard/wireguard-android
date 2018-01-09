@@ -31,11 +31,13 @@ public final class ToolsInstaller {
     };
     private static final File INSTALL_DIR = getInstallDir();
 
+    private final File localBinaryDir;
     private final File nativeLibraryDir;
     private final RootShell rootShell;
 
     @Inject
     public ToolsInstaller(@ApplicationContext final Context context, final RootShell rootShell) {
+        localBinaryDir = new File(context.getCacheDir(), "bin");
         nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
         this.rootShell = rootShell;
     }
@@ -68,6 +70,21 @@ public final class ToolsInstaller {
         }
     }
 
+    public boolean areSymlinked() {
+        final StringBuilder script = new StringBuilder();
+        for (final String[] names : EXECUTABLES) {
+            script.append(String.format("test '%s' -ef '%s' && ",
+                    new File(nativeLibraryDir, names[0]),
+                    new File(localBinaryDir, names[1])));
+        }
+        script.append("exit ").append(OsConstants.EALREADY);
+        try {
+            return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
+        } catch (final ErrnoException | IOException | NoRootException ignored) {
+            return false;
+        }
+    }
+
     public int install() {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
@@ -77,6 +94,24 @@ public final class ToolsInstaller {
             final File destination = new File(INSTALL_DIR, names[1]);
             script.append(String.format("; cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' ",
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
+        }
+        try {
+            return rootShell.run(null, script.toString());
+        } catch (final ErrnoException e) {
+            return e.errno;
+        } catch (final IOException ignored) {
+            return OsConstants.EXIT_FAILURE;
+        } catch (final NoRootException ignored) {
+            return OsConstants.EACCES;
+        }
+    }
+
+    public int symlink() {
+        final StringBuilder script = new StringBuilder("set -ex");
+        for (final String[] names : EXECUTABLES) {
+            script.append(String.format("; ln -fns '%s' '%s'",
+                    new File(nativeLibraryDir, names[0]),
+                    new File(localBinaryDir, names[1])));
         }
         try {
             return rootShell.run(null, script.toString());
