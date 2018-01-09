@@ -1,7 +1,6 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
-import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.util.Log;
 
@@ -69,7 +68,7 @@ public final class ToolsInstaller {
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
             return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
-        } catch (final ErrnoException | IOException | NoRootException ignored) {
+        } catch (final IOException | NoRootException ignored) {
             return false;
         }
     }
@@ -84,7 +83,7 @@ public final class ToolsInstaller {
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
             return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
-        } catch (final ErrnoException | IOException | NoRootException ignored) {
+        } catch (final IOException | NoRootException ignored) {
             return false;
         }
     }
@@ -125,8 +124,6 @@ public final class ToolsInstaller {
         }
         try {
             return rootShell.run(null, script.toString());
-        } catch (final ErrnoException e) {
-            return e.errno;
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         } catch (final NoRootException ignored) {
@@ -143,8 +140,6 @@ public final class ToolsInstaller {
         }
         try {
             return rootShell.run(null, script.toString());
-        } catch (final ErrnoException e) {
-            return e.errno;
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         } catch (final NoRootException ignored) {
