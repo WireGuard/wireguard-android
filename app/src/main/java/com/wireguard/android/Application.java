@@ -81,8 +81,9 @@ public class Application extends android.app.Application {
         @ApplicationScope
         @Provides
         public static Backend getBackend(@ApplicationContext final Context context,
-                                         final RootShell rootShell) {
-            return new WgQuickBackend(context, rootShell);
+                                         final RootShell rootShell,
+                                         final ToolsInstaller toolsInstaller) {
+            return new WgQuickBackend(context, rootShell, toolsInstaller);
         }
 
         @ApplicationScope

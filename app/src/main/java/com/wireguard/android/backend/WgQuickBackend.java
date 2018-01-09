@@ -9,6 +9,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.RootShell;
+import com.wireguard.android.util.ToolsInstaller;
 import com.wireguard.config.Config;
 
 import java.io.File;
@@ -29,10 +30,13 @@ public final class WgQuickBackend implements Backend {
 
     private final Context context;
     private final RootShell rootShell;
+    private final ToolsInstaller toolsInstaller;
 
-    public WgQuickBackend(final Context context, final RootShell rootShell) {
+    public WgQuickBackend(final Context context, final RootShell rootShell,
+                          final ToolsInstaller toolsInstaller) {
         this.context = context;
         this.rootShell = rootShell;
+        this.toolsInstaller = toolsInstaller;
     }
 
     @Override
@@ -47,6 +51,7 @@ public final class WgQuickBackend implements Backend {
         final List<String> output = new ArrayList<>();
         // Don't throw an exception here or nothing will show up in the UI.
         try {
+            toolsInstaller.ensureToolsAvailable();
             if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
                 return Collections.emptySet();
         } catch (final Exception ignored) {
@@ -75,6 +80,7 @@ public final class WgQuickBackend implements Backend {
             state = originalState == State.UP ? State.DOWN : State.UP;
         if (state == originalState)
             return originalState;
+        toolsInstaller.ensureToolsAvailable();
         final int result;
         if (state == State.UP) {
             if (!new File("/sys/module/wireguard").exists())
