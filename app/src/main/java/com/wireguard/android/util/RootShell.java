@@ -57,13 +57,11 @@ public class RootShell {
         return false;
     }
 
-    public boolean isRunning() {
+    public synchronized boolean isRunning() {
         try {
             // Throws an exception if the process hasn't finished yet.
-            synchronized (this) {
-                if (process != null)
-                    process.exitValue();
-            }
+            if (process != null)
+                process.exitValue();
         } catch (final IllegalThreadStateException ignored) {
             // The existing process is still running.
             return true;
@@ -149,12 +147,10 @@ public class RootShell {
         }
     }
 
-    public void stop() throws IOException {
-        synchronized (this) {
-            if (process != null) {
-                process.destroy();
-                process = null;
-            }
+    public synchronized void stop() throws IOException {
+        if (process != null) {
+            process.destroy();
+            process = null;
         }
     }
 
