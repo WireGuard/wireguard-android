@@ -94,6 +94,8 @@ public class QuickTileService extends TileService {
             label = getString(R.string.app_name);
             state = Tile.STATE_INACTIVE;
         }
+        if (tile == null)
+            return;
         tile.setLabel(label);
         if (tile.getState() != state) {
             // The icon must be changed every time the state changes, or the shade will not change.
