@@ -93,7 +93,7 @@ public final class ToolsInstaller {
             synchronized (this) {
                 if (areToolsAvailable == null) {
                     if (areInstalled() == OsConstants.EALREADY) {
-                        Log.d(TAG, "Tools are installed to /system");
+                        Log.d(TAG, "Tools are installed to the system partition");
                         areToolsAvailable = true;
                     } else if (areSymlinked() == OsConstants.EALREADY) {
                         Log.d(TAG, "Tools were already symlinked into our private binary dir");

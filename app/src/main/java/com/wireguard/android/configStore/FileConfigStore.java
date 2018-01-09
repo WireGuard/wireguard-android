@@ -8,6 +8,7 @@ import com.wireguard.config.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +32,7 @@ public final class FileConfigStore implements ConfigStore {
 
     @Override
     public Config create(final String name, final Config config) throws IOException {
+        Log.d(TAG, "Creating configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.createNewFile()) {
             final String message = "Configuration file " + file.getName() + " already exists";
@@ -44,6 +46,7 @@ public final class FileConfigStore implements ConfigStore {
 
     @Override
     public void delete(final String name) throws IOException {
+        Log.d(TAG, "Deleting configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.delete())
             throw new IOException("Cannot delete configuration file " + file.getName());
@@ -70,11 +73,11 @@ public final class FileConfigStore implements ConfigStore {
 
     @Override
     public Config save(final String name, final Config config) throws IOException {
-        Log.d(TAG, "Requested save config for tunnel " + name);
+        Log.d(TAG, "Saving configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.isFile()) {
             final String message = "Configuration file " + file.getName() + " not found";
-            throw new IllegalStateException(message);
+            throw new FileNotFoundException(message);
         }
         try (FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
