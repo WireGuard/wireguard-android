@@ -34,15 +34,6 @@ public class ToolsInstallerPreference extends Preference {
         this(context, null);
     }
 
-    private static State mapResultToState(final int scriptResult) {
-        if (scriptResult == OsConstants.EXIT_SUCCESS)
-            return State.SUCCESS;
-        else if (scriptResult == OsConstants.EALREADY)
-            return State.ALREADY;
-        else
-            return State.FAILURE;
-    }
-
     @Override
     public CharSequence getSummary() {
         return getContext().getString(state.messageResourceId);
@@ -61,16 +52,31 @@ public class ToolsInstallerPreference extends Preference {
     @Override
     protected void onAttachedToActivity() {
         super.onAttachedToActivity();
-        asyncWorker.supplyAsync(toolsInstaller::areInstalled)
-                .thenAccept(installed -> setState(installed ? State.ALREADY : State.INITIAL));
+        asyncWorker.supplyAsync(toolsInstaller::areInstalled).whenComplete(this::onCheckResult);
+    }
+
+    private void onCheckResult(final Integer result, final Throwable throwable) {
+        setState(throwable == null && result == OsConstants.EALREADY ?
+                State.ALREADY : State.INITIAL);
     }
 
     @Override
     protected void onClick() {
         setState(State.WORKING);
-        asyncWorker.supplyAsync(toolsInstaller::install)
-                .thenApply(ToolsInstallerPreference::mapResultToState)
-                .thenAccept(this::setState);
+        asyncWorker.supplyAsync(toolsInstaller::install).whenComplete(this::onInstallResult);
+    }
+
+    private void onInstallResult(final Integer result, final Throwable throwable) {
+        final State nextState;
+        if (throwable != null)
+            nextState = State.FAILURE;
+        else if (result == OsConstants.EXIT_SUCCESS)
+            nextState = State.SUCCESS;
+        else if (result == OsConstants.EALREADY)
+            nextState = State.ALREADY;
+        else
+            nextState = State.FAILURE;
+        setState(nextState);
     }
 
     private void setState(@NonNull final State state) {

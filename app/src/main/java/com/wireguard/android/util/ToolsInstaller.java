@@ -56,9 +56,9 @@ public final class ToolsInstaller {
         return null;
     }
 
-    public boolean areInstalled() {
+    public int areInstalled() throws NoRootException {
         if (INSTALL_DIR == null)
-            return false;
+            return OsConstants.ENOENT;
         final StringBuilder script = new StringBuilder();
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("cmp -s '%s' '%s' && ",
@@ -67,13 +67,13 @@ public final class ToolsInstaller {
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
-            return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
-        } catch (final IOException | NoRootException ignored) {
-            return false;
+            return rootShell.run(null, script.toString());
+        } catch (final IOException ignored) {
+            return OsConstants.EXIT_FAILURE;
         }
     }
 
-    public boolean areSymlinked() {
+    public int areSymlinked() throws NoRootException {
         final StringBuilder script = new StringBuilder();
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("test '%s' -ef '%s' && ",
@@ -82,20 +82,20 @@ public final class ToolsInstaller {
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
-            return rootShell.run(null, script.toString()) == OsConstants.EALREADY;
-        } catch (final IOException | NoRootException ignored) {
-            return false;
+            return rootShell.run(null, script.toString());
+        } catch (final IOException ignored) {
+            return OsConstants.EXIT_FAILURE;
         }
     }
 
-    public void ensureToolsAvailable() throws FileNotFoundException {
+    public void ensureToolsAvailable() throws FileNotFoundException, NoRootException {
         if (areToolsAvailable == null) {
             synchronized (this) {
                 if (areToolsAvailable == null) {
-                    if (areInstalled()) {
+                    if (areInstalled() == OsConstants.EALREADY) {
                         Log.d(TAG, "Tools are installed to /system");
                         areToolsAvailable = true;
-                    } else if (areSymlinked()) {
+                    } else if (areSymlinked() == OsConstants.EALREADY) {
                         Log.d(TAG, "Tools were already symlinked into our private binary dir");
                         areToolsAvailable = true;
                     } else if (symlink() == OsConstants.EXIT_SUCCESS) {
@@ -112,7 +112,7 @@ public final class ToolsInstaller {
             throw new FileNotFoundException("Required tools unavailable");
     }
 
-    public int install() {
+    public int install() throws NoRootException {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
         final StringBuilder script = new StringBuilder("set -ex;");
@@ -126,12 +126,10 @@ public final class ToolsInstaller {
             return rootShell.run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
-        } catch (final NoRootException ignored) {
-            return OsConstants.EACCES;
         }
     }
 
-    public int symlink() {
+    public int symlink() throws NoRootException {
         final StringBuilder script = new StringBuilder("set -ex;");
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("ln -fns '%s' '%s'; ",
@@ -142,8 +140,6 @@ public final class ToolsInstaller {
             return rootShell.run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
-        } catch (final NoRootException ignored) {
-            return OsConstants.EACCES;
         }
     }
 }
