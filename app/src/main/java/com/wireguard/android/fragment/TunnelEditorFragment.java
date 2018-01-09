@@ -146,18 +146,19 @@ public class TunnelEditorFragment extends BaseFragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_save:
-                if (getSelectedTunnel() == null) {
+                final Tunnel selectedTunnel = getSelectedTunnel();
+                if (selectedTunnel == null) {
                     Log.d(TAG, "Attempting to create new tunnel " + localName.get());
                     final TunnelManager manager = Application.getComponent().getTunnelManager();
                     manager.create(localName.get(), localConfig)
                             .whenComplete(this::onTunnelCreated);
-                } else if (!getSelectedTunnel().getName().equals(localName.get())) {
+                } else if (!selectedTunnel.getName().equals(localName.get())) {
                     Log.d(TAG, "Attempting to rename tunnel to " + localName.get());
-                    getSelectedTunnel().rename(localName.get())
+                    selectedTunnel.rename(localName.get())
                             .whenComplete(this::onTunnelRenamed);
-                } else {
-                    Log.d(TAG, "Attempting to save config of " + getSelectedTunnel().getName());
-                    getSelectedTunnel().setConfig(localConfig)
+                } else if (localConfig != null) {
+                    Log.d(TAG, "Attempting to save config of " + selectedTunnel.getName());
+                    selectedTunnel.setConfig(localConfig)
                             .whenComplete(this::onConfigSaved);
                 }
                 return true;
