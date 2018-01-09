@@ -148,13 +148,12 @@ public class TunnelListFragment extends BaseFragment {
 
     private void onTunnelDeletionFinished(final Integer count, final Throwable throwable) {
         final String message;
-        final String plural = count == 1 ? "" : "s";
         if (throwable == null) {
-            message = "Successfully deleted " + count + " tunnel" + plural;
+            message = getResources().getQuantityString(R.plurals.delete_success, count, count);
         } else {
-            message = "Unable to delete tunnel" + plural + ": "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
-            Log.e(TAG, "Cannot delete tunnel" + plural, throwable);
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getResources().getQuantityString(R.plurals.delete_error, count, count, error);
+            Log.e(TAG, message, throwable);
         }
         if (binding != null) {
             final CoordinatorLayout container = binding.mainContainer;
@@ -165,11 +164,11 @@ public class TunnelListFragment extends BaseFragment {
     private void onTunnelImportFinished(final Tunnel tunnel, final Throwable throwable) {
         final String message;
         if (throwable == null) {
-            message = "Successfully imported tunnel '" + tunnel.getName() + '\'';
+            message = getString(R.string.import_success, tunnel.getName());
         } else {
-            message = "Cannot import tunnel: "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
-            Log.e(TAG, "Cannot import tunnel", throwable);
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getString(R.string.import_error, error);
+            Log.e(TAG, message, throwable);
         }
         if (binding != null) {
             final CoordinatorLayout container = binding.mainContainer;
@@ -245,7 +244,7 @@ public class TunnelListFragment extends BaseFragment {
 
         private void updateTitle(final ActionMode mode) {
             final int count = (int) getCheckedPositions().count();
-            mode.setTitle(resources.getQuantityString(R.plurals.list_delete_title, count, count));
+            mode.setTitle(resources.getQuantityString(R.plurals.delete_title, count, count));
         }
     }
 

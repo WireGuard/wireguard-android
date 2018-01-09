@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <plurals name="list_delete_title">
-        <item quantity="one">%d configuration selected</item>
-        <item quantity="other">%d configurations selected</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <plurals name="delete_error">
+        <item quantity="one">Unable to delete %d tunnel: %s</item>
+        <item quantity="other">Unable to delete %d tunnels: %s</item>
+    </plurals>
+    <plurals name="delete_success">
+        <item quantity="one">Successfully deleted %d tunnel</item>
+        <item quantity="other">Successfully deleted %d tunnels</item>
+    </plurals>
+    <plurals name="delete_title">
+        <item quantity="one">%d tunnel selected</item>
+        <item quantity="other">%d tunnels selected</item>
     </plurals>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
+    <string name="config_save_error">Unable to configuration for “%s”: %s</string>
+    <string name="config_save_success">Successfully saved configuration for “%s”</string>
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
     <string name="create_from_file">Create from file</string>
@@ -15,20 +25,21 @@
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
-    <string name="error_down">Error bringing down WireGuard tunnel</string>
-    <string name="error_up">Error bringing up WireGuard tunnel</string>
-    <string name="error_toggle">Error toggling WireGuard tunnel</string>
-    <string name="error_rootshell">Please obtain root access and try again</string>
+    <string name="error_down">Error bringing down tunnel: %s</string>
+    <string name="error_root">Please obtain root access and try again</string>
+    <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
+    <string name="import_error">Unable to import tunnel: %s</string>
+    <string name="import_success">Successfully imported “%s”</string>
     <string name="interface_title">Interface</string>
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
-    <string name="not_supported_message"><![CDATA[
+    <string name="not_supported_message" tools:ignore="TypographyQuotes"><![CDATA[
         <p>Your Android device does not <em>currently</em> have the WireGuard kernel module. Please
         talk to the manufacturer of your Android device or the author of your device&rsquo;s ROM
         about including the WireGuard kernel module.</p>
@@ -55,10 +66,15 @@
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
     <string name="settings">Settings</string>
+    <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
-    <string name="tools_installer_failure">Command line tools could not be installed (no root?)</string>
+    <string name="tools_installer_failure">Unable to install command-line tools (no root?)</string>
     <string name="tools_installer_initial">Install optional tools for scripting into the system partition</string>
     <string name="tools_installer_success">wg and wg-quick installed into the system partition</string>
     <string name="tools_installer_title">Install command line tools</string>
     <string name="tools_installer_working">Installing wg and wg-quick into the system partition</string>
+    <string name="tunnel_create_error">Unable to create tunnel: %s</string>
+    <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
+    <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
+    <string name="tunnel_rename_success">Successfully renamed tunnel “%s” to “%s”</string>
 </resources>

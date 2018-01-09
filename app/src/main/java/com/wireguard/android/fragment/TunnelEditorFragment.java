@@ -60,17 +60,19 @@ public class TunnelEditorFragment extends BaseFragment {
     }
 
     private void onConfigSaved(final Config config, final Throwable throwable) {
-        if (throwable != null) {
-            Log.e(TAG, "Cannot save configuration", throwable);
-            final String message = "Cannot save configuration: "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
+        final String message;
+        if (throwable == null) {
+            message = getString(R.string.config_save_success, localTunnel.getName());
+            Log.d(TAG, message);
+            onFinished();
+        } else {
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getString(R.string.config_save_error, localTunnel.getName(), error);
+            Log.e(TAG, message, throwable);
             if (binding != null) {
                 final CoordinatorLayout container = binding.mainContainer;
                 Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
             }
-        } else {
-            Log.d(TAG, "Successfully saved configuration for " + localTunnel.getName());
-            onFinished();
         }
     }
 
@@ -191,38 +193,40 @@ public class TunnelEditorFragment extends BaseFragment {
     }
 
     private void onTunnelCreated(final Tunnel tunnel, final Throwable throwable) {
-        if (throwable != null) {
-            Log.e(TAG, "Cannot create tunnel", throwable);
-            final String message = "Cannot create tunnel: "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
+        final String message;
+        if (throwable == null) {
+            message = getString(R.string.tunnel_create_success, tunnel.getName());
+            Log.d(TAG, message);
+            onFinished();
+        } else {
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getString(R.string.tunnel_create_error, error);
+            Log.e(TAG, message, throwable);
             if (binding != null) {
                 final CoordinatorLayout container = binding.mainContainer;
                 Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
             }
-        } else {
-            Log.d(TAG, "Successfully created tunnel " + tunnel.getName());
-            localTunnel = tunnel;
-            onFinished();
         }
     }
 
-
     private void onTunnelRenamed(final Tunnel tunnel, final Throwable throwable) {
-        if (throwable != null) {
-            Log.e(TAG, "Cannot rename tunnel", throwable);
-            final String message = "Cannot rename tunnel: "
-                    + ExceptionLoggers.unwrap(throwable).getMessage();
+        final String message;
+        if (throwable == null) {
+            message = getString(R.string.tunnel_rename_success, localTunnel.getName(),
+                    tunnel.getName());
+            Log.d(TAG, message);
+            localTunnel = tunnel;
+            // Now save the rest of configuration changes.
+            Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel.getName());
+            tunnel.setConfig(localConfig).whenComplete(this::onConfigSaved);
+        } else {
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getString(R.string.tunnel_rename_error, error);
+            Log.e(TAG, message, throwable);
             if (binding != null) {
                 final CoordinatorLayout container = binding.mainContainer;
                 Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
             }
-        } else {
-            Log.d(TAG, "Successfully renamed tunnel to " + tunnel.getName());
-            localTunnel = tunnel;
-            // Now save the rest of configuration changes.
-            Log.d(TAG, "Attempting to save config of " + tunnel.getName());
-            tunnel.setConfig(localConfig)
-                    .whenComplete(this::onConfigSaved);
         }
     }
 

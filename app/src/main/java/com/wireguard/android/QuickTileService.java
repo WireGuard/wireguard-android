@@ -16,7 +16,6 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.RootShell;
 
 import java.util.Objects;
 
@@ -63,16 +62,13 @@ public class QuickTileService extends TileService {
         tunnelManager.removeOnPropertyChangedCallback(onTunnelChangedCallback);
     }
 
-    @SuppressWarnings("unused")
-    private Void onToggleFinished(final State state, final Throwable throwable) {
+    private void onToggleFinished(final State state, final Throwable throwable) {
         if (throwable == null)
-            return null;
-        Log.e(TAG, "Cannot toggle tunnel", throwable);
-        final String message = throwable instanceof RootShell.NoRootException ?
-                getApplicationContext().getString(R.string.error_rootshell) :
-                getApplicationContext().getString(R.string.error_toggle) + ": " + throwable.getMessage();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        return null;
+            return;
+        final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+        final String message = getString(R.string.toggle_error, error);
+        Log.e(TAG, message, throwable);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private void updateTile() {
