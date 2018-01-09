@@ -1,12 +1,15 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
+import android.system.ErrnoException;
 import android.system.OsConstants;
 
 import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
+import com.wireguard.android.util.RootShell.NoRootException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,7 +70,11 @@ public final class ToolsInstaller {
         }
         try {
             return rootShell.run(null, script.toString());
-        } catch (Exception e) {
+        } catch (final ErrnoException e) {
+            return e.errno;
+        } catch (final IOException ignored) {
+            return OsConstants.EXIT_FAILURE;
+        } catch (final NoRootException ignored) {
             return OsConstants.EACCES;
         }
     }

@@ -7,12 +7,14 @@ import android.util.Log;
 
 import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
+import com.wireguard.android.R;
 
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +36,7 @@ public class RootShell {
             {"libwg-quick.so", "wg-quick"}
     };
 
+    private final String exceptionMessage;
     private final String preamble;
 
     private BufferedWriter stdin;
@@ -59,6 +62,7 @@ public class RootShell {
         builder.append(String.format("export PATH=\"%s:$PATH\" TMPDIR=\"%s\";", binDir, tmpDir));
         builder.append("id;\n");
 
+        exceptionMessage = context.getString(R.string.error_root);
         preamble = builder.toString();
     }
 
@@ -72,7 +76,7 @@ public class RootShell {
         return false;
     }
 
-    private void ensureRoot() throws Exception {
+    private void ensureRoot() throws ErrnoException, IOException, NoRootException {
         try {
             if (process != null) {
                 process.exitValue();
@@ -83,7 +87,7 @@ public class RootShell {
         }
 
         if (!isExecutable("su"))
-            throw new NoRootException();
+            throw new NoRootException(exceptionMessage);
 
         try {
             final ProcessBuilder builder = new ProcessBuilder();
@@ -103,8 +107,8 @@ public class RootShell {
                 int errno = process.exitValue();
                 String line;
                 while ((line = stderr.readLine()) != null) {
-                   if (line.contains("Permission denied"))
-                       throw new NoRootException();
+                    if (line.contains("Permission denied"))
+                        throw new NoRootException(exceptionMessage);
                 }
                 throw new ErrnoException("Unknown error when obtaining root access", errno);
             } catch (IllegalThreadStateException e) {
@@ -112,7 +116,7 @@ public class RootShell {
             }
 
             if (id == null || !id.contains("uid=0"))
-                throw new NoRootException();
+                throw new NoRootException(exceptionMessage);
         } catch (Exception e) {
             Log.w(TAG, "Session failed with exception", e);
             process.destroy();
@@ -121,7 +125,7 @@ public class RootShell {
             if (match.find()) {
                 final int errno = Integer.valueOf(match.group(1));
                 if (errno == OsConstants.EACCES)
-                    throw new NoRootException();
+                    throw new NoRootException(exceptionMessage);
                 else
                     throw new ErrnoException("Unknown error when obtaining root access", errno);
             }
@@ -137,7 +141,8 @@ public class RootShell {
      * @param command Command to run as root.
      * @return The exit value of the last command run, or -1 if there was an internal error.
      */
-    public int run(final List<String> output, final String command) throws Exception {
+    public int run(final List<String> output, final String command)
+            throws ErrnoException, IOException, NoRootException {
         ensureRoot();
 
         StringBuilder builder = new StringBuilder();
@@ -205,6 +210,9 @@ public class RootShell {
         return errnoStdout;
     }
 
-    public class NoRootException extends Exception {
+    public static class NoRootException extends Exception {
+        public NoRootException(final String message) {
+            super(message);
+        }
     }
 }

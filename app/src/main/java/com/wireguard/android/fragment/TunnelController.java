@@ -19,7 +19,6 @@ import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.RootShell;
 
 /**
  * Helper method shared by TunnelListFragment and TunnelDetailFragment.
@@ -48,7 +47,6 @@ public final class TunnelController {
         tunnel.setState(State.of(checked)).whenComplete((state, throwable) -> {
             if (throwable == null)
                 return;
-            Log.e(TAG, "Cannot set state of tunnel " + tunnel.getName(), throwable);
             final Context context = view.getContext();
             if (throwable instanceof ErrnoException
                     && ((ErrnoException) throwable).errno == OsConstants.ENODEV) {
@@ -61,13 +59,13 @@ public final class TunnelController {
                 // Make links work.
                 ((TextView) dialog.findViewById(android.R.id.message))
                         .setMovementMethod(LinkMovementMethod.getInstance());
-            } else if (throwable instanceof RootShell.NoRootException) {
-                Snackbar.make(view, R.string.error_rootshell, Snackbar.LENGTH_LONG).show();
+                Log.e(TAG, "WireGuard not supported");
             } else {
-                final String message =
-                        context.getString(checked ? R.string.error_up : R.string.error_down) + ": "
-                                + ExceptionLoggers.unwrap(throwable).getMessage();
+                final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+                final int messageResId = checked ? R.string.error_up : R.string.error_down;
+                final String message = context.getString(messageResId, error);
                 Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+                Log.e(TAG, message, throwable);
             }
         });
     }

@@ -55,7 +55,7 @@ public final class WgQuickBackend implements Backend {
         try {
             if (rootShell.run(output, "wg show interfaces") != 0 || output.isEmpty())
                 return Collections.emptySet();
-        } catch (Exception e) {
+        } catch (final Exception ignored) {
             return Collections.emptySet();
         }
         // wg puts all interface names on the same line. Split them into separate elements.
