@@ -286,6 +286,8 @@ static void up_if(unsigned int *netid, const char *iface)
 static void set_dnses(unsigned int netid, const char *dnses)
 {
 	size_t len = strlen(dnses);
+	if (len > (1<<16))
+		return;
 	_cleanup_free_ char *mutable = xstrdup(dnses);
 	_cleanup_free_ char *arglist = xmalloc(len * 4 + 1);
 	_cleanup_free_ char *arg = xmalloc(len + 4);
@@ -586,6 +588,8 @@ static void parse_options(char **iface, char **config, unsigned int *mtu, char *
 
 	while (getline(&line, &n, file) >= 0) {
 		size_t len = strlen(line), j = 0;
+		if (len > (1<<16))
+			return;
 		_cleanup_free_ char *clean = xmalloc(len + 1);
 
 		for (size_t i = 0; i < len; ++i) {
