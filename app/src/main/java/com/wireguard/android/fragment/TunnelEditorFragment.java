@@ -154,7 +154,7 @@ public class TunnelEditorFragment extends BaseFragment {
                             .whenComplete(this::onTunnelCreated);
                 } else if (!selectedTunnel.getName().equals(localName.get())) {
                     Log.d(TAG, "Attempting to rename tunnel to " + localName.get());
-                    selectedTunnel.rename(localName.get())
+                    selectedTunnel.setName(localName.get())
                             .whenComplete(this::onTunnelRenamed);
                 } else if (localConfig != null) {
                     Log.d(TAG, "Attempting to save config of " + selectedTunnel.getName());
@@ -212,16 +212,14 @@ public class TunnelEditorFragment extends BaseFragment {
         }
     }
 
-    private void onTunnelRenamed(final Tunnel tunnel, final Throwable throwable) {
+    private void onTunnelRenamed(final String name, final Throwable throwable) {
         final String message;
         if (throwable == null) {
-            message = getString(R.string.tunnel_rename_success, localTunnel.getName(),
-                    tunnel.getName());
+            message = getString(R.string.tunnel_rename_success, localTunnel.getName(), name);
             Log.d(TAG, message);
-            localTunnel = tunnel;
             // Now save the rest of configuration changes.
-            Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel.getName());
-            tunnel.setConfig(localConfig).whenComplete(this::onConfigSaved);
+            Log.d(TAG, "Attempting to save config of renamed tunnel " + localTunnel.getName());
+            localTunnel.setConfig(localConfig).whenComplete(this::onConfigSaved);
         } else {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
             message = getString(R.string.tunnel_rename_error, error);
