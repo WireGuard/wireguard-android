@@ -73,32 +73,15 @@ public final class ToolsInstaller {
         }
     }
 
-    public int areSymlinked() throws NoRootException {
-        final StringBuilder script = new StringBuilder();
-        for (final String[] names : EXECUTABLES) {
-            script.append(String.format("test '%s' -ef '%s' && ",
-                    new File(nativeLibraryDir, names[0]),
-                    new File(localBinaryDir, names[1])));
-        }
-        script.append("exit ").append(OsConstants.EALREADY).append(';');
-        try {
-            return rootShell.run(null, script.toString());
-        } catch (final IOException ignored) {
-            return OsConstants.EXIT_FAILURE;
-        }
-    }
-
     public void ensureToolsAvailable() throws FileNotFoundException, NoRootException {
         if (areToolsAvailable == null) {
             synchronized (this) {
                 if (areToolsAvailable == null) {
-                    if (areInstalled() == OsConstants.EALREADY) {
-                        Log.d(TAG, "Tools are installed to the system partition");
-                        areToolsAvailable = true;
-                    } else if (areSymlinked() == OsConstants.EALREADY) {
+                    int ret = symlink();
+                    if (ret == OsConstants.EALREADY) {
                         Log.d(TAG, "Tools were already symlinked into our private binary dir");
                         areToolsAvailable = true;
-                    } else if (symlink() == OsConstants.EXIT_SUCCESS) {
+                    } else if (ret == OsConstants.EXIT_SUCCESS) {
                         Log.d(TAG, "Tools are now symlinked into our private binary dir");
                         areToolsAvailable = true;
                     } else {
@@ -115,7 +98,7 @@ public final class ToolsInstaller {
     public int install() throws NoRootException {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
-        final StringBuilder script = new StringBuilder("set -ex;");
+        final StringBuilder script = new StringBuilder("set -ex; ");
         script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
         for (final String[] names : EXECUTABLES) {
             final File destination = new File(INSTALL_DIR, names[1]);
@@ -130,12 +113,21 @@ public final class ToolsInstaller {
     }
 
     public int symlink() throws NoRootException {
-        final StringBuilder script = new StringBuilder("set -ex;");
+        final StringBuilder script = new StringBuilder("set -x; ");
+        for (final String[] names : EXECUTABLES) {
+            script.append(String.format("test '%s' -ef '%s' && ",
+                    new File(nativeLibraryDir, names[0]),
+                    new File(localBinaryDir, names[1])));
+        }
+        script.append("exit ").append(OsConstants.EALREADY).append("; set -e; ");
+
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("ln -fns '%s' '%s'; ",
                     new File(nativeLibraryDir, names[0]),
                     new File(localBinaryDir, names[1])));
         }
+        script.append("exit ").append(OsConstants.EXIT_SUCCESS).append(';');
+
         try {
             return rootShell.run(null, script.toString());
         } catch (final IOException ignored) {
