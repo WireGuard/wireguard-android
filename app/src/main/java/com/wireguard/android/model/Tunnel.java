@@ -24,8 +24,8 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,15}");
 
     private final TunnelManager manager;
-    private final String name;
     private Config config;
+    private String name;
     private State state;
     private Statistics statistics;
 
@@ -63,6 +63,7 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return name;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }
@@ -97,6 +98,12 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return config;
     }
 
+    public String onNameChanged(final String name) {
+        this.name = name;
+        notifyPropertyChanged(BR.name);
+        return name;
+    }
+
     State onStateChanged(final State state) {
         if (state != State.UP)
             onStatisticsChanged(null);
@@ -111,16 +118,16 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return statistics;
     }
 
-    public CompletionStage<Tunnel> rename(@NonNull final String name) {
-        if (!name.equals(this.name))
-            return manager.rename(this, name);
-        return CompletableFuture.completedFuture(this);
-    }
-
     public CompletionStage<Config> setConfig(@NonNull final Config config) {
         if (!config.equals(this.config))
             return manager.setTunnelConfig(this, config);
         return CompletableFuture.completedFuture(this.config);
+    }
+
+    public CompletionStage<String> setName(@NonNull final String name) {
+        if (!name.equals(this.name))
+            return manager.setTunnelName(this, name);
+        return CompletableFuture.completedFuture(this.name);
     }
 
     public CompletionStage<State> setState(@NonNull final State state) {

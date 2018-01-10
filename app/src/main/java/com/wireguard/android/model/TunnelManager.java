@@ -142,53 +142,6 @@ public final class TunnelManager extends BaseObservable {
             setLastUsedTunnel(tunnels.get(lastUsedName));
     }
 
-    CompletionStage<Tunnel> rename(final Tunnel tunnel, final String name) {
-        if (!Tunnel.isNameValid(name))
-            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
-        if (tunnels.containsKey(name)) {
-            final String message = "Tunnel " + name + " already exists";
-            return CompletableFuture.failedFuture(new IllegalArgumentException(message));
-        }
-        final State originalState = tunnel.getState();
-        final boolean wasLastUsed = tunnel == lastUsedTunnel;
-        // Make sure nothing touches the tunnel.
-        if (wasLastUsed)
-            setLastUsedTunnel(null);
-        tunnels.remove(tunnel);
-        return asyncWorker.supplyAsync(() -> {
-            if (originalState == State.UP)
-                backend.setState(tunnel, State.DOWN);
-            final Config newConfig = configStore.create(name, tunnel.getConfig());
-            final Tunnel newTunnel = new Tunnel(this, name, newConfig, State.DOWN);
-            try {
-                if (originalState == State.UP)
-                    backend.setState(newTunnel, originalState);
-                configStore.delete(tunnel.getName());
-            } catch (final Exception e) {
-                // Clean up.
-                configStore.delete(name);
-                if (originalState == State.UP)
-                    backend.setState(tunnel, originalState);
-                // Re-throw the exception to fail the completion.
-                throw e;
-            }
-            return newTunnel;
-        }).whenComplete((newTunnel, e) -> {
-            if (e == null) {
-                // Success, add the new tunnel.
-                newTunnel.onStateChanged(originalState);
-                tunnels.add(newTunnel);
-                if (wasLastUsed)
-                    setLastUsedTunnel(newTunnel);
-            } else {
-                // Failure, put the old tunnel back.
-                tunnels.add(tunnel);
-                if (wasLastUsed)
-                    setLastUsedTunnel(tunnel);
-            }
-        });
-    }
-
     public CompletionStage<Void> restoreState() {
         if (!preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
             return CompletableFuture.completedFuture(null);
@@ -225,6 +178,38 @@ public final class TunnelManager extends BaseObservable {
             final Config appliedConfig = backend.applyConfig(tunnel, config);
             return configStore.save(tunnel.getName(), appliedConfig);
         }).thenApply(tunnel::onConfigChanged);
+    }
+
+    CompletionStage<String> setTunnelName(final Tunnel tunnel, final String name) {
+        if (!Tunnel.isNameValid(name))
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
+        if (tunnels.containsKey(name)) {
+            final String message = "Tunnel " + name + " already exists";
+            return CompletableFuture.failedFuture(new IllegalArgumentException(message));
+        }
+        final State originalState = tunnel.getState();
+        final boolean wasLastUsed = tunnel == lastUsedTunnel;
+        // Make sure nothing touches the tunnel.
+        if (wasLastUsed)
+            setLastUsedTunnel(null);
+        tunnels.remove(tunnel);
+        return asyncWorker.supplyAsync(() -> {
+            if (originalState == State.UP)
+                backend.setState(tunnel, State.DOWN);
+            configStore.rename(tunnel.getName(), name);
+            final String newName = tunnel.onNameChanged(name);
+            if (originalState == State.UP)
+                backend.setState(tunnel, originalState);
+            return newName;
+        }).whenComplete((newName, e) -> {
+            // On failure, we don't know what state the tunnel might be in. Fix that.
+            if (e != null)
+                getTunnelState(tunnel);
+            // Add the tunnel back to the manager, under whatever name it thinks it has.
+            tunnels.add(tunnel);
+            if (wasLastUsed)
+                setLastUsedTunnel(tunnel);
+        });
     }
 
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
