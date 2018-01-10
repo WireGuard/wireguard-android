@@ -20,8 +20,8 @@ import java9.util.concurrent.CompletionStage;
  */
 
 public class Tunnel extends BaseObservable implements Keyed<String> {
-    public static final int NAME_MAX_LENGTH = 16;
-    private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,16}");
+    public static final int NAME_MAX_LENGTH = 15;
+    private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,15}");
 
     private final TunnelManager manager;
     private final String name;
