@@ -34,10 +34,8 @@ public final class FileConfigStore implements ConfigStore {
     public Config create(final String name, final Config config) throws IOException {
         Log.d(TAG, "Creating configuration for tunnel " + name);
         final File file = fileFor(name);
-        if (!file.createNewFile()) {
-            final String message = "Configuration file " + file.getName() + " already exists";
-            throw new IllegalStateException(message);
-        }
+        if (!file.createNewFile())
+            throw new IOException("Configuration file " + file.getName() + " already exists");
         try (FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
@@ -75,10 +73,8 @@ public final class FileConfigStore implements ConfigStore {
     public Config save(final String name, final Config config) throws IOException {
         Log.d(TAG, "Saving configuration for tunnel " + name);
         final File file = fileFor(name);
-        if (!file.isFile()) {
-            final String message = "Configuration file " + file.getName() + " not found";
-            throw new FileNotFoundException(message);
-        }
+        if (!file.isFile())
+            throw new FileNotFoundException("Configuration file " + file.getName() + " not found");
         try (FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
