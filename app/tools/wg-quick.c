@@ -173,7 +173,7 @@ _printf_(1, 2) static void cmd(const char *cmd_fmt, ...)
 	if (ret < 0)
 		ret = ESRCH;
 	else if (ret > 0)
-		ret = WEXITSTATUS(ret);
+		ret = WIFEXITED(ret) ? WEXITSTATUS(ret) : EIO;
 
 	if (ret && !is_exiting)
 		exit(ret);
@@ -428,6 +428,7 @@ static void set_config(const char *iface, const char *config)
 {
 	FILE *config_writer;
 	_cleanup_free_ char *cmd = concat("wg setconf ", iface, " /proc/self/fd/0", NULL);
+	int ret;
 
 	printf("[#] %s\n", cmd);
 
@@ -440,7 +441,9 @@ static void set_config(const char *iface, const char *config)
 		perror("Error: fputs");
 		exit(errno);
 	}
-	pclose(config_writer);
+	ret = pclose(config_writer);
+	if (ret)
+		exit(WIFEXITED(ret) ? WEXITSTATUS(ret) : EIO);
 }
 
 static void print_search_paths(FILE *file, const char *prefix)
