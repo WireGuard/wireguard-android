@@ -76,8 +76,10 @@ public final class FileConfigStore implements ConfigStore {
         final File replacementFile = fileFor(replacement);
         if (!replacementFile.createNewFile())
             throw new IOException("Configuration for " + replacement + " already exists");
-        if (!file.renameTo(replacementFile))
+        if (!file.renameTo(replacementFile)) {
+            replacementFile.delete();
             throw new IOException("Cannot rename configuration file " + file.getName());
+        }
     }
 
     @Override
