@@ -43,6 +43,14 @@ public interface ConfigStore {
     Config load(final String name) throws Exception;
 
     /**
+     * Rename the configuration for the tunnel given by {@code name}.
+     *
+     * @param name        The identifier for the existing configuration in persistent storage.
+     * @param replacement The new identifier for the configuration in persistent storage.
+     */
+    void rename(String name, String replacement) throws Exception;
+
+    /**
      * Save the configuration for an existing tunnel given by {@code name}.
      *
      * @param name   The identifier for the configuration in persistent storage (i.e. the name of

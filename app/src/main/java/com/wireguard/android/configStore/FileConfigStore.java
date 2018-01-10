@@ -70,6 +70,17 @@ public final class FileConfigStore implements ConfigStore {
     }
 
     @Override
+    public void rename(final String name, final String replacement) throws IOException {
+        Log.d(TAG, "Renaming configuration for tunnel " + name + " to " + replacement);
+        final File file = fileFor(name);
+        final File replacementFile = fileFor(replacement);
+        if (!replacementFile.createNewFile())
+            throw new IOException("Configuration for " + replacement + " already exists");
+        if (!file.renameTo(replacementFile))
+            throw new IOException("Cannot rename configuration file " + file.getName());
+    }
+
+    @Override
     public Config save(final String name, final Config config) throws IOException {
         Log.d(TAG, "Saving configuration for tunnel " + name);
         final File file = fileFor(name);
