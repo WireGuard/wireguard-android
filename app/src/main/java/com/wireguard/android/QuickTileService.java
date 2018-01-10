@@ -36,10 +36,13 @@ public class QuickTileService extends TileService {
 
     @Override
     public void onClick() {
-        if (tunnel != null)
+        if (tunnel != null) {
             tunnel.setState(State.TOGGLE).whenComplete(this::onToggleFinished);
-        else
-            startActivityAndCollapse(new Intent(this, MainActivity.class));
+        } else {
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivityAndCollapse(intent);
+        }
     }
 
     @Override
