@@ -543,8 +543,8 @@ static void parse_options(char **iface, char **config, unsigned int *mtu, char *
 	*iface = *config = *addrs = *dnses = NULL;
 	*mtu = 0;
 
-	xregcomp(&regex_iface, "^[a-zA-Z0-9_=+.-]{1,16}$", REG_EXTENDED | REG_NOSUB);
-	xregcomp(&regex_conf, "/?([a-zA-Z0-9_=+.-]{1,16})\\.conf$", REG_EXTENDED);
+	xregcomp(&regex_iface, "^[a-zA-Z0-9_=+.-]{1,15}$", REG_EXTENDED | REG_NOSUB);
+	xregcomp(&regex_conf, "/?([a-zA-Z0-9_=+.-]{1,15})\\.conf$", REG_EXTENDED);
 
 	if (!regexec(&regex_iface, arg, 0, NULL, 0)) {
 		for (char *path = strtok(paths, " "); path; path = strtok(NULL, " ")) {
