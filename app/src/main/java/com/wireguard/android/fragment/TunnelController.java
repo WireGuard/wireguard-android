@@ -47,8 +47,8 @@ public final class TunnelController {
             if (throwable == null)
                 return;
             final Context context = view.getContext();
-            if (throwable instanceof WgQuickBackend.ModuleNotLoadedException ||
-                    throwable.getCause() instanceof WgQuickBackend.ModuleNotLoadedException) {
+            if (ExceptionLoggers.unwrap(throwable)
+                    instanceof WgQuickBackend.ModuleNotLoadedException) {
                 final String message = context.getString(R.string.not_supported_message);
                 final String title = context.getString(R.string.not_supported_title);
                 final AlertDialog dialog = new AlertDialog.Builder(context)
