@@ -33,11 +33,13 @@
 
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/settings" />
+            android:label="@string/settings"
+            android:parentActivityName=".activity.MainActivity" />
 
         <activity
             android:name=".activity.TunnelCreatorActivity"
-            android:label="@string/create_activity_title" />
+            android:label="@string/create_activity_title"
+            android:parentActivityName=".activity.MainActivity" />
 
         <receiver android:name=".BootShutdownReceiver">
 
