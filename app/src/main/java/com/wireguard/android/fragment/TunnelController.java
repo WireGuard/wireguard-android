@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.system.ErrnoException;
-import android.system.OsConstants;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
@@ -48,8 +47,8 @@ public final class TunnelController {
             if (throwable == null)
                 return;
             final Context context = view.getContext();
-            if (throwable instanceof ErrnoException
-                    && ((ErrnoException) throwable).errno == OsConstants.ENODEV) {
+            if (throwable instanceof WgQuickBackend.ModuleNotLoadedException ||
+                    throwable.getCause() instanceof WgQuickBackend.ModuleNotLoadedException) {
                 final String message = context.getString(R.string.not_supported_message);
                 final String title = context.getString(R.string.not_supported_title);
                 final AlertDialog dialog = new AlertDialog.Builder(context)
