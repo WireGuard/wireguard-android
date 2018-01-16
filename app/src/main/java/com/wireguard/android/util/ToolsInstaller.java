@@ -34,6 +34,7 @@ public final class ToolsInstaller {
     private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
 
     private final File localBinaryDir;
+    private final Object lock = new Object();
     private final File nativeLibraryDir;
     private final RootShell rootShell;
     private Boolean areToolsAvailable;
@@ -74,25 +75,23 @@ public final class ToolsInstaller {
     }
 
     public void ensureToolsAvailable() throws FileNotFoundException, NoRootException {
-        if (areToolsAvailable == null) {
-            synchronized (this) {
-                if (areToolsAvailable == null) {
-                    int ret = symlink();
-                    if (ret == OsConstants.EALREADY) {
-                        Log.d(TAG, "Tools were already symlinked into our private binary dir");
-                        areToolsAvailable = true;
-                    } else if (ret == OsConstants.EXIT_SUCCESS) {
-                        Log.d(TAG, "Tools are now symlinked into our private binary dir");
-                        areToolsAvailable = true;
-                    } else {
-                        Log.e(TAG, "For some reason, wg and wg-quick are not available at all");
-                        areToolsAvailable = false;
-                    }
+        synchronized (lock) {
+            if (areToolsAvailable == null) {
+                final int ret = symlink();
+                if (ret == OsConstants.EALREADY) {
+                    Log.d(TAG, "Tools were already symlinked into our private binary dir");
+                    areToolsAvailable = true;
+                } else if (ret == OsConstants.EXIT_SUCCESS) {
+                    Log.d(TAG, "Tools are now symlinked into our private binary dir");
+                    areToolsAvailable = true;
+                } else {
+                    Log.e(TAG, "For some reason, wg and wg-quick are not available at all");
+                    areToolsAvailable = false;
                 }
             }
+            if (!areToolsAvailable)
+                throw new FileNotFoundException("Required tools unavailable");
         }
-        if (!areToolsAvailable)
-            throw new FileNotFoundException("Required tools unavailable");
     }
 
     public int install() throws NoRootException {
