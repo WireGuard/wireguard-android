@@ -90,7 +90,7 @@ public final class TunnelManager extends BaseObservable {
                 configStore.delete(tunnel.getName());
             } catch (final Exception e) {
                 if (originalState == State.UP)
-                    backend.setState(tunnel, originalState);
+                    backend.setState(tunnel, State.UP);
                 // Re-throw the exception to fail the completion.
                 throw e;
             }
@@ -199,7 +199,7 @@ public final class TunnelManager extends BaseObservable {
             configStore.rename(tunnel.getName(), name);
             final String newName = tunnel.onNameChanged(name);
             if (originalState == State.UP)
-                backend.setState(tunnel, originalState);
+                backend.setState(tunnel, State.UP);
             return newName;
         }).whenComplete((newName, e) -> {
             // On failure, we don't know what state the tunnel might be in. Fix that.
