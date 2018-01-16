@@ -127,6 +127,7 @@ public class Peer extends BaseObservable implements Parcelable {
         notifyPropertyChanged(BR.publicKey);
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder().append("[Peer]\n");
         if (allowedIPs != null)
