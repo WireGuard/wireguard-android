@@ -1,8 +1,6 @@
 package com.wireguard.android.backend;
 
 import android.content.Context;
-import android.system.ErrnoException;
-import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.model.Tunnel;
@@ -30,14 +28,12 @@ import java9.util.stream.Stream;
 public final class WgQuickBackend implements Backend {
     private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
 
-    private final Context context;
     private final File localTemporaryDir;
     private final RootShell rootShell;
     private final ToolsInstaller toolsInstaller;
 
     public WgQuickBackend(final Context context, final RootShell rootShell,
                           final ToolsInstaller toolsInstaller) {
-        this.context = context;
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
         this.rootShell = rootShell;
         this.toolsInstaller = toolsInstaller;
