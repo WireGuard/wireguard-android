@@ -130,7 +130,8 @@ public class TunnelListFragment extends BaseFragment {
 
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
-        binding.createMenu.collapse();
+        if (binding != null)
+            binding.createMenu.collapse();
     }
 
     public void onRequestImportConfig(@SuppressWarnings("unused") final View view) {
@@ -138,7 +139,8 @@ public class TunnelListFragment extends BaseFragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         startActivityForResult(intent, REQUEST_IMPORT);
-        binding.createMenu.collapse();
+        if (binding != null)
+            binding.createMenu.collapse();
     }
 
     @Override
@@ -261,14 +263,16 @@ public class TunnelListFragment extends BaseFragment {
                                        final int position, final long id) {
             if (actionMode != null)
                 return false;
-            binding.tunnelList.setItemChecked(position, true);
+            if (binding != null)
+                binding.tunnelList.setItemChecked(position, true);
             return true;
         }
 
         @Override
         @SuppressLint("ClickableViewAccessibility")
         public boolean onTouch(final View view, final MotionEvent motionEvent) {
-            binding.createMenu.collapse();
+            if (binding != null)
+                binding.createMenu.collapse();
             return false;
         }
     }
