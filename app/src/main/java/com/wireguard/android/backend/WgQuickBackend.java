@@ -43,27 +43,16 @@ public final class WgQuickBackend implements Backend {
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
         if (tunnel.getState() == State.UP) {
             // Restart the tunnel to apply the new config.
-            setState(tunnel, State.DOWN);
+            setStateInternal(tunnel, tunnel.getConfig(), State.DOWN);
             try {
-                bringUpTunnel(tunnel, config);
+                setStateInternal(tunnel, config, State.UP);
             } catch (final Exception e) {
                 // The new configuration didn't work, so try to go back to the old one.
-                bringUpTunnel(tunnel, tunnel.getConfig());
+                setStateInternal(tunnel, tunnel.getConfig(), State.UP);
                 throw e;
             }
         }
         return config;
-    }
-
-    private int bringUpTunnel(final Tunnel tunnel, final Config config) throws Exception {
-        final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
-        try (FileOutputStream stream = new FileOutputStream(tempFile, false)) {
-            stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
-        }
-        final int result = rootShell.run(null, "wg-quick up '" + tempFile.getAbsolutePath() + '\'');
-        if (!tempFile.delete())
-            Log.w(TAG, "Couldn't delete temporary file after bringing up " + tunnel.getName());
-        return result;
     }
 
     @Override
@@ -103,14 +92,26 @@ public final class WgQuickBackend implements Backend {
             throw new ModuleNotLoadedException("WireGuard module not loaded");
         Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
         toolsInstaller.ensureToolsAvailable();
-        final int result;
-        if (state == State.UP)
-            result = bringUpTunnel(tunnel, tunnel.getConfig());
-        else
-            result = rootShell.run(null, "wg-quick down '" + tunnel.getName() + '\'');
-        if (result != 0)
-            throw new Exception("Unable to configure tunnel");
+        setStateInternal(tunnel, tunnel.getConfig(), state);
         return getState(tunnel);
+    }
+
+    private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
+            throws Exception {
+        final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
+        final int result;
+        if (state == State.UP) {
+            try (FileOutputStream stream = new FileOutputStream(tempFile, false)) {
+                stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
+            }
+            result = rootShell.run(null, "wg-quick up '" + tempFile.getAbsolutePath() + '\'');
+        } else {
+            result = rootShell.run(null, "wg-quick down '" + tempFile.getAbsolutePath() + '\'');
+            if (result == 0 && !tempFile.delete())
+                Log.w(TAG, "Couldn't delete temp config after bringing down " + tunnel.getName());
+        }
+        if (result != 0)
+            throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
     }
 
     public static class ModuleNotLoadedException extends Exception {
