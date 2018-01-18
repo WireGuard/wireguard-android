@@ -77,7 +77,8 @@ public final class FileConfigStore implements ConfigStore {
         if (!replacementFile.createNewFile())
             throw new IOException("Configuration for " + replacement + " already exists");
         if (!file.renameTo(replacementFile)) {
-            replacementFile.delete();
+            if (!replacementFile.delete())
+                Log.w(TAG, "Couldn't delete marker file for new name " + replacement);
             throw new IOException("Cannot rename configuration file " + file.getName());
         }
     }
