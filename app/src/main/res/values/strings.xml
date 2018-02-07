@@ -39,23 +39,6 @@
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
-    <string name="not_supported_message" tools:ignore="TypographyQuotes"><![CDATA[
-        <p>Your Android device does not <em>currently</em> have the WireGuard kernel module. Please
-        talk to the manufacturer of your Android device or the author of your device&rsquo;s ROM
-        about including the WireGuard kernel module.</p>
-
-        <p>Fortunately, we are in the process of implementing support for WireGuard in a way that
-        will work on all devices, without any need for the kernel module. This means that while you
-        may not be able to use WireGuard today, you will very likely be able to use WireGuard in
-        several weeks. Things are looking up!</p>
-
-        <p>Sorry for the wait. In the mean time, you may stay up to date on the latest project news
-        by <a href="https://lists.zx2c4.com/mailman/listinfo/wireguard">subscribing to our mailing
-        list</a>. General information about the project is available at
-        <a href="https://www.wireguard.com/">WireGuard.com</a>.</p>
-    ]]></string>
-    <string name="not_supported_title">WireGuard not installed</string>
-    <string name="ok">OK</string>
     <string name="peer">Peer</string>
     <string name="persistent_keepalive">Persistent keepalive</string>
     <string name="pre_shared_key">Pre-shared key</string>

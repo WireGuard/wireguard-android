@@ -88,8 +88,6 @@ public final class WgQuickBackend implements Backend {
             state = originalState == State.UP ? State.DOWN : State.UP;
         if (state == originalState)
             return originalState;
-        if (state == State.UP && !new File("/sys/module/wireguard").exists())
-            throw new ModuleNotLoadedException("WireGuard module not loaded");
         Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
         toolsInstaller.ensureToolsAvailable();
         setStateInternal(tunnel, tunnel.getConfig(), state);
@@ -112,15 +110,5 @@ public final class WgQuickBackend implements Backend {
         }
         if (result != 0)
             throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
-    }
-
-    public static class ModuleNotLoadedException extends Exception {
-        public ModuleNotLoadedException(final String message, final Throwable cause) {
-            super(message, cause);
-        }
-
-        public ModuleNotLoadedException(final String message) {
-            super(message);
-        }
     }
 }
