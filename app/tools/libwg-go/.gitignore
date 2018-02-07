@@ -1,0 +1,4 @@
+go/
+*.go
+libwg-go.h
+jni.o

@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 
 import com.wireguard.android.backend.Backend;
+import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.configStore.FileConfigStore;
@@ -16,6 +17,7 @@ import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
+import java.io.File;
 import java.util.concurrent.Executor;
 
 import javax.inject.Qualifier;
@@ -56,6 +58,8 @@ public class Application extends android.app.Application {
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
+
+        Class getBackendType();
     }
 
     @Qualifier
@@ -83,7 +87,16 @@ public class Application extends android.app.Application {
         public static Backend getBackend(@ApplicationContext final Context context,
                                          final RootShell rootShell,
                                          final ToolsInstaller toolsInstaller) {
-            return new WgQuickBackend(context, rootShell, toolsInstaller);
+            if (new File("/sys/module/wireguard").exists())
+                return new WgQuickBackend(context, rootShell, toolsInstaller);
+            else
+                return new GoBackend(context);
+        }
+
+        @ApplicationScope
+        @Provides
+        public static Class getBackendType(final Backend backend) {
+            return backend.getClass();
         }
 
         @ApplicationScope

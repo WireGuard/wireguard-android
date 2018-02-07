@@ -1,9 +1,8 @@
 # Android GUI for [WireGuard](https://www.wireguard.com/)
 
-##### [Test this app on the Play Store](https://play.google.com/apps/testing/com.wireguard.android).
+### [Test this app on the Play Store](https://play.google.com/apps/testing/com.wireguard.android).
 
-This is a work in progress Android GUI for [WireGuard](https://www.wireguard.com/). The ultimate goal is to [opportunistically use the kernel implementation](https://git.zx2c4.com/android_kernel_wireguard/about/), and fallback to using the non-root userspace implementation. At the time of writing, this only supports using the kernel module, but this should change in the near future.
-
+This is an Android GUI for [WireGuard](https://www.wireguard.com/). It [opportunistically uses the kernel implementation](https://git.zx2c4.com/android_kernel_wireguard/about/), and falls back to using the non-root [userspace implementation](https://git.zx2c4.com/wireguard-go/about/).
 
 ## License
 
