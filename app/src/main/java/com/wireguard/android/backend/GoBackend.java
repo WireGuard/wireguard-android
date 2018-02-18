@@ -1,6 +1,8 @@
 package com.wireguard.android.backend;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
 
@@ -23,12 +25,35 @@ public final class GoBackend implements Backend {
         System.loadLibrary("wg-go");
     }
 
-    private final Context context;
     private Tunnel currentTunnel;
+    private int currentTunnelHandle = -1;
 
-    public GoBackend(final Context context) {
+    private Context context;
+
+    public GoBackend(Context context) {
         this.context = context;
+        context.startService(new Intent(context, VpnService.class));
     }
+
+    public static class VpnService extends android.net.VpnService {
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            vpnService = this;
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            vpnService = null;
+        }
+
+        public Builder getBuilder() {
+            return new Builder();
+        }
+    }
+
+    private static VpnService vpnService = null;
 
     private static native int wgGetSocketV4(int handle);
 
@@ -90,10 +115,22 @@ public final class GoBackend implements Backend {
 
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
             throws Exception {
-        if (state == State.UP) {
-            // Do something (context.startService()...).
-            currentTunnel = tunnel;
 
+        if (state == State.UP) {
+            Log.i(TAG, "Bringing tunnel up");
+
+            if (VpnService.prepare(context) != null)
+                throw new Exception("VPN service not authorized by user");
+
+            if (vpnService == null)
+                throw new Exception("Android VPN service is not running");
+
+            if (currentTunnelHandle != -1) {
+                Log.w(TAG, "Tunnel already up");
+                return;
+            }
+
+            // Build config
             Formatter fmt = new Formatter(new StringBuilder());
             final Interface iface = config.getInterface();
             fmt.format("replace_peers=true\n");
@@ -116,10 +153,47 @@ public final class GoBackend implements Backend {
                     }
                 }
             }
-            wgTurnOn(tunnel.getName(), -1, fmt.toString());
+
+            // Create the vpn tunnel with android API
+            VpnService.Builder builder = vpnService.getBuilder();
+            builder.setSession(tunnel.getName());
+            builder.addAddress(config.getInterface().getAddress(), 32);
+            if (config.getInterface().getDns() != null)
+                builder.addDnsServer(config.getInterface().getDns());
+
+            for (final Peer peer : config.getPeers()) {
+                if (peer.getAllowedIPs() != null) {
+                    for (final String allowedIp : peer.getAllowedIPs().split(" *, *")) {
+                        String[] part = allowedIp.split("/", 2);
+                        builder.addRoute(part[0], Integer.parseInt(part[1]));
+                    }
+                }
+            }
+
+            builder.setBlocking(true);
+            ParcelFileDescriptor tun = builder.establish();
+            if (tun == null)
+                throw new Exception("Unable to create tun device");
+
+            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), fmt.toString());
+            if (currentTunnelHandle < 0)
+                throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ")");
+
+            currentTunnel = tunnel;
+
+            vpnService.protect(wgGetSocketV4(currentTunnelHandle));
+            vpnService.protect(wgGetSocketV6(currentTunnelHandle));
         } else {
-            // Do something else.
+            Log.i(TAG, "Bringing tunnel down");
+
+            if (currentTunnelHandle == -1) {
+                Log.w(TAG, "Tunnel already down");
+                return;
+            }
+
+            wgTurnOff(currentTunnelHandle);
             currentTunnel = null;
+            currentTunnelHandle = -1;
         }
     }
 }
