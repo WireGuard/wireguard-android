@@ -45,6 +45,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		fd:     os.NewFile(uintptr(tun_fd), ""),
 		events: make(chan TUNEvent, 5),
 		errors: make(chan error, 5),
+		nopi:   true,
 	}
 	device := NewDevice(tun, logger)
 	device.tun.mtu = DefaultMTU //TODO: make dynamic
