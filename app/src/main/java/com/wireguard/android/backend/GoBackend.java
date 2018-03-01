@@ -14,6 +14,8 @@ import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.KeyEncoding;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.Set;
@@ -113,6 +115,16 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
+    private String ResolveSocketAddress(String string) throws Exception {
+        String[] part = string.split(":", 2);
+        if (part.length != 2 || part[0].isEmpty() || part[1].isEmpty())
+            throw new Exception("Invalid socket address " + string);
+        InetAddress address = InetAddress.getByName(part[0]);
+        int port = Integer.valueOf(part[1]);
+        InetSocketAddress socketAddress = new InetSocketAddress(address, port);
+        return socketAddress.getAddress().getHostAddress() + ":" + socketAddress.getPort();
+    }
+
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
             throws Exception {
 
@@ -143,8 +155,9 @@ public final class GoBackend implements Backend {
                     fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPublicKey())));
                 if (peer.getPreSharedKey() != null)
                     fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
-                if (peer.getEndpoint() != null)
-                    fmt.format("endpoint=%s\n", peer.getEndpoint());
+                if (peer.getEndpoint() != null) {
+                    fmt.format("endpoint=%s\n", ResolveSocketAddress(peer.getEndpoint()));
+                }
                 if (peer.getPersistentKeepalive() != null)
                     fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive()));
                 if (peer.getAllowedIPs() != null) {
