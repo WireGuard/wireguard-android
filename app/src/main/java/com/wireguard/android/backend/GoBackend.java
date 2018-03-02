@@ -14,6 +14,7 @@ import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.KeyEncoding;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Collections;
@@ -115,14 +116,31 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
-    private String ResolveSocketAddress(String string) throws Exception {
-        String[] part = string.split(":", 2);
+    private String parseEndpoint(String string) throws Exception {
+        String[] part;
+        if (string.charAt(0) == '[') { // ipv6
+            int end = string.indexOf(']');
+            if (end == -1 || string.charAt(end+1) != ':')
+                throw new Exception("Invalid endpoint " + string);
+
+            part = new String[2];
+            part[0] = string.substring(1, end);
+            part[1] = string.substring(end + 2);
+            Log.d(TAG, "PP " + part[0] + " " + part[1]);
+        } else { // ipv4
+            part = string.split(":", 2);
+        }
+
         if (part.length != 2 || part[0].isEmpty() || part[1].isEmpty())
-            throw new Exception("Invalid socket address " + string);
+            throw new Exception("Invalid endpoint " + string);
+
         InetAddress address = InetAddress.getByName(part[0]);
         int port = Integer.valueOf(part[1]);
         InetSocketAddress socketAddress = new InetSocketAddress(address, port);
-        return socketAddress.getAddress().getHostAddress() + ":" + socketAddress.getPort();
+        if (socketAddress.getAddress() instanceof Inet4Address)
+            return socketAddress.getAddress().getHostAddress() + ":" + socketAddress.getPort();
+        else
+            return "[" + socketAddress.getAddress().getHostAddress() + "]:" + socketAddress.getPort();
     }
 
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
@@ -156,7 +174,7 @@ public final class GoBackend implements Backend {
                 if (peer.getPreSharedKey() != null)
                     fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
                 if (peer.getEndpoint() != null) {
-                    fmt.format("endpoint=%s\n", ResolveSocketAddress(peer.getEndpoint()));
+                    fmt.format("endpoint=%s\n", parseEndpoint(peer.getEndpoint()));
                 }
                 if (peer.getPersistentKeepalive() != null)
                     fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive()));
@@ -170,7 +188,8 @@ public final class GoBackend implements Backend {
             // Create the vpn tunnel with android API
             VpnService.Builder builder = vpnService.getBuilder();
             builder.setSession(tunnel.getName());
-            builder.addAddress(config.getInterface().getAddress(), 32);
+            InetAddress address = InetAddress.getByName(config.getInterface().getAddress());
+            builder.addAddress(address.getHostAddress(), (address instanceof Inet4Address) ? 32 : 128);
             if (config.getInterface().getDns() != null)
                 builder.addDnsServer(config.getInterface().getDns());
 
