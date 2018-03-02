@@ -191,7 +191,7 @@ public final class GoBackend implements Backend {
             InetAddress address = InetAddress.getByName(config.getInterface().getAddress());
             builder.addAddress(address.getHostAddress(), (address instanceof Inet4Address) ? 32 : 128);
             if (config.getInterface().getDns() != null)
-                builder.addDnsServer(config.getInterface().getDns());
+                builder.addDnsServer(InetAddress.getByName(config.getInterface().getDns()).getHostAddress());
 
             for (final Peer peer : config.getPeers()) {
                 if (peer.getAllowedIPs() != null) {
