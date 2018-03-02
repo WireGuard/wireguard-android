@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
+import android.util.Pair;
 
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
@@ -20,6 +21,7 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.Set;
+import java.util.Vector;
 
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
@@ -143,6 +145,33 @@ public final class GoBackend implements Backend {
             return "[" + socketAddress.getAddress().getHostAddress() + "]:" + socketAddress.getPort();
     }
 
+    private Vector<Pair<String, Integer>> parseAllowedIps(String string) throws Exception {
+        Vector<Pair<String, Integer>> ret = new Vector<>();
+        for (final String allowedIp : string.split(" *, *")) {
+            String[] part = allowedIp.split("/", 2);
+            if (part.length > 2)
+                throw new Exception("Invalid allowed ips string " + string);
+
+            try {
+                InetAddress address = InetAddress.getByName(part[0]);
+                int networkPrefixLength;
+                if (part.length == 2) {
+                    networkPrefixLength = Integer.valueOf(part[1]);
+                    if (networkPrefixLength < 0 || networkPrefixLength > 128
+                            || (address instanceof Inet4Address && networkPrefixLength > 32))
+                        throw new Exception();
+                } else {
+                    networkPrefixLength = (address instanceof Inet4Address) ? 32 : 128;
+                }
+
+                ret.add(new Pair<>(address.getHostAddress(), networkPrefixLength));
+            } catch (Exception e) {
+                throw new Exception("Invalid allowed ips string " + string);
+            }
+        }
+        return ret;
+    }
+
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
             throws Exception {
 
@@ -179,8 +208,8 @@ public final class GoBackend implements Backend {
                 if (peer.getPersistentKeepalive() != null)
                     fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive()));
                 if (peer.getAllowedIPs() != null) {
-                    for (final String allowedIp : peer.getAllowedIPs().split(" *, *")) {
-                        fmt.format("allowed_ip=%s\n", allowedIp);
+                    for (final Pair<String, Integer> allowedIp : parseAllowedIps(peer.getAllowedIPs())) {
+                        fmt.format("allowed_ip=%s\n", allowedIp.first + "/" + allowedIp.second);
                     }
                 }
             }
@@ -195,9 +224,8 @@ public final class GoBackend implements Backend {
 
             for (final Peer peer : config.getPeers()) {
                 if (peer.getAllowedIPs() != null) {
-                    for (final String allowedIp : peer.getAllowedIPs().split(" *, *")) {
-                        String[] part = allowedIp.split("/", 2);
-                        builder.addRoute(part[0], Integer.parseInt(part[1]));
+                    for (final Pair<String, Integer> allowedIp : parseAllowedIps(peer.getAllowedIPs())) {
+                        builder.addRoute(allowedIp.first, allowedIp.second);
                     }
                 }
             }
