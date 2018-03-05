@@ -90,9 +90,9 @@ public class Interface extends BaseObservable implements Parcelable {
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
-            setAddress(key.parse(line));
+            addAddress(key.parse(line));
         else if (key == Attribute.DNS)
-            setDns(key.parse(line));
+            addDns(key.parse(line));
         else if (key == Attribute.LISTEN_PORT)
             setListenPort(key.parse(line));
         else if (key == Attribute.MTU)
@@ -103,11 +103,25 @@ public class Interface extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
+    public void addAddress(String address) {
+        if (address != null && address.isEmpty())
+            address = null;
+        setAddress((this.address == null) ? address
+                : this.address + ", " + address);
+    }
+
     public void setAddress(String address) {
         if (address != null && address.isEmpty())
             address = null;
         this.address = address;
         notifyPropertyChanged(BR.address);
+    }
+
+    public void addDns(String dns) {
+        if (dns != null && dns.isEmpty())
+            dns = null;
+        setDns((this.dns == null) ? dns
+                : this.dns + ", " + dns);
     }
 
     public void setDns(String dns) {
