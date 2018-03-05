@@ -217,10 +217,17 @@ public final class GoBackend implements Backend {
             // Create the vpn tunnel with android API
             VpnService.Builder builder = vpnService.getBuilder();
             builder.setSession(tunnel.getName());
-            InetAddress address = InetAddress.getByName(config.getInterface().getAddress());
-            builder.addAddress(address.getHostAddress(), (address instanceof Inet4Address) ? 32 : 128);
-            if (config.getInterface().getDns() != null)
-                builder.addDnsServer(InetAddress.getByName(config.getInterface().getDns()).getHostAddress());
+
+            for (final String addressString : config.getInterface().getAddress().split(" *, *")) {
+                InetAddress address = InetAddress.getByName(addressString);
+                builder.addAddress(address.getHostAddress(), (address instanceof Inet4Address) ? 32 : 128);
+            }
+
+            if (config.getInterface().getDns() != null) {
+                for (final String dnsString : config.getInterface().getDns().split(" *, *")) {
+                    builder.addDnsServer(InetAddress.getByName(dnsString).getHostAddress());
+                }
+            }
 
             for (final Peer peer : config.getPeers()) {
                 if (peer.getAllowedIPs() != null) {
