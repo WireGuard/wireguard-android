@@ -22,6 +22,10 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import java9.util.concurrent.CompletableFuture;
 
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
@@ -37,20 +41,23 @@ public final class GoBackend implements Backend {
 
     public GoBackend(Context context) {
         this.context = context;
+    }
+
+    public void startVpnService() {
         context.startService(new Intent(context, VpnService.class));
     }
 
     public static class VpnService extends android.net.VpnService {
         @Override
         public void onCreate() {
+            vpnService.complete(this);
             super.onCreate();
-            vpnService = this;
         }
 
         @Override
         public void onDestroy() {
+            vpnService = vpnService.newIncompleteFuture();
             super.onDestroy();
-            vpnService = null;
         }
 
         public Builder getBuilder() {
@@ -58,7 +65,7 @@ public final class GoBackend implements Backend {
         }
     }
 
-    private static VpnService vpnService = null;
+    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
 
     private static native int wgGetSocketV4(int handle);
 
@@ -181,8 +188,15 @@ public final class GoBackend implements Backend {
             if (VpnService.prepare(context) != null)
                 throw new Exception("VPN service not authorized by user");
 
-            if (vpnService == null)
-                throw new Exception("Android VPN service is not running");
+            VpnService service;
+            if (!vpnService.isDone())
+                startVpnService();
+
+            try {
+                service = vpnService.get(2, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                throw new Exception("Unable to start Android VPN service");
+            }
 
             if (currentTunnelHandle != -1) {
                 Log.w(TAG, "Tunnel already up");
@@ -215,7 +229,7 @@ public final class GoBackend implements Backend {
             }
 
             // Create the vpn tunnel with android API
-            VpnService.Builder builder = vpnService.getBuilder();
+            VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
             for (final String addressString : config.getInterface().getAddress().split(" *, *")) {
@@ -248,8 +262,8 @@ public final class GoBackend implements Backend {
 
             currentTunnel = tunnel;
 
-            vpnService.protect(wgGetSocketV4(currentTunnelHandle));
-            vpnService.protect(wgGetSocketV6(currentTunnelHandle));
+            service.protect(wgGetSocketV4(currentTunnelHandle));
+            service.protect(wgGetSocketV6(currentTunnelHandle));
         } else {
             Log.i(TAG, "Bringing tunnel down");
 
