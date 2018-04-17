@@ -26,20 +26,21 @@ public class Interface extends BaseObservable implements Parcelable {
         }
     };
 
-    private String address;
-    private String dns;
+    private String[] addressList;
+    private String[] dnsList;
     private Keypair keypair;
     private String listenPort;
     private String mtu;
     private String privateKey;
 
     public Interface() {
-        // Do nothing.
+        addressList = new String[0];
+        dnsList = new String[0];
     }
 
     private Interface(final Parcel in) {
-        address = in.readString();
-        dns = in.readString();
+        addressList = in.createStringArray();
+        dnsList = in.createStringArray();
         listenPort = in.readString();
         mtu = in.readString();
         setPrivateKey(in.readString());
@@ -58,13 +59,23 @@ public class Interface extends BaseObservable implements Parcelable {
     }
 
     @Bindable
-    public String getAddress() {
-        return address;
+    public String getAddressString() {
+        return Attribute.listToString(addressList);
     }
 
     @Bindable
-    public String getDns() {
-        return dns;
+    public String[] getAddresses() {
+        return addressList;
+    }
+
+    @Bindable
+    public String getDnsString() {
+        return Attribute.listToString(dnsList);
+    }
+
+    @Bindable
+    public String[] getDnses() {
+        return dnsList;
     }
 
     @Bindable
@@ -90,9 +101,9 @@ public class Interface extends BaseObservable implements Parcelable {
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
-            addAddress(key.parse(line));
+            addAddresses(key.parseList(line));
         else if (key == Attribute.DNS)
-            addDns(key.parse(line));
+            addDnses(key.parseList(line));
         else if (key == Attribute.LISTEN_PORT)
             setListenPort(key.parse(line));
         else if (key == Attribute.MTU)
@@ -103,32 +114,44 @@ public class Interface extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
-    public void addAddress(String address) {
-        if (address != null && address.isEmpty())
-            address = null;
-        setAddress((this.address == null) ? address
-                : this.address + ", " + address);
+    public void addAddresses(String[] addresses) {
+        if (addresses == null || addresses.length == 0)
+            return;
+        String[] both = new String[addresses.length + this.addressList.length];
+        System.arraycopy(this.addressList, 0, both, 0, this.addressList.length);
+        System.arraycopy(addresses, 0, both, this.addressList.length, addresses.length);
+        setAddresses(both);
     }
 
-    public void setAddress(String address) {
-        if (address != null && address.isEmpty())
-            address = null;
-        this.address = address;
-        notifyPropertyChanged(BR.address);
+    public void setAddresses(String[] addresses) {
+        if (addresses == null)
+            addresses = new String[0];
+        this.addressList = addresses;
+        notifyPropertyChanged(BR.addresses);
     }
 
-    public void addDns(String dns) {
-        if (dns != null && dns.isEmpty())
-            dns = null;
-        setDns((this.dns == null) ? dns
-                : this.dns + ", " + dns);
+    public void setAddressString(String addressString) {
+        setAddresses(Attribute.stringToList(addressString));
     }
 
-    public void setDns(String dns) {
-        if (dns != null && dns.isEmpty())
-            dns = null;
-        this.dns = dns;
-        notifyPropertyChanged(BR.dns);
+    public void addDnses(String[] dnses) {
+        if (dnses == null || dnses.length == 0)
+            return;
+        String[] both = new String[dnses.length + this.dnsList.length];
+        System.arraycopy(this.dnsList, 0, both, 0, this.dnsList.length);
+        System.arraycopy(dnses, 0, both, this.dnsList.length, dnses.length);
+        setDnses(both);
+    }
+
+    public void setDnses(String[] dnses) {
+        if (dnses == null)
+            dnses = new String[0];
+        this.dnsList = dnses;
+        notifyPropertyChanged(BR.dnses);
+    }
+
+    public void setDnsString(String dnsString) {
+        setDnses(Attribute.stringToList(dnsString));
     }
 
     public void setListenPort(String listenPort) {
@@ -165,10 +188,10 @@ public class Interface extends BaseObservable implements Parcelable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder().append("[Interface]\n");
-        if (address != null)
-            sb.append(Attribute.ADDRESS.composeWith(address));
-        if (dns != null)
-            sb.append(Attribute.DNS.composeWith(dns));
+        if (addressList != null && addressList.length > 0)
+            sb.append(Attribute.ADDRESS.composeWith(addressList));
+        if (dnsList != null && dnsList.length > 0)
+            sb.append(Attribute.DNS.composeWith(dnsList));
         if (listenPort != null)
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
         if (mtu != null)
@@ -180,8 +203,8 @@ public class Interface extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(address);
-        dest.writeString(dns);
+        dest.writeStringArray(addressList);
+        dest.writeStringArray(dnsList);
         dest.writeString(listenPort);
         dest.writeString(mtu);
         dest.writeString(privateKey);

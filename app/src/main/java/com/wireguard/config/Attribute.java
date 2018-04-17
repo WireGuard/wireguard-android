@@ -1,5 +1,7 @@
 package com.wireguard.config;
 
+import android.text.TextUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,8 +45,20 @@ enum Attribute {
         return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0]);
     }
 
+    public static String listToString(final String[] list) {
+        return TextUtils.join(", ", list);
+    }
+
+    public static String[] stringToList(final String string) {
+        return string.trim().split("\\s*,\\s*");
+    }
+
     public String composeWith(final Object value) {
         return String.format("%s = %s%n", token, value);
+    }
+
+    public String composeWith(final String[] value) {
+        return String.format("%s = %s%n", token, listToString(value));
     }
 
     public String getToken() {
@@ -54,5 +68,10 @@ enum Attribute {
     public String parse(final CharSequence line) {
         final Matcher matcher = pattern.matcher(line);
         return matcher.matches() ? matcher.group(1) : null;
+    }
+
+    public String[] parseList(final CharSequence line) {
+        final Matcher matcher = pattern.matcher(line);
+        return matcher.matches() ? stringToList(matcher.group(1)) : null;
     }
 }

@@ -24,18 +24,18 @@ public class Peer extends BaseObservable implements Parcelable {
         }
     };
 
-    private String allowedIPs;
+    private String[] allowedIPList;
     private String endpoint;
     private String persistentKeepalive;
     private String preSharedKey;
     private String publicKey;
 
     public Peer() {
-        // Do nothing.
+        allowedIPList = new String[0];
     }
 
     private Peer(final Parcel in) {
-        allowedIPs = in.readString();
+        allowedIPList = in.createStringArray();
         endpoint = in.readString();
         persistentKeepalive = in.readString();
         preSharedKey = in.readString();
@@ -51,9 +51,13 @@ public class Peer extends BaseObservable implements Parcelable {
         return 0;
     }
 
+
     @Bindable
-    public String getAllowedIPs() {
-        return allowedIPs;
+    public String getAllowedIPsString() { return Attribute.listToString(allowedIPList); }
+
+    @Bindable
+    public String[] getAllowedIPs() {
+        return allowedIPList;
     }
 
     @Bindable
@@ -79,7 +83,7 @@ public class Peer extends BaseObservable implements Parcelable {
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
-            setAllowedIPs(key.parse(line));
+            addAllowedIPs(key.parseList(line));
         else if (key == Attribute.ENDPOINT)
             setEndpoint(key.parse(line));
         else if (key == Attribute.PERSISTENT_KEEPALIVE)
@@ -92,11 +96,24 @@ public class Peer extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
-    public void setAllowedIPs(String allowedIPs) {
-        if (allowedIPs != null && allowedIPs.isEmpty())
-            allowedIPs = null;
-        this.allowedIPs = allowedIPs;
+    public void addAllowedIPs(String[] allowedIPs) {
+        if (allowedIPs == null || allowedIPs.length == 0)
+            return;
+        String[] both = new String[allowedIPs.length + this.allowedIPList.length];
+        System.arraycopy(this.allowedIPList, 0, both, 0, this.allowedIPList.length);
+        System.arraycopy(allowedIPs, 0, both, this.allowedIPList.length, allowedIPs.length);
+        setAllowedIPs(both);
+    }
+
+    public void setAllowedIPs(String[] allowedIPs) {
+        if (allowedIPs == null)
+            allowedIPs = new String[0];
+        this.allowedIPList = allowedIPs;
         notifyPropertyChanged(BR.allowedIPs);
+    }
+
+    public void setAllowedIPsString(String allowedIPsString) {
+        setAllowedIPs(Attribute.stringToList(allowedIPsString));
     }
 
     public void setEndpoint(String endpoint) {
@@ -130,8 +147,8 @@ public class Peer extends BaseObservable implements Parcelable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder().append("[Peer]\n");
-        if (allowedIPs != null)
-            sb.append(Attribute.ALLOWED_IPS.composeWith(allowedIPs));
+        if (allowedIPList != null)
+            sb.append(Attribute.ALLOWED_IPS.composeWith(allowedIPList));
         if (endpoint != null)
             sb.append(Attribute.ENDPOINT.composeWith(endpoint));
         if (persistentKeepalive != null)
@@ -145,7 +162,7 @@ public class Peer extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(allowedIPs);
+        dest.writeStringArray(allowedIPList);
         dest.writeString(endpoint);
         dest.writeString(persistentKeepalive);
         dest.writeString(preSharedKey);

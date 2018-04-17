@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/allowed_ips_label"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:text="@={item.allowedIPs}" />
+            android:text="@={item.allowedIPsString}" />
 
         <TextView
             android:id="@+id/endpoint_label"

@@ -21,7 +21,6 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -127,16 +126,15 @@ public final class GoBackend implements Backend {
 
     private String parseEndpoint(String string) throws Exception {
         String[] part;
-        if (string.charAt(0) == '[') { // ipv6
+        if (string.charAt(0) == '[') {
             int end = string.indexOf(']');
-            if (end == -1 || string.charAt(end+1) != ':')
+            if (end == -1 || end >= string.length() - 2 || string.charAt(end + 1) != ':')
                 throw new Exception("Invalid endpoint " + string);
 
             part = new String[2];
             part[0] = string.substring(1, end);
             part[1] = string.substring(end + 2);
-            Log.d(TAG, "PP " + part[0] + " " + part[1]);
-        } else { // ipv4
+        } else {
             part = string.split(":", 2);
         }
 
@@ -144,7 +142,13 @@ public final class GoBackend implements Backend {
             throw new Exception("Invalid endpoint " + string);
 
         InetAddress address = InetAddress.getByName(part[0]);
-        int port = Integer.valueOf(part[1]);
+        int port = -1;
+        try {
+            port = Integer.parseInt(part[1], 10);
+        } catch (Exception e) {
+        }
+        if (port < 1)
+            throw new Exception("Invalid endpoint port " + part[1]);
         InetSocketAddress socketAddress = new InetSocketAddress(address, port);
         if (socketAddress.getAddress() instanceof Inet4Address)
             return socketAddress.getAddress().getHostAddress() + ":" + socketAddress.getPort();
@@ -152,31 +156,23 @@ public final class GoBackend implements Backend {
             return "[" + socketAddress.getAddress().getHostAddress() + "]:" + socketAddress.getPort();
     }
 
-    private Vector<Pair<String, Integer>> parseAllowedIps(String string) throws Exception {
-        Vector<Pair<String, Integer>> ret = new Vector<>();
-        for (final String allowedIp : string.split(" *, *")) {
-            String[] part = allowedIp.split("/", 2);
-            if (part.length > 2)
-                throw new Exception("Invalid allowed ips string " + string);
-
+    private Pair<String, Integer> parseAddressWithCidr(String in) {
+        int cidr = -1;
+        String addr = in;
+        int slash = in.lastIndexOf('/');
+        if (slash != -1 && slash < in.length() - 1) {
             try {
-                InetAddress address = InetAddress.getByName(part[0]);
-                int networkPrefixLength;
-                if (part.length == 2) {
-                    networkPrefixLength = Integer.valueOf(part[1]);
-                    if (networkPrefixLength < 0 || networkPrefixLength > 128
-                            || (address instanceof Inet4Address && networkPrefixLength > 32))
-                        throw new Exception();
-                } else {
-                    networkPrefixLength = (address instanceof Inet4Address) ? 32 : 128;
-                }
-
-                ret.add(new Pair<>(address.getHostAddress(), networkPrefixLength));
+                cidr = Integer.parseInt(in.substring(slash + 1), 10);
+                addr = in.substring(0, slash);
             } catch (Exception e) {
-                throw new Exception("Invalid allowed ips string " + string);
             }
         }
-        return ret;
+        boolean isV6 = addr.indexOf(':') != -1;
+        if (isV6 && (cidr > 128 || cidr < 0))
+            cidr = 128;
+        else if (!isV6 && (cidr > 32 || cidr < 0))
+            cidr = 32;
+        return new Pair<>(addr, cidr);
     }
 
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
@@ -216,15 +212,13 @@ public final class GoBackend implements Backend {
                     fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPublicKey())));
                 if (peer.getPreSharedKey() != null)
                     fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
-                if (peer.getEndpoint() != null) {
+                if (peer.getEndpoint() != null)
                     fmt.format("endpoint=%s\n", parseEndpoint(peer.getEndpoint()));
-                }
                 if (peer.getPersistentKeepalive() != null)
-                    fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive()));
-                if (peer.getAllowedIPs() != null) {
-                    for (final Pair<String, Integer> allowedIp : parseAllowedIps(peer.getAllowedIPs())) {
-                        fmt.format("allowed_ip=%s\n", allowedIp.first + "/" + allowedIp.second);
-                    }
+                    fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive(), 10));
+                for (final String addr : peer.getAllowedIPs()) {
+                    final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
+                    fmt.format("allowed_ip=%s\n", addressCidr.first + "/" + addressCidr.second);
                 }
             }
 
@@ -232,22 +226,21 @@ public final class GoBackend implements Backend {
             VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
-            for (final String addressString : config.getInterface().getAddress().split(" *, *")) {
-                InetAddress address = InetAddress.getByName(addressString);
-                builder.addAddress(address.getHostAddress(), (address instanceof Inet4Address) ? 32 : 128);
+            for (final String addr : config.getInterface().getAddresses()) {
+                final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
+                final InetAddress address = InetAddress.getByName(addressCidr.first);
+                builder.addAddress(address.getHostAddress(), addressCidr.second);
             }
 
-            if (config.getInterface().getDns() != null) {
-                for (final String dnsString : config.getInterface().getDns().split(" *, *")) {
-                    builder.addDnsServer(InetAddress.getByName(dnsString).getHostAddress());
-                }
+            for (final String addr : config.getInterface().getDnses()) {
+                final InetAddress address = InetAddress.getByName(addr);
+                builder.addDnsServer(address.getHostAddress());
             }
 
             for (final Peer peer : config.getPeers()) {
-                if (peer.getAllowedIPs() != null) {
-                    for (final Pair<String, Integer> allowedIp : parseAllowedIps(peer.getAllowedIPs())) {
-                        builder.addRoute(allowedIp.first, allowedIp.second);
-                    }
+                for (final String addr : peer.getAllowedIPs()) {
+                    final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
+                    builder.addRoute(addressCidr.first, addressCidr.second);
                 }
             }
 
