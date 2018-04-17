@@ -30,7 +30,7 @@ func init() {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
+func wgTurnOn(ifnameRef string, tun_fd int32, mtu int32, settings string) int32 {
 	interfaceName := string([]byte(ifnameRef))
 
 	logger := &Logger{
@@ -48,7 +48,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		nopi:   true,
 	}
 	device := NewDevice(tun, logger)
-	device.tun.mtu = DefaultMTU //TODO: make dynamic
+	device.tun.mtu = mtu
 
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	setError := ipcSetOperation(device, bufferedSettings)

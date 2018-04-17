@@ -72,7 +72,7 @@ public final class GoBackend implements Backend {
 
     private static native void wgTurnOff(int handle);
 
-    private static native int wgTurnOn(String ifName, int tunFd, String settings);
+    private static native int wgTurnOn(String ifName, int tunFd, int mtu, String settings);
 
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
@@ -244,12 +244,21 @@ public final class GoBackend implements Backend {
                 }
             }
 
+            int mtu = -1;
+            try {
+                mtu = Integer.parseInt(config.getInterface().getMtu(), 10);
+            } catch (Exception e) {
+            }
+            if (mtu < 0)
+                mtu = 1280;
+            builder.setMtu(mtu);
+
             builder.setBlocking(true);
             ParcelFileDescriptor tun = builder.establish();
             if (tun == null)
                 throw new Exception("Unable to create tun device");
 
-            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), fmt.toString());
+            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), mtu, fmt.toString());
             if (currentTunnelHandle < 0)
                 throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ")");
 
