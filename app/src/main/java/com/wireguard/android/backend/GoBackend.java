@@ -11,6 +11,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.config.Config;
+import com.wireguard.config.IPCidr;
 import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.KeyEncoding;
@@ -124,57 +125,6 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
-    private String parseEndpoint(String string) throws Exception {
-        String[] part;
-        if (string.charAt(0) == '[') {
-            int end = string.indexOf(']');
-            if (end == -1 || end >= string.length() - 2 || string.charAt(end + 1) != ':')
-                throw new Exception("Invalid endpoint " + string);
-
-            part = new String[2];
-            part[0] = string.substring(1, end);
-            part[1] = string.substring(end + 2);
-        } else {
-            part = string.split(":", 2);
-        }
-
-        if (part.length != 2 || part[0].isEmpty() || part[1].isEmpty())
-            throw new Exception("Invalid endpoint " + string);
-
-        InetAddress address = InetAddress.getByName(part[0]);
-        int port = -1;
-        try {
-            port = Integer.parseInt(part[1], 10);
-        } catch (Exception e) {
-        }
-        if (port < 1)
-            throw new Exception("Invalid endpoint port " + part[1]);
-        InetSocketAddress socketAddress = new InetSocketAddress(address, port);
-        if (socketAddress.getAddress() instanceof Inet4Address)
-            return socketAddress.getAddress().getHostAddress() + ":" + socketAddress.getPort();
-        else
-            return "[" + socketAddress.getAddress().getHostAddress() + "]:" + socketAddress.getPort();
-    }
-
-    private Pair<String, Integer> parseAddressWithCidr(String in) {
-        int cidr = -1;
-        String addr = in;
-        int slash = in.lastIndexOf('/');
-        if (slash != -1 && slash < in.length() - 1) {
-            try {
-                cidr = Integer.parseInt(in.substring(slash + 1), 10);
-                addr = in.substring(0, slash);
-            } catch (Exception e) {
-            }
-        }
-        boolean isV6 = addr.indexOf(':') != -1;
-        if (isV6 && (cidr > 128 || cidr < 0))
-            cidr = 128;
-        else if (!isV6 && (cidr > 32 || cidr < 0))
-            cidr = 32;
-        return new Pair<>(addr, cidr);
-    }
-
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
             throws Exception {
 
@@ -205,20 +155,19 @@ public final class GoBackend implements Backend {
             fmt.format("replace_peers=true\n");
             if (iface.getPrivateKey() != null)
                 fmt.format("private_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(iface.getPrivateKey())));
-            if (iface.getListenPort() != null)
-                fmt.format("listen_port=%d\n", Integer.parseInt(config.getInterface().getListenPort()));
+            if (iface.getListenPort() != 0)
+                fmt.format("listen_port=%d\n", config.getInterface().getListenPort());
             for (final Peer peer : config.getPeers()) {
                 if (peer.getPublicKey() != null)
                     fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPublicKey())));
                 if (peer.getPreSharedKey() != null)
                     fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
                 if (peer.getEndpoint() != null)
-                    fmt.format("endpoint=%s\n", parseEndpoint(peer.getEndpoint()));
-                if (peer.getPersistentKeepalive() != null)
-                    fmt.format("persistent_keepalive_interval=%d\n", Integer.parseInt(peer.getPersistentKeepalive(), 10));
-                for (final String addr : peer.getAllowedIPs()) {
-                    final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
-                    fmt.format("allowed_ip=%s\n", addressCidr.first + "/" + addressCidr.second);
+                    fmt.format("endpoint=%s\n", peer.getResolvedEndpointString());
+                if (peer.getPersistentKeepalive() != 0)
+                    fmt.format("persistent_keepalive_interval=%d\n", peer.getPersistentKeepalive());
+                for (final IPCidr addr : peer.getAllowedIPs()) {
+                    fmt.format("allowed_ip=%s\n", addr.toString());
                 }
             }
 
@@ -226,30 +175,19 @@ public final class GoBackend implements Backend {
             VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
-            for (final String addr : config.getInterface().getAddresses()) {
-                final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
-                final InetAddress address = InetAddress.getByName(addressCidr.first);
-                builder.addAddress(address.getHostAddress(), addressCidr.second);
-            }
+            for (final IPCidr addr : config.getInterface().getAddresses())
+                builder.addAddress(addr.getAddress(), addr.getCidr());
 
-            for (final String addr : config.getInterface().getDnses()) {
-                final InetAddress address = InetAddress.getByName(addr);
-                builder.addDnsServer(address.getHostAddress());
-            }
+            for (final InetAddress addr : config.getInterface().getDnses())
+                builder.addDnsServer(addr.getHostAddress());
 
             for (final Peer peer : config.getPeers()) {
-                for (final String addr : peer.getAllowedIPs()) {
-                    final Pair<String, Integer> addressCidr = parseAddressWithCidr(addr);
-                    builder.addRoute(addressCidr.first, addressCidr.second);
-                }
+                for (final IPCidr addr : peer.getAllowedIPs())
+                    builder.addRoute(addr.getAddress(), addr.getCidr());
             }
 
-            int mtu = -1;
-            try {
-                mtu = Integer.parseInt(config.getInterface().getMtu(), 10);
-            } catch (Exception e) {
-            }
-            if (mtu < 0)
+            int mtu = config.getInterface().getMtu();
+            if (mtu == 0)
                 mtu = 1280;
             builder.setMtu(mtu);
 

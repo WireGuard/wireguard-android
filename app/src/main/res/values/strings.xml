@@ -16,7 +16,7 @@
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
-    <string name="config_save_error">Unable to configuration for “%s”: %s</string>
+    <string name="config_save_error">Unable to save configuration for “%s”: %s</string>
     <string name="config_save_success">Successfully saved configuration for “%s”</string>
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>

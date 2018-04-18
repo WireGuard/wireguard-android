@@ -116,7 +116,7 @@
             android:layout_below="@+id/endpoint_label"
             android:layout_toStartOf="@+id/persistent_keepalive_text"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:text="@={item.endpoint}" />
+            android:text="@={item.endpointString}" />
 
         <TextView
             android:id="@+id/persistent_keepalive_label"
@@ -136,7 +136,7 @@
             android:layout_alignStart="@+id/persistent_keepalive_label"
             android:hint="@string/hint_optional"
             android:inputType="number"
-            android:text="@={item.persistentKeepalive}"
+            android:text="@={item.persistentKeepaliveString}"
             android:textAlignment="center" />
     </RelativeLayout>
 </layout>

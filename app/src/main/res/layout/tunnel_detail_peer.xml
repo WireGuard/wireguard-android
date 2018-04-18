@@ -86,6 +86,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/endpoint_label"
-            android:text="@{item.endpoint}" />
+            android:text="@{item.endpointString}" />
     </RelativeLayout>
 </layout>
