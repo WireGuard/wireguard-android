@@ -73,7 +73,7 @@ public final class GoBackend implements Backend {
 
     private static native void wgTurnOff(int handle);
 
-    private static native int wgTurnOn(String ifName, int tunFd, int mtu, String settings);
+    private static native int wgTurnOn(String ifName, int tunFd, String settings);
 
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
@@ -196,7 +196,7 @@ public final class GoBackend implements Backend {
             if (tun == null)
                 throw new Exception("Unable to create tun device");
 
-            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), mtu, fmt.toString());
+            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), fmt.toString());
             if (currentTunnelHandle < 0)
                 throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ")");
 

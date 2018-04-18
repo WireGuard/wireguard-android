@@ -30,7 +30,7 @@ func init() {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, tun_fd int32, mtu int32, settings string) int32 {
+func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 	interfaceName := string([]byte(ifnameRef))
 
 	logger := &Logger{
@@ -47,13 +47,19 @@ func wgTurnOn(ifnameRef string, tun_fd int32, mtu int32, settings string) int32 
 		errors: make(chan error, 5),
 		nopi:   true,
 	}
+	name, err := tun.Name()
+	if err != nil {
+	    logger.Error.Println(err)
+	    return -1
+	}
+	logger.Info.Println("Attaching to interface", name)
 	device := NewDevice(tun, logger)
-	device.tun.mtu = mtu
+	logger.Debug.Println("Interface has MTU", device.tun.mtu)
 
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	setError := ipcSetOperation(device, bufferedSettings)
 	if setError != nil {
-		logger.Debug.Println(setError)
+		logger.Error.Println(setError)
 		return -1
 	}
 
