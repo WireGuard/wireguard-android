@@ -1,6 +1,6 @@
 containing = $(foreach v,$2,$(if $(findstring $1,$v),$v))
 FILES := $(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)
-FILES := $(filter-out %/main.go $(filter-out %_linux.go,$(call containing,_,$(FILES))),$(FILES))
+FILES := $(filter-out %/main.go $(filter-out %_linux.go,$(call containing,_,$(FILES))),$(FILES)) $(wildcard ../wireguard-go/syscall_linux*.go)
 
 export GOPATH := $(CURDIR)/go
 CLANG_FLAGS := --target=$(ANDROID_LLVM_TRIPLE) --gcc-toolchain=$(ANDROID_TOOLCHAIN_ROOT) --sysroot=$(ANDROID_SYSROOT)
