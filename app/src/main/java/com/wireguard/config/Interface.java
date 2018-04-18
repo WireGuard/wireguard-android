@@ -9,6 +9,11 @@ import com.wireguard.android.BR;
 import com.wireguard.crypto.KeyEncoding;
 import com.wireguard.crypto.Keypair;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Represents the configuration for a WireGuard interface (an [Interface] block).
  */
@@ -26,23 +31,30 @@ public class Interface extends BaseObservable implements Parcelable {
         }
     };
 
-    private String[] addressList;
-    private String[] dnsList;
+    private List<IPCidr> addressList;
+    private List<InetAddress> dnsList;
     private Keypair keypair;
-    private String listenPort;
-    private String mtu;
+    private int listenPort;
+    private int mtu;
     private String privateKey;
 
     public Interface() {
-        addressList = new String[0];
-        dnsList = new String[0];
+        addressList = new LinkedList<>();
+        dnsList = new LinkedList<>();
     }
 
     private Interface(final Parcel in) {
-        addressList = in.createStringArray();
-        dnsList = in.createStringArray();
-        listenPort = in.readString();
-        mtu = in.readString();
+        addressList = in.createTypedArrayList(IPCidr.CREATOR);
+        int dnsItems = in.readInt();
+        dnsList = new LinkedList<>();
+        for (int i = 0; i < dnsItems; ++i) {
+            try {
+                dnsList.add(InetAddress.getByAddress(in.createByteArray()));
+            } catch (Exception e) {
+            }
+        }
+        listenPort = in.readInt();
+        mtu = in.readInt();
         setPrivateKey(in.readString());
     }
 
@@ -60,32 +72,57 @@ public class Interface extends BaseObservable implements Parcelable {
 
     @Bindable
     public String getAddressString() {
+        if (addressList.isEmpty())
+            return null;
         return Attribute.listToString(addressList);
     }
 
     @Bindable
-    public String[] getAddresses() {
-        return addressList;
+    public IPCidr[] getAddresses() {
+        return addressList.toArray(new IPCidr[addressList.size()]);
+    }
+
+    public List<String> getDnsStrings() {
+        List<String> strings = new LinkedList<>();
+        for (final InetAddress addr : dnsList)
+            strings.add(addr.getHostAddress());
+        return strings;
     }
 
     @Bindable
     public String getDnsString() {
-        return Attribute.listToString(dnsList);
+        if (dnsList.isEmpty())
+            return null;
+        return Attribute.listToString(getDnsStrings());
     }
 
     @Bindable
-    public String[] getDnses() {
-        return dnsList;
+    public InetAddress[] getDnses() {
+        return dnsList.toArray(new InetAddress[dnsList.size()]);
     }
 
     @Bindable
-    public String getListenPort() {
+    public int getListenPort() {
         return listenPort;
     }
 
     @Bindable
-    public String getMtu() {
+    public String getListenPortString() {
+        if (listenPort == 0)
+            return null;
+        return new Integer(listenPort).toString();
+    }
+
+    @Bindable
+    public int getMtu() {
         return mtu;
+    }
+
+    @Bindable
+    public String getMtuString() {
+        if (mtu == 0)
+            return null;
+        return new Integer(mtu).toString();
     }
 
     @Bindable
@@ -98,74 +135,90 @@ public class Interface extends BaseObservable implements Parcelable {
         return keypair != null ? keypair.getPublicKey() : null;
     }
 
-    public void parse(final String line) {
+    public void parse(final String line) throws UnknownHostException {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
             addAddresses(key.parseList(line));
         else if (key == Attribute.DNS)
             addDnses(key.parseList(line));
         else if (key == Attribute.LISTEN_PORT)
-            setListenPort(key.parse(line));
+            setListenPortString(key.parse(line));
         else if (key == Attribute.MTU)
-            setMtu(key.parse(line));
+            setMtuString(key.parse(line));
         else if (key == Attribute.PRIVATE_KEY)
             setPrivateKey(key.parse(line));
         else
             throw new IllegalArgumentException(line);
     }
 
-    public void addAddresses(String[] addresses) {
-        if (addresses == null || addresses.length == 0)
-            return;
-        String[] both = new String[addresses.length + this.addressList.length];
-        System.arraycopy(this.addressList, 0, both, 0, this.addressList.length);
-        System.arraycopy(addresses, 0, both, this.addressList.length, addresses.length);
-        setAddresses(both);
-    }
-
-    public void setAddresses(String[] addresses) {
-        if (addresses == null)
-            addresses = new String[0];
-        this.addressList = addresses;
+    public void addAddresses(String[] addresses) throws UnknownHostException {
+        if (addresses != null && addresses.length > 0) {
+            for (final String addr : addresses) {
+                if (addr.isEmpty())
+                    throw new UnknownHostException("{empty}");
+                this.addressList.add(new IPCidr(addr));
+            }
+        }
         notifyPropertyChanged(BR.addresses);
+        notifyPropertyChanged(BR.addressString);
+
     }
 
-    public void setAddressString(String addressString) {
-        setAddresses(Attribute.stringToList(addressString));
+    public void setAddressString(final String addressString) {
+        this.addressList.clear();
+        try {
+            addAddresses(Attribute.stringToList(addressString));
+        } catch (Exception e) {
+            this.addressList.clear();
+        }
     }
 
-    public void addDnses(String[] dnses) {
-        if (dnses == null || dnses.length == 0)
-            return;
-        String[] both = new String[dnses.length + this.dnsList.length];
-        System.arraycopy(this.dnsList, 0, both, 0, this.dnsList.length);
-        System.arraycopy(dnses, 0, both, this.dnsList.length, dnses.length);
-        setDnses(both);
-    }
-
-    public void setDnses(String[] dnses) {
-        if (dnses == null)
-            dnses = new String[0];
-        this.dnsList = dnses;
+    public void addDnses(String[] dnses) throws UnknownHostException {
+        if (dnses != null && dnses.length > 0) {
+            for (final String dns : dnses) {
+                if (dns.isEmpty())
+                    throw new UnknownHostException("{empty}");
+                this.dnsList.add(InetAddress.getByName(dns));
+            }
+        }
         notifyPropertyChanged(BR.dnses);
+        notifyPropertyChanged(BR.dnsString);
+
     }
 
-    public void setDnsString(String dnsString) {
-        setDnses(Attribute.stringToList(dnsString));
+    public void setDnsString(final String dnsString) {
+        try {
+            this.dnsList.clear();
+            addDnses(Attribute.stringToList(dnsString));
+        } catch (Exception e) {
+            this.dnsList.clear();
+        }
     }
 
-    public void setListenPort(String listenPort) {
-        if (listenPort != null && listenPort.isEmpty())
-            listenPort = null;
+    public void setListenPort(int listenPort) {
         this.listenPort = listenPort;
         notifyPropertyChanged(BR.listenPort);
+        notifyPropertyChanged(BR.listenPortString);
     }
 
-    public void setMtu(String mtu) {
-        if (mtu != null && mtu.isEmpty())
-            mtu = null;
+    public void setListenPortString(final String port) {
+        if (port != null && !port.isEmpty())
+            setListenPort(Integer.parseInt(port, 10));
+        else
+            setListenPort(0);
+    }
+
+    public void setMtu(int mtu) {
         this.mtu = mtu;
         notifyPropertyChanged(BR.mtu);
+        notifyPropertyChanged(BR.mtuString);
+    }
+
+    public void setMtuString(final String mtu) {
+        if (mtu != null && !mtu.isEmpty())
+            setMtu(Integer.parseInt(mtu, 10));
+        else
+            setMtu(0);
     }
 
     public void setPrivateKey(String privateKey) {
@@ -188,13 +241,13 @@ public class Interface extends BaseObservable implements Parcelable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder().append("[Interface]\n");
-        if (addressList != null && addressList.length > 0)
+        if (!addressList.isEmpty())
             sb.append(Attribute.ADDRESS.composeWith(addressList));
-        if (dnsList != null && dnsList.length > 0)
-            sb.append(Attribute.DNS.composeWith(dnsList));
-        if (listenPort != null)
+        if (!dnsList.isEmpty())
+            sb.append(Attribute.DNS.composeWith(getDnsStrings()));
+        if (listenPort != 0)
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
-        if (mtu != null)
+        if (mtu != 0)
             sb.append(Attribute.MTU.composeWith(mtu));
         if (privateKey != null)
             sb.append(Attribute.PRIVATE_KEY.composeWith(privateKey));
@@ -203,10 +256,12 @@ public class Interface extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeStringArray(addressList);
-        dest.writeStringArray(dnsList);
-        dest.writeString(listenPort);
-        dest.writeString(mtu);
+        dest.writeTypedList(addressList);
+        dest.writeInt(dnsList.size());
+        for (final InetAddress addr : dnsList)
+            dest.writeByteArray(addr.getAddress());
+        dest.writeInt(listenPort);
+        dest.writeInt(mtu);
         dest.writeString(privateKey);
     }
 }

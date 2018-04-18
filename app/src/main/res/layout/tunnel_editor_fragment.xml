@@ -122,6 +122,7 @@
                         android:focusable="false"
                         android:hint="@string/hint_generated"
                         android:maxLines="1"
+                        android:contentDescription="@string/public_key_description"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.publicKey}" />
 
@@ -164,7 +165,7 @@
                         android:layout_alignStart="@+id/generate_private_key_button"
                         android:hint="@string/hint_random"
                         android:inputType="number"
-                        android:text="@={config.interface.listenPort}"
+                        android:text="@={config.interface.listenPortString}"
                         android:textAlignment="center" />
 
                     <TextView
@@ -206,7 +207,7 @@
                         android:layout_alignStart="@+id/generate_private_key_button"
                         android:hint="@string/hint_automatic"
                         android:inputType="number"
-                        android:text="@={config.interface.mtu}"
+                        android:text="@={config.interface.mtuString}"
                         android:textAlignment="center" />
                 </RelativeLayout>
 
