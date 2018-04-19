@@ -20,7 +20,7 @@ android {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 403
+        versionCode 404
         versionName '0.4.0'
     }
     externalNativeBuild {
