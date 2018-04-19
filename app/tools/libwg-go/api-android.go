@@ -11,6 +11,7 @@ import (
 	"math"
 	"os"
 	"strings"
+	"syscall"
 )
 
 type AndroidLogger struct {
@@ -42,15 +43,27 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 	logger.Debug.Println("Debug log enabled")
 
 	tun := &NativeTun{
-		fd:     os.NewFile(uintptr(tun_fd), ""),
+		fd:     os.NewFile(uintptr(tun_fd), "/dev/tun"),
 		events: make(chan TUNEvent, 5),
 		errors: make(chan error, 5),
 		nopi:   true,
 	}
+	var err error
+
+	err = syscall.SetNonblock(int(tun_fd), true)
+	if err != nil {
+		logger.Error.Println(err)
+		return -1
+	}
+	tun.closingReader, tun.closingWriter, err = os.Pipe()
+	if err != nil {
+		logger.Error.Println(err)
+		return -1
+	}
 	name, err := tun.Name()
 	if err != nil {
-	    logger.Error.Println(err)
-	    return -1
+		logger.Error.Println(err)
+		return -1
 	}
 	logger.Info.Println("Attaching to interface", name)
 	device := NewDevice(tun, logger)
