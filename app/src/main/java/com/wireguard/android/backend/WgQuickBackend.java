@@ -1,8 +1,11 @@
 package com.wireguard.android.backend;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
@@ -110,5 +113,13 @@ public final class WgQuickBackend implements Backend {
         }
         if (result != 0)
             throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
+    }
+
+    public final static class WgQuickChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Refreshing tunnel states");
+            Application.getComponent().getTunnelManager().refreshTunnelStates();
+        }
     }
 }
