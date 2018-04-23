@@ -43,10 +43,15 @@
             android:parentActivityName=".activity.MainActivity" />
 
         <receiver android:name=".BootShutdownReceiver">
-
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".backend.WgQuickBackend$WgQuickChangeReceiver">
+            <intent-filter>
+                <action android:name="com.wireguard.android.WGQUICK_CHANGE" />
             </intent-filter>
         </receiver>
 

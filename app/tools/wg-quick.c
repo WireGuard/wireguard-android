@@ -446,6 +446,14 @@ static void set_config(const char *iface, const char *config)
 		exit(WIFEXITED(ret) ? WEXITSTATUS(ret) : EIO);
 }
 
+static void broadcast_change(void)
+{
+	const char *pkg = getenv("CALLING_PACKAGE");
+
+	if (!pkg || strcmp(pkg, "com.wireguard.android"))
+		cmd("am broadcast -a com.wireguard.android.WGQUICK_CHANGE com.wireguard.android");
+}
+
 static void print_search_paths(FILE *file, const char *prefix)
 {
 	_cleanup_free_ char *paths = strdup(WG_CONFIG_SEARCH_PATHS);
@@ -502,6 +510,7 @@ static void cmd_up(const char *iface, const char *config, unsigned int mtu, cons
 	set_dnses(netid, dnses);
 	set_routes(iface, netid);
 	set_mtu(iface, mtu);
+	broadcast_change();
 
 	free(cleanup_iface);
 	cleanup_iface = NULL;
@@ -528,6 +537,7 @@ static void cmd_down(const char *iface)
 	}
 
 	del_if(iface);
+	broadcast_change();
 	exit(EXIT_SUCCESS);
 }
 

@@ -128,6 +128,15 @@ public final class TunnelManager extends BaseObservable {
         return tunnels;
     }
 
+    public void refreshTunnelStates() {
+        asyncWorker.supplyAsync(backend::enumerate)
+                .thenAccept(running -> {
+                    for (final Tunnel tunnel : tunnels)
+                        tunnel.onStateChanged(running.contains(tunnel.getName()) ? State.UP : State.DOWN);
+                })
+                .whenComplete(ExceptionLoggers.E);
+    }
+
     public void onCreate() {
         asyncWorker.supplyAsync(configStore::enumerate)
                 .thenAcceptBoth(asyncWorker.supplyAsync(backend::enumerate), this::onTunnelsLoaded)
