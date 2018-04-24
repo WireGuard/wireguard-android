@@ -135,7 +135,7 @@ public class Interface extends BaseObservable implements Parcelable {
         return keypair != null ? keypair.getPublicKey() : null;
     }
 
-    public void parse(final String line) throws UnknownHostException {
+    public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ADDRESS)
             addAddresses(key.parseList(line));
@@ -151,11 +151,11 @@ public class Interface extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
-    public void addAddresses(String[] addresses) throws UnknownHostException {
+    public void addAddresses(String[] addresses) {
         if (addresses != null && addresses.length > 0) {
             for (final String addr : addresses) {
                 if (addr.isEmpty())
-                    throw new UnknownHostException("{empty}");
+                    throw new IllegalArgumentException("Address is empty");
                 this.addressList.add(new IPCidr(addr));
             }
         }
@@ -166,19 +166,19 @@ public class Interface extends BaseObservable implements Parcelable {
 
     public void setAddressString(final String addressString) {
         this.addressList.clear();
-        try {
-            addAddresses(Attribute.stringToList(addressString));
-        } catch (Exception e) {
-            this.addressList.clear();
-        }
+        addAddresses(Attribute.stringToList(addressString));
     }
 
-    public void addDnses(String[] dnses) throws UnknownHostException {
+    public void addDnses(String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
                 if (dns.isEmpty())
-                    throw new UnknownHostException("{empty}");
-                this.dnsList.add(InetAddress.getByName(dns));
+                    throw new IllegalArgumentException("DNS is empty");
+                try {
+                    this.dnsList.add(InetAddress.getByName(dns));
+                } catch (UnknownHostException e) {
+                    throw new IllegalArgumentException(e);
+                }
             }
         }
         notifyPropertyChanged(BR.dnses);
@@ -187,12 +187,8 @@ public class Interface extends BaseObservable implements Parcelable {
     }
 
     public void setDnsString(final String dnsString) {
-        try {
-            this.dnsList.clear();
-            addDnses(Attribute.stringToList(dnsString));
-        } catch (Exception e) {
-            this.dnsList.clear();
-        }
+        this.dnsList.clear();
+        addDnses(Attribute.stringToList(dnsString));
     }
 
     public void setListenPort(int listenPort) {
@@ -228,8 +224,9 @@ public class Interface extends BaseObservable implements Parcelable {
         if (privateKey != null && privateKey.length() == KeyEncoding.KEY_LENGTH_BASE64) {
             try {
                 keypair = new Keypair(privateKey);
-            } catch (final IllegalArgumentException ignored) {
+            } catch (final IllegalArgumentException e) {
                 keypair = null;
+                throw e;
             }
         } else {
             keypair = null;

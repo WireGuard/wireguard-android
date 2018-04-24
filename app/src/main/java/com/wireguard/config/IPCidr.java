@@ -25,11 +25,11 @@ public class IPCidr implements Parcelable {
         }
     };
 
-    public IPCidr(String in) throws UnknownHostException {
+    public IPCidr(String in) {
         parse(in);
     }
 
-    private void parse(String in) throws UnknownHostException {
+    private void parse(String in) {
         cidr = -1;
         int slash = in.lastIndexOf('/');
         if (slash != -1 && slash < in.length() - 1) {
@@ -39,7 +39,11 @@ public class IPCidr implements Parcelable {
             } catch (Exception e) {
             }
         }
-        address = InetAddress.getByName(in);
+        try {
+            address = InetAddress.getByName(in);
+        } catch (UnknownHostException e) {
+            throw new IllegalArgumentException(e);
+        }
         if ((address instanceof Inet6Address) && (cidr > 128 || cidr < 0))
             cidr = 128;
         else if ((address instanceof Inet4Address) && (cidr > 32 || cidr < 0))

@@ -51,7 +51,7 @@ enum Attribute {
     }
 
     public static String[] stringToList(final String string) {
-        return string.trim().split("\\s*,\\s*", -1);
+        return string.trim().split("\\s*,\\s*");
     }
 
     public String composeWith(final Object value) {
