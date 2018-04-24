@@ -125,7 +125,7 @@ public class Peer extends BaseObservable implements Parcelable {
         return publicKey;
     }
 
-    public void parse(final String line) throws UnknownHostException {
+    public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
             addAllowedIPs(key.parseList(line));
@@ -141,11 +141,11 @@ public class Peer extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
-    public void addAllowedIPs(String[] allowedIPs) throws UnknownHostException {
+    public void addAllowedIPs(String[] allowedIPs) {
         if (allowedIPs != null && allowedIPs.length > 0) {
             for (final String allowedIP : allowedIPs) {
                 if (allowedIP.isEmpty())
-                    throw new UnknownHostException("{empty}");
+                    throw new IllegalArgumentException("AllowedIP is empty");
                 this.allowedIPsList.add(new IPCidr(allowedIP));
             }
         }
@@ -154,12 +154,8 @@ public class Peer extends BaseObservable implements Parcelable {
     }
 
     public void setAllowedIPsString(final String allowedIPsString) {
-        try {
-            this.allowedIPsList.clear();
-            addAllowedIPs(Attribute.stringToList(allowedIPsString));
-        } catch (Exception e) {
-            this.allowedIPsList.clear();
-        }
+        this.allowedIPsList.clear();
+        addAllowedIPs(Attribute.stringToList(allowedIPsString));
     }
 
     public void setEndpoint(InetSocketAddress endpoint) {
@@ -171,14 +167,15 @@ public class Peer extends BaseObservable implements Parcelable {
     public void setEndpointString(final String endpoint) {
         if (endpoint != null && !endpoint.isEmpty()) {
             InetSocketAddress constructedEndpoint;
+            if (endpoint.indexOf('/') != -1 || endpoint.indexOf('?') != -1 || endpoint.indexOf('#') != -1)
+                    throw new IllegalArgumentException("Forbidden characters in endpoint");
+            URI uri;
             try {
-                if (endpoint.indexOf('/') != -1 || endpoint.indexOf('?') != -1 || endpoint.indexOf('#') != -1)
-                    throw new Exception();
-                URI uri = new URI("wg://" + endpoint);
-                constructedEndpoint = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-            } catch (Exception e) {
-                return; /* XXX: Uh oh. */
+                uri = new URI("wg://" + endpoint);
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
             }
+            constructedEndpoint = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
             setEndpoint(constructedEndpoint);
         } else
             setEndpoint(null);
