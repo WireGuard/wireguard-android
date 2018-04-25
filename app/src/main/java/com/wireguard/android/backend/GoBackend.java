@@ -7,9 +7,11 @@ import android.support.v4.util.ArraySet;
 import android.util.Log;
 import android.util.Pair;
 
+import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.model.TunnelManager;
 import com.wireguard.config.Config;
 import com.wireguard.config.IPCidr;
 import com.wireguard.config.Interface;
@@ -56,6 +58,10 @@ public final class GoBackend implements Backend {
 
         @Override
         public void onDestroy() {
+            for (final Tunnel tunnel : Application.getComponent().getTunnelManager().getTunnels()) {
+                if (tunnel != null && tunnel.getState() != State.DOWN)
+                    tunnel.setState(State.DOWN);
+            }
             vpnService = vpnService.newIncompleteFuture();
             super.onDestroy();
         }
