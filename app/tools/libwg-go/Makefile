@@ -2,6 +2,13 @@ containing = $(foreach v,$2,$(if $(findstring $1,$v),$v))
 FILES := $(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)
 FILES := $(filter-out %/main.go $(filter-out %_linux.go,$(call containing,_,$(FILES))),$(FILES))
 
+NDK_GO_ARCH_MAP_x86 := 386
+NDK_GO_ARCH_MAP_x86_64 := amd64
+NDK_GO_ARCH_MAP_arm := arm
+NDK_GO_ARCH_MAP_arm64 := arm64
+NDK_GO_ARCH_MAP_mips := mipsx
+NDK_GO_ARCH_MAP_mips64 := mips64x
+
 export GOPATH := $(CURDIR)/gopath
 export GOROOT := $(CURDIR)/goroot
 export PATH := $(GOROOT)/bin:$(PATH)
@@ -9,12 +16,12 @@ CLANG_FLAGS := --target=$(ANDROID_LLVM_TRIPLE) --gcc-toolchain=$(ANDROID_TOOLCHA
 export CGO_CFLAGS := $(CLANG_FLAGS) $(CFLAGS)
 export CGO_LDFLAGS := $(CLANG_FLAGS) $(LDFLAGS)
 export CC := $(ANDROID_C_COMPILER)
-GO_ARCH_FILTER := case "$(ANDROID_ARCH_NAME)" in x86) echo 386 ;; x86_64) echo amd64 ;; *) echo $(ANDROID_ARCH_NAME) ;; esac
-export GOARCH := $(shell $(GO_ARCH_FILTER))
+export GOARCH := $(NDK_GO_ARCH_MAP_$(ANDROID_ARCH_NAME))
 export GOOS := android
 export CGO_ENABLED := 1
 
-GORELEASETARBALL := https://dl.google.com/go/go1.10.1.$(shell uname -s | tr '[:upper:]' '[:lower:]')-amd64.tar.gz
+GORELEASEVERSION := 1.10.1
+GORELEASETARBALL := https://dl.google.com/go/go$(GORELEASEVERSION).$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(NDK_GO_ARCH_MAP_$(shell uname -m)).tar.gz
 
 default: $(DESTDIR)/libwg-go.so
 
