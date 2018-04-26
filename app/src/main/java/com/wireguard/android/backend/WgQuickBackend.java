@@ -100,17 +100,12 @@ public final class WgQuickBackend implements Backend {
     private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
             throws Exception {
         final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
-        final int result;
-        if (state == State.UP) {
-            try (FileOutputStream stream = new FileOutputStream(tempFile, false)) {
-                stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
-            }
-            result = rootShell.run(null, "wg-quick up '" + tempFile.getAbsolutePath() + '\'');
-        } else {
-            result = rootShell.run(null, "wg-quick down '" + tempFile.getAbsolutePath() + '\'');
-            if (result == 0 && !tempFile.delete())
-                Log.w(TAG, "Couldn't delete temp config after bringing down " + tunnel.getName());
+        try (FileOutputStream stream = new FileOutputStream(tempFile, false)) {
+            stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
+        final String command = String.format("wg-quick %s '%s'", state.toString().toLowerCase(), tempFile.getAbsolutePath());
+        final int result = rootShell.run(null, command);
+        tempFile.delete();
         if (result != 0)
             throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
     }
