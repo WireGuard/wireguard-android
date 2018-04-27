@@ -63,8 +63,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!moveToState(State.ofLayer(state.layer - 1)))
-            super.onBackPressed();
+        TunnelListFragment fragment = null;
+        try {
+            fragment =
+                    ((TunnelListFragment)
+                            getSupportFragmentManager().getFragments().get(0));
+        } catch (ClassCastException ignored) {
+        }
+        if (fragment == null || !(fragment.collapseActionMenu())) {
+            if (!moveToState(State.ofLayer(state.layer - 1)))
+                super.onBackPressed();
+        }
     }
 
     @Override
