@@ -5,22 +5,18 @@ import android.content.Intent;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
-import android.util.Pair;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
-import com.wireguard.android.model.TunnelManager;
 import com.wireguard.config.Config;
 import com.wireguard.config.IPCidr;
 import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.KeyEncoding;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.Set;
@@ -45,7 +41,7 @@ public final class GoBackend implements Backend {
         this.context = context;
     }
 
-    public void startVpnService() {
+    private void startVpnService() {
         context.startService(new Intent(context, VpnService.class));
     }
 

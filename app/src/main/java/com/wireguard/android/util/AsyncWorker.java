@@ -22,7 +22,7 @@ public class AsyncWorker {
     private final Handler handler;
 
     @Inject
-    public AsyncWorker(final Executor executor, @ApplicationHandler final Handler handler) {
+    AsyncWorker(final Executor executor, @ApplicationHandler final Handler handler) {
         this.executor = executor;
         this.handler = handler;
     }

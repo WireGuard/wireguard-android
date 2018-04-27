@@ -30,10 +30,6 @@ public class ToolsInstallerPreference extends Preference {
         toolsInstaller = applicationComponent.getToolsInstaller();
     }
 
-    public ToolsInstallerPreference(final Context context) {
-        this(context, null);
-    }
-
     @Override
     public CharSequence getSummary() {
         return getContext().getString(state.messageResourceId);

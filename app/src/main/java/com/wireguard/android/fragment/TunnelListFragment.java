@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -110,7 +111,7 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
@@ -220,7 +221,8 @@ public class TunnelListFragment extends BaseFragment {
         @Override
         public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
             actionMode = mode;
-            resources = getActivity().getResources();
+            if (getActivity() != null)
+                resources = getActivity().getResources();
             tunnelList = binding.tunnelList;
             mode.getMenuInflater().inflate(R.menu.tunnel_list_action_mode, menu);
             return true;
