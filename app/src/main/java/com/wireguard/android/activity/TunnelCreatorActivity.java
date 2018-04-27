@@ -14,8 +14,8 @@ public class TunnelCreatorActivity extends BaseActivity {
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getFragmentManager().findFragmentById(android.R.id.content) == null) {
-            getFragmentManager().beginTransaction()
+        if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+            getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new TunnelEditorFragment())
                     .commit();
         }
