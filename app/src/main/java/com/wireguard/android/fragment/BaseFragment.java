@@ -1,7 +1,7 @@
 package com.wireguard.android.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.wireguard.android.activity.BaseActivity;
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener;

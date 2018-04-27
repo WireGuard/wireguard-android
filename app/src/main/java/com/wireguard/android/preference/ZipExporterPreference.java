@@ -1,9 +1,10 @@
 package com.wireguard.android.preference;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.preference.Preference;
+import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -57,12 +58,7 @@ public class ZipExporterPreference extends Preference {
 
     @Override
     public CharSequence getTitle() {
-        return getContext().getString(getTitleRes());
-    }
-
-    @Override
-    public int getTitleRes() {
-        return R.string.zip_exporter_title;
+        return getContext().getString(R.string.zip_exporter_title);
     }
 
     private void exportZip() {
@@ -86,7 +82,8 @@ public class ZipExporterPreference extends Preference {
                             final ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file));
                             for (int i = 0; i < futureConfigs.size(); ++i) {
                                 zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
-                                zip.write(futureConfigs.get(i).getNow(null).toString().getBytes(StandardCharsets.UTF_8));
+                                zip.write(futureConfigs.get(i).getNow(null).
+                                        toString().getBytes(StandardCharsets.UTF_8));
                             }
                             zip.closeEntry();
                             zip.close();
@@ -104,7 +101,9 @@ public class ZipExporterPreference extends Preference {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
             final String message = getContext().getString(R.string.export_error, error);
             Log.e(TAG, message, throwable);
-            Snackbar.make(((SettingsActivity)getContext()).findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(
+                    ((SettingsActivity)getContext()).findViewById(android.R.id.content),
+                    message, Snackbar.LENGTH_LONG).show();
         } else {
             exportedFilePath = filePath;
             setEnabled(false);
@@ -114,10 +113,12 @@ public class ZipExporterPreference extends Preference {
 
     @Override
     protected void onClick() {
-        ((SettingsActivity)getContext()).ensurePermissions(new String[] { "android.permission.WRITE_EXTERNAL_STORAGE" }, (permissions, granted) -> {
-            if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
-                exportZip();
-        });
+        ((SettingsActivity)getContext()).ensurePermissions(
+                new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                (permissions, granted) -> {
+                    if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
+                        exportZip();
+                });
     }
 
 }

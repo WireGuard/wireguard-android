@@ -1,10 +1,10 @@
 package com.wireguard.android.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.backend.GoBackend;
@@ -17,7 +17,7 @@ import java.util.Objects;
  * Base class for activities that need to remember the currently-selected tunnel.
  */
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends AppCompatActivity {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();

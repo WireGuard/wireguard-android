@@ -1,9 +1,10 @@
 package com.wireguard.android.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity {
     private State state = State.EMPTY;
 
     private boolean moveToState(final State nextState) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
         Log.i(TAG, "Moving from " + state.name() + " to " + nextState.name());
         if (nextState == state) {
             return false;
@@ -37,16 +39,16 @@ public class MainActivity extends BaseActivity {
             return true;
         } else if (nextState.layer == state.layer + 1) {
             final Fragment fragment = Fragment.instantiate(this, nextState.fragment);
-            final FragmentTransaction transaction = getFragmentManager().beginTransaction()
+            final FragmentTransaction transaction = fragmentManager.beginTransaction()
                     .replace(R.id.master_fragment, fragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             if (state.layer > 0)
                 transaction.addToBackStack(null);
             transaction.commit();
         } else if (nextState.layer == state.layer - 1) {
-            if (getFragmentManager().getBackStackEntryCount() == 0)
+            if (fragmentManager.getBackStackEntryCount() == 0)
                 return false;
-            getFragmentManager().popBackStack();
+            fragmentManager.popBackStack();
         } else if (nextState.layer < state.layer - 1) {
             moveToState(State.ofLayer(state.layer - 1));
             moveToState(nextState);
@@ -121,8 +123,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateActionBar() {
-        if (getActionBar() != null)
-            getActionBar().setDisplayHomeAsUpEnabled(state.layer > State.LIST.layer);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(state.layer > State.LIST.layer);
     }
 
     private enum State {

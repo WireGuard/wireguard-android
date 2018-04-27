@@ -1,8 +1,8 @@
 package com.wireguard.android.preference;
 
 import android.content.Context;
-import android.preference.Preference;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.Preference;
 import android.system.OsConstants;
 import android.util.AttributeSet;
 
@@ -37,17 +37,12 @@ public class ToolsInstallerPreference extends Preference {
 
     @Override
     public CharSequence getTitle() {
-        return getContext().getString(getTitleRes());
+        return getContext().getString(R.string.tools_installer_title);
     }
 
     @Override
-    public int getTitleRes() {
-        return R.string.tools_installer_title;
-    }
-
-    @Override
-    protected void onAttachedToActivity() {
-        super.onAttachedToActivity();
+    public void onAttached() {
+        super.onAttached();
         asyncWorker.supplyAsync(toolsInstaller::areInstalled).whenComplete(this::onCheckResult);
     }
 

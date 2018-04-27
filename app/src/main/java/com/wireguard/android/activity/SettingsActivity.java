@@ -1,10 +1,11 @@
 package com.wireguard.android.activity;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -19,7 +20,7 @@ import java.util.List;
  * Interface for changing application-global persistent settings.
  */
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends AppCompatActivity {
     @FunctionalInterface
     public interface PermissionRequestCallback {
         void done(String[] permissions, int[] grantResults);
@@ -56,7 +57,7 @@ public class SettingsActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
         if (f != null) {
             permissionRequestCallbacks.remove(requestCode);
@@ -67,17 +68,16 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getFragmentManager().findFragmentById(android.R.id.content) == null) {
-            getFragmentManager().beginTransaction()
+        if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+            getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new SettingsFragment())
                     .commit();
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
-        public void onCreate(final Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
             if (Application.getComponent().getBackendType() != WgQuickBackend.class) {
                 final Preference toolsInstaller =
