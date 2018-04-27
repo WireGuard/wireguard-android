@@ -193,6 +193,14 @@ public class TunnelListFragment extends BaseFragment {
         super.onDestroyView();
     }
 
+    public boolean collapseActionMenu() {
+        if (binding.createMenu.isExpanded()) {
+            binding.createMenu.collapse();
+            return true;
+        }
+        return false;
+    }
+
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
         if (binding != null)
