@@ -172,13 +172,7 @@ public class Interface extends BaseObservable implements Parcelable {
     public void addDnses(String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
-                if (dns.isEmpty())
-                    throw new IllegalArgumentException("DNS is empty");
-                try {
-                    this.dnsList.add(InetAddress.getByName(dns));
-                } catch (UnknownHostException e) {
-                    throw new IllegalArgumentException(e);
-                }
+                this.dnsList.add(Attribute.parseIPString(dns));
             }
         }
         notifyPropertyChanged(BR.dnses);

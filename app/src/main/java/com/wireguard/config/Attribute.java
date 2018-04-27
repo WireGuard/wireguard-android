@@ -2,6 +2,9 @@ package com.wireguard.config;
 
 import android.text.TextUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +55,30 @@ enum Attribute {
 
     public static String[] stringToList(final String string) {
         return string.trim().split("\\s*,\\s*");
+    }
+
+    private static Method parseNumericAddressMethod;
+    static {
+        try {
+            parseNumericAddressMethod = InetAddress.class.getMethod("parseNumericAddress", new Class[]{String.class});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static InetAddress parseIPString(final String address) {
+        if (address == null || address.isEmpty())
+            throw new IllegalArgumentException("Empty address");
+        try {
+            return (InetAddress)parseNumericAddressMethod.invoke(null, new Object[]{address});
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof IllegalArgumentException)
+                throw (IllegalArgumentException)e.getCause();
+            else
+                throw new IllegalArgumentException(e.getCause());
+        }
     }
 
     public String composeWith(final Object value) {

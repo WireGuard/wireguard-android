@@ -39,11 +39,7 @@ public class IPCidr implements Parcelable {
             } catch (Exception e) {
             }
         }
-        try {
-            address = InetAddress.getByName(in);
-        } catch (UnknownHostException e) {
-            throw new IllegalArgumentException(e);
-        }
+        address = Attribute.parseIPString(in);
         if ((address instanceof Inet6Address) && (cidr > 128 || cidr < 0))
             cidr = 128;
         else if ((address instanceof Inet4Address) && (cidr > 32 || cidr < 0))
