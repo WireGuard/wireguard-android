@@ -108,7 +108,7 @@ func wgGetSocketV4(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	native, ok := device.net.bind.(NativeBind)
+	native, ok := device.net.bind.(*NativeBind)
 	if !ok {
 		return -1
 	}
@@ -121,7 +121,7 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	native, ok := device.net.bind.(NativeBind)
+	native, ok := device.net.bind.(*NativeBind)
 	if !ok {
 		return -1
 	}
