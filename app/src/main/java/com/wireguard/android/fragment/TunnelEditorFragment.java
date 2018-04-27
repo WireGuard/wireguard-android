@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -101,7 +102,7 @@ public class TunnelEditorFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
@@ -118,6 +119,7 @@ public class TunnelEditorFragment extends BaseFragment {
     private void onFinished() {
         // Hide the keyboard; it rarely goes away on its own.
         final Activity activity = getActivity();
+        if (activity == null) return;
         final View focusedView = activity.getCurrentFocus();
         if (focusedView != null) {
             final Object service = activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -174,7 +176,7 @@ public class TunnelEditorFragment extends BaseFragment {
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
         outState.putParcelable(KEY_LOCAL_CONFIG, localConfig);
         outState.putString(KEY_ORIGINAL_NAME, originalName);
         super.onSaveInstanceState(outState);
