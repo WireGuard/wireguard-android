@@ -6,10 +6,11 @@ import android.os.Parcelable;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.util.Locale;
 
 public class IPCidr implements Parcelable {
-    InetAddress address;
-    int cidr;
+    private InetAddress address;
+    private int cidr;
 
 
     public static final Parcelable.Creator<IPCidr> CREATOR = new Parcelable.Creator<IPCidr>() {
@@ -24,7 +25,7 @@ public class IPCidr implements Parcelable {
         }
     };
 
-    public IPCidr(String in) {
+    IPCidr(String in) {
         parse(in);
     }
 
@@ -35,7 +36,7 @@ public class IPCidr implements Parcelable {
             try {
                 cidr = Integer.parseInt(in.substring(slash + 1), 10);
                 in = in.substring(0, slash);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         address = Attribute.parseIPString(in);
@@ -55,7 +56,7 @@ public class IPCidr implements Parcelable {
 
     @Override
     public String toString() {
-        return String.format("%s/%d", address.getHostAddress(), cidr);
+        return String.format(Locale.getDefault(), "%s/%d", address.getHostAddress(), cidr);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class IPCidr implements Parcelable {
     private IPCidr(final Parcel in) {
         try {
             parse(in.readString());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

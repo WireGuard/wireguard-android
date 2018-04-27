@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Represents the configuration for a WireGuard peer (a [Peer] block).
@@ -167,7 +168,7 @@ public class Peer implements Parcelable {
     private String getEndpointString() {
         if (endpoint == null)
             return null;
-        return String.format("%s:%d", endpoint.getHostString(), endpoint.getPort());
+        return String.format(Locale.getDefault(), "%s:%d", endpoint.getHostString(), endpoint.getPort());
     }
 
     public String getResolvedEndpointString() throws UnknownHostException {
@@ -178,8 +179,14 @@ public class Peer implements Parcelable {
         if (endpoint.isUnresolved())
             throw new UnknownHostException(endpoint.getHostString());
         if (endpoint.getAddress() instanceof Inet6Address)
-            return String.format("[%s]:%d", endpoint.getAddress().getHostAddress(), endpoint.getPort());
-        return String.format("%s:%d",  endpoint.getAddress().getHostAddress(), endpoint.getPort());
+            return String.format(Locale.getDefault(),
+                    "[%s]:%d",
+                    endpoint.getAddress().getHostAddress(),
+                    endpoint.getPort());
+        return String.format(Locale.getDefault(),
+                "%s:%d",
+                endpoint.getAddress().getHostAddress(),
+                endpoint.getPort());
     }
 
     public int getPersistentKeepalive() {
@@ -189,7 +196,7 @@ public class Peer implements Parcelable {
     private String getPersistentKeepaliveString() {
         if (persistentKeepalive == 0)
             return null;
-        return new Integer(persistentKeepalive).toString();
+        return Integer.valueOf(persistentKeepalive).toString();
     }
 
     public String getPreSharedKey() {

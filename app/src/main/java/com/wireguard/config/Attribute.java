@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,15 +89,11 @@ enum Attribute {
     }
 
     public String composeWith(final int value) {
-        return String.format("%s = %d%n", token, value);
+        return String.format(Locale.getDefault(), "%s = %d%n", token, value);
     }
 
     public <T> String composeWith(final List<T> value) {
         return String.format("%s = %s%n", token, listToString(value));
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public String parse(final CharSequence line) {

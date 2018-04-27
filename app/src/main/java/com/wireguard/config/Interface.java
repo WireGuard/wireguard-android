@@ -151,7 +151,7 @@ public class Interface implements Parcelable {
         for (int i = 0; i < dnsItems; ++i) {
             try {
                 dnsList.add(InetAddress.getByAddress(in.createByteArray()));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         listenPort = in.readInt();
@@ -198,7 +198,7 @@ public class Interface implements Parcelable {
     private String getListenPortString() {
         if (listenPort == 0)
             return null;
-        return new Integer(listenPort).toString();
+        return Integer.valueOf(listenPort).toString();
     }
 
     public int getMtu() {
@@ -208,7 +208,7 @@ public class Interface implements Parcelable {
     private String getMtuString() {
         if (mtu == 0)
             return null;
-        return new Integer(mtu).toString();
+        return Integer.toString(mtu);
     }
 
     public String getPrivateKey() {
