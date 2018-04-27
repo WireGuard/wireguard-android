@@ -144,8 +144,6 @@ public class Peer extends BaseObservable implements Parcelable {
     public void addAllowedIPs(String[] allowedIPs) {
         if (allowedIPs != null && allowedIPs.length > 0) {
             for (final String allowedIP : allowedIPs) {
-                if (allowedIP.isEmpty())
-                    throw new IllegalArgumentException("AllowedIP is empty");
                 this.allowedIPsList.add(new IPCidr(allowedIP));
             }
         }
