@@ -97,35 +97,35 @@ public class Config implements Parcelable {
         in.readTypedList(peers, Peer.CREATOR);
     }
 
-    public static Config from(final InputStream stream)
-            throws IOException {
+    public static Config from(final InputStream stream) throws IOException {
+        return from(new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)));
+    }
+
+    public static Config from(final BufferedReader reader) throws IOException {
         final Config config = new Config();
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            Peer currentPeer = null;
-            String line;
-            boolean inInterfaceSection = false;
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty() || line.startsWith("#"))
-                    continue;
-                if ("[Interface]".equals(line)) {
-                    currentPeer = null;
-                    inInterfaceSection = true;
-                } else if ("[Peer]".equals(line)) {
-                    currentPeer = new Peer();
-                    config.peers.add(currentPeer);
-                    inInterfaceSection = false;
-                } else if (inInterfaceSection) {
-                    config.interfaceSection.parse(line);
-                } else if (currentPeer != null) {
-                    currentPeer.parse(line);
-                } else {
-                    throw new IllegalArgumentException("Invalid configuration line: " + line);
-                }
+        Peer currentPeer = null;
+        String line;
+        boolean inInterfaceSection = false;
+        while ((line = reader.readLine()) != null) {
+            if (line.isEmpty() || line.startsWith("#"))
+                continue;
+            if ("[Interface]".equals(line)) {
+                currentPeer = null;
+                inInterfaceSection = true;
+            } else if ("[Peer]".equals(line)) {
+                currentPeer = new Peer();
+                config.peers.add(currentPeer);
+                inInterfaceSection = false;
+            } else if (inInterfaceSection) {
+                config.interfaceSection.parse(line);
+            } else if (currentPeer != null) {
+                currentPeer.parse(line);
+            } else {
+                throw new IllegalArgumentException("Invalid configuration line: " + line);
             }
-            if (!inInterfaceSection && currentPeer == null) {
-                throw new IllegalArgumentException("Could not find any config information");
-            }
+        }
+        if (!inInterfaceSection && currentPeer == null) {
+            throw new IllegalArgumentException("Could not find any config information");
         }
         return config;
     }
