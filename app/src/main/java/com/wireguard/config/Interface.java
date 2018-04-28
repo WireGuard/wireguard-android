@@ -10,7 +10,6 @@ import com.wireguard.crypto.KeyEncoding;
 import com.wireguard.crypto.Keypair;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
  * Represents the configuration for a WireGuard interface (an [Interface] block).
  */
 
-public class Interface extends BaseObservable implements Parcelable {
+public class Interface implements Parcelable {
     public static final Creator<Interface> CREATOR = new Creator<Interface>() {
         @Override
         public Interface createFromParcel(final Parcel in) {
@@ -31,12 +30,114 @@ public class Interface extends BaseObservable implements Parcelable {
         }
     };
 
+    public static class Observable extends BaseObservable {
+        private String addresses;
+        private String dnses;
+        private String publicKey;
+        private String privateKey;
+        private String listenPort;
+        private String mtu;
+
+        public Observable(Interface parent) {
+            loadData(parent);
+        }
+
+        public void loadData(Interface parent) {
+            this.addresses = parent.getAddressString();
+            this.dnses = parent.getDnsString();
+            this.publicKey = parent.getPublicKey();
+            this.privateKey = parent.getPrivateKey();
+            this.listenPort = parent.getListenPortString();
+            this.mtu = parent.getMtuString();
+        }
+
+        public void commitData(Interface parent) {
+            parent.setAddressString(this.addresses);
+            parent.setDnsString(this.dnses);
+            parent.setPrivateKey(this.privateKey);
+            parent.setListenPortString(this.listenPort);
+            parent.setMtuString(this.mtu);
+            loadData(parent);
+            notifyChange();
+        }
+
+        @Bindable
+        public String getAddresses() {
+            return addresses;
+        }
+
+        public void setAddresses(String addresses) {
+            this.addresses = addresses;
+            notifyPropertyChanged(BR.addresses);
+        }
+
+        @Bindable
+        public String getDnses() {
+            return dnses;
+        }
+
+        public void setDnses(String dnses) {
+            this.dnses = dnses;
+            notifyPropertyChanged(BR.dnses);
+        }
+
+        @Bindable
+        public String getPublicKey() {
+            return publicKey;
+        }
+
+        @Bindable
+        public String getPrivateKey() {
+            return privateKey;
+        }
+
+        public void setPrivateKey(String privateKey) {
+            this.privateKey = privateKey;
+
+            try {
+                this.publicKey = new Keypair(privateKey).getPublicKey();
+            } catch (IllegalArgumentException ignored) {
+                this.publicKey = "";
+            }
+
+            notifyPropertyChanged(BR.privateKey);
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        public void generateKeypair() {
+            Keypair keypair = new Keypair();
+            privateKey = keypair.getPrivateKey();
+            publicKey = keypair.getPublicKey();
+            notifyPropertyChanged(BR.privateKey);
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        @Bindable
+        public String getListenPort() {
+            return listenPort;
+        }
+
+        public void setListenPort(String listenPort) {
+            this.listenPort = listenPort;
+            notifyPropertyChanged(BR.listenPort);
+        }
+
+        @Bindable
+        public String getMtu() {
+            return mtu;
+        }
+
+        public void setMtu(String mtu) {
+            this.mtu = mtu;
+            notifyPropertyChanged(BR.mtu);
+        }
+    }
+
     private List<IPCidr> addressList;
     private List<InetAddress> dnsList;
     private Keypair keypair;
     private int listenPort;
     private int mtu;
-    private String privateKey;
 
     public Interface() {
         addressList = new LinkedList<>();
@@ -63,76 +164,63 @@ public class Interface extends BaseObservable implements Parcelable {
         return 0;
     }
 
-    public void generateKeypair() {
-        keypair = new Keypair();
-        privateKey = keypair.getPrivateKey();
-        notifyPropertyChanged(BR.privateKey);
-        notifyPropertyChanged(BR.publicKey);
-    }
-
-    @Bindable
-    public String getAddressString() {
+    private String getAddressString() {
         if (addressList.isEmpty())
             return null;
         return Attribute.listToString(addressList);
     }
 
-    @Bindable
     public IPCidr[] getAddresses() {
         return addressList.toArray(new IPCidr[addressList.size()]);
     }
 
-    public List<String> getDnsStrings() {
+    private List<String> getDnsStrings() {
         List<String> strings = new LinkedList<>();
         for (final InetAddress addr : dnsList)
             strings.add(addr.getHostAddress());
         return strings;
     }
 
-    @Bindable
-    public String getDnsString() {
+    private String getDnsString() {
         if (dnsList.isEmpty())
             return null;
         return Attribute.listToString(getDnsStrings());
     }
 
-    @Bindable
     public InetAddress[] getDnses() {
         return dnsList.toArray(new InetAddress[dnsList.size()]);
     }
 
-    @Bindable
     public int getListenPort() {
         return listenPort;
     }
 
-    @Bindable
-    public String getListenPortString() {
+    private String getListenPortString() {
         if (listenPort == 0)
             return null;
         return new Integer(listenPort).toString();
     }
 
-    @Bindable
     public int getMtu() {
         return mtu;
     }
 
-    @Bindable
-    public String getMtuString() {
+    private String getMtuString() {
         if (mtu == 0)
             return null;
         return new Integer(mtu).toString();
     }
 
-    @Bindable
     public String getPrivateKey() {
-        return privateKey;
+        if (keypair == null)
+            return null;
+        return keypair.getPrivateKey();
     }
 
-    @Bindable
     public String getPublicKey() {
-        return keypair != null ? keypair.getPublicKey() : null;
+        if (keypair == null)
+            return null;
+        return keypair.getPublicKey();
     }
 
     public void parse(final String line) {
@@ -151,7 +239,7 @@ public class Interface extends BaseObservable implements Parcelable {
             throw new IllegalArgumentException(line);
     }
 
-    public void addAddresses(String[] addresses) {
+    private void addAddresses(String[] addresses) {
         if (addresses != null && addresses.length > 0) {
             for (final String addr : addresses) {
                 if (addr.isEmpty())
@@ -159,74 +247,55 @@ public class Interface extends BaseObservable implements Parcelable {
                 this.addressList.add(new IPCidr(addr));
             }
         }
-        notifyPropertyChanged(BR.addresses);
-        notifyPropertyChanged(BR.addressString);
-
     }
 
-    public void setAddressString(final String addressString) {
+    private void setAddressString(final String addressString) {
         this.addressList.clear();
         addAddresses(Attribute.stringToList(addressString));
     }
 
-    public void addDnses(String[] dnses) {
+    private void addDnses(String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
                 this.dnsList.add(Attribute.parseIPString(dns));
             }
         }
-        notifyPropertyChanged(BR.dnses);
-        notifyPropertyChanged(BR.dnsString);
-
     }
 
-    public void setDnsString(final String dnsString) {
+    private void setDnsString(final String dnsString) {
         this.dnsList.clear();
         addDnses(Attribute.stringToList(dnsString));
     }
 
-    public void setListenPort(int listenPort) {
+    private void setListenPort(int listenPort) {
         this.listenPort = listenPort;
-        notifyPropertyChanged(BR.listenPort);
-        notifyPropertyChanged(BR.listenPortString);
     }
 
-    public void setListenPortString(final String port) {
+    private void setListenPortString(final String port) {
         if (port != null && !port.isEmpty())
             setListenPort(Integer.parseInt(port, 10));
         else
             setListenPort(0);
     }
 
-    public void setMtu(int mtu) {
+    private void setMtu(int mtu) {
         this.mtu = mtu;
-        notifyPropertyChanged(BR.mtu);
-        notifyPropertyChanged(BR.mtuString);
     }
 
-    public void setMtuString(final String mtu) {
+    private void setMtuString(final String mtu) {
         if (mtu != null && !mtu.isEmpty())
             setMtu(Integer.parseInt(mtu, 10));
         else
             setMtu(0);
     }
 
-    public void setPrivateKey(String privateKey) {
+    private void setPrivateKey(String privateKey) {
         if (privateKey != null && privateKey.isEmpty())
             privateKey = null;
-        this.privateKey = privateKey;
-        if (privateKey != null && privateKey.length() == KeyEncoding.KEY_LENGTH_BASE64) {
-            try {
-                keypair = new Keypair(privateKey);
-            } catch (final IllegalArgumentException e) {
-                keypair = null;
-                throw e;
-            }
-        } else {
+        if (privateKey == null)
             keypair = null;
-        }
-        notifyPropertyChanged(BR.privateKey);
-        notifyPropertyChanged(BR.publicKey);
+        else
+            keypair = new Keypair(privateKey);
     }
 
     @Override
@@ -240,8 +309,8 @@ public class Interface extends BaseObservable implements Parcelable {
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
         if (mtu != 0)
             sb.append(Attribute.MTU.composeWith(mtu));
-        if (privateKey != null)
-            sb.append(Attribute.PRIVATE_KEY.composeWith(privateKey));
+        if (keypair != null)
+            sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
         return sb.toString();
     }
 
@@ -253,6 +322,6 @@ public class Interface extends BaseObservable implements Parcelable {
             dest.writeByteArray(addr.getAddress());
         dest.writeInt(listenPort);
         dest.writeInt(mtu);
-        dest.writeString(privateKey);
+        dest.writeString(keypair == null ? "" : keypair.getPrivateKey());
     }
 }

@@ -54,6 +54,8 @@ enum Attribute {
     }
 
     public static String[] stringToList(final String string) {
+        if (string == null)
+            return new String[0];
         return string.trim().split("\\s*,\\s*");
     }
 

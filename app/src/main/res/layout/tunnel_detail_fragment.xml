@@ -14,6 +14,10 @@
         <variable
             name="tunnel"
             type="com.wireguard.android.model.Tunnel" />
+
+        <variable
+            name="config"
+            type="com.wireguard.config.Config.Observable" />
     </data>
 
     <ScrollView
@@ -92,7 +96,25 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:onClick="@{ClipboardUtils::copyTextView}"
-                    android:text="@{tunnel.config.interface.publicKey}" />
+                    android:text="@{config.interfaceSection.publicKey}" />
+
+                <TextView
+                    android:id="@+id/addresses_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/public_key_text"
+                    android:layout_marginTop="8dp"
+                    android:labelFor="@+id/addresses_text"
+                    android:text="@string/addresses" />
+
+                <TextView
+                    android:id="@+id/addresses_text"
+                    style="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addresses_label"
+                    android:contentDescription="@string/addresses"
+                    android:text="@{config.interfaceSection.addresses}" />
             </RelativeLayout>
 
             <LinearLayout
@@ -101,7 +123,7 @@
                 android:layout_marginBottom="4dp"
                 android:divider="@null"
                 android:orientation="vertical"
-                app:items="@{tunnel.config.peers}"
+                app:items="@{config.peers}"
                 app:layout="@{@layout/tunnel_detail_peer}"
                 tools:ignore="UselessLeaf" />
         </LinearLayout>

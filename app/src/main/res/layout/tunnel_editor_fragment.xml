@@ -15,11 +15,7 @@
 
         <variable
             name="config"
-            type="com.wireguard.config.Config" />
-
-        <variable
-            name="name"
-            type="android.databinding.ObservableField&lt;String&gt;" />
+            type="com.wireguard.config.Config.Observable" />
     </data>
 
     <com.commonsware.cwac.crossport.design.widget.CoordinatorLayout
@@ -71,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/interface_name_label"
                         android:inputType="textNoSuggestions|textVisiblePassword"
-                        android:text="@={name}"
+                        android:text="@={config.name}"
                         app:filter="@{NameInputFilter.newInstance()}" />
 
                     <TextView
@@ -91,7 +87,7 @@
                         android:layout_toStartOf="@+id/generate_private_key_button"
                         android:contentDescription="@string/public_key_description"
                         android:inputType="textNoSuggestions|textVisiblePassword"
-                        android:text="@={config.interface.privateKey}"
+                        android:text="@={config.interfaceSection.privateKey}"
                         app:filter="@{KeyInputFilter.newInstance()}" />
 
                     <Button
@@ -101,7 +97,7 @@
                         android:layout_alignBottom="@id/private_key_text"
                         android:layout_alignParentEnd="true"
                         android:layout_below="@+id/private_key_label"
-                        android:onClick="@{() -> config.interface.generateKeypair()}"
+                        android:onClick="@{() -> config.interfaceSection.generateKeypair()}"
                         android:text="@string/generate" />
 
                     <TextView
@@ -124,7 +120,7 @@
                         android:maxLines="1"
                         android:contentDescription="@string/public_key_description"
                         android:onClick="@{ClipboardUtils::copyTextView}"
-                        android:text="@{config.interface.publicKey}" />
+                        android:text="@{config.interfaceSection.publicKey}" />
 
                     <TextView
                         android:id="@+id/addresses_label"
@@ -144,7 +140,7 @@
                         android:layout_below="@+id/addresses_label"
                         android:layout_toStartOf="@+id/listen_port_text"
                         android:inputType="textNoSuggestions|textVisiblePassword"
-                        android:text="@={config.interface.addressString}" />
+                        android:text="@={config.interfaceSection.addresses}" />
 
                     <TextView
                         android:id="@+id/listen_port_label"
@@ -165,7 +161,7 @@
                         android:layout_alignStart="@+id/generate_private_key_button"
                         android:hint="@string/hint_random"
                         android:inputType="number"
-                        android:text="@={config.interface.listenPortString}"
+                        android:text="@={config.interfaceSection.listenPort}"
                         android:textAlignment="center" />
 
                     <TextView
@@ -186,7 +182,7 @@
                         android:layout_below="@+id/dns_servers_label"
                         android:layout_toStartOf="@+id/mtu_text"
                         android:inputType="textNoSuggestions|textVisiblePassword"
-                        android:text="@={config.interface.dnsString}" />
+                        android:text="@={config.interfaceSection.dnses}" />
 
                     <TextView
                         android:id="@+id/mtu_label"
@@ -207,7 +203,7 @@
                         android:layout_alignStart="@+id/generate_private_key_button"
                         android:hint="@string/hint_automatic"
                         android:inputType="number"
-                        android:text="@={config.interface.mtuString}"
+                        android:text="@={config.interfaceSection.mtu}"
                         android:textAlignment="center" />
                 </RelativeLayout>
 
@@ -226,7 +222,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginStart="4dp"
-                    android:onClick="@{() -> config.peers.add(Peer.newInstance())}"
+                    android:onClick="@{() -> config.peers.add(Peer.Observable.newInstance())}"
                     android:text="@string/add_peer" />
             </LinearLayout>
         </ScrollView>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.model.Tunnel;
+import com.wireguard.config.Config;
 
 /**
  * Fragment that shows details about a specific tunnel.
@@ -18,6 +19,7 @@ import com.wireguard.android.model.Tunnel;
 public class TunnelDetailFragment extends BaseFragment {
     private TunnelDetailFragmentBinding binding;
     private boolean isViewStateRestored;
+    private String originalName;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -45,16 +47,34 @@ public class TunnelDetailFragment extends BaseFragment {
         super.onDestroyView();
     }
 
+    private void onConfigLoaded(Config config) {
+        binding.setConfig(new Config.Observable(config, originalName));
+    }
+
     @Override
     public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
-        if (binding != null && isViewStateRestored)
+        if (binding != null && isViewStateRestored) {
             binding.setTunnel(newTunnel);
+            if (newTunnel == null)
+                binding.setConfig(null);
+            else {
+                originalName = newTunnel.getName();
+                newTunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
+            }
+        }
     }
 
     @Override
     public void onViewStateRestored(final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        binding.setTunnel(getSelectedTunnel());
+        Tunnel tunnel = getSelectedTunnel();
+        binding.setTunnel(tunnel);
+        if (tunnel == null)
+            binding.setConfig(null);
+        else {
+            originalName = tunnel.getName();
+            tunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
+        }
         isViewStateRestored = true;
     }
 }
