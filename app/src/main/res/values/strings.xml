@@ -34,7 +34,9 @@
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
     <string name="import_error">Unable to import tunnel: %s</string>
-    <string name="import_success">Successfully imported “%s”</string>
+    <string name="import_success">Imported “%s”</string>
+    <string name="import_total_success">Imported %d tunnels</string>
+    <string name="import_partial_success">Imported %d of %d tunnels</string>
     <string name="interface_title">Interface</string>
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>

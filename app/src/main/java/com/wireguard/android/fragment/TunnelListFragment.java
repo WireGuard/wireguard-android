@@ -39,11 +39,16 @@ import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import java9.util.concurrent.CompletableFuture;
-import java9.util.concurrent.CompletionStage;
-import java9.util.function.Function;
 import java9.util.stream.Collectors;
 import java9.util.stream.IntStream;
 import java9.util.stream.StreamSupport;
@@ -68,7 +73,10 @@ public class TunnelListFragment extends BaseFragment {
         if (activity == null)
             return;
         final ContentResolver contentResolver = activity.getContentResolver();
-        final CompletionStage<String> nameStage = asyncWorker.supplyAsync(() -> {
+
+        final List<CompletableFuture<Tunnel>> futureTunnels = new ArrayList<>();
+        final List<Throwable> throwables = new ArrayList<>();
+        asyncWorker.supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
             String name = null;
             try (Cursor cursor = contentResolver.query(uri, columns, null, null, null)) {
@@ -77,17 +85,71 @@ public class TunnelListFragment extends BaseFragment {
             }
             if (name == null)
                 name = Uri.decode(uri.getLastPathSegment());
-            if (name.indexOf('/') >= 0)
-                name = name.substring(name.lastIndexOf('/') + 1);
-            if (name.endsWith(".conf"))
+            int idx = name.lastIndexOf('/');
+            if (idx >= 0) {
+                if (idx >= name.length() - 1)
+                    throw new IllegalArgumentException("Illegal file name: " + name);
+                name = name.substring(idx + 1);
+            }
+            boolean isZip = name.toLowerCase().endsWith(".zip");
+            if (name.toLowerCase().endsWith(".conf"))
                 name = name.substring(0, name.length() - ".conf".length());
-            Log.d(TAG, "Import mapped URI " + uri + " to tunnel name " + name);
-            return name;
+
+            if (isZip) {
+                ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8));
+                ZipEntry entry;
+                while ((entry = zip.getNextEntry()) != null) {
+                    if (entry.isDirectory())
+                        continue;
+                    name = entry.getName();
+                    idx = name.lastIndexOf('/');
+                    if (idx >= 0) {
+                        if (idx >= name.length() - 1)
+                            continue;
+                        name = name.substring(name.lastIndexOf('/') + 1);
+                    }
+                    if (name.toLowerCase().endsWith(".conf"))
+                        name = name.substring(0, name.length() - ".conf".length());
+                    else
+                        continue;
+                    Config config = null;
+                    try {
+                        config = Config.from(reader);
+                    } catch (Exception e) {
+                        throwables.add(e);
+                    }
+                    if (config != null)
+                        futureTunnels.add(tunnelManager.create(name, config).toCompletableFuture());
+                }
+            } else {
+                futureTunnels.add(tunnelManager.create(name, Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
+            }
+
+            if (futureTunnels.isEmpty() && throwables.size() == 1)
+                throw throwables.get(0);
+
+            return CompletableFuture.allOf(futureTunnels.toArray(new CompletableFuture[futureTunnels.size()]));
+        }).whenComplete((future, exception) -> {
+            if (exception != null) {
+                this.onTunnelImportFinished(Arrays.asList(), Arrays.asList(exception));
+            } else {
+                future.whenComplete((ignored1, ignored2) -> {
+                    ArrayList<Tunnel> tunnels = new ArrayList<>(futureTunnels.size());
+                    for (CompletableFuture<Tunnel> futureTunnel : futureTunnels) {
+                        Tunnel tunnel = null;
+                        try {
+                            tunnel = futureTunnel.getNow(null);
+                        } catch (Exception e) {
+                            throwables.add(e);
+                        }
+                        if (tunnel != null)
+                            tunnels.add(tunnel);
+                    }
+                    onTunnelImportFinished(tunnels, throwables);
+                });
+            }
         });
-        asyncWorker.supplyAsync(() -> Config.from(contentResolver.openInputStream(uri)))
-                .thenCombine(nameStage, (config, name) -> tunnelManager.create(name, config))
-                .thenCompose(Function.identity())
-                .whenComplete(this::onTunnelImportFinished);
     }
 
     @Override
@@ -164,16 +226,25 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    private void onTunnelImportFinished(final Tunnel tunnel, final Throwable throwable) {
-        final String message;
-        if (throwable == null) {
-            message = getString(R.string.import_success, tunnel.getName());
-        } else {
+    private void onTunnelImportFinished(final List<Tunnel> tunnels, final List<Throwable> throwables) {
+        String message = null;
+
+        for (final Throwable throwable : throwables) {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
             message = getString(R.string.import_error, error);
             Log.e(TAG, message, throwable);
         }
-        if (binding != null) {
+
+        if (tunnels.size() == 1 && throwables.isEmpty())
+            message = getString(R.string.import_success, tunnels.get(0).getName());
+        else if (tunnels.isEmpty() && throwables.size() == 1)
+            /* Use the exception message from above. */;
+        else if (throwables.isEmpty())
+            message = getString(R.string.import_total_success, tunnels.size());
+        else if (!throwables.isEmpty())
+            message = getString(R.string.import_partial_success, tunnels.size(), tunnels.size() + throwables.size());
+
+        if (binding != null && message != null) {
             final CoordinatorLayout container = binding.mainContainer;
             Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
         }
