@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
     <style name="fab_label" parent="android:TextAppearance.DeviceDefault.Inverse">
         <item name="android:background">@drawable/fab_label_background</item>
     </style>
