@@ -2,7 +2,6 @@ package com.wireguard.android.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,11 +30,9 @@ import com.wireguard.config.Config;
 
 public class TunnelEditorFragment extends BaseFragment {
     private static final String KEY_LOCAL_CONFIG = "local_config";
-    private static final String KEY_LOCAL_NAME = "local_name";
     private static final String KEY_ORIGINAL_NAME = "original_name";
     private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
 
-    private final ObservableField<String> localName = new ObservableField<>("");
     private TunnelEditorFragmentBinding binding;
     private boolean isViewStateRestored;
     private Config localConfig = new Config();
@@ -56,7 +53,7 @@ public class TunnelEditorFragment extends BaseFragment {
     private void onConfigLoaded(final Config config) {
         localConfig = copyParcelable(config);
         if (binding != null && isViewStateRestored)
-            binding.setConfig(localConfig);
+            binding.setConfig(new Config.Observable(localConfig, originalName));
     }
 
     private void onConfigSaved(@SuppressWarnings("unused") final Config config,
@@ -82,20 +79,17 @@ public class TunnelEditorFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             localConfig = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
-            localName.set(savedInstanceState.getString(KEY_LOCAL_NAME));
             originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
         }
         // Erase the remains of creating or editing a different tunnel.
         if (getSelectedTunnel() != null && !getSelectedTunnel().getName().equals(originalName)) {
             // The config must be loaded asynchronously since it's not an observable property.
             localConfig = null;
-            getSelectedTunnel().getConfigAsync().thenAccept(this::onConfigLoaded);
             originalName = getSelectedTunnel().getName();
-            localName.set(originalName);
+            getSelectedTunnel().getConfigAsync().thenAccept(this::onConfigLoaded);
         } else if (getSelectedTunnel() == null && originalName != null) {
             localConfig = new Config();
             originalName = null;
-            localName.set("");
         }
         localTunnel = getSelectedTunnel();
         setHasOptionsMenu(true);
@@ -147,14 +141,26 @@ public class TunnelEditorFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.menu_action_save:
                 final Tunnel selectedTunnel = getSelectedTunnel();
+                if (localConfig != null) {
+                    try {
+                        binding.getConfig().commitData(localConfig);
+                    } catch (Exception e) {
+                        final String error = ExceptionLoggers.unwrap(e).getMessage();
+                        final String message = getString(R.string.config_save_error, localTunnel.getName(), error);
+                        Log.e(TAG, message, e);
+                        final CoordinatorLayout container = binding.mainContainer;
+                        Snackbar.make(container, error, Snackbar.LENGTH_LONG).show();
+                        return false;
+                    }
+                }
                 if (selectedTunnel == null) {
-                    Log.d(TAG, "Attempting to create new tunnel " + localName.get());
+                    Log.d(TAG, "Attempting to create new tunnel " + binding.getConfig().getName());
                     final TunnelManager manager = Application.getComponent().getTunnelManager();
-                    manager.create(localName.get(), localConfig)
+                    manager.create(binding.getConfig().getName(), localConfig)
                             .whenComplete(this::onTunnelCreated);
-                } else if (!selectedTunnel.getName().equals(localName.get())) {
-                    Log.d(TAG, "Attempting to rename tunnel to " + localName.get());
-                    selectedTunnel.setName(localName.get())
+                } else if (!selectedTunnel.getName().equals(binding.getConfig().getName())) {
+                    Log.d(TAG, "Attempting to rename tunnel to " + binding.getConfig().getName());
+                    selectedTunnel.setName(binding.getConfig().getName())
                             .whenComplete(this::onTunnelRenamed);
                 } else if (localConfig != null) {
                     Log.d(TAG, "Attempting to save config of " + selectedTunnel.getName());
@@ -170,7 +176,6 @@ public class TunnelEditorFragment extends BaseFragment {
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         outState.putParcelable(KEY_LOCAL_CONFIG, localConfig);
-        outState.putString(KEY_LOCAL_NAME, localName.get());
         outState.putString(KEY_ORIGINAL_NAME, originalName);
         super.onSaveInstanceState(outState);
     }
@@ -181,15 +186,13 @@ public class TunnelEditorFragment extends BaseFragment {
         if (newTunnel != null) {
             // The config must be loaded asynchronously since it's not an observable property.
             localConfig = null;
-            newTunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
             originalName = newTunnel.getName();
-            localName.set(originalName);
+            newTunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
         } else {
             localConfig = new Config();
             if (binding != null && isViewStateRestored)
-                binding.setConfig(localConfig);
+                binding.setConfig(new Config.Observable(localConfig, ""));
             originalName = null;
-            localName.set("");
         }
         localTunnel = newTunnel;
     }
@@ -234,8 +237,9 @@ public class TunnelEditorFragment extends BaseFragment {
     @Override
     public void onViewStateRestored(final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        binding.setConfig(localConfig);
-        binding.setName(localName);
+        if (localConfig == null)
+            localConfig = new Config();
+        binding.setConfig(new Config.Observable(localConfig, originalName));
         isViewStateRestored = true;
     }
 }

@@ -8,11 +8,11 @@
 
         <variable
             name="collection"
-            type="android.databinding.ObservableList&lt;com.wireguard.config.Peer&gt;" />
+            type="android.databinding.ObservableList&lt;com.wireguard.config.Peer.Observable&gt;" />
 
         <variable
             name="item"
-            type="com.wireguard.config.Peer" />
+            type="com.wireguard.config.Peer.Observable" />
     </data>
 
     <RelativeLayout
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/allowed_ips_label"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:text="@={item.allowedIPsString}" />
+            android:text="@={item.allowedIPs}" />
 
         <TextView
             android:id="@+id/endpoint_label"
@@ -116,7 +116,7 @@
             android:layout_below="@+id/endpoint_label"
             android:layout_toStartOf="@+id/persistent_keepalive_text"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:text="@={item.endpointString}" />
+            android:text="@={item.endpoint}" />
 
         <TextView
             android:id="@+id/persistent_keepalive_label"
@@ -136,7 +136,7 @@
             android:layout_alignStart="@+id/persistent_keepalive_label"
             android:hint="@string/hint_optional"
             android:inputType="number"
-            android:text="@={item.persistentKeepaliveString}"
+            android:text="@={item.persistentKeepalive}"
             android:textAlignment="center" />
     </RelativeLayout>
 </layout>

@@ -1,6 +1,9 @@
 package com.wireguard.config;
 
+import com.android.databinding.library.baseAdapters.BR;
+
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
 import android.os.Parcel;
@@ -11,12 +14,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a wg-quick configuration file, its name, and its connection state.
  */
 
-public class Config extends BaseObservable implements Parcelable {
+public class Config implements Parcelable {
     public static final Creator<Config> CREATOR = new Creator<Config>() {
         @Override
         public Config createFromParcel(final Parcel in) {
@@ -29,8 +34,59 @@ public class Config extends BaseObservable implements Parcelable {
         }
     };
 
+    public static class Observable extends BaseObservable {
+        private String name;
+        private Interface.Observable observableInterface;
+        private ObservableList<Peer.Observable> observablePeers;
+
+
+        public Observable(Config parent, String name) {
+            this.name = name;
+            loadData(parent);
+        }
+
+        public void loadData(Config parent) {
+            this.observableInterface = new Interface.Observable(parent.interfaceSection);
+            this.observablePeers = new ObservableArrayList<>();
+            for (Peer peer : parent.getPeers())
+                this.observablePeers.add(new Peer.Observable(peer));
+        }
+
+        public void commitData(Config parent) {
+            this.observableInterface.commitData(parent.interfaceSection);
+            List<Peer> newPeers = new ArrayList<>(this.observablePeers.size());
+            for (Peer.Observable observablePeer : this.observablePeers) {
+                Peer peer = new Peer();
+                observablePeer.commitData(peer);
+                newPeers.add(peer);
+            }
+            parent.peers = newPeers;
+            notifyChange();
+        }
+
+        @Bindable
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+            notifyPropertyChanged(BR.name);
+        }
+
+        @Bindable
+        public Interface.Observable getInterfaceSection() {
+            return observableInterface;
+        }
+
+        @Bindable
+        public ObservableList<Peer.Observable> getPeers() {
+            return observablePeers;
+        }
+    }
+
     private final Interface interfaceSection;
-    private final ObservableList<Peer> peers = new ObservableArrayList<>();
+    private List<Peer> peers = new ArrayList<>();
 
     public Config() {
         interfaceSection = new Interface();
@@ -83,7 +139,7 @@ public class Config extends BaseObservable implements Parcelable {
         return interfaceSection;
     }
 
-    public ObservableList<Peer> getPeers() {
+    public List<Peer> getPeers() {
         return peers;
     }
 
