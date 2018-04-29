@@ -20,7 +20,7 @@
     <string name="config_save_success">Successfully saved configuration for “%s”</string>
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
-    <string name="create_from_file">Create from file</string>
+    <string name="create_from_file">Create from file or archive</string>
     <string name="delete">Delete</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
@@ -33,6 +33,10 @@
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
+    <string name="zip_exporter_title">Export tunnels to zip file</string>
+    <string name="export_error">Unable to export tunnels: %s</string>
+    <string name="export_success">Saved to %s</string>
+    <string name="export_summary">Zip file will be saved to downloads folder</string>
     <string name="import_error">Unable to import tunnel: %s</string>
     <string name="import_success">Imported “%s”</string>
     <string name="import_total_success">Imported %d tunnels</string>
