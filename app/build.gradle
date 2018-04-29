@@ -30,7 +30,7 @@ android {
     }
 }
 ext {
-    databindingVersion = '3.1.1'
+    databindingVersion = '3.1.2'
     supportLibsVersion = '27.1.1'
     daggerVersion = '2.14.1'
     crossportVersion = '0.2.1'
