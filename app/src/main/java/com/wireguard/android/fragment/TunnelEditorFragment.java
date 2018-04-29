@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.commonsware.cwac.crossport.design.widget.CoordinatorLayout;
-import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding;

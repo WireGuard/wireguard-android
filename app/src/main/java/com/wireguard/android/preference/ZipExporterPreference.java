@@ -4,11 +4,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationComponent;
 import com.wireguard.android.R;

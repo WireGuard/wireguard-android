@@ -3,10 +3,10 @@ package com.wireguard.android.fragment;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
-import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
