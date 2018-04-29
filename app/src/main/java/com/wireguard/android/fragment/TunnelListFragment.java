@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -27,8 +29,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.TextView;
 
-import com.commonsware.cwac.crossport.design.widget.CoordinatorLayout;
-import com.commonsware.cwac.crossport.design.widget.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationComponent;
 import com.wireguard.android.R;

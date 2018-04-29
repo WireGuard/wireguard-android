@@ -3,10 +3,9 @@ package com.wireguard.android.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
-
-import com.commonsware.cwac.crossport.design.widget.Snackbar;
 
 /**
  * Standalone utilities for interacting with the system clipboard.
