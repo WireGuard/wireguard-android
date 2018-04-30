@@ -19,8 +19,6 @@ import com.wireguard.config.Config;
 
 public class TunnelDetailFragment extends BaseFragment {
     private TunnelDetailFragmentBinding binding;
-    private boolean isViewStateRestored;
-    private String originalName;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -48,34 +46,24 @@ public class TunnelDetailFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    private void onConfigLoaded(Config config) {
-        binding.setConfig(new Config.Observable(config, originalName));
+    private void onConfigLoaded(final String name, final Config config) {
+        binding.setConfig(new Config.Observable(config, name));
     }
 
     @Override
     public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
-        if (binding != null && isViewStateRestored) {
-            binding.setTunnel(newTunnel);
-            if (newTunnel == null)
-                binding.setConfig(null);
-            else {
-                originalName = newTunnel.getName();
-                newTunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
-            }
-        }
+        if (binding == null)
+            return;
+        binding.setTunnel(newTunnel);
+        if (newTunnel == null)
+            binding.setConfig(null);
+        else
+            newTunnel.getConfigAsync().thenAccept(a -> onConfigLoaded(newTunnel.getName(), a));
     }
 
     @Override
     public void onViewStateRestored(final Bundle savedInstanceState) {
+        onSelectedTunnelChanged(null, getSelectedTunnel());
         super.onViewStateRestored(savedInstanceState);
-        Tunnel tunnel = getSelectedTunnel();
-        binding.setTunnel(tunnel);
-        if (tunnel == null)
-            binding.setConfig(null);
-        else {
-            originalName = tunnel.getName();
-            tunnel.getConfigAsync().thenAccept(this::onConfigLoaded);
-        }
-        isViewStateRestored = true;
     }
 }
