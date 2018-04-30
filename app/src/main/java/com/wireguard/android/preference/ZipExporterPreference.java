@@ -104,7 +104,7 @@ public class ZipExporterPreference extends Preference {
             final String message = getContext().getString(R.string.export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
-                    Objects.requireNonNull(getPrefActivity(this)).findViewById(android.R.id.content),
+                    getPrefActivity(this).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
         } else {
             exportedFilePath = filePath;
@@ -125,7 +125,7 @@ public class ZipExporterPreference extends Preference {
 
     @Override
     protected void onClick() {
-        Objects.requireNonNull(getPrefActivity(this)).ensurePermissions(
+        getPrefActivity(this).ensurePermissions(
                 new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 (permissions, granted) -> {
                     if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
