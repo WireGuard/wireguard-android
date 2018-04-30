@@ -12,6 +12,14 @@
         <item quantity="one">%d tunnel selected</item>
         <item quantity="other">%d tunnels selected</item>
     </plurals>
+    <plurals name="import_partial_success">
+        <item quantity="one">Imported %d of %d tunnels</item>
+        <item quantity="other">Imported %d of %d tunnels</item>
+    </plurals>
+    <plurals name="import_total_success">
+        <item quantity="one">Imported %d tunnel</item>
+        <item quantity="other">Imported %d tunnels</item>
+    </plurals>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
@@ -28,19 +36,16 @@
     <string name="error_down">Error bringing down tunnel: %s</string>
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
+    <string name="export_error">Unable to export tunnels: %s</string>
+    <string name="export_success">Saved to %s</string>
+    <string name="export_summary">Zip file will be saved to downloads folder</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
-    <string name="zip_exporter_title">Export tunnels to zip file</string>
-    <string name="export_error">Unable to export tunnels: %s</string>
-    <string name="export_success">Saved to %s</string>
-    <string name="export_summary">Zip file will be saved to downloads folder</string>
     <string name="import_error">Unable to import tunnel: %s</string>
     <string name="import_success">Imported “%s”</string>
-    <string name="import_total_success">Imported %d tunnels</string>
-    <string name="import_partial_success">Imported %d of %d tunnels</string>
     <string name="interface_title">Interface</string>
     <string name="listen_port">Listen port</string>
     <string name="mtu">MTU</string>
@@ -66,4 +71,5 @@
     <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
+    <string name="zip_exporter_title">Export tunnels to zip file</string>
 </resources>

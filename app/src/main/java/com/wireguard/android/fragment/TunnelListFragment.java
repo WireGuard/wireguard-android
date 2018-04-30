@@ -254,9 +254,12 @@ public class TunnelListFragment extends BaseFragment {
         else if (tunnels.isEmpty() && throwables.size() == 1)
             /* Use the exception message from above. */ ;
         else if (throwables.isEmpty())
-            message = getString(R.string.import_total_success, tunnels.size());
+            message = getResources().getQuantityString(R.plurals.import_total_success,
+                    tunnels.size(), tunnels.size());
         else if (!throwables.isEmpty())
-            message = getString(R.string.import_partial_success, tunnels.size(), tunnels.size() + throwables.size());
+            message = getResources().getQuantityString(R.plurals.import_partial_success,
+                    tunnels.size() + throwables.size(),
+                    tunnels.size(), tunnels.size() + throwables.size());
 
         if (binding != null) {
             final CoordinatorLayout container = binding.mainContainer;
