@@ -90,7 +90,7 @@ public class Config {
         private Interface.Observable observableInterface;
         private ObservableList<Peer.Observable> observablePeers;
 
-        public Observable(Config parent, String name) {
+        public Observable(final Config parent, final String name) {
             this.name = name;
             loadData(parent);
         }
@@ -102,11 +102,11 @@ public class Config {
             in.readTypedList(observablePeers, Peer.Observable.CREATOR);
         }
 
-        public void commitData(Config parent) {
-            this.observableInterface.commitData(parent.interfaceSection);
-            List<Peer> newPeers = new ArrayList<>(this.observablePeers.size());
-            for (Peer.Observable observablePeer : this.observablePeers) {
-                Peer peer = new Peer();
+        public void commitData(final Config parent) {
+            observableInterface.commitData(parent.interfaceSection);
+            final List<Peer> newPeers = new ArrayList<>(observablePeers.size());
+            for (final Peer.Observable observablePeer : observablePeers) {
+                final Peer peer = new Peer();
                 observablePeer.commitData(peer);
                 newPeers.add(peer);
             }
@@ -134,16 +134,16 @@ public class Config {
             return observablePeers;
         }
 
-        public void loadData(Config parent) {
-            this.observableInterface = new Interface.Observable(parent == null ? null : parent.interfaceSection);
-            this.observablePeers = new ObservableArrayList<>();
+        protected void loadData(final Config parent) {
+            observableInterface = new Interface.Observable(parent == null ? null : parent.interfaceSection);
+            observablePeers = new ObservableArrayList<>();
             if (parent != null) {
-                for (Peer peer : parent.getPeers())
-                    this.observablePeers.add(new Peer.Observable(peer));
+                for (final Peer peer : parent.getPeers())
+                    observablePeers.add(new Peer.Observable(peer));
             }
         }
 
-        public void setName(String name) {
+        public void setName(final String name) {
             this.name = name;
             notifyPropertyChanged(BR.name);
         }

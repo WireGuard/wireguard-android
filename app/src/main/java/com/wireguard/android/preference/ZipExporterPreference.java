@@ -22,6 +22,7 @@ import com.wireguard.config.Config;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ZipExporterPreference extends Preference {
 
     private final AsyncWorker asyncWorker;
     private final TunnelManager tunnelManager;
-    private String exportedFilePath = null;
+    private String exportedFilePath;
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ZipExporterPreference(final Context context, final AttributeSet attrs) {
@@ -49,9 +50,19 @@ public class ZipExporterPreference extends Preference {
         tunnelManager = applicationComponent.getTunnelManager();
     }
 
+    private static SettingsActivity getPrefActivity(final Preference preference) {
+        final Context context = preference.getContext();
+        if (context instanceof ContextThemeWrapper) {
+            if (((ContextThemeWrapper) context).getBaseContext() instanceof SettingsActivity) {
+                return ((SettingsActivity) ((ContextThemeWrapper) context).getBaseContext());
+            }
+        }
+        return null;
+    }
+
     private void exportZip() {
-        List<Tunnel> tunnels = new ArrayList<>(tunnelManager.getTunnels());
-        List<CompletableFuture<Config>> futureConfigs = new ArrayList<>(tunnels.size());
+        final List<Tunnel> tunnels = new ArrayList<>(tunnelManager.getTunnels());
+        final List<CompletableFuture<Config>> futureConfigs = new ArrayList<>(tunnels.size());
         for (final Tunnel tunnel : tunnels)
             futureConfigs.add(tunnel.getConfigAsync().toCompletableFuture());
         if (futureConfigs.isEmpty()) {
@@ -65,9 +76,9 @@ public class ZipExporterPreference extends Preference {
                             throw exception;
                         final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                         final File file = new File(path, "wireguard-export.zip");
-                        try {
-                            path.mkdirs();
-                            final ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file));
+                        if (!path.mkdirs())
+                            throw new IOException("Cannot create output directory");
+                        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
                             for (int i = 0; i < futureConfigs.size(); ++i) {
                                 zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
                                 zip.write(futureConfigs.get(i).getNow(null).
@@ -76,6 +87,7 @@ public class ZipExporterPreference extends Preference {
                             zip.closeEntry();
                             zip.close();
                         } catch (Exception e) {
+                            // noinspection ResultOfMethodCallIgnored
                             file.delete();
                             throw e;
                         }
@@ -84,7 +96,7 @@ public class ZipExporterPreference extends Preference {
                 });
     }
 
-    private void exportZipComplete(String filePath, Throwable throwable) {
+    private void exportZipComplete(final String filePath, final Throwable throwable) {
         if (throwable != null) {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
             final String message = getContext().getString(R.string.export_error, error);
@@ -97,16 +109,6 @@ public class ZipExporterPreference extends Preference {
             setEnabled(false);
             notifyChanged();
         }
-    }
-
-    private SettingsActivity getPrefActivity(Preference preference) {
-        Context context = preference.getContext();
-        if (context instanceof ContextThemeWrapper) {
-            if (((ContextThemeWrapper) context).getBaseContext() instanceof SettingsActivity) {
-                return ((SettingsActivity) ((ContextThemeWrapper) context).getBaseContext());
-            }
-        }
-        return null;
     }
 
     @Override

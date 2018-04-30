@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
             fragment =
                     ((TunnelListFragment)
                             getSupportFragmentManager().getFragments().get(0));
-        } catch (ClassCastException ignored) {
+        } catch (final ClassCastException ignored) {
         }
         if (fragment == null || !(fragment.collapseActionMenu())) {
             if (!moveToState(State.ofLayer(state.layer - 1)))

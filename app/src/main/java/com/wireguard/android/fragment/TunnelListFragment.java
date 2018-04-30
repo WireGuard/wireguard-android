@@ -43,6 +43,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -82,7 +83,7 @@ public class TunnelListFragment extends BaseFragment {
             return;
         final ContentResolver contentResolver = activity.getContentResolver();
 
-        final List<CompletableFuture<Tunnel>> futureTunnels = new ArrayList<>();
+        final Collection<CompletableFuture<Tunnel>> futureTunnels = new ArrayList<>();
         final List<Throwable> throwables = new ArrayList<>();
         asyncWorker.supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
@@ -106,31 +107,32 @@ public class TunnelListFragment extends BaseFragment {
                 throw new IllegalArgumentException("File must be .conf or .zip");
 
             if (isZip) {
-                ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8));
-                ZipEntry entry;
-                while ((entry = zip.getNextEntry()) != null) {
-                    if (entry.isDirectory())
-                        continue;
-                    name = entry.getName();
-                    idx = name.lastIndexOf('/');
-                    if (idx >= 0) {
-                        if (idx >= name.length() - 1)
+                try (ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri))) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(zip, StandardCharsets.UTF_8));
+                    ZipEntry entry;
+                    while ((entry = zip.getNextEntry()) != null) {
+                        if (entry.isDirectory())
                             continue;
-                        name = name.substring(name.lastIndexOf('/') + 1);
+                        name = entry.getName();
+                        idx = name.lastIndexOf('/');
+                        if (idx >= 0) {
+                            if (idx >= name.length() - 1)
+                                continue;
+                            name = name.substring(name.lastIndexOf('/') + 1);
+                        }
+                        if (name.toLowerCase().endsWith(".conf"))
+                            name = name.substring(0, name.length() - ".conf".length());
+                        else
+                            continue;
+                        Config config = null;
+                        try {
+                            config = Config.from(reader);
+                        } catch (Exception e) {
+                            throwables.add(e);
+                        }
+                        if (config != null)
+                            futureTunnels.add(tunnelManager.create(name, config).toCompletableFuture());
                     }
-                    if (name.toLowerCase().endsWith(".conf"))
-                        name = name.substring(0, name.length() - ".conf".length());
-                    else
-                        continue;
-                    Config config = null;
-                    try {
-                        config = Config.from(reader);
-                    } catch (Exception e) {
-                        throwables.add(e);
-                    }
-                    if (config != null)
-                        futureTunnels.add(tunnelManager.create(name, config).toCompletableFuture());
                 }
             } else {
                 futureTunnels.add(tunnelManager.create(name, Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
@@ -146,15 +148,15 @@ public class TunnelListFragment extends BaseFragment {
             return CompletableFuture.allOf(futureTunnels.toArray(new CompletableFuture[futureTunnels.size()]));
         }).whenComplete((future, exception) -> {
             if (exception != null) {
-                this.onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
+                onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
             } else {
                 future.whenComplete((ignored1, ignored2) -> {
-                    ArrayList<Tunnel> tunnels = new ArrayList<>(futureTunnels.size());
-                    for (CompletableFuture<Tunnel> futureTunnel : futureTunnels) {
+                    final List<Tunnel> tunnels = new ArrayList<>(futureTunnels.size());
+                    for (final CompletableFuture<Tunnel> futureTunnel : futureTunnels) {
                         Tunnel tunnel = null;
                         try {
                             tunnel = futureTunnel.getNow(null);
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             throwables.add(e);
                         }
                         if (tunnel != null)
@@ -240,7 +242,7 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    private void onTunnelImportFinished(final List<Tunnel> tunnels, final List<Throwable> throwables) {
+    private void onTunnelImportFinished(final List<Tunnel> tunnels, final Collection<Throwable> throwables) {
         String message = null;
 
         for (final Throwable throwable : throwables) {

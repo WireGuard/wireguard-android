@@ -6,17 +6,17 @@ import java.net.InetAddress;
 import java.util.Locale;
 
 public class IPCidr {
-    private InetAddress address;
+    private final InetAddress address;
     private int cidr;
 
     public IPCidr(String in) {
         cidr = -1;
-        int slash = in.lastIndexOf('/');
+        final int slash = in.lastIndexOf('/');
         if (slash != -1 && slash < in.length() - 1) {
             try {
                 cidr = Integer.parseInt(in.substring(slash + 1), 10);
                 in = in.substring(0, slash);
-            } catch (Exception ignored) {
+            } catch (final Exception ignored) {
             }
         }
         address = Attribute.parseIPString(in);

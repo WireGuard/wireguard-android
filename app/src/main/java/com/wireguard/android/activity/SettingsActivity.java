@@ -17,28 +17,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for changing application-global persistent settings.
  */
 
 public class SettingsActivity extends AppCompatActivity {
-    private HashMap<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
-    private int permissionRequestCounter = 0;
+    private final Map<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
+    private int permissionRequestCounter;
 
-    public synchronized void ensurePermissions(String[] permissions, PermissionRequestCallback cb) {
-        List<String> needPermissions = new ArrayList<>(permissions.length);
+    public void ensurePermissions(final String[] permissions, final PermissionRequestCallback cb) {
+        final List<String> needPermissions = new ArrayList<>(permissions.length);
         for (final String permission : permissions) {
             if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
                 needPermissions.add(permission);
         }
         if (needPermissions.isEmpty()) {
-            int[] granted = new int[permissions.length];
+            final int[] granted = new int[permissions.length];
             Arrays.fill(granted, PackageManager.PERMISSION_GRANTED);
             cb.done(permissions, granted);
             return;
         }
-        int idx = permissionRequestCounter++;
+        final int idx = permissionRequestCounter++;
         permissionRequestCallbacks.put(idx, cb);
         ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]), idx);
     }
@@ -54,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -65,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
         if (f != null) {
             permissionRequestCallbacks.remove(requestCode);
@@ -73,7 +74,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    @FunctionalInterface
     public interface PermissionRequestCallback {
         void done(String[] permissions, int[] grantResults);
     }

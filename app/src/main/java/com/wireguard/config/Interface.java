@@ -9,7 +9,7 @@ import com.wireguard.android.BR;
 import com.wireguard.crypto.Keypair;
 
 import java.net.InetAddress;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,30 +17,31 @@ import java.util.List;
  */
 
 public class Interface {
-    private List<IPCidr> addressList;
-    private List<InetAddress> dnsList;
+    private final List<IPCidr> addressList;
+    private final List<InetAddress> dnsList;
     private Keypair keypair;
     private int listenPort;
     private int mtu;
+
     public Interface() {
-        addressList = new LinkedList<>();
-        dnsList = new LinkedList<>();
+        addressList = new ArrayList<>();
+        dnsList = new ArrayList<>();
     }
 
-    private void addAddresses(String[] addresses) {
+    private void addAddresses(final String[] addresses) {
         if (addresses != null && addresses.length > 0) {
             for (final String addr : addresses) {
                 if (addr.isEmpty())
                     throw new IllegalArgumentException("Address is empty");
-                this.addressList.add(new IPCidr(addr));
+                addressList.add(new IPCidr(addr));
             }
         }
     }
 
-    private void addDnses(String[] dnses) {
+    private void addDnses(final String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
-                this.dnsList.add(Attribute.parseIPString(dns));
+                dnsList.add(Attribute.parseIPString(dns));
             }
         }
     }
@@ -48,7 +49,7 @@ public class Interface {
     private String getAddressString() {
         if (addressList.isEmpty())
             return null;
-        return Attribute.listToString(addressList);
+        return Attribute.iterableToString(addressList);
     }
 
     public IPCidr[] getAddresses() {
@@ -58,11 +59,11 @@ public class Interface {
     private String getDnsString() {
         if (dnsList.isEmpty())
             return null;
-        return Attribute.listToString(getDnsStrings());
+        return Attribute.iterableToString(getDnsStrings());
     }
 
     private List<String> getDnsStrings() {
-        List<String> strings = new LinkedList<>();
+        final List<String> strings = new ArrayList<>();
         for (final InetAddress addr : dnsList)
             strings.add(addr.getHostAddress());
         return strings;
@@ -106,31 +107,38 @@ public class Interface {
 
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
-        if (key == Attribute.ADDRESS)
-            addAddresses(key.parseList(line));
-        else if (key == Attribute.DNS)
-            addDnses(key.parseList(line));
-        else if (key == Attribute.LISTEN_PORT)
-            setListenPortString(key.parse(line));
-        else if (key == Attribute.MTU)
-            setMtuString(key.parse(line));
-        else if (key == Attribute.PRIVATE_KEY)
-            setPrivateKey(key.parse(line));
-        else
-            throw new IllegalArgumentException(line);
+        switch (key) {
+            case ADDRESS:
+                addAddresses(key.parseList(line));
+                break;
+            case DNS:
+                addDnses(key.parseList(line));
+                break;
+            case LISTEN_PORT:
+                setListenPortString(key.parse(line));
+                break;
+            case MTU:
+                setMtuString(key.parse(line));
+                break;
+            case PRIVATE_KEY:
+                setPrivateKey(key.parse(line));
+                break;
+            default:
+                throw new IllegalArgumentException(line);
+        }
     }
 
     private void setAddressString(final String addressString) {
-        this.addressList.clear();
+        addressList.clear();
         addAddresses(Attribute.stringToList(addressString));
     }
 
     private void setDnsString(final String dnsString) {
-        this.dnsList.clear();
+        dnsList.clear();
         addDnses(Attribute.stringToList(dnsString));
     }
 
-    private void setListenPort(int listenPort) {
+    private void setListenPort(final int listenPort) {
         this.listenPort = listenPort;
     }
 
@@ -141,7 +149,7 @@ public class Interface {
             setListenPort(0);
     }
 
-    private void setMtu(int mtu) {
+    private void setMtu(final int mtu) {
         this.mtu = mtu;
     }
 
@@ -155,10 +163,7 @@ public class Interface {
     private void setPrivateKey(String privateKey) {
         if (privateKey != null && privateKey.isEmpty())
             privateKey = null;
-        if (privateKey == null)
-            keypair = null;
-        else
-            keypair = new Keypair(privateKey);
+        keypair = privateKey == null ? null : new Keypair(privateKey);
     }
 
     @Override
@@ -196,7 +201,7 @@ public class Interface {
         private String privateKey;
         private String publicKey;
 
-        public Observable(Interface parent) {
+        public Observable(final Interface parent) {
             if (parent != null)
                 loadData(parent);
         }
@@ -210,12 +215,12 @@ public class Interface {
             mtu = in.readString();
         }
 
-        public void commitData(Interface parent) {
-            parent.setAddressString(this.addresses);
-            parent.setDnsString(this.dnses);
-            parent.setPrivateKey(this.privateKey);
-            parent.setListenPortString(this.listenPort);
-            parent.setMtuString(this.mtu);
+        public void commitData(final Interface parent) {
+            parent.setAddressString(addresses);
+            parent.setDnsString(dnses);
+            parent.setPrivateKey(privateKey);
+            parent.setListenPortString(listenPort);
+            parent.setMtuString(mtu);
             loadData(parent);
             notifyChange();
         }
@@ -226,7 +231,7 @@ public class Interface {
         }
 
         public void generateKeypair() {
-            Keypair keypair = new Keypair();
+            final Keypair keypair = new Keypair();
             privateKey = keypair.getPrivateKey();
             publicKey = keypair.getPublicKey();
             notifyPropertyChanged(BR.privateKey);
@@ -263,42 +268,42 @@ public class Interface {
             return publicKey;
         }
 
-        public void loadData(Interface parent) {
-            this.addresses = parent.getAddressString();
-            this.dnses = parent.getDnsString();
-            this.publicKey = parent.getPublicKey();
-            this.privateKey = parent.getPrivateKey();
-            this.listenPort = parent.getListenPortString();
-            this.mtu = parent.getMtuString();
+        protected void loadData(final Interface parent) {
+            addresses = parent.getAddressString();
+            dnses = parent.getDnsString();
+            publicKey = parent.getPublicKey();
+            privateKey = parent.getPrivateKey();
+            listenPort = parent.getListenPortString();
+            mtu = parent.getMtuString();
         }
 
-        public void setAddresses(String addresses) {
+        public void setAddresses(final String addresses) {
             this.addresses = addresses;
             notifyPropertyChanged(BR.addresses);
         }
 
-        public void setDnses(String dnses) {
+        public void setDnses(final String dnses) {
             this.dnses = dnses;
             notifyPropertyChanged(BR.dnses);
         }
 
-        public void setListenPort(String listenPort) {
+        public void setListenPort(final String listenPort) {
             this.listenPort = listenPort;
             notifyPropertyChanged(BR.listenPort);
         }
 
-        public void setMtu(String mtu) {
+        public void setMtu(final String mtu) {
             this.mtu = mtu;
             notifyPropertyChanged(BR.mtu);
         }
 
-        public void setPrivateKey(String privateKey) {
+        public void setPrivateKey(final String privateKey) {
             this.privateKey = privateKey;
 
             try {
-                this.publicKey = new Keypair(privateKey).getPublicKey();
-            } catch (IllegalArgumentException ignored) {
-                this.publicKey = "";
+                publicKey = new Keypair(privateKey).getPublicKey();
+            } catch (final IllegalArgumentException ignored) {
+                publicKey = "";
             }
 
             notifyPropertyChanged(BR.privateKey);

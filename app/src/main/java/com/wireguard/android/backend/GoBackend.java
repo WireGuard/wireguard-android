@@ -33,11 +33,11 @@ public final class GoBackend implements Backend {
         System.loadLibrary("wg-go");
     }
 
-    private Context context;
+    private final Context context;
     private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
 
-    public GoBackend(Context context) {
+    public GoBackend(final Context context) {
         this.context = context;
     }
 
@@ -108,14 +108,14 @@ public final class GoBackend implements Backend {
             if (VpnService.prepare(context) != null)
                 throw new Exception("VPN service not authorized by user");
 
-            VpnService service;
+            final VpnService service;
             if (!vpnService.isDone())
                 startVpnService();
 
             try {
                 service = vpnService.get(2, TimeUnit.SECONDS);
-            } catch (TimeoutException e) {
-                throw new Exception("Unable to start Android VPN service");
+            } catch (final TimeoutException e) {
+                throw new Exception("Unable to start Android VPN service", e);
             }
 
             if (currentTunnelHandle != -1) {
@@ -124,29 +124,32 @@ public final class GoBackend implements Backend {
             }
 
             // Build config
-            Formatter fmt = new Formatter(new StringBuilder());
             final Interface iface = config.getInterface();
-            fmt.format("replace_peers=true\n");
-            if (iface.getPrivateKey() != null)
-                fmt.format("private_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(iface.getPrivateKey())));
-            if (iface.getListenPort() != 0)
-                fmt.format("listen_port=%d\n", config.getInterface().getListenPort());
-            for (final Peer peer : config.getPeers()) {
-                if (peer.getPublicKey() != null)
-                    fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPublicKey())));
-                if (peer.getPreSharedKey() != null)
-                    fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
-                if (peer.getEndpoint() != null)
-                    fmt.format("endpoint=%s\n", peer.getResolvedEndpointString());
-                if (peer.getPersistentKeepalive() != 0)
-                    fmt.format("persistent_keepalive_interval=%d\n", peer.getPersistentKeepalive());
-                for (final IPCidr addr : peer.getAllowedIPs()) {
-                    fmt.format("allowed_ip=%s\n", addr.toString());
+            final String goConfig;
+            try (Formatter fmt = new Formatter(new StringBuilder())) {
+                fmt.format("replace_peers=true\n");
+                if (iface.getPrivateKey() != null)
+                    fmt.format("private_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(iface.getPrivateKey())));
+                if (iface.getListenPort() != 0)
+                    fmt.format("listen_port=%d\n", config.getInterface().getListenPort());
+                for (final Peer peer : config.getPeers()) {
+                    if (peer.getPublicKey() != null)
+                        fmt.format("public_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPublicKey())));
+                    if (peer.getPreSharedKey() != null)
+                        fmt.format("preshared_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(peer.getPreSharedKey())));
+                    if (peer.getEndpoint() != null)
+                        fmt.format("endpoint=%s\n", peer.getResolvedEndpointString());
+                    if (peer.getPersistentKeepalive() != 0)
+                        fmt.format("persistent_keepalive_interval=%d\n", peer.getPersistentKeepalive());
+                    for (final IPCidr addr : peer.getAllowedIPs()) {
+                        fmt.format("allowed_ip=%s\n", addr.toString());
+                    }
                 }
+                goConfig = fmt.toString();
             }
 
             // Create the vpn tunnel with android API
-            VpnService.Builder builder = service.getBuilder();
+            final VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
             for (final IPCidr addr : config.getInterface().getAddresses())
@@ -166,13 +169,13 @@ public final class GoBackend implements Backend {
             builder.setMtu(mtu);
 
             builder.setBlocking(true);
-            ParcelFileDescriptor tun = builder.establish();
+            final ParcelFileDescriptor tun = builder.establish();
             if (tun == null)
                 throw new Exception("Unable to create tun device");
 
-            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), fmt.toString());
+            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), goConfig);
             if (currentTunnelHandle < 0)
-                throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ")");
+                throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ')');
 
             currentTunnel = tunnel;
 
