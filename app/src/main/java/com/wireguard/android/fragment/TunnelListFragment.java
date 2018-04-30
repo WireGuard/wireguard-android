@@ -25,6 +25,7 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.TextView;
 
 import com.commonsware.cwac.crossport.design.widget.CoordinatorLayout;
 import com.commonsware.cwac.crossport.design.widget.Snackbar;

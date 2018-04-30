@@ -6,7 +6,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.wireguard.android.BR;
-import com.wireguard.crypto.KeyEncoding;
 import com.wireguard.crypto.Keypair;
 
 import java.net.InetAddress;
@@ -17,20 +16,8 @@ import java.util.List;
  * Represents the configuration for a WireGuard interface (an [Interface] block).
  */
 
-public class Interface implements Parcelable {
-    public static final Creator<Interface> CREATOR = new Creator<Interface>() {
-        @Override
-        public Interface createFromParcel(final Parcel in) {
-            return new Interface(in);
-        }
-
-        @Override
-        public Interface[] newArray(final int size) {
-            return new Interface[size];
-        }
-    };
-
-    public static class Observable extends BaseObservable {
+public class Interface {
+    public static class Observable extends BaseObservable implements Parcelable {
         private String addresses;
         private String dnses;
         private String publicKey;
@@ -39,7 +26,8 @@ public class Interface implements Parcelable {
         private String mtu;
 
         public Observable(Interface parent) {
-            loadData(parent);
+            if (parent != null)
+                loadData(parent);
         }
 
         public void loadData(Interface parent) {
@@ -131,6 +119,43 @@ public class Interface implements Parcelable {
             this.mtu = mtu;
             notifyPropertyChanged(BR.mtu);
         }
+
+
+        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
+            @Override
+            public Observable createFromParcel(final Parcel in) {
+                return new Observable(in);
+            }
+
+            @Override
+            public Observable[] newArray(final int size) {
+                return new Observable[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeString(addresses);
+            dest.writeString(dnses);
+            dest.writeString(publicKey);
+            dest.writeString(privateKey);
+            dest.writeString(listenPort);
+            dest.writeString(mtu);
+        }
+
+        private Observable(final Parcel in) {
+            addresses = in.readString();
+            dnses = in.readString();
+            publicKey = in.readString();
+            privateKey = in.readString();
+            listenPort = in.readString();
+            mtu = in.readString();
+        }
     }
 
     private List<IPCidr> addressList;
@@ -142,26 +167,6 @@ public class Interface implements Parcelable {
     public Interface() {
         addressList = new LinkedList<>();
         dnsList = new LinkedList<>();
-    }
-
-    private Interface(final Parcel in) {
-        addressList = in.createTypedArrayList(IPCidr.CREATOR);
-        int dnsItems = in.readInt();
-        dnsList = new LinkedList<>();
-        for (int i = 0; i < dnsItems; ++i) {
-            try {
-                dnsList.add(InetAddress.getByAddress(in.createByteArray()));
-            } catch (Exception ignored) {
-            }
-        }
-        listenPort = in.readInt();
-        mtu = in.readInt();
-        setPrivateKey(in.readString());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     private String getAddressString() {
@@ -312,16 +317,5 @@ public class Interface implements Parcelable {
         if (keypair != null)
             sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
         return sb.toString();
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeTypedList(addressList);
-        dest.writeInt(dnsList.size());
-        for (final InetAddress addr : dnsList)
-            dest.writeByteArray(addr.getAddress());
-        dest.writeInt(listenPort);
-        dest.writeInt(mtu);
-        dest.writeString(keypair == null ? "" : keypair.getPrivateKey());
     }
 }

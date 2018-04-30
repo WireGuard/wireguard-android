@@ -21,26 +21,13 @@ import java.util.Locale;
  * Represents the configuration for a WireGuard peer (a [Peer] block).
  */
 
-public class Peer implements Parcelable {
-    public static final Creator<Peer> CREATOR = new Creator<Peer>() {
-        @Override
-        public Peer createFromParcel(final Parcel in) {
-            return new Peer(in);
-        }
-
-        @Override
-        public Peer[] newArray(final int size) {
-            return new Peer[size];
-        }
-    };
-
-    public static class Observable extends BaseObservable {
+public class Peer {
+    public static class Observable extends BaseObservable implements Parcelable {
         private String allowedIPs;
         private String endpoint;
         private String persistentKeepalive;
         private String preSharedKey;
         private String publicKey;
-
 
         public Observable(Peer parent) {
             loadData(parent);
@@ -118,6 +105,41 @@ public class Peer implements Parcelable {
             this.publicKey = publicKey;
             notifyPropertyChanged(BR.publicKey);
         }
+
+
+        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
+            @Override
+            public Observable createFromParcel(final Parcel in) {
+                return new Observable(in);
+            }
+
+            @Override
+            public Observable[] newArray(final int size) {
+                return new Observable[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeString(allowedIPs);
+            dest.writeString(endpoint);
+            dest.writeString(persistentKeepalive);
+            dest.writeString(preSharedKey);
+            dest.writeString(publicKey);
+        }
+
+        private Observable(final Parcel in) {
+            allowedIPs = in.readString();
+            endpoint = in.readString();
+            persistentKeepalive = in.readString();
+            preSharedKey = in.readString();
+            publicKey = in.readString();
+        }
     }
 
     private List<IPCidr> allowedIPsList;
@@ -128,26 +150,6 @@ public class Peer implements Parcelable {
 
     public Peer() {
         allowedIPsList = new LinkedList<>();
-    }
-
-    private Peer(final Parcel in) {
-        allowedIPsList = in.createTypedArrayList(IPCidr.CREATOR);
-        String host = in.readString();
-        int port = in.readInt();
-        if (host != null && !host.isEmpty() && port > 0)
-            endpoint = InetSocketAddress.createUnresolved(host, port);
-        persistentKeepalive = in.readInt();
-        preSharedKey = in.readString();
-        if (preSharedKey != null && preSharedKey.isEmpty())
-            preSharedKey = null;
-        publicKey = in.readString();
-        if (publicKey != null && publicKey.isEmpty())
-            publicKey = null;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
 
@@ -298,15 +300,5 @@ public class Peer implements Parcelable {
         if (publicKey != null)
             sb.append(Attribute.PUBLIC_KEY.composeWith(publicKey));
         return sb.toString();
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeTypedList(allowedIPsList);
-        dest.writeString(endpoint == null ? null : endpoint.getHostString());
-        dest.writeInt(endpoint == null ? 0 : endpoint.getPort());
-        dest.writeInt(persistentKeepalive);
-        dest.writeString(preSharedKey);
-        dest.writeString(publicKey);
     }
 }

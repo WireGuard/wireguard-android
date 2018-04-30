@@ -21,24 +21,11 @@ import java.util.List;
  * Represents a wg-quick configuration file, its name, and its connection state.
  */
 
-public class Config implements Parcelable {
-    public static final Creator<Config> CREATOR = new Creator<Config>() {
-        @Override
-        public Config createFromParcel(final Parcel in) {
-            return new Config(in);
-        }
-
-        @Override
-        public Config[] newArray(final int size) {
-            return new Config[size];
-        }
-    };
-
-    public static class Observable extends BaseObservable {
+public class Config {
+    public static class Observable extends BaseObservable implements Parcelable {
         private String name;
         private Interface.Observable observableInterface;
         private ObservableList<Peer.Observable> observablePeers;
-
 
         public Observable(Config parent, String name) {
             this.name = name;
@@ -46,10 +33,12 @@ public class Config implements Parcelable {
         }
 
         public void loadData(Config parent) {
-            this.observableInterface = new Interface.Observable(parent.interfaceSection);
+            this.observableInterface = new Interface.Observable(parent == null ? null : parent.interfaceSection);
             this.observablePeers = new ObservableArrayList<>();
-            for (Peer peer : parent.getPeers())
-                this.observablePeers.add(new Peer.Observable(peer));
+            if (parent != null) {
+                for (Peer peer : parent.getPeers())
+                    this.observablePeers.add(new Peer.Observable(peer));
+            }
         }
 
         public void commitData(Config parent) {
@@ -66,7 +55,7 @@ public class Config implements Parcelable {
 
         @Bindable
         public String getName() {
-            return name;
+            return name == null ? "" : name;
         }
 
         public void setName(String name) {
@@ -83,19 +72,42 @@ public class Config implements Parcelable {
         public ObservableList<Peer.Observable> getPeers() {
             return observablePeers;
         }
+
+
+        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
+            @Override
+            public Observable createFromParcel(final Parcel in) {
+                return new Observable(in);
+            }
+
+            @Override
+            public Observable[] newArray(final int size) {
+                return new Observable[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeString(name);
+            dest.writeParcelable(observableInterface, flags);
+            dest.writeTypedList(observablePeers);
+        }
+
+        private Observable(final Parcel in) {
+            name = in.readString();
+            observableInterface = in.readParcelable(Interface.Observable.class.getClassLoader());
+            observablePeers = new ObservableArrayList<>();
+            in.readTypedList(observablePeers, Peer.Observable.CREATOR);
+        }
     }
 
-    private final Interface interfaceSection;
+    private final Interface interfaceSection = new Interface();
     private List<Peer> peers = new ArrayList<>();
-
-    public Config() {
-        interfaceSection = new Interface();
-    }
-
-    private Config(final Parcel in) {
-        interfaceSection = in.readParcelable(Interface.class.getClassLoader());
-        in.readTypedList(peers, Peer.CREATOR);
-    }
 
     public static Config from(final InputStream stream) throws IOException {
         return from(new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)));
@@ -130,11 +142,6 @@ public class Config implements Parcelable {
         return config;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     public Interface getInterface() {
         return interfaceSection;
     }
@@ -149,11 +156,5 @@ public class Config implements Parcelable {
         for (final Peer peer : peers)
             sb.append('\n').append(peer);
         return sb.toString();
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeParcelable(interfaceSection, flags);
-        dest.writeTypedList(peers);
     }
 }

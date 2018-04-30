@@ -65,5 +65,5 @@
     <string name="tunnel_create_error">Unable to create tunnel: %s</string>
     <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
-    <string name="tunnel_rename_success">Successfully renamed tunnel “%s” to “%s”</string>
+    <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
 </resources>
