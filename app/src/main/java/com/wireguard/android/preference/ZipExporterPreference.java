@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
+import android.view.ContextThemeWrapper;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -24,6 +25,7 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -102,7 +104,7 @@ public class ZipExporterPreference extends Preference {
             final String message = getContext().getString(R.string.export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
-                    ((SettingsActivity)getContext()).findViewById(android.R.id.content),
+                    Objects.requireNonNull(getPrefActivity(this)).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
         } else {
             exportedFilePath = filePath;
@@ -111,9 +113,19 @@ public class ZipExporterPreference extends Preference {
         }
     }
 
+    private SettingsActivity getPrefActivity(Preference preference) {
+        Context context = preference.getContext();
+        if (context instanceof ContextThemeWrapper) {
+            if (((ContextThemeWrapper) context).getBaseContext() instanceof SettingsActivity) {
+                return ((SettingsActivity) ((ContextThemeWrapper) context).getBaseContext());
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void onClick() {
-        ((SettingsActivity)getContext()).ensurePermissions(
+        Objects.requireNonNull(getPrefActivity(this)).ensurePermissions(
                 new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 (permissions, granted) -> {
                     if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
