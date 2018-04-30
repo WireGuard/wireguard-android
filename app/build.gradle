@@ -39,13 +39,13 @@ ext {
 
 dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.android.databinding:library:$databindingVersion"
-    implementation "com.android.support:support-annotations:$supportLibsVersion"
     implementation "com.android.support:appcompat-v7:$supportLibsVersion"
     implementation "com.android.support:design:$supportLibsVersion"
     implementation "com.android.support:preference-v14:$supportLibsVersion"
+    implementation "com.android.support:support-annotations:$supportLibsVersion"
     implementation "com.getbase:floatingactionbutton:$fabLibVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
 }
