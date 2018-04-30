@@ -27,7 +27,6 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.TextView;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationComponent;
@@ -44,7 +43,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -69,6 +67,14 @@ public class TunnelListFragment extends BaseFragment {
     private AsyncWorker asyncWorker;
     private TunnelListFragmentBinding binding;
     private TunnelManager tunnelManager;
+
+    public boolean collapseActionMenu() {
+        if (binding.createMenu.isExpanded()) {
+            binding.createMenu.collapse();
+            return true;
+        }
+        return false;
+    }
 
     private void importTunnel(final Uri uri) {
         final Activity activity = getActivity();
@@ -199,14 +205,6 @@ public class TunnelListFragment extends BaseFragment {
         super.onDestroyView();
     }
 
-    public boolean collapseActionMenu() {
-        if (binding.createMenu.isExpanded()) {
-            binding.createMenu.collapse();
-            return true;
-        }
-        return false;
-    }
-
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
         if (binding != null)
@@ -254,7 +252,7 @@ public class TunnelListFragment extends BaseFragment {
         if (tunnels.size() == 1 && throwables.isEmpty())
             message = getString(R.string.import_success, tunnels.get(0).getName());
         else if (tunnels.isEmpty() && throwables.size() == 1)
-            /* Use the exception message from above. */;
+            /* Use the exception message from above. */ ;
         else if (throwables.isEmpty())
             message = getString(R.string.import_total_success, tunnels.size());
         else if (!throwables.isEmpty())

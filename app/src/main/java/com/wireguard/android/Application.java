@@ -55,11 +55,11 @@ public class Application extends android.app.Application {
     public interface ApplicationComponent {
         AsyncWorker getAsyncWorker();
 
+        Class getBackendType();
+
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
-
-        Class getBackendType();
     }
 
     @Qualifier

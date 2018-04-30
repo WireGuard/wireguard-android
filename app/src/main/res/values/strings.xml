@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <plurals name="delete_error">
         <item quantity="one">Unable to delete %d tunnel: %s</item>
         <item quantity="other">Unable to delete %d tunnels: %s</item>

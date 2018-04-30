@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
-import android.view.ContextThemeWrapper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationComponent;
@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -48,19 +47,6 @@ public class ZipExporterPreference extends Preference {
         final ApplicationComponent applicationComponent = Application.getComponent();
         asyncWorker = applicationComponent.getAsyncWorker();
         tunnelManager = applicationComponent.getTunnelManager();
-    }
-
-    @Override
-    public CharSequence getSummary() {
-        if (exportedFilePath == null)
-            return getContext().getString(R.string.export_summary);
-        else
-            return getContext().getString(R.string.export_success, exportedFilePath);
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return getContext().getString(R.string.zip_exporter_title);
     }
 
     private void exportZip() {
@@ -124,9 +110,22 @@ public class ZipExporterPreference extends Preference {
     }
 
     @Override
+    public CharSequence getSummary() {
+        if (exportedFilePath == null)
+            return getContext().getString(R.string.export_summary);
+        else
+            return getContext().getString(R.string.export_success, exportedFilePath);
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return getContext().getString(R.string.zip_exporter_title);
+    }
+
+    @Override
     protected void onClick() {
         getPrefActivity(this).ensurePermissions(
-                new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 (permissions, granted) -> {
                     if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
                         exportZip();

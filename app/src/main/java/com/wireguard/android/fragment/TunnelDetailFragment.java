@@ -20,6 +20,10 @@ import com.wireguard.config.Config;
 public class TunnelDetailFragment extends BaseFragment {
     private TunnelDetailFragmentBinding binding;
 
+    private void onConfigLoaded(final String name, final Config config) {
+        binding.setConfig(new Config.Observable(config, name));
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +48,6 @@ public class TunnelDetailFragment extends BaseFragment {
     public void onDestroyView() {
         binding = null;
         super.onDestroyView();
-    }
-
-    private void onConfigLoaded(final String name, final Config config) {
-        binding.setConfig(new Config.Observable(config, name));
     }
 
     @Override

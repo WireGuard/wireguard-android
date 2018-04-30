@@ -13,10 +13,10 @@ public final class KeyEncoding {
     public static final int KEY_LENGTH_HEX = 64;
     private static final String KEY_LENGTH_BASE64_EXCEPTION_MESSAGE =
             "WireGuard base64 keys must be 44 characters encoding 32 bytes";
-    private static final String KEY_LENGTH_HEX_EXCEPTION_MESSAGE =
-            "WireGuard hex keys must be 64 characters encoding 32 bytes";
     private static final String KEY_LENGTH_EXCEPTION_MESSAGE =
             "WireGuard keys must be 32 bytes";
+    private static final String KEY_LENGTH_HEX_EXCEPTION_MESSAGE =
+            "WireGuard hex keys must be 64 characters encoding 32 bytes";
 
     private KeyEncoding() {
         // Prevent instantiation.
@@ -82,6 +82,32 @@ public final class KeyEncoding {
         return key;
     }
 
+    public static byte[] keyFromHex(final String str) {
+        final char[] input = str.toCharArray();
+        final byte[] key = new byte[KEY_LENGTH];
+        if (input.length != KEY_LENGTH_HEX)
+            throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
+
+        int c, c_acc = 0, c_alpha0, c_alpha, c_num0, c_num, c_val, state = 0;
+
+        for (int i = 0; i < KEY_LENGTH_HEX; ++i) {
+            c = input[i];
+            c_num = c ^ 48;
+            c_num0 = (c_num - 10) >> 8;
+            c_alpha = (c & ~32) - 55;
+            c_alpha0 = ((c_alpha - 10) ^ (c_alpha - 16)) >> 8;
+            if ((c_num0 | c_alpha0) == 0)
+                throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
+            c_val = (c_num0 & c_num) | (c_alpha0 & c_alpha);
+            if (state == 0)
+                c_acc = c_val * 16;
+            else
+                key[i / 2] = (byte) (c_acc | c_val);
+            state = ~state;
+        }
+        return key;
+    }
+
     public static String keyToBase64(final byte[] key) {
         final char[] output = new char[KEY_LENGTH_BASE64];
         if (key.length != KEY_LENGTH)
@@ -99,39 +125,13 @@ public final class KeyEncoding {
         return new String(output);
     }
 
-    public static byte[] keyFromHex(final String str) {
-        final char[] input = str.toCharArray();
-        final byte[] key = new byte[KEY_LENGTH];
-        if (input.length != KEY_LENGTH_HEX)
-            throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
-
-        int c, c_acc = 0, c_alpha0, c_alpha, c_num0, c_num, c_val, state = 0;
-
-        for (int i = 0; i < KEY_LENGTH_HEX; ++i) {
-            c = input[i];
-            c_num = c ^ 48;
-            c_num0 = (c_num - 10) >>8;
-            c_alpha = (c & ~32) - 55;
-            c_alpha0 = ((c_alpha - 10) ^ (c_alpha - 16)) >> 8;
-            if ((c_num0 | c_alpha0) == 0)
-                throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
-            c_val = (c_num0 & c_num) | (c_alpha0 & c_alpha);
-            if (state == 0)
-                c_acc = c_val * 16;
-            else
-                key[i / 2] = (byte)(c_acc | c_val);
-            state = ~state;
-        }
-        return key;
-    }
-
     public static String keyToHex(final byte[] key) {
         final char[] output = new char[KEY_LENGTH_HEX];
         if (key.length != KEY_LENGTH)
             throw new IllegalArgumentException(KEY_LENGTH_EXCEPTION_MESSAGE);
         for (int i = 0; i < KEY_LENGTH; ++i) {
-            output[i * 2] = (char)(87 + (key[i] >> 4 & 0xf) + ((((key[i] >> 4 & 0xf) - 10) >> 8) & ~38));
-            output[i * 2 + 1] = (char)(87 + (key[i] & 0xf) + ((((key[i] & 0xf) - 10) >> 8) & ~38));
+            output[i * 2] = (char) (87 + (key[i] >> 4 & 0xf) + ((((key[i] >> 4 & 0xf) - 10) >> 8) & ~38));
+            output[i * 2 + 1] = (char) (87 + (key[i] & 0xf) + ((((key[i] & 0xf) - 10) >> 8) & ~38));
         }
         return new String(output);
     }
