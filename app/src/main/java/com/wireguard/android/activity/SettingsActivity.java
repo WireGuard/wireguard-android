@@ -3,6 +3,7 @@ package com.wireguard.android.activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -31,30 +32,20 @@ public class SettingsActivity extends AppCompatActivity {
     private int permissionRequestCounter = 0;
 
     public synchronized void ensurePermissions(String[] permissions, PermissionRequestCallback cb) {
-        /* TODO(MSF): since when porting to AppCompat, you'll be replacing checkSelfPermission
-         * and requestPermission with AppCompat.checkSelfPermission and AppCompat.requestPermission,
-         * you can remove this SDK_INT block entirely here, and count on the compat lib to do
-         * the right thing. */
-        if (android.os.Build.VERSION.SDK_INT < 23) {
+        List<String> needPermissions = new ArrayList<>(permissions.length);
+        for (final String permission : permissions) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
+                needPermissions.add(permission);
+        }
+        if (needPermissions.isEmpty()) {
             int[] granted = new int[permissions.length];
             Arrays.fill(granted, PackageManager.PERMISSION_GRANTED);
             cb.done(permissions, granted);
-        } else {
-            List<String> needPermissions = new ArrayList<>(permissions.length);
-            for (final String permission : permissions) {
-                if (getApplicationContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED)
-                    needPermissions.add(permission);
-            }
-            if (needPermissions.isEmpty()) {
-                int[] granted = new int[permissions.length];
-                Arrays.fill(granted, PackageManager.PERMISSION_GRANTED);
-                cb.done(permissions, granted);
-                return;
-            }
-            int idx = permissionRequestCounter++;
-            permissionRequestCallbacks.put(idx, cb);
-            requestPermissions(needPermissions.toArray(new String[needPermissions.size()]), idx);
+            return;
         }
+        int idx = permissionRequestCounter++;
+        permissionRequestCallbacks.put(idx, cb);
+        ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]), idx);
     }
 
     @Override
