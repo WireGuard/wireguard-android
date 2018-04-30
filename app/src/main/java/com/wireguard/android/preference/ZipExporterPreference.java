@@ -76,7 +76,7 @@ public class ZipExporterPreference extends Preference {
                             throw exception;
                         final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                         final File file = new File(path, "wireguard-export.zip");
-                        if (!path.mkdirs())
+                        if (!path.isDirectory() && !path.mkdirs())
                             throw new IOException("Cannot create output directory");
                         try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
                             for (int i = 0; i < futureConfigs.size(); ++i) {
