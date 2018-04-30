@@ -49,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (Application.getComponent().getBackendType() == GoBackend.class) {
-            Intent intent = GoBackend.VpnService.prepare(this);
+            final Intent intent = GoBackend.VpnService.prepare(this);
             if (intent != null) {
                 startActivityForResult(intent, 0);
             }

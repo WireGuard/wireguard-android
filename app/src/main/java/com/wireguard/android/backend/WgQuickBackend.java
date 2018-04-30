@@ -105,14 +105,15 @@ public final class WgQuickBackend implements Backend {
         }
         final String command = String.format("wg-quick %s '%s'", state.toString().toLowerCase(), tempFile.getAbsolutePath());
         final int result = rootShell.run(null, command);
+        // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
         if (result != 0)
             throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
     }
 
-    public final static class WgQuickChangeReceiver extends BroadcastReceiver {
+    public static final class WgQuickChangeReceiver extends BroadcastReceiver {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             Log.d(TAG, "Refreshing tunnel states");
             Application.getComponent().getTunnelManager().refreshTunnelStates();
         }

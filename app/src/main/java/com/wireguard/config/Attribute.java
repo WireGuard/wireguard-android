@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,9 +27,11 @@ enum Attribute {
     PRIVATE_KEY("PrivateKey"),
     PUBLIC_KEY("PublicKey");
 
+    private static final String[] EMPTY_LIST = new String[0];
     private static final Map<String, Attribute> KEY_MAP;
+    private static final Pattern LIST_SEPARATOR_PATTERN = Pattern.compile("\\s*,\\s*");
+    private static final Method NUMERIC_ADDRESS_PARSER;
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s|=");
-    private static Method parseNumericAddressMethod;
 
     static {
         KEY_MAP = new HashMap<>(Attribute.values().length);
@@ -41,8 +42,8 @@ enum Attribute {
 
     static {
         try {
-            parseNumericAddressMethod = InetAddress.class.getMethod("parseNumericAddress", new Class[]{String.class});
-        } catch (Exception e) {
+            NUMERIC_ADDRESS_PARSER = InetAddress.class.getMethod("parseNumericAddress", String.class);
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -55,8 +56,8 @@ enum Attribute {
         this.token = token;
     }
 
-    public static <T> String listToString(final List<T> list) {
-        return TextUtils.join(", ", list);
+    public static <T> String iterableToString(final Iterable<T> iterable) {
+        return TextUtils.join(", ", iterable);
     }
 
     public static Attribute match(final CharSequence line) {
@@ -67,10 +68,10 @@ enum Attribute {
         if (address == null || address.isEmpty())
             throw new IllegalArgumentException("Empty address");
         try {
-            return (InetAddress) parseNumericAddressMethod.invoke(null, new Object[]{address});
-        } catch (IllegalAccessException e) {
+            return (InetAddress) NUMERIC_ADDRESS_PARSER.invoke(null, address);
+        } catch (final IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             if (e.getCause() instanceof IllegalArgumentException)
                 throw (IllegalArgumentException) e.getCause();
             else
@@ -80,8 +81,8 @@ enum Attribute {
 
     public static String[] stringToList(final String string) {
         if (string == null)
-            return new String[0];
-        return string.trim().split("\\s*,\\s*");
+            return EMPTY_LIST;
+        return LIST_SEPARATOR_PATTERN.split(string.trim());
     }
 
     public String composeWith(final Object value) {
@@ -92,8 +93,8 @@ enum Attribute {
         return String.format(Locale.getDefault(), "%s = %d%n", token, value);
     }
 
-    public <T> String composeWith(final List<T> value) {
-        return String.format("%s = %s%n", token, listToString(value));
+    public <T> String composeWith(final Iterable<T> value) {
+        return String.format("%s = %s%n", token, iterableToString(value));
     }
 
     public String parse(final CharSequence line) {

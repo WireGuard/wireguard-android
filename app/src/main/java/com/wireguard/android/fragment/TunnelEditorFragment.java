@@ -109,10 +109,10 @@ public class TunnelEditorFragment extends BaseFragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_action_save:
-                Config newConfig = new Config();
+                final Config newConfig = new Config();
                 try {
                     binding.getConfig().commitData(newConfig);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     final String error = ExceptionLoggers.unwrap(e).getMessage();
                     final String tunnelName = tunnel == null ? binding.getConfig().getName() : tunnel.getName();
                     final String message = getString(R.string.config_save_error, tunnelName, error);
@@ -202,8 +202,8 @@ public class TunnelEditorFragment extends BaseFragment {
             onSelectedTunnelChanged(null, getSelectedTunnel());
         } else {
             tunnel = getSelectedTunnel();
-            Config.Observable config = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
-            String originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
+            final Config.Observable config = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
+            final String originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
             if (tunnel != null && !tunnel.getName().equals(originalName))
                 onSelectedTunnelChanged(null, tunnel);
             else
