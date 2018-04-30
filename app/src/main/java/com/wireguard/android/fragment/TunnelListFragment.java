@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -133,7 +134,7 @@ public class TunnelListFragment extends BaseFragment {
             return CompletableFuture.allOf(futureTunnels.toArray(new CompletableFuture[futureTunnels.size()]));
         }).whenComplete((future, exception) -> {
             if (exception != null) {
-                this.onTunnelImportFinished(Arrays.asList(), Arrays.asList(exception));
+                this.onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
             } else {
                 future.whenComplete((ignored1, ignored2) -> {
                     ArrayList<Tunnel> tunnels = new ArrayList<>(futureTunnels.size());
@@ -245,7 +246,7 @@ public class TunnelListFragment extends BaseFragment {
         else if (!throwables.isEmpty())
             message = getString(R.string.import_partial_success, tunnels.size(), tunnels.size() + throwables.size());
 
-        if (binding != null && message != null) {
+        if (binding != null) {
             final CoordinatorLayout container = binding.mainContainer;
             Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
         }
