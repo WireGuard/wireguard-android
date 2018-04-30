@@ -1,35 +1,15 @@
 package com.wireguard.config;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.Locale;
 
-public class IPCidr implements Parcelable {
+public class IPCidr {
     private InetAddress address;
     private int cidr;
 
-
-    public static final Parcelable.Creator<IPCidr> CREATOR = new Parcelable.Creator<IPCidr>() {
-        @Override
-        public IPCidr createFromParcel(final Parcel in) {
-            return new IPCidr(in);
-        }
-
-        @Override
-        public IPCidr[] newArray(final int size) {
-            return new IPCidr[size];
-        }
-    };
-
-    IPCidr(String in) {
-        parse(in);
-    }
-
-    private void parse(String in) {
+    public IPCidr(String in) {
         cidr = -1;
         int slash = in.lastIndexOf('/');
         if (slash != -1 && slash < in.length() - 1) {
@@ -58,22 +38,4 @@ public class IPCidr implements Parcelable {
     public String toString() {
         return String.format(Locale.getDefault(), "%s/%d", address.getHostAddress(), cidr);
     }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(this.toString());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    private IPCidr(final Parcel in) {
-        try {
-            parse(in.readString());
-        } catch (Exception ignored) {
-        }
-    }
-
 }
