@@ -96,6 +96,8 @@ public class TunnelListFragment extends BaseFragment {
             boolean isZip = name.toLowerCase().endsWith(".zip");
             if (name.toLowerCase().endsWith(".conf"))
                 name = name.substring(0, name.length() - ".conf".length());
+            else if (!isZip)
+                throw new IllegalArgumentException("File must be .conf or .zip");
 
             if (isZip) {
                 ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri));
@@ -128,8 +130,12 @@ public class TunnelListFragment extends BaseFragment {
                 futureTunnels.add(tunnelManager.create(name, Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
             }
 
-            if (futureTunnels.isEmpty() && throwables.size() == 1)
-                throw throwables.get(0);
+            if (futureTunnels.isEmpty()) {
+                if (throwables.size() == 1)
+                    throw throwables.get(0);
+                else if (throwables.isEmpty())
+                    throw new IllegalArgumentException("No configurations found");
+            }
 
             return CompletableFuture.allOf(futureTunnels.toArray(new CompletableFuture[futureTunnels.size()]));
         }).whenComplete((future, exception) -> {
