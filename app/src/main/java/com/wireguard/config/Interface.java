@@ -17,156 +17,32 @@ import java.util.List;
  */
 
 public class Interface {
-    public static class Observable extends BaseObservable implements Parcelable {
-        private String addresses;
-        private String dnses;
-        private String publicKey;
-        private String privateKey;
-        private String listenPort;
-        private String mtu;
-
-        public Observable(Interface parent) {
-            if (parent != null)
-                loadData(parent);
-        }
-
-        public void loadData(Interface parent) {
-            this.addresses = parent.getAddressString();
-            this.dnses = parent.getDnsString();
-            this.publicKey = parent.getPublicKey();
-            this.privateKey = parent.getPrivateKey();
-            this.listenPort = parent.getListenPortString();
-            this.mtu = parent.getMtuString();
-        }
-
-        public void commitData(Interface parent) {
-            parent.setAddressString(this.addresses);
-            parent.setDnsString(this.dnses);
-            parent.setPrivateKey(this.privateKey);
-            parent.setListenPortString(this.listenPort);
-            parent.setMtuString(this.mtu);
-            loadData(parent);
-            notifyChange();
-        }
-
-        @Bindable
-        public String getAddresses() {
-            return addresses;
-        }
-
-        public void setAddresses(String addresses) {
-            this.addresses = addresses;
-            notifyPropertyChanged(BR.addresses);
-        }
-
-        @Bindable
-        public String getDnses() {
-            return dnses;
-        }
-
-        public void setDnses(String dnses) {
-            this.dnses = dnses;
-            notifyPropertyChanged(BR.dnses);
-        }
-
-        @Bindable
-        public String getPublicKey() {
-            return publicKey;
-        }
-
-        @Bindable
-        public String getPrivateKey() {
-            return privateKey;
-        }
-
-        public void setPrivateKey(String privateKey) {
-            this.privateKey = privateKey;
-
-            try {
-                this.publicKey = new Keypair(privateKey).getPublicKey();
-            } catch (IllegalArgumentException ignored) {
-                this.publicKey = "";
-            }
-
-            notifyPropertyChanged(BR.privateKey);
-            notifyPropertyChanged(BR.publicKey);
-        }
-
-        public void generateKeypair() {
-            Keypair keypair = new Keypair();
-            privateKey = keypair.getPrivateKey();
-            publicKey = keypair.getPublicKey();
-            notifyPropertyChanged(BR.privateKey);
-            notifyPropertyChanged(BR.publicKey);
-        }
-
-        @Bindable
-        public String getListenPort() {
-            return listenPort;
-        }
-
-        public void setListenPort(String listenPort) {
-            this.listenPort = listenPort;
-            notifyPropertyChanged(BR.listenPort);
-        }
-
-        @Bindable
-        public String getMtu() {
-            return mtu;
-        }
-
-        public void setMtu(String mtu) {
-            this.mtu = mtu;
-            notifyPropertyChanged(BR.mtu);
-        }
-
-
-        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
-            @Override
-            public Observable createFromParcel(final Parcel in) {
-                return new Observable(in);
-            }
-
-            @Override
-            public Observable[] newArray(final int size) {
-                return new Observable[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(final Parcel dest, final int flags) {
-            dest.writeString(addresses);
-            dest.writeString(dnses);
-            dest.writeString(publicKey);
-            dest.writeString(privateKey);
-            dest.writeString(listenPort);
-            dest.writeString(mtu);
-        }
-
-        private Observable(final Parcel in) {
-            addresses = in.readString();
-            dnses = in.readString();
-            publicKey = in.readString();
-            privateKey = in.readString();
-            listenPort = in.readString();
-            mtu = in.readString();
-        }
-    }
-
     private List<IPCidr> addressList;
     private List<InetAddress> dnsList;
     private Keypair keypair;
     private int listenPort;
     private int mtu;
-
     public Interface() {
         addressList = new LinkedList<>();
         dnsList = new LinkedList<>();
+    }
+
+    private void addAddresses(String[] addresses) {
+        if (addresses != null && addresses.length > 0) {
+            for (final String addr : addresses) {
+                if (addr.isEmpty())
+                    throw new IllegalArgumentException("Address is empty");
+                this.addressList.add(new IPCidr(addr));
+            }
+        }
+    }
+
+    private void addDnses(String[] dnses) {
+        if (dnses != null && dnses.length > 0) {
+            for (final String dns : dnses) {
+                this.dnsList.add(Attribute.parseIPString(dns));
+            }
+        }
     }
 
     private String getAddressString() {
@@ -179,17 +55,17 @@ public class Interface {
         return addressList.toArray(new IPCidr[addressList.size()]);
     }
 
+    private String getDnsString() {
+        if (dnsList.isEmpty())
+            return null;
+        return Attribute.listToString(getDnsStrings());
+    }
+
     private List<String> getDnsStrings() {
         List<String> strings = new LinkedList<>();
         for (final InetAddress addr : dnsList)
             strings.add(addr.getHostAddress());
         return strings;
-    }
-
-    private String getDnsString() {
-        if (dnsList.isEmpty())
-            return null;
-        return Attribute.listToString(getDnsStrings());
     }
 
     public InetAddress[] getDnses() {
@@ -244,27 +120,9 @@ public class Interface {
             throw new IllegalArgumentException(line);
     }
 
-    private void addAddresses(String[] addresses) {
-        if (addresses != null && addresses.length > 0) {
-            for (final String addr : addresses) {
-                if (addr.isEmpty())
-                    throw new IllegalArgumentException("Address is empty");
-                this.addressList.add(new IPCidr(addr));
-            }
-        }
-    }
-
     private void setAddressString(final String addressString) {
         this.addressList.clear();
         addAddresses(Attribute.stringToList(addressString));
-    }
-
-    private void addDnses(String[] dnses) {
-        if (dnses != null && dnses.length > 0) {
-            for (final String dns : dnses) {
-                this.dnsList.add(Attribute.parseIPString(dns));
-            }
-        }
     }
 
     private void setDnsString(final String dnsString) {
@@ -317,5 +175,144 @@ public class Interface {
         if (keypair != null)
             sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
         return sb.toString();
+    }
+
+    public static class Observable extends BaseObservable implements Parcelable {
+        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
+            @Override
+            public Observable createFromParcel(final Parcel in) {
+                return new Observable(in);
+            }
+
+            @Override
+            public Observable[] newArray(final int size) {
+                return new Observable[size];
+            }
+        };
+        private String addresses;
+        private String dnses;
+        private String listenPort;
+        private String mtu;
+        private String privateKey;
+        private String publicKey;
+
+        public Observable(Interface parent) {
+            if (parent != null)
+                loadData(parent);
+        }
+
+        private Observable(final Parcel in) {
+            addresses = in.readString();
+            dnses = in.readString();
+            publicKey = in.readString();
+            privateKey = in.readString();
+            listenPort = in.readString();
+            mtu = in.readString();
+        }
+
+        public void commitData(Interface parent) {
+            parent.setAddressString(this.addresses);
+            parent.setDnsString(this.dnses);
+            parent.setPrivateKey(this.privateKey);
+            parent.setListenPortString(this.listenPort);
+            parent.setMtuString(this.mtu);
+            loadData(parent);
+            notifyChange();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public void generateKeypair() {
+            Keypair keypair = new Keypair();
+            privateKey = keypair.getPrivateKey();
+            publicKey = keypair.getPublicKey();
+            notifyPropertyChanged(BR.privateKey);
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        @Bindable
+        public String getAddresses() {
+            return addresses;
+        }
+
+        @Bindable
+        public String getDnses() {
+            return dnses;
+        }
+
+        @Bindable
+        public String getListenPort() {
+            return listenPort;
+        }
+
+        @Bindable
+        public String getMtu() {
+            return mtu;
+        }
+
+        @Bindable
+        public String getPrivateKey() {
+            return privateKey;
+        }
+
+        @Bindable
+        public String getPublicKey() {
+            return publicKey;
+        }
+
+        public void loadData(Interface parent) {
+            this.addresses = parent.getAddressString();
+            this.dnses = parent.getDnsString();
+            this.publicKey = parent.getPublicKey();
+            this.privateKey = parent.getPrivateKey();
+            this.listenPort = parent.getListenPortString();
+            this.mtu = parent.getMtuString();
+        }
+
+        public void setAddresses(String addresses) {
+            this.addresses = addresses;
+            notifyPropertyChanged(BR.addresses);
+        }
+
+        public void setDnses(String dnses) {
+            this.dnses = dnses;
+            notifyPropertyChanged(BR.dnses);
+        }
+
+        public void setListenPort(String listenPort) {
+            this.listenPort = listenPort;
+            notifyPropertyChanged(BR.listenPort);
+        }
+
+        public void setMtu(String mtu) {
+            this.mtu = mtu;
+            notifyPropertyChanged(BR.mtu);
+        }
+
+        public void setPrivateKey(String privateKey) {
+            this.privateKey = privateKey;
+
+            try {
+                this.publicKey = new Keypair(privateKey).getPublicKey();
+            } catch (IllegalArgumentException ignored) {
+                this.publicKey = "";
+            }
+
+            notifyPropertyChanged(BR.privateKey);
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeString(addresses);
+            dest.writeString(dnses);
+            dest.writeString(publicKey);
+            dest.writeString(privateKey);
+            dest.writeString(listenPort);
+            dest.writeString(mtu);
+        }
     }
 }

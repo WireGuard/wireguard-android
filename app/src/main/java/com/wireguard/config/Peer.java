@@ -22,145 +22,31 @@ import java.util.Locale;
  */
 
 public class Peer {
-    public static class Observable extends BaseObservable implements Parcelable {
-        private String allowedIPs;
-        private String endpoint;
-        private String persistentKeepalive;
-        private String preSharedKey;
-        private String publicKey;
-
-        public Observable(Peer parent) {
-            loadData(parent);
-        }
-        public static Observable newInstance() {
-            return new Observable(new Peer());
-        }
-
-        public void loadData(Peer parent) {
-            this.allowedIPs = parent.getAllowedIPsString();
-            this.endpoint = parent.getEndpointString();
-            this.persistentKeepalive = parent.getPersistentKeepaliveString();
-            this.preSharedKey = parent.getPreSharedKey();
-            this.publicKey = parent.getPublicKey();
-        }
-
-        public void commitData(Peer parent) {
-            parent.setAllowedIPsString(this.allowedIPs);
-            parent.setEndpointString(this.endpoint);
-            parent.setPersistentKeepaliveString(this.persistentKeepalive);
-            parent.setPreSharedKey(this.preSharedKey);
-            parent.setPublicKey(this.publicKey);
-            if (parent.getPublicKey() == null)
-                throw new IllegalArgumentException("Peer public key may not be empty");
-            loadData(parent);
-            notifyChange();
-        }
-
-        @Bindable
-        public String getAllowedIPs() {
-            return allowedIPs;
-        }
-
-        public void setAllowedIPs(String allowedIPs) {
-            this.allowedIPs = allowedIPs;
-            notifyPropertyChanged(BR.allowedIPs);
-        }
-
-        @Bindable
-        public String getEndpoint() {
-            return endpoint;
-        }
-
-        public void setEndpoint(String endpoint) {
-            this.endpoint = endpoint;
-            notifyPropertyChanged(BR.endpoint);
-        }
-
-        @Bindable
-        public String getPersistentKeepalive() {
-            return persistentKeepalive;
-        }
-
-        public void setPersistentKeepalive(String persistentKeepalive) {
-            this.persistentKeepalive = persistentKeepalive;
-            notifyPropertyChanged(BR.persistentKeepalive);
-        }
-
-        @Bindable
-        public String getPreSharedKey() {
-            return preSharedKey;
-        }
-
-        public void setPreSharedKey(String preSharedKey) {
-            this.preSharedKey = preSharedKey;
-            notifyPropertyChanged(BR.preSharedKey);
-        }
-
-        @Bindable
-        public String getPublicKey() {
-            return publicKey;
-        }
-
-        public void setPublicKey(String publicKey) {
-            this.publicKey = publicKey;
-            notifyPropertyChanged(BR.publicKey);
-        }
-
-
-        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
-            @Override
-            public Observable createFromParcel(final Parcel in) {
-                return new Observable(in);
-            }
-
-            @Override
-            public Observable[] newArray(final int size) {
-                return new Observable[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(final Parcel dest, final int flags) {
-            dest.writeString(allowedIPs);
-            dest.writeString(endpoint);
-            dest.writeString(persistentKeepalive);
-            dest.writeString(preSharedKey);
-            dest.writeString(publicKey);
-        }
-
-        private Observable(final Parcel in) {
-            allowedIPs = in.readString();
-            endpoint = in.readString();
-            persistentKeepalive = in.readString();
-            preSharedKey = in.readString();
-            publicKey = in.readString();
-        }
-    }
-
     private List<IPCidr> allowedIPsList;
     private InetSocketAddress endpoint;
     private int persistentKeepalive;
     private String preSharedKey;
     private String publicKey;
-
     public Peer() {
         allowedIPsList = new LinkedList<>();
     }
 
+    private void addAllowedIPs(String[] allowedIPs) {
+        if (allowedIPs != null && allowedIPs.length > 0) {
+            for (final String allowedIP : allowedIPs) {
+                this.allowedIPsList.add(new IPCidr(allowedIP));
+            }
+        }
+    }
+
+    public IPCidr[] getAllowedIPs() {
+        return allowedIPsList.toArray(new IPCidr[allowedIPsList.size()]);
+    }
 
     private String getAllowedIPsString() {
         if (allowedIPsList.isEmpty())
             return null;
         return Attribute.listToString(allowedIPsList);
-    }
-
-    public IPCidr[] getAllowedIPs() {
-        return allowedIPsList.toArray(new IPCidr[allowedIPsList.size()]);
     }
 
     public InetSocketAddress getEndpoint() {
@@ -171,24 +57,6 @@ public class Peer {
         if (endpoint == null)
             return null;
         return String.format(Locale.getDefault(), "%s:%d", endpoint.getHostString(), endpoint.getPort());
-    }
-
-    public String getResolvedEndpointString() throws UnknownHostException {
-        if (endpoint == null)
-            throw new UnknownHostException("{empty}");
-        if (endpoint.isUnresolved())
-            endpoint = new InetSocketAddress(endpoint.getHostString(), endpoint.getPort());
-        if (endpoint.isUnresolved())
-            throw new UnknownHostException(endpoint.getHostString());
-        if (endpoint.getAddress() instanceof Inet6Address)
-            return String.format(Locale.getDefault(),
-                    "[%s]:%d",
-                    endpoint.getAddress().getHostAddress(),
-                    endpoint.getPort());
-        return String.format(Locale.getDefault(),
-                "%s:%d",
-                endpoint.getAddress().getHostAddress(),
-                endpoint.getPort());
     }
 
     public int getPersistentKeepalive() {
@@ -209,6 +77,24 @@ public class Peer {
         return publicKey;
     }
 
+    public String getResolvedEndpointString() throws UnknownHostException {
+        if (endpoint == null)
+            throw new UnknownHostException("{empty}");
+        if (endpoint.isUnresolved())
+            endpoint = new InetSocketAddress(endpoint.getHostString(), endpoint.getPort());
+        if (endpoint.isUnresolved())
+            throw new UnknownHostException(endpoint.getHostString());
+        if (endpoint.getAddress() instanceof Inet6Address)
+            return String.format(Locale.getDefault(),
+                    "[%s]:%d",
+                    endpoint.getAddress().getHostAddress(),
+                    endpoint.getPort());
+        return String.format(Locale.getDefault(),
+                "%s:%d",
+                endpoint.getAddress().getHostAddress(),
+                endpoint.getPort());
+    }
+
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == Attribute.ALLOWED_IPS)
@@ -225,14 +111,6 @@ public class Peer {
             throw new IllegalArgumentException(line);
     }
 
-    private void addAllowedIPs(String[] allowedIPs) {
-        if (allowedIPs != null && allowedIPs.length > 0) {
-            for (final String allowedIP : allowedIPs) {
-                this.allowedIPsList.add(new IPCidr(allowedIP));
-            }
-        }
-    }
-
     private void setAllowedIPsString(final String allowedIPsString) {
         this.allowedIPsList.clear();
         addAllowedIPs(Attribute.stringToList(allowedIPsString));
@@ -246,7 +124,7 @@ public class Peer {
         if (endpoint != null && !endpoint.isEmpty()) {
             InetSocketAddress constructedEndpoint;
             if (endpoint.indexOf('/') != -1 || endpoint.indexOf('?') != -1 || endpoint.indexOf('#') != -1)
-                    throw new IllegalArgumentException("Forbidden characters in endpoint");
+                throw new IllegalArgumentException("Forbidden characters in endpoint");
             URI uri;
             try {
                 uri = new URI("wg://" + endpoint);
@@ -300,5 +178,124 @@ public class Peer {
         if (publicKey != null)
             sb.append(Attribute.PUBLIC_KEY.composeWith(publicKey));
         return sb.toString();
+    }
+
+    public static class Observable extends BaseObservable implements Parcelable {
+        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
+            @Override
+            public Observable createFromParcel(final Parcel in) {
+                return new Observable(in);
+            }
+
+            @Override
+            public Observable[] newArray(final int size) {
+                return new Observable[size];
+            }
+        };
+        private String allowedIPs;
+        private String endpoint;
+        private String persistentKeepalive;
+        private String preSharedKey;
+        private String publicKey;
+
+        public Observable(Peer parent) {
+            loadData(parent);
+        }
+
+        private Observable(final Parcel in) {
+            allowedIPs = in.readString();
+            endpoint = in.readString();
+            persistentKeepalive = in.readString();
+            preSharedKey = in.readString();
+            publicKey = in.readString();
+        }
+
+        public static Observable newInstance() {
+            return new Observable(new Peer());
+        }
+
+        public void commitData(Peer parent) {
+            parent.setAllowedIPsString(this.allowedIPs);
+            parent.setEndpointString(this.endpoint);
+            parent.setPersistentKeepaliveString(this.persistentKeepalive);
+            parent.setPreSharedKey(this.preSharedKey);
+            parent.setPublicKey(this.publicKey);
+            if (parent.getPublicKey() == null)
+                throw new IllegalArgumentException("Peer public key may not be empty");
+            loadData(parent);
+            notifyChange();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Bindable
+        public String getAllowedIPs() {
+            return allowedIPs;
+        }
+
+        @Bindable
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        @Bindable
+        public String getPersistentKeepalive() {
+            return persistentKeepalive;
+        }
+
+        @Bindable
+        public String getPreSharedKey() {
+            return preSharedKey;
+        }
+
+        @Bindable
+        public String getPublicKey() {
+            return publicKey;
+        }
+
+        public void loadData(Peer parent) {
+            this.allowedIPs = parent.getAllowedIPsString();
+            this.endpoint = parent.getEndpointString();
+            this.persistentKeepalive = parent.getPersistentKeepaliveString();
+            this.preSharedKey = parent.getPreSharedKey();
+            this.publicKey = parent.getPublicKey();
+        }
+
+        public void setAllowedIPs(String allowedIPs) {
+            this.allowedIPs = allowedIPs;
+            notifyPropertyChanged(BR.allowedIPs);
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
+            notifyPropertyChanged(BR.endpoint);
+        }
+
+        public void setPersistentKeepalive(String persistentKeepalive) {
+            this.persistentKeepalive = persistentKeepalive;
+            notifyPropertyChanged(BR.persistentKeepalive);
+        }
+
+        public void setPreSharedKey(String preSharedKey) {
+            this.preSharedKey = preSharedKey;
+            notifyPropertyChanged(BR.preSharedKey);
+        }
+
+        public void setPublicKey(String publicKey) {
+            this.publicKey = publicKey;
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        @Override
+        public void writeToParcel(final Parcel dest, final int flags) {
+            dest.writeString(allowedIPs);
+            dest.writeString(endpoint);
+            dest.writeString(persistentKeepalive);
+            dest.writeString(preSharedKey);
+            dest.writeString(publicKey);
+        }
     }
 }

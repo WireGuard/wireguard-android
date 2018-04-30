@@ -27,47 +27,19 @@ import java9.util.concurrent.CompletableFuture;
 
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
+    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
 
     static {
         System.loadLibrary("wg-go");
     }
 
+    private Context context;
     private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
-
-    private Context context;
 
     public GoBackend(Context context) {
         this.context = context;
     }
-
-    private void startVpnService() {
-        context.startService(new Intent(context, VpnService.class));
-    }
-
-    public static class VpnService extends android.net.VpnService {
-        @Override
-        public void onCreate() {
-            vpnService.complete(this);
-            super.onCreate();
-        }
-
-        @Override
-        public void onDestroy() {
-            for (final Tunnel tunnel : Application.getComponent().getTunnelManager().getTunnels()) {
-                if (tunnel != null && tunnel.getState() != State.DOWN)
-                    tunnel.setState(State.DOWN);
-            }
-            vpnService = vpnService.newIncompleteFuture();
-            super.onDestroy();
-        }
-
-        public Builder getBuilder() {
-            return new Builder();
-        }
-    }
-
-    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
 
     private static native int wgGetSocketV4(int handle);
 
@@ -217,6 +189,32 @@ public final class GoBackend implements Backend {
             wgTurnOff(currentTunnelHandle);
             currentTunnel = null;
             currentTunnelHandle = -1;
+        }
+    }
+
+    private void startVpnService() {
+        context.startService(new Intent(context, VpnService.class));
+    }
+
+    public static class VpnService extends android.net.VpnService {
+        public Builder getBuilder() {
+            return new Builder();
+        }
+
+        @Override
+        public void onCreate() {
+            vpnService.complete(this);
+            super.onCreate();
+        }
+
+        @Override
+        public void onDestroy() {
+            for (final Tunnel tunnel : Application.getComponent().getTunnelManager().getTunnels()) {
+                if (tunnel != null && tunnel.getState() != State.DOWN)
+                    tunnel.setState(State.DOWN);
+            }
+            vpnService = vpnService.newIncompleteFuture();
+            super.onDestroy();
         }
     }
 }

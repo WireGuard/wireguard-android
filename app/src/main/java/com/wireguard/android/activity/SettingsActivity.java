@@ -23,11 +23,6 @@ import java.util.List;
  */
 
 public class SettingsActivity extends AppCompatActivity {
-    @FunctionalInterface
-    public interface PermissionRequestCallback {
-        void done(String[] permissions, int[] grantResults);
-    }
-
     private HashMap<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
     private int permissionRequestCounter = 0;
 
@@ -49,15 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
-        if (f != null) {
-            permissionRequestCallbacks.remove(requestCode);
-            f.done(permissions, grantResults);
-        }
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
@@ -76,6 +62,20 @@ public class SettingsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
+        if (f != null) {
+            permissionRequestCallbacks.remove(requestCode);
+            f.done(permissions, grantResults);
+        }
+    }
+
+    @FunctionalInterface
+    public interface PermissionRequestCallback {
+        void done(String[] permissions, int[] grantResults);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

@@ -30,11 +30,20 @@ enum Attribute {
 
     private static final Map<String, Attribute> KEY_MAP;
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s|=");
+    private static Method parseNumericAddressMethod;
 
     static {
         KEY_MAP = new HashMap<>(Attribute.values().length);
         for (final Attribute key : Attribute.values()) {
             KEY_MAP.put(key.token, key);
+        }
+    }
+
+    static {
+        try {
+            parseNumericAddressMethod = InetAddress.class.getMethod("parseNumericAddress", new Class[]{String.class});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -46,42 +55,33 @@ enum Attribute {
         this.token = token;
     }
 
-    public static Attribute match(final CharSequence line) {
-        return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0]);
-    }
-
     public static <T> String listToString(final List<T> list) {
         return TextUtils.join(", ", list);
     }
 
-    public static String[] stringToList(final String string) {
-        if (string == null)
-            return new String[0];
-        return string.trim().split("\\s*,\\s*");
-    }
-
-    private static Method parseNumericAddressMethod;
-    static {
-        try {
-            parseNumericAddressMethod = InetAddress.class.getMethod("parseNumericAddress", new Class[]{String.class});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static Attribute match(final CharSequence line) {
+        return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0]);
     }
 
     public static InetAddress parseIPString(final String address) {
         if (address == null || address.isEmpty())
             throw new IllegalArgumentException("Empty address");
         try {
-            return (InetAddress)parseNumericAddressMethod.invoke(null, new Object[]{address});
+            return (InetAddress) parseNumericAddressMethod.invoke(null, new Object[]{address});
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof IllegalArgumentException)
-                throw (IllegalArgumentException)e.getCause();
+                throw (IllegalArgumentException) e.getCause();
             else
                 throw new IllegalArgumentException(e.getCause());
         }
+    }
+
+    public static String[] stringToList(final String string) {
+        if (string == null)
+            return new String[0];
+        return string.trim().split("\\s*,\\s*");
     }
 
     public String composeWith(final Object value) {

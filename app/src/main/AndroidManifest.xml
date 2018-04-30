@@ -35,8 +35,8 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/settings"
-            android:theme="@style/SettingsTheme"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/SettingsTheme" />
 
         <activity
             android:name=".activity.TunnelCreatorActivity"
@@ -58,11 +58,12 @@
 
         <service
             android:name=".backend.GoBackend$VpnService"
-            android:permission="android.permission.BIND_VPN_SERVICE" >
+            android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
-            <meta-data android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
+            <meta-data
+                android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
                 android:value="false" />
         </service>
 

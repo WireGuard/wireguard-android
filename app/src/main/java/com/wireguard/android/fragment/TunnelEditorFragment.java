@@ -3,8 +3,6 @@ package com.wireguard.android.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -41,44 +39,28 @@ public class TunnelEditorFragment extends BaseFragment {
         binding.setConfig(new Config.Observable(config, name));
     }
 
+    private void onConfigSaved(final Tunnel savedTunnel, final Config config,
+                               final Throwable throwable) {
+        final String message;
+        if (throwable == null) {
+            message = getString(R.string.config_save_success, savedTunnel.getName());
+            Log.d(TAG, message);
+            onFinished();
+        } else {
+            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            message = getString(R.string.config_save_error, savedTunnel.getName(), error);
+            Log.e(TAG, message, throwable);
+            if (binding != null) {
+                final CoordinatorLayout container = binding.mainContainer;
+                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
-        tunnel = newTunnel;
-        if (binding == null)
-            return;
-        binding.setConfig(new Config.Observable(null, null));
-        if (tunnel != null)
-            tunnel.getConfigAsync().thenAccept(a -> onConfigLoaded(tunnel.getName(), a));
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull final Bundle outState) {
-        outState.putParcelable(KEY_LOCAL_CONFIG, binding.getConfig());
-        outState.putString(KEY_ORIGINAL_NAME, tunnel == null ? null : tunnel.getName());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(final Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            onSelectedTunnelChanged(null, getSelectedTunnel());
-        } else {
-            tunnel = getSelectedTunnel();
-            Config.Observable config = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
-            String originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
-            if (tunnel != null && !tunnel.getName().equals(originalName))
-                onSelectedTunnelChanged(null, tunnel);
-            else
-                binding.setConfig(config);
-        }
-
-        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -159,22 +141,21 @@ public class TunnelEditorFragment extends BaseFragment {
         }
     }
 
-    private void onConfigSaved(final Tunnel savedTunnel, final Config config,
-                               final Throwable throwable) {
-        final String message;
-        if (throwable == null) {
-            message = getString(R.string.config_save_success, savedTunnel.getName());
-            Log.d(TAG, message);
-            onFinished();
-        } else {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
-            message = getString(R.string.config_save_error, savedTunnel.getName(), error);
-            Log.e(TAG, message, throwable);
-            if (binding != null) {
-                final CoordinatorLayout container = binding.mainContainer;
-                Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
-            }
-        }
+    @Override
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
+        outState.putParcelable(KEY_LOCAL_CONFIG, binding.getConfig());
+        outState.putString(KEY_ORIGINAL_NAME, tunnel == null ? null : tunnel.getName());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+        tunnel = newTunnel;
+        if (binding == null)
+            return;
+        binding.setConfig(new Config.Observable(null, null));
+        if (tunnel != null)
+            tunnel.getConfigAsync().thenAccept(a -> onConfigLoaded(tunnel.getName(), a));
     }
 
     private void onTunnelCreated(final Tunnel newTunnel, final Throwable throwable) {
@@ -213,5 +194,22 @@ public class TunnelEditorFragment extends BaseFragment {
                 Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onViewStateRestored(final Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            onSelectedTunnelChanged(null, getSelectedTunnel());
+        } else {
+            tunnel = getSelectedTunnel();
+            Config.Observable config = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG);
+            String originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME);
+            if (tunnel != null && !tunnel.getName().equals(originalName))
+                onSelectedTunnelChanged(null, tunnel);
+            else
+                binding.setConfig(config);
+        }
+
+        super.onViewStateRestored(savedInstanceState);
     }
 }

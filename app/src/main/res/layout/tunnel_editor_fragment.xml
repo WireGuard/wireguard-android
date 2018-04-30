@@ -114,11 +114,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/public_key_label"
+                        android:contentDescription="@string/public_key_description"
                         android:ellipsize="end"
                         android:focusable="false"
                         android:hint="@string/hint_generated"
                         android:maxLines="1"
-                        android:contentDescription="@string/public_key_description"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interfaceSection.publicKey}" />
 
