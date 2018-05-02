@@ -41,6 +41,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     implementation "com.android.databinding:library:$databindingVersion"
     implementation "com.android.support:appcompat-v7:$supportLibsVersion"
+    implementation "com.android.support:cardview-v7:$supportLibsVersion"
     implementation "com.android.support:design:$supportLibsVersion"
     implementation "com.android.support:preference-v14:$supportLibsVersion"
     implementation "com.android.support:support-annotations:$supportLibsVersion"
