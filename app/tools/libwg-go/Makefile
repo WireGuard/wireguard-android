@@ -22,28 +22,34 @@ default: $(DESTDIR)/libwg-go.so
 
 GOBUILDARCH := $(NDK_GO_ARCH_MAP_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOBUILDVERSION := 1.10.1
+GOBUILDVERSION := 1.10.2
 GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
+GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
 
-ifeq (go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH),$(shell go version 2>/dev/null))
-ensure_go_exists:
-	@echo "Using system go"
+GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
+ifeq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
+$(info Using system go)
 else
 export GOROOT := $(CURDIR)/goroot
 export PATH := $(GOROOT)/bin:$(PATH)
+GOBUILDVERSION_CURRENT := $(shell $(GOROOT)/bin/go version 2>/dev/null)
+ifneq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
+$(shell rm -f $(GOROOT)/bin/go)
+endif
 $(GOROOT)/bin/go:
 	rm -rf "$(GOROOT)"
 	mkdir -p "$(GOROOT)"
-	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || rm -rf "$(GOROOT)"
-ensure_go_exists: $(GOROOT)/bin/go
+	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
+$(DESTDIR)/libwg-go.so: $(GOROOT)/bin/go
 endif
 
-$(DESTDIR)/libwg-go.so: $(FILES) api-android.go jni.c ensure_go_exists
+$(shell test "$$(cat .gobuildversion 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.so")
+
+$(DESTDIR)/libwg-go.so: $(FILES) api-android.go jni.c
 	find . -name '*.go' -type l -delete
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./,$(dir $(FILE))) $(FILE);)
 	go get -v -d
 	go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared
-
-.PHONY: ensure_go_exists
+	go version > .gobuildversion

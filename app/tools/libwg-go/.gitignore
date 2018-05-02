@@ -4,3 +4,4 @@ libwg-go.h
 jni.o
 gopath/
 goroot/
+.gobuildversion
