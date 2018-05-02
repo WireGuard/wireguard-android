@@ -1,6 +1,6 @@
 <component name="CopyrightManager">
   <copyright>
     <option name="myName" value="GPL-2.0-or-later" />
-    <option name="notice" value="Copyright © &amp;#36;today.year Samuel Holland &lt;samuel@sholland.org&gt;&#10;SPDX-License-Identifier: GPL-2.0-or-later" />
+    <option name="notice" value="Copyright © &amp;#36;today.year Firstname Lastname &lt;email@example.com&gt;&#10;SPDX-License-Identifier: GPL-2.0-or-later" />
   </copyright>
 </component>
