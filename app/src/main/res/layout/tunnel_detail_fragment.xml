@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -38,84 +38,90 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:background="?android:attr/colorBackground"
-                android:elevation="2dp"
-                android:padding="8dp">
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp"
+                app:contentPadding="8dp">
 
-                <TextView
-                    android:id="@+id/interface_title"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/tunnel_switch"
-                    android:text="@string/interface_title" />
-
-                <com.wireguard.android.widget.ToggleSwitch
-                    android:id="@+id/tunnel_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/interface_title"
-                    android:layout_alignParentEnd="true"
-                    app:checked="@{tunnel.state == State.UP}"
-                    app:onBeforeCheckedChanged="@{TunnelController::setTunnelState}" />
-
-                <TextView
-                    android:id="@+id/interface_name_label"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/interface_title"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/interface_name_text"
-                    android:text="@string/name" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/interface_name_text"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/interface_name_label"
-                    android:text="@{tunnel.name}" />
+                    <TextView
+                        android:id="@+id/interface_title"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@+id/tunnel_switch"
+                        android:text="@string/interface_title" />
 
-                <TextView
-                    android:id="@+id/public_key_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/interface_name_text"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/public_key_text"
-                    android:text="@string/public_key" />
+                    <com.wireguard.android.widget.ToggleSwitch
+                        android:id="@+id/tunnel_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/interface_title"
+                        android:layout_alignParentEnd="true"
+                        app:checked="@{tunnel.state == State.UP}"
+                        app:onBeforeCheckedChanged="@{TunnelController::setTunnelState}" />
 
-                <TextView
-                    android:id="@+id/public_key_text"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/public_key_label"
-                    android:contentDescription="@string/public_key_description"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:onClick="@{ClipboardUtils::copyTextView}"
-                    android:text="@{config.interfaceSection.publicKey}" />
+                    <TextView
+                        android:id="@+id/interface_name_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/interface_title"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/interface_name_text"
+                        android:text="@string/name" />
 
-                <TextView
-                    android:id="@+id/addresses_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/public_key_text"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/addresses_text"
-                    android:text="@string/addresses" />
+                    <TextView
+                        android:id="@+id/interface_name_text"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/interface_name_label"
+                        android:text="@{tunnel.name}" />
 
-                <TextView
-                    android:id="@+id/addresses_text"
-                    style="?android:attr/textAppearanceMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/addresses_label"
-                    android:contentDescription="@string/addresses"
-                    android:text="@{config.interfaceSection.addresses}" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/public_key_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/interface_name_text"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/public_key_text"
+                        android:text="@string/public_key" />
+
+                    <TextView
+                        android:id="@+id/public_key_text"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/public_key_label"
+                        android:contentDescription="@string/public_key_description"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.interfaceSection.publicKey}" />
+
+                    <TextView
+                        android:id="@+id/addresses_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/public_key_text"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/addresses_text"
+                        android:text="@string/addresses" />
+
+                    <TextView
+                        android:id="@+id/addresses_text"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/addresses_label"
+                        android:contentDescription="@string/addresses"
+                        android:text="@{config.interfaceSection.addresses}" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
