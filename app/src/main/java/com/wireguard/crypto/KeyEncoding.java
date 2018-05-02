@@ -91,17 +91,18 @@ public final class KeyEncoding {
         if (input.length != KEY_LENGTH_HEX)
             throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
 
-        int c, c_acc = 0, c_alpha0, c_alpha, c_num0, c_num, c_val, state = 0;
+        int c_acc = 0;
+        int state = 0;
 
         for (int i = 0; i < KEY_LENGTH_HEX; ++i) {
-            c = input[i];
-            c_num = c ^ 48;
-            c_num0 = (c_num - 10) >> 8;
-            c_alpha = (c & ~32) - 55;
-            c_alpha0 = ((c_alpha - 10) ^ (c_alpha - 16)) >> 8;
+            final int c = input[i];
+            final int c_num = c ^ 48;
+            final int c_num0 = (c_num - 10) >> 8;
+            final int c_alpha = (c & ~32) - 55;
+            final int c_alpha0 = ((c_alpha - 10) ^ (c_alpha - 16)) >> 8;
             if ((c_num0 | c_alpha0) == 0)
                 throw new IllegalArgumentException(KEY_LENGTH_HEX_EXCEPTION_MESSAGE);
-            c_val = (c_num0 & c_num) | (c_alpha0 & c_alpha);
+            final int c_val = (c_num0 & c_num) | (c_alpha0 & c_alpha);
             if (state == 0)
                 c_acc = c_val * 16;
             else
@@ -133,8 +134,10 @@ public final class KeyEncoding {
         if (key.length != KEY_LENGTH)
             throw new IllegalArgumentException(KEY_LENGTH_EXCEPTION_MESSAGE);
         for (int i = 0; i < KEY_LENGTH; ++i) {
-            output[i * 2] = (char) (87 + (key[i] >> 4 & 0xf) + ((((key[i] >> 4 & 0xf) - 10) >> 8) & ~38));
-            output[i * 2 + 1] = (char) (87 + (key[i] & 0xf) + ((((key[i] & 0xf) - 10) >> 8) & ~38));
+            output[i * 2] = (char) (87 + (key[i] >> 4 & 0xf)
+                    + ((((key[i] >> 4 & 0xf) - 10) >> 8) & ~38));
+            output[i * 2 + 1] = (char) (87 + (key[i] & 0xf)
+                    + ((((key[i] & 0xf) - 10) >> 8) & ~38));
         }
         return new String(output);
     }
