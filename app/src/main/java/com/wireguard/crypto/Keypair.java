@@ -11,7 +11,6 @@ import java.security.SecureRandom;
  * Represents a Curve25519 keypair as used by WireGuard.
  */
 
-@SuppressWarnings("MagicNumber")
 public class Keypair {
     private final byte[] privateKey;
     private final byte[] publicKey;
@@ -29,6 +28,7 @@ public class Keypair {
         this(KeyEncoding.keyFromBase64(privateKey));
     }
 
+    @SuppressWarnings("MagicNumber")
     private static byte[] generatePrivateKey() {
         final SecureRandom secureRandom = new SecureRandom();
         final byte[] privateKey = new byte[KeyEncoding.KEY_LENGTH];
