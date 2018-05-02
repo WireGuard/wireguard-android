@@ -18,18 +18,18 @@ import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
  * Static methods for use by generated code in the Android data binding library.
  */
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public final class BindingAdapters {
     private BindingAdapters() {
         // Prevent instantiation.
     }
 
-    @BindingAdapter({"checked"})
+    @BindingAdapter("checked")
     public static void setChecked(final ToggleSwitch view, final boolean checked) {
         view.setCheckedInternal(checked);
     }
 
-    @BindingAdapter({"filter"})
+    @BindingAdapter("filter")
     public static void setFilter(final TextView view, final InputFilter filter) {
         view.setFilters(new InputFilter[]{filter});
     }
@@ -85,7 +85,7 @@ public final class BindingAdapters {
         adapter.setList(newList);
     }
 
-    @BindingAdapter({"onBeforeCheckedChanged"})
+    @BindingAdapter("onBeforeCheckedChanged")
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
                                                  final OnBeforeCheckedChangeListener listener) {
         view.setOnBeforeCheckedChangeListener(listener);
