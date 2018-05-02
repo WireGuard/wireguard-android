@@ -70,30 +70,28 @@ public class ZipExporterPreference extends Preference {
             return;
         }
         CompletableFuture.allOf(futureConfigs.toArray(new CompletableFuture[futureConfigs.size()]))
-                .whenComplete((ignored1, exception) -> {
-                    asyncWorker.supplyAsync(() -> {
-                        if (exception != null)
-                            throw exception;
-                        final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                        final File file = new File(path, "wireguard-export.zip");
-                        if (!path.isDirectory() && !path.mkdirs())
-                            throw new IOException("Cannot create output directory");
-                        try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
-                            for (int i = 0; i < futureConfigs.size(); ++i) {
-                                zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
-                                zip.write(futureConfigs.get(i).getNow(null).
-                                        toString().getBytes(StandardCharsets.UTF_8));
-                            }
-                            zip.closeEntry();
-                            zip.close();
-                        } catch (Exception e) {
-                            // noinspection ResultOfMethodCallIgnored
-                            file.delete();
-                            throw e;
+                .whenComplete((ignored1, exception) -> asyncWorker.supplyAsync(() -> {
+                    if (exception != null)
+                        throw exception;
+                    final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    final File file = new File(path, "wireguard-export.zip");
+                    if (!path.isDirectory() && !path.mkdirs())
+                        throw new IOException("Cannot create output directory");
+                    try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
+                        for (int i = 0; i < futureConfigs.size(); ++i) {
+                            zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
+                            zip.write(futureConfigs.get(i).getNow(null).
+                                    toString().getBytes(StandardCharsets.UTF_8));
                         }
-                        return file.getAbsolutePath();
-                    }).whenComplete(this::exportZipComplete);
-                });
+                        zip.closeEntry();
+                        zip.close();
+                    } catch (Exception e) {
+                        // noinspection ResultOfMethodCallIgnored
+                        file.delete();
+                        throw e;
+                    }
+                    return file.getAbsolutePath();
+                }).whenComplete(this::exportZipComplete));
     }
 
     private void exportZipComplete(final String filePath, final Throwable throwable) {
@@ -113,10 +111,9 @@ public class ZipExporterPreference extends Preference {
 
     @Override
     public CharSequence getSummary() {
-        if (exportedFilePath == null)
-            return getContext().getString(R.string.export_summary);
-        else
-            return getContext().getString(R.string.export_success, exportedFilePath);
+        return exportedFilePath == null ?
+                getContext().getString(R.string.export_summary) :
+                getContext().getString(R.string.export_success, exportedFilePath);
     }
 
     @Override
