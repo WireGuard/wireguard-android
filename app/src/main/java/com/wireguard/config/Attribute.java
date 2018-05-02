@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2018 Samuel Holland <samuel@sholland.org>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 package com.wireguard.config;
 
 import android.text.TextUtils;
