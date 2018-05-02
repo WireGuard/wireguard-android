@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+
 containing = $(foreach v,$2,$(if $(findstring $1,$v),$v))
 FILES := $(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)
 FILES := $(filter-out %/main.go $(filter-out %_linux.go,$(call containing,_,$(FILES))),$(FILES))

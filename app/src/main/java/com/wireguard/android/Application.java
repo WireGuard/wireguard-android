@@ -1,5 +1,6 @@
 /*
  * Copyright © 2018 Samuel Holland <samuel@sholland.org>
+ * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
