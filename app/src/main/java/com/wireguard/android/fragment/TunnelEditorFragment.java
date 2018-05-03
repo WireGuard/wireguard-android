@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -51,6 +52,7 @@ public class TunnelEditorFragment extends BaseFragment {
         if (throwable == null) {
             message = getString(R.string.config_save_success, savedTunnel.getName());
             Log.d(TAG, message);
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
