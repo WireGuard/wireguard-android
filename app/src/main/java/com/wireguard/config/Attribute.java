@@ -42,7 +42,7 @@ enum Attribute {
     static {
         KEY_MAP = new HashMap<>(Attribute.values().length);
         for (final Attribute key : Attribute.values()) {
-            KEY_MAP.put(key.token, key);
+            KEY_MAP.put(key.token.toLowerCase(), key);
         }
     }
 
@@ -67,7 +67,7 @@ enum Attribute {
     }
 
     public static Attribute match(final CharSequence line) {
-        return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0]);
+        return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0].toLowerCase());
     }
 
     public static InetAddress parseIPString(final String address) {

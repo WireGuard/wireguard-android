@@ -41,12 +41,16 @@ public class Config {
         String line;
         boolean inInterfaceSection = false;
         while ((line = reader.readLine()) != null) {
-            if (line.isEmpty() || line.startsWith("#"))
+            final int commentIndex = line.indexOf('#');
+            if (commentIndex != -1)
+                line = line.substring(0, commentIndex);
+            line = line.trim();
+            if (line.isEmpty())
                 continue;
-            if ("[Interface]".equals(line)) {
+            if ("[Interface]".toLowerCase().equals(line.toLowerCase())) {
                 currentPeer = null;
                 inInterfaceSection = true;
-            } else if ("[Peer]".equals(line)) {
+            } else if ("[Peer]".toLowerCase().equals(line.toLowerCase())) {
                 currentPeer = new Peer();
                 config.peers.add(currentPeer);
                 inInterfaceSection = false;
