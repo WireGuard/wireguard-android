@@ -2,4 +2,5 @@
 <resources>
     <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
     <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
+    <color name="wireguard_brand_red">#871719</color>
 </resources>
