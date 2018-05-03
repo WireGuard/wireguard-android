@@ -135,7 +135,7 @@ public class TunnelEditorFragment extends BaseFragment {
                 } else if (!tunnel.getName().equals(binding.getConfig().getName())) {
                     Log.d(TAG, "Attempting to rename tunnel to " + binding.getConfig().getName());
                     tunnel.setName(binding.getConfig().getName())
-                            .whenComplete((a, b) -> onTunnelRenamed(tunnel, newConfig, a, b));
+                            .whenComplete((a, b) -> onTunnelRenamed(tunnel, newConfig, b));
                 } else {
                     Log.d(TAG, "Attempting to save config of " + tunnel.getName());
                     tunnel.setConfig(newConfig)
@@ -183,7 +183,7 @@ public class TunnelEditorFragment extends BaseFragment {
     }
 
     private void onTunnelRenamed(final Tunnel renamedTunnel, final Config newConfig,
-                                 final String name, final Throwable throwable) {
+                                 final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = getString(R.string.tunnel_rename_success, renamedTunnel.getName());
