@@ -2,7 +2,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:navigationBarColor">@color/wireguard_brand_blue</item>
+        <item name="android:statusBarColor">@color/wireguard_brand_blue</item>
         <item name="colorAccent">@color/wireguard_brand_red</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/wireguard_brand_blue</item>
     </style>
 
     <style name="SettingsTheme" parent="AppTheme">
