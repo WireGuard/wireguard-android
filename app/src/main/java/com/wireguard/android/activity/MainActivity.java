@@ -35,11 +35,11 @@ public class MainActivity extends BaseActivity {
     private State state = State.EMPTY;
 
     private boolean moveToState(final State nextState) {
+        if (state == nextState)
+            return false;
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Log.i(TAG, "Moving from " + state.name() + " to " + nextState.name());
-        if (nextState == state) {
-            return false;
-        } else if (nextState.layer > state.layer + 1) {
+        if (nextState.layer > state.layer + 1) {
             moveToState(State.ofLayer(state.layer + 1));
             moveToState(nextState);
             return true;
