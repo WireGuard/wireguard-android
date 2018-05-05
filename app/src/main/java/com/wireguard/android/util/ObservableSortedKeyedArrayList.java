@@ -95,7 +95,9 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     @Override
     public K firstKey() {
         if (isEmpty())
-            throw new NoSuchElementException();
+            // The parameter in the exception is only to shut
+            // lint up, we never care for the exception message.
+            throw new NoSuchElementException("Empty set");
         return get(0).getKey();
     }
 
@@ -137,7 +139,9 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     @Override
     public K lastKey() {
         if (isEmpty())
-            throw new NoSuchElementException();
+            // The parameter in the exception is only to shut
+            // lint up, we never care for the exception message.
+            throw new NoSuchElementException("Empty set");
         return get(size() - 1).getKey();
     }
 

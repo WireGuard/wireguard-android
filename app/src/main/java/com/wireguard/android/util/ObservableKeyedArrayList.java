@@ -25,28 +25,28 @@ public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
     @Override
     public boolean add(final E e) {
         if (e == null)
-            throw new NullPointerException();
+            throw new NullPointerException("Trying to add a null element");
         return super.add(e);
     }
 
     @Override
     public void add(final int index, final E e) {
         if (e == null)
-            throw new NullPointerException();
+            throw new NullPointerException("Trying to add a null element");
         super.add(index, e);
     }
 
     @Override
     public boolean addAll(@NonNull final Collection<? extends E> c) {
         if (c.contains(null))
-            throw new NullPointerException();
+            throw new NullPointerException("Trying to add a collection with null element(s)");
         return super.addAll(c);
     }
 
     @Override
     public boolean addAll(final int index, @NonNull final Collection<? extends E> c) {
         if (c.contains(null))
-            throw new NullPointerException();
+            throw new NullPointerException("Trying to add a collection with null element(s)");
         return super.addAll(index, c);
     }
 
@@ -100,7 +100,7 @@ public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
     @Override
     public E set(final int index, final E e) {
         if (e == null)
-            throw new NullPointerException();
+            throw new NullPointerException("Trying to set a null key");
         return super.set(index, e);
     }
 }

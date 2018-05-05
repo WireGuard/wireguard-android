@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 public final class ClipboardUtils {
     private ClipboardUtils() {
+        // Prevent instantiation
     }
 
     public static void copyTextView(final View view) {

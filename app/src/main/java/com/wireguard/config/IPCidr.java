@@ -15,6 +15,7 @@ public class IPCidr {
     private final InetAddress address;
     private int cidr;
 
+    @SuppressWarnings("MagicNumber")
     public IPCidr(String in) {
         cidr = -1;
         final int slash = in.lastIndexOf('/');

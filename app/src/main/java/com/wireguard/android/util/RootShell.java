@@ -50,7 +50,7 @@ public class RootShell {
         final File cacheDir = context.getCacheDir();
         localBinaryDir = new File(cacheDir, "bin");
         localTemporaryDir = new File(cacheDir, "tmp");
-        preamble = String.format("export CALLING_PACKAGE=com.wireguard.android; export PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
+        preamble = String.format("export CALLING_PACKAGE=com.wireguard.android PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
                 localBinaryDir, localTemporaryDir);
     }
 
