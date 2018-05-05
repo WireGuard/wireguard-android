@@ -46,7 +46,7 @@ public class TunnelEditorFragment extends BaseFragment {
         binding.setConfig(new Config.Observable(config, name));
     }
 
-    private void onConfigSaved(final Tunnel savedTunnel, final Config config,
+    private void onConfigSaved(final Tunnel savedTunnel,
                                final Throwable throwable) {
         final String message;
         if (throwable == null) {
@@ -141,7 +141,7 @@ public class TunnelEditorFragment extends BaseFragment {
                 } else {
                     Log.d(TAG, "Attempting to save config of " + tunnel.getName());
                     tunnel.setConfig(newConfig)
-                            .whenComplete((a, b) -> onConfigSaved(tunnel, a, b));
+                            .whenComplete((a, b) -> onConfigSaved(tunnel, b));
                 }
                 return true;
             default:
@@ -192,7 +192,7 @@ public class TunnelEditorFragment extends BaseFragment {
             Log.d(TAG, message);
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel.getName());
-            renamedTunnel.setConfig(newConfig).whenComplete((a, b) -> onConfigSaved(renamedTunnel, a, b));
+            renamedTunnel.setConfig(newConfig).whenComplete((a, b) -> onConfigSaved(renamedTunnel, b));
         } else {
             final String error = ExceptionLoggers.unwrap(throwable).getMessage();
             message = getString(R.string.tunnel_rename_error, error);

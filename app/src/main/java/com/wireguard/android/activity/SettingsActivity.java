@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -36,7 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
     public void ensurePermissions(final String[] permissions, final PermissionRequestCallback cb) {
         final List<String> needPermissions = new ArrayList<>(permissions.length);
         for (final String permission : permissions) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED)
                 needPermissions.add(permission);
         }
         if (needPermissions.isEmpty()) {
@@ -47,7 +49,8 @@ public class SettingsActivity extends AppCompatActivity {
         }
         final int idx = permissionRequestCounter++;
         permissionRequestCallbacks.put(idx, cb);
-        ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]), idx);
+        ActivityCompat.requestPermissions(this,
+                needPermissions.toArray(new String[needPermissions.size()]), idx);
     }
 
     @Override
@@ -72,7 +75,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode,
+                                           @NonNull final String[] permissions,
+                                           @NonNull final int[] grantResults) {
         final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
         if (f != null) {
             permissionRequestCallbacks.remove(requestCode);

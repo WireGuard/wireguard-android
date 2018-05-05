@@ -21,28 +21,28 @@ import java.util.Arrays;
  * <p>
  * References: http://cr.yp.to/ecdh.html, RFC 7748
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("MagicNumber")
 public final class Curve25519 {
 
     // Numbers modulo 2^255 - 19 are broken up into ten 26-bit words.
     private static final int NUM_LIMBS_255BIT = 10;
     private static final int NUM_LIMBS_510BIT = 20;
-    private int[] A;
-    private int[] AA;
-    private int[] B;
-    private int[] BB;
-    private int[] C;
-    private int[] CB;
-    private int[] D;
-    private int[] DA;
-    private int[] E;
-    private long[] t1;
-    private int[] t2;
-    private int[] x_1;
-    private int[] x_2;
-    private int[] x_3;
-    private int[] z_2;
-    private int[] z_3;
+    private final int[] A;
+    private final int[] AA;
+    private final int[] B;
+    private final int[] BB;
+    private final int[] C;
+    private final int[] CB;
+    private final int[] D;
+    private final int[] DA;
+    private final int[] E;
+    private final long[] t1;
+    private final int[] t2;
+    private final int[] x_1;
+    private final int[] x_2;
+    private final int[] x_3;
+    private final int[] z_2;
+    private final int[] z_3;
 
     /**
      * Constructs the temporary state holder for Curve25519 evaluation.
@@ -74,11 +74,10 @@ public final class Curve25519 {
      * @param x      The first value.
      * @param y      The second value.
      */
-    private static void cswap(int select, int[] x, int[] y) {
-        int dummy;
+    private static void cswap(int select, final int[] x, final int[] y) {
         select = -select;
         for (int index = 0; index < NUM_LIMBS_255BIT; ++index) {
-            dummy = select & (x[index] ^ y[index]);
+            final int dummy = select & (x[index] ^ y[index]);
             x[index] ^= dummy;
             y[index] ^= dummy;
         }
@@ -93,17 +92,18 @@ public final class Curve25519 {
      * @param publicKey  The public key to use in the evaluation, or null
      *                   if the base point of the curve should be used.
      */
-    public static void eval(byte[] result, int offset, byte[] privateKey, byte[] publicKey) {
-        Curve25519 state = new Curve25519();
+    public static void eval(final byte[] result, final int offset,
+                            final byte[] privateKey, final byte[] publicKey) {
+        final Curve25519 state = new Curve25519();
         try {
             // Unpack the public key value.  If null, use 9 as the base point.
             Arrays.fill(state.x_1, 0);
             if (publicKey != null) {
                 // Convert the input value from little-endian into 26-bit limbs.
                 for (int index = 0; index < 32; ++index) {
-                    int bit = (index * 8) % 26;
-                    int word = (index * 8) / 26;
-                    int value = publicKey[index] & 0xFF;
+                    final int bit = (index * 8) % 26;
+                    final int word = (index * 8) / 26;
+                    final int value = publicKey[index] & 0xFF;
                     if (bit <= (26 - 8)) {
                         state.x_1[word] |= value << bit;
                     } else {
@@ -139,8 +139,8 @@ public final class Curve25519 {
 
             // Convert x_2 into little-endian in the result buffer.
             for (int index = 0; index < 32; ++index) {
-                int bit = (index * 8) % 26;
-                int word = (index * 8) / 26;
+                final int bit = (index * 8) % 26;
+                final int word = (index * 8) / 26;
                 if (bit <= (26 - 8))
                     result[offset + index] = (byte) (state.x_2[word] >> bit);
                 else
@@ -159,11 +159,11 @@ public final class Curve25519 {
      * @param x      The first number to add.
      * @param y      The second number to add.
      */
-    private void add(int[] result, int[] x, int[] y) {
-        int index, carry;
+    private void add(final int[] result, final int[] x, final int[] y) {
+        int carry;
         carry = x[0] + y[0];
         result[0] = carry & 0x03FFFFFF;
-        for (index = 1; index < NUM_LIMBS_255BIT; ++index) {
+        for (int index = 1; index < NUM_LIMBS_255BIT; ++index) {
             carry = (carry >> 26) + x[index] + y[index];
             result[index] = carry & 0x03FFFFFF;
         }
@@ -198,19 +198,17 @@ public final class Curve25519 {
      *
      * @param s The 32-byte secret key.
      */
-    private void evalCurve(byte[] s) {
+    private void evalCurve(final byte[] s) {
         int sposn = 31;
-        int sbit = 6;
         int svalue = s[sposn] | 0x40;
         int swap = 0;
-        int select;
 
         // Iterate over all 255 bits of "s" from the highest to the lowest.
         // We ignore the high bit of the 256-bit representation of "s".
-        for (; ; ) {
+        for (int sbit = 6; ; ) {
             // Conditional swaps on entry to this bit but only if we
             // didn't swap on the previous bit.
-            select = (svalue >> sbit) & 0x01;
+            final int select = (svalue >> sbit) & 0x01;
             swap ^= select;
             cswap(swap, x_2, x_3);
             cswap(swap, z_2, z_3);
@@ -264,8 +262,8 @@ public final class Curve25519 {
      * @param x      The first number to multiply.
      * @param y      The second number to multiply.
      */
-    private void mul(int[] result, int[] x, int[] y) {
-        int i, j;
+    private void mul(final int[] result, final int[] x, final int[] y) {
+        int i;
 
         // Multiply the two numbers to create the intermediate result.
         long v = x[0];
@@ -274,7 +272,7 @@ public final class Curve25519 {
         }
         for (i = 1; i < NUM_LIMBS_255BIT; ++i) {
             v = x[i];
-            for (j = 0; j < (NUM_LIMBS_255BIT - 1); ++j) {
+            for (int j = 0; j < (NUM_LIMBS_255BIT - 1); ++j) {
                 t1[i + j] += v * y[j];
             }
             t1[i + NUM_LIMBS_255BIT - 1] = v * y[NUM_LIMBS_255BIT - 1];
@@ -298,11 +296,10 @@ public final class Curve25519 {
      * @param result The result.
      * @param x      The number to multiply by a24.
      */
-    private void mulA24(int[] result, int[] x) {
-        long a24 = 121665;
+    private void mulA24(final int[] result, final int[] x) {
+        final long a24 = 121665;
         long carry = 0;
-        int index;
-        for (index = 0; index < NUM_LIMBS_255BIT; ++index) {
+        for (int index = 0; index < NUM_LIMBS_255BIT; ++index) {
             carry += a24 * x[index];
             t2[index] = ((int) carry) & 0x03FFFFFF;
             carry >>= 26;
@@ -317,8 +314,8 @@ public final class Curve25519 {
      * @param result The result.  Must not overlap with x.
      * @param x      The argument.
      */
-    private void pow250(int[] result, int[] x) {
-        int i, j;
+    private void pow250(final int[] result, final int[] x) {
+        int j;
 
         // The big-endian hexadecimal expansion of (2^250 - 1) is:
         // 03FFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF
@@ -335,7 +332,7 @@ public final class Curve25519 {
         for (j = 0; j < 9; ++j)
             square(A, A);
         mul(result, A, x);
-        for (i = 0; i < 23; ++i) {
+        for (int i = 0; i < 23; ++i) {
             for (j = 0; j < 10; ++j)
                 square(A, A);
             mul(result, result, A);
@@ -357,7 +354,7 @@ public final class Curve25519 {
      * @param result The result.  Must not overlap with x.
      * @param x      The argument.
      */
-    private void recip(int[] result, int[] x) {
+    private void recip(final int[] result, final int[] x) {
         // The reciprocal is the same as x ^ (p - 2) where p = 2^255 - 19.
         // The big-endian hexadecimal expansion of (p - 2) is:
         // 7FFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFEB
@@ -383,8 +380,10 @@ public final class Curve25519 {
      *               modified during the reduction.
      * @param size   The number of limbs in the high order half of x.
      */
-    private void reduce(int[] result, int[] x, int size) {
-        int index, limb, carry;
+    private void reduce(final int[] result, final int[] x, final int size) {
+        int index;
+        int limb;
+        int carry;
 
         // Calculate (x mod 2^255) + ((x / 2^255) * 19) which will
         // either produce the answer we want or it will produce a
@@ -436,8 +435,9 @@ public final class Curve25519 {
      *
      * @param x The number to reduce, and the result.
      */
-    private void reduceQuick(int[] x) {
-        int index, carry;
+    private void reduceQuick(final int[] x) {
+        int index;
+        int carry;
 
         // Perform a trial subtraction of (2^255 - 19) from "x" which is
         // equivalent to adding 19 and subtracting 2^255.  We add 19 here;
@@ -454,8 +454,8 @@ public final class Curve25519 {
         // correct answer but do it in a way that instruction timing will not
         // reveal which value was selected.  Borrow will occur if bit 21 of
         // "t2" is zero.  Turn the bit into a selection mask.
-        int mask = -((t2[NUM_LIMBS_255BIT - 1] >> 21) & 0x01);
-        int nmask = ~mask;
+        final int mask = -((t2[NUM_LIMBS_255BIT - 1] >> 21) & 0x01);
+        final int nmask = ~mask;
         t2[NUM_LIMBS_255BIT - 1] &= 0x001FFFFF;
         for (index = 0; index < NUM_LIMBS_255BIT; ++index)
             x[index] = (x[index] & nmask) | (t2[index] & mask);
@@ -467,7 +467,7 @@ public final class Curve25519 {
      * @param result The result.
      * @param x      The number to square.
      */
-    private void square(int[] result, int[] x) {
+    private void square(final int[] result, final int[] x) {
         mul(result, x, x);
     }
 
@@ -478,8 +478,9 @@ public final class Curve25519 {
      * @param x      The first number to subtract.
      * @param y      The second number to subtract.
      */
-    private void sub(int[] result, int[] x, int[] y) {
-        int index, borrow;
+    private static void sub(final int[] result, final int[] x, final int[] y) {
+        int index;
+        int borrow;
 
         // Subtract y from x to generate the intermediate result.
         borrow = 0;

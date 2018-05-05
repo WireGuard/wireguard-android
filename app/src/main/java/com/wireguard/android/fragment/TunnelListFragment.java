@@ -94,7 +94,8 @@ public class TunnelListFragment extends BaseFragment {
         asyncWorker.supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
             String name = null;
-            try (Cursor cursor = contentResolver.query(uri, columns, null, null, null)) {
+            try (Cursor cursor = contentResolver.query(uri, columns,
+                    null, null, null)) {
                 if (cursor != null && cursor.moveToFirst() && !cursor.isNull(0))
                     name = cursor.getString(0);
             }

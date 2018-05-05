@@ -109,7 +109,8 @@ public final class WgQuickBackend implements Backend {
         try (FileOutputStream stream = new FileOutputStream(tempFile, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
-        final String command = String.format("wg-quick %s '%s'", state.toString().toLowerCase(), tempFile.getAbsolutePath());
+        final String command = String.format("wg-quick %s '%s'",
+                state.toString().toLowerCase(), tempFile.getAbsolutePath());
         final int result = rootShell.run(null, command);
         // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
