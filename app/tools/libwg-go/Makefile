@@ -44,6 +44,7 @@ $(GOROOT)/bin/go:
 	rm -rf "$(GOROOT)"
 	mkdir -p "$(GOROOT)"
 	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
+	patch -p1 -f -N -r- -d"$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
 $(DESTDIR)/libwg-go.so: $(GOROOT)/bin/go
 endif
 
@@ -54,6 +55,7 @@ $(DESTDIR)/libwg-go.so: $(FILES) api-android.go jni.c
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./,$(dir $(FILE))) $(FILE);)
+	patch -p1 -f -R -s --dry-run -d"$$(go env GOROOT)" < goruntime-boottime-over-monotonic.diff
 	go get -v -d
 	go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared
 	go version > .gobuildversion

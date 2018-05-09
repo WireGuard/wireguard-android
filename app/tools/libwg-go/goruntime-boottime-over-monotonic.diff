@@ -1,0 +1,103 @@
+diff -ru b/src/runtime/sys_linux_386.s a/src/runtime/sys_linux_386.s
+--- b/src/runtime/sys_linux_386.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_386.s	2018-05-09 17:09:42.319531743 +0200
+@@ -287,13 +287,13 @@
+ 
+ 	LEAL	8(SP), BX	// &ts (struct timespec)
+ 	MOVL	BX, 4(SP)
+-	MOVL	$1, 0(SP)	// CLOCK_MONOTONIC
++	MOVL	$7, 0(SP)	// CLOCK_BOOTTIME
+ 	CALL	AX
+ 	JMP finish
+ 
+ fallback:
+ 	MOVL	$SYS_clock_gettime, AX
+-	MOVL	$1, BX		// CLOCK_MONOTONIC
++	MOVL	$7, BX		// CLOCK_BOOTTIME
+ 	LEAL	8(SP), CX
+ 	INVOKE_SYSCALL
+ 
+diff -ru b/src/runtime/sys_linux_amd64.s a/src/runtime/sys_linux_amd64.s
+--- b/src/runtime/sys_linux_amd64.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_amd64.s	2018-05-09 17:09:42.319531743 +0200
+@@ -258,7 +258,7 @@
+ 	MOVQ	runtime·__vdso_clock_gettime_sym(SB), AX
+ 	CMPQ	AX, $0
+ 	JEQ	fallback
+-	MOVL	$1, DI // CLOCK_MONOTONIC
++	MOVL	$7, DI // CLOCK_BOOTTIME
+ 	LEAQ	0(SP), SI
+ 	CALL	AX
+ 	MOVQ	0(SP), AX	// sec
+diff -ru b/src/runtime/sys_linux_arm64.s a/src/runtime/sys_linux_arm64.s
+--- b/src/runtime/sys_linux_arm64.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_arm64.s	2018-05-09 17:12:47.844591628 +0200
+@@ -201,7 +201,7 @@
+ 	RET
+ 
+ TEXT runtime·nanotime(SB),NOSPLIT,$24-8
+-	MOVW	$1, R0 // CLOCK_MONOTONIC
++	MOVW	$7, R0 // CLOCK_BOOTTIME
+ 	MOVD	RSP, R1
+ 	MOVD	$SYS_clock_gettime, R8
+ 	SVC
+diff -ru b/src/runtime/sys_linux_arm.s a/src/runtime/sys_linux_arm.s
+--- b/src/runtime/sys_linux_arm.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_arm.s	2018-05-09 17:13:18.983281049 +0200
+@@ -235,7 +235,7 @@
+ 
+ // int64 nanotime(void)
+ TEXT runtime·nanotime(SB),NOSPLIT,$32
+-	MOVW	$1, R0  // CLOCK_MONOTONIC
++	MOVW	$7, R0  // CLOCK_BOOTTIME
+ 	MOVW	$8(R13), R1  // timespec
+ 	MOVW	$SYS_clock_gettime, R7
+ 	SWI	$0
+diff -ru b/src/runtime/sys_linux_mips64x.s a/src/runtime/sys_linux_mips64x.s
+--- b/src/runtime/sys_linux_mips64x.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_mips64x.s	2018-05-09 17:09:42.321531721 +0200
+@@ -197,7 +197,7 @@
+ 	RET
+ 
+ TEXT runtime·nanotime(SB),NOSPLIT,$16
+-	MOVW	$1, R4 // CLOCK_MONOTONIC
++	MOVW	$7, R4 // CLOCK_BOOTTIME
+ 	MOVV	$0(R29), R5
+ 	MOVV	$SYS_clock_gettime, R2
+ 	SYSCALL
+diff -ru b/src/runtime/sys_linux_mipsx.s a/src/runtime/sys_linux_mipsx.s
+--- b/src/runtime/sys_linux_mipsx.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_mipsx.s	2018-05-09 17:09:42.321531721 +0200
+@@ -202,7 +202,7 @@
+ 	RET
+ 
+ TEXT runtime·nanotime(SB),NOSPLIT,$8-8
+-	MOVW	$1, R4	// CLOCK_MONOTONIC
++	MOVW	$7, R4	// CLOCK_BOOTTIME
+ 	MOVW	$4(R29), R5
+ 	MOVW	$SYS_clock_gettime, R2
+ 	SYSCALL
+diff -ru b/src/runtime/sys_linux_ppc64x.s a/src/runtime/sys_linux_ppc64x.s
+--- b/src/runtime/sys_linux_ppc64x.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_ppc64x.s	2018-05-09 17:09:42.322531710 +0200
+@@ -176,7 +176,7 @@
+ 	RET
+ 
+ TEXT runtime·nanotime(SB),NOSPLIT,$16
+-	MOVW	$1, R3 // CLOCK_MONOTONIC
++	MOVW	$7, R3 // CLOCK_BOOTTIME
+ 	MOVD	$0(R1), R4
+ 	SYSCALL	$SYS_clock_gettime
+ 	MOVD	0(R1), R3	// sec
+diff -ru b/src/runtime/sys_linux_s390x.s a/src/runtime/sys_linux_s390x.s
+--- b/src/runtime/sys_linux_s390x.s	2018-04-30 22:26:39.000000000 +0200
++++ a/src/runtime/sys_linux_s390x.s	2018-05-09 17:09:42.322531710 +0200
+@@ -188,7 +188,7 @@
+ 	RET
+ 
+ TEXT runtime·nanotime(SB),NOSPLIT,$16
+-	MOVW	$1, R2 // CLOCK_MONOTONIC
++	MOVW	$7, R2 // CLOCK_BOOTTIME
+ 	MOVD	$tp-16(SP), R3
+ 	MOVW	$SYS_clock_gettime, R1
+ 	SYSCALL
