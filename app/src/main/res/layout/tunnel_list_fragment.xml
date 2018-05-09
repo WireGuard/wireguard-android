@@ -35,8 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="8dp"
-            app:fab_addButtonColorNormal="@color/wireguard_brand_red"
-            app:fab_addButtonColorPressed="@color/wireguard_brand_red"
             app:fab_labelStyle="@style/fab_label"
             app:fab_labelsPosition="left"
             app:layout_dodgeInsetEdges="bottom">
@@ -46,8 +44,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestCreateConfig}"
-                app:fab_colorNormal="@color/wireguard_brand_red"
-                app:fab_colorPressed="@color/wireguard_brand_red"
                 app:fab_icon="@drawable/ic_action_edit"
                 app:fab_size="mini"
                 app:fab_title="@string/create_empty" />
@@ -57,8 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestImportConfig}"
-                app:fab_colorNormal="@color/wireguard_brand_red"
-                app:fab_colorPressed="@color/wireguard_brand_red"
                 app:fab_icon="@drawable/ic_action_open"
                 app:fab_size="mini"
                 app:fab_title="@string/create_from_file" />

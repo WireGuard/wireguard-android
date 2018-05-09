@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#ed2c3e50</color> <!-- WireGuard blue, but lighter -->
     <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
     <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
-    <color name="wireguard_brand_red">#871719</color>
-    <color name="wireguard_brand_blue">#2c3e50</color>
 </resources>
