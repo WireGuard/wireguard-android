@@ -10,13 +10,14 @@ package main
 import "C"
 
 import (
+	"./rwcancel"
 	"bufio"
+	"golang.org/x/sys/unix"
 	"io/ioutil"
 	"log"
 	"math"
 	"os"
 	"strings"
-	"syscall"
 )
 
 type AndroidLogger struct {
@@ -52,21 +53,19 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		events: make(chan TUNEvent, 5),
 		errors: make(chan error, 5),
 		nopi:   true,
+		statusListenersShutdown: make(chan struct{}),
 	}
 	var err error
 
-	err = syscall.SetNonblock(int(tun_fd), true)
+	tun.fdCancel, err = rwcancel.NewRWCancel(int(tun_fd))
 	if err != nil {
-		logger.Error.Println(err)
-		return -1
-	}
-	tun.closingReader, tun.closingWriter, err = os.Pipe()
-	if err != nil {
+		unix.Close(int(tun_fd))
 		logger.Error.Println(err)
 		return -1
 	}
 	name, err := tun.Name()
 	if err != nil {
+		unix.Close(int(tun_fd))
 		logger.Error.Println(err)
 		return -1
 	}
@@ -77,6 +76,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	setError := ipcSetOperation(device, bufferedSettings)
 	if setError != nil {
+		unix.Close(int(tun_fd))
 		logger.Error.Println(setError)
 		return -1
 	}
@@ -91,6 +91,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		}
 	}
 	if i == math.MaxInt32 {
+		unix.Close(int(tun_fd))
 		return -1
 	}
 	tunnelHandles[i] = device
