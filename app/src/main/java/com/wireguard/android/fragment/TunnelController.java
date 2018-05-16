@@ -48,7 +48,7 @@ public final class TunnelController {
             if (throwable == null)
                 return;
             final Context context = view.getContext();
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             final int messageResId = checked ? R.string.error_up : R.string.error_down;
             final String message = context.getString(messageResId, error);
             Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();

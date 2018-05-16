@@ -102,7 +102,7 @@ public class ZipExporterPreference extends Preference {
 
     private void exportZipComplete(final String filePath, final Throwable throwable) {
         if (throwable != null) {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             final String message = getContext().getString(R.string.export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(

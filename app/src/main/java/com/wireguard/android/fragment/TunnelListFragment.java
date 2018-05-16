@@ -239,7 +239,7 @@ public class TunnelListFragment extends BaseFragment {
         if (throwable == null) {
             message = getResources().getQuantityString(R.plurals.delete_success, count, count);
         } else {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             message = getResources().getQuantityString(R.plurals.delete_error, count, count, error);
             Log.e(TAG, message, throwable);
         }
@@ -252,7 +252,7 @@ public class TunnelListFragment extends BaseFragment {
         String message = null;
 
         for (final Throwable throwable : throwables) {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             message = getString(R.string.import_error, error);
             Log.e(TAG, message, throwable);
         }
