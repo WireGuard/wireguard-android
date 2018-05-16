@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -142,7 +141,8 @@ public class TunnelListFragment extends BaseFragment {
                     }
                 }
             } else {
-                futureTunnels.add(tunnelManager.create(name, Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
+                futureTunnels.add(tunnelManager.create(name,
+                        Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
             }
 
             if (futureTunnels.isEmpty()) {
@@ -244,8 +244,7 @@ public class TunnelListFragment extends BaseFragment {
             Log.e(TAG, message, throwable);
         }
         if (binding != null) {
-            final CoordinatorLayout container = binding.mainContainer;
-            Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -271,8 +270,7 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size(), tunnels.size() + throwables.size());
 
         if (binding != null) {
-            final CoordinatorLayout container = binding.mainContainer;
-            Snackbar.make(container, message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
         }
     }
 
