@@ -76,7 +76,7 @@ public class QuickTileService extends TileService {
                                   final Throwable throwable) {
         if (throwable == null)
             return;
-        final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+        final String error = ExceptionLoggers.unwrapMessage(throwable);
         final String message = getString(R.string.toggle_error, error);
         Log.e(TAG, message, throwable);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

@@ -54,7 +54,7 @@ public class TunnelEditorFragment extends BaseFragment {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             message = getString(R.string.config_save_error, savedTunnel.getName(), error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
@@ -119,7 +119,7 @@ public class TunnelEditorFragment extends BaseFragment {
                 try {
                     binding.getConfig().commitData(newConfig);
                 } catch (final Exception e) {
-                    final String error = ExceptionLoggers.unwrap(e).getMessage();
+                    final String error = ExceptionLoggers.unwrapMessage(e);
                     final String tunnelName = tunnel == null ? binding.getConfig().getName() : tunnel.getName();
                     final String message = getString(R.string.config_save_error, tunnelName, error);
                     Log.e(TAG, message, e);
@@ -171,7 +171,7 @@ public class TunnelEditorFragment extends BaseFragment {
             Log.d(TAG, message);
             onFinished();
         } else {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             message = getString(R.string.tunnel_create_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
@@ -190,7 +190,7 @@ public class TunnelEditorFragment extends BaseFragment {
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel.getName());
             renamedTunnel.setConfig(newConfig).whenComplete((a, b) -> onConfigSaved(renamedTunnel, b));
         } else {
-            final String error = ExceptionLoggers.unwrap(throwable).getMessage();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
             message = getString(R.string.tunnel_rename_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
