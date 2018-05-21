@@ -17,7 +17,10 @@ import (
 	"log"
 	"math"
 	"os"
+	"os/signal"
+	"runtime"
 	"strings"
+	"unsafe"
 )
 
 type AndroidLogger struct {
@@ -34,6 +37,19 @@ var tunnelHandles map[int32]*Device
 
 func init() {
 	tunnelHandles = make(map[int32]*Device)
+	signals := make(chan os.Signal)
+	signal.Notify(signals, unix.SIGUSR2)
+	go func() {
+		buf := make([]byte, os.Getpagesize())
+		for {
+			select {
+			case <-signals:
+				n := runtime.Stack(buf, true)
+				buf[n] = 0
+				C.__android_log_write(C.ANDROID_LOG_ERROR, C.CString("WireGuard/GoBackend/Stacktrace"), (*_Ctype_char)(unsafe.Pointer(&buf[0])))
+			}
+		}
+	}()
 }
 
 //export wgTurnOn
@@ -53,7 +69,6 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		events: make(chan TUNEvent, 5),
 		errors: make(chan error, 5),
 		nopi:   true,
-		statusListenersShutdown: make(chan struct{}),
 	}
 	var err error
 
