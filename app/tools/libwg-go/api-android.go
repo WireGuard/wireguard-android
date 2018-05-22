@@ -133,7 +133,18 @@ func wgGetSocketV4(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	return int32(native.sock4)
+	fd := int32(-1)
+	conn, err := native.ipv4.SyscallConn()
+	if err != nil {
+		return -1
+	}
+	err = conn.Control(func(f uintptr) {
+		fd = int32(f)
+	})
+	if err != nil {
+		return -1
+	}
+	return fd
 }
 
 //export wgGetSocketV6
@@ -146,7 +157,18 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	return int32(native.sock6)
+	fd := int32(-1)
+	conn, err := native.ipv6.SyscallConn()
+	if err != nil {
+		return -1
+	}
+	err = conn.Control(func(f uintptr) {
+		fd = int32(f)
+	})
+	if err != nil {
+		return -1
+	}
+	return fd
 }
 
 func main() {}
