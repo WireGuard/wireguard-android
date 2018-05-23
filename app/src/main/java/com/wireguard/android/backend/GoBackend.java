@@ -51,6 +51,10 @@ public final class GoBackend implements Backend {
 
     private static native int wgGetSocketV6(int handle);
 
+    private static native void wgPutSocketV4(int handle);
+
+    private static native void wgPutSocketV6(int handle);
+
     private static native void wgTurnOff(int handle);
 
     private static native int wgTurnOn(String ifName, int tunFd, String settings);
@@ -186,7 +190,9 @@ public final class GoBackend implements Backend {
             currentTunnel = tunnel;
 
             service.protect(wgGetSocketV4(currentTunnelHandle));
+            wgPutSocketV4(currentTunnelHandle);
             service.protect(wgGetSocketV6(currentTunnelHandle));
+            wgPutSocketV6(currentTunnelHandle);
         } else {
             Log.i(TAG, "Bringing tunnel down");
 
