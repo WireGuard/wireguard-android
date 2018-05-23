@@ -1,7 +1,2 @@
-go/
-*.go
-libwg-go.h
-jni.o
-gopath/
-goroot/
+src/
 .gobuildversion

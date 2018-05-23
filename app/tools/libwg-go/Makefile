@@ -11,7 +11,6 @@ NDK_GO_ARCH_MAP_arm64 := arm64
 NDK_GO_ARCH_MAP_mips := mipsx
 NDK_GO_ARCH_MAP_mips64 := mips64x
 
-export GOPATH := $(CURDIR)/gopath
 CLANG_FLAGS := --target=$(ANDROID_LLVM_TRIPLE) --gcc-toolchain=$(ANDROID_TOOLCHAIN_ROOT) --sysroot=$(ANDROID_SYSROOT)
 export CGO_CFLAGS := $(CLANG_FLAGS) $(CFLAGS)
 export CGO_LDFLAGS := $(CLANG_FLAGS) $(LDFLAGS)
@@ -48,12 +47,12 @@ endif
 
 $(shell test "$$(cat .gobuildversion 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.so")
 
-$(DESTDIR)/libwg-go.so: $(FILES) api-android.go jni.c
+$(DESTDIR)/libwg-go.so: $(FILES) src/git.zx2c4.com/wireguard-go/api-android.go src/git.zx2c4.com/wireguard-go/tun/api-android.go src/git.zx2c4.com/wireguard-go/jni.c
 	find . -name '*.go' -type l -delete
 	find . -type d -empty -delete
-	mkdir -p $(subst ../wireguard-go/,./,$(dir $(FILES)))
-	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./,$(dir $(FILE))) $(FILE);)
+	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
+	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE))) $(FILE);)
 	patch -p1 -f -R -s --dry-run -d"$$(go env GOROOT)" < goruntime-boottime-over-monotonic.diff
-	go get -v -d
-	go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared
+	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
+	GOPATH=$(PWD) go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared git.zx2c4.com/wireguard-go
 	go version > .gobuildversion
