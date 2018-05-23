@@ -10,8 +10,8 @@ package main
 import "C"
 
 import (
-	"./rwcancel"
 	"bufio"
+	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
 	"io/ioutil"
 	"log"
@@ -64,28 +64,16 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 
 	logger.Debug.Println("Debug log enabled")
 
-	tun := &NativeTun{
-		fd:     os.NewFile(uintptr(tun_fd), "/dev/tun"),
-		events: make(chan TUNEvent, 5),
-		errors: make(chan error, 5),
-		nopi:   true,
+	tun, name, err := tun.CreateTUNFromFD(int(tun_fd))
+	if err != nil {
+		unix.Close(int(tun_fd))
+		logger.Error.Println(err)
+		return -1
 	}
-	var err error
 
-	tun.fdCancel, err = rwcancel.NewRWCancel(int(tun_fd))
-	if err != nil {
-		unix.Close(int(tun_fd))
-		logger.Error.Println(err)
-		return -1
-	}
-	name, err := tun.Name()
-	if err != nil {
-		unix.Close(int(tun_fd))
-		logger.Error.Println(err)
-		return -1
-	}
 	logger.Info.Println("Attaching to interface", name)
 	device := NewDevice(tun, logger)
+
 	logger.Debug.Println("Interface has MTU", device.tun.mtu)
 
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
