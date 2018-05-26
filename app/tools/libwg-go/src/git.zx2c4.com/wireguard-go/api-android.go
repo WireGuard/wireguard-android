@@ -85,7 +85,6 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 	}
 
 	device.Up()
-	device.net.bind.(*NativeBind).clearSourceOnAllRouteChanges = true
 	logger.Info.Println("Device started")
 
 	var i int32
@@ -122,7 +121,18 @@ func wgGetSocketV4(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	return int32(native.sock4)
+	fd := int32(-1)
+	conn, err := native.ipv4.SyscallConn()
+	if err != nil {
+		return -1
+	}
+	err = conn.Control(func(f uintptr) {
+		fd = int32(f)
+	})
+	if err != nil {
+		return -1
+	}
+	return fd
 }
 
 //export wgGetSocketV6
@@ -135,41 +145,18 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 	if !ok {
 		return -1
 	}
-	return int32(native.sock6)
-}
-
-//export wgPutSocketV4
-func wgPutSocketV4(tunnelHandle int32) {
-	device, ok := tunnelHandles[tunnelHandle]
-	if !ok {
-		return
+	fd := int32(-1)
+	conn, err := native.ipv6.SyscallConn()
+	if err != nil {
+		return -1
 	}
-	native, ok := device.net.bind.(*NativeBind)
-	if !ok {
-		return
+	err = conn.Control(func(f uintptr) {
+		fd = int32(f)
+	})
+	if err != nil {
+		return -1
 	}
-	fwmark, err := unix.GetsockoptInt(native.sock6, unix.SOL_SOCKET, unix.SO_MARK)
-	if err == nil {
-		native.lastMark = uint32(fwmark)
-		device.net.fwmark = uint32(fwmark)
-	}
-}
-
-//export wgPutSocketV6
-func wgPutSocketV6(tunnelHandle int32) {
-	device, ok := tunnelHandles[tunnelHandle]
-	if !ok {
-		return
-	}
-	native, ok := device.net.bind.(*NativeBind)
-	if !ok {
-		return
-	}
-	fwmark, err := unix.GetsockoptInt(native.sock6, unix.SOL_SOCKET, unix.SO_MARK)
-	if err == nil {
-		native.lastMark = uint32(fwmark)
-		device.net.fwmark = uint32(fwmark)
-	}
+	return fd
 }
 
 func main() {}
