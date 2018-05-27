@@ -36,6 +36,7 @@ func (l AndroidLogger) Write(p []byte) (int, error) {
 var tunnelHandles map[int32]*Device
 
 func init() {
+	roamingDisabled = true
 	tunnelHandles = make(map[int32]*Device)
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
