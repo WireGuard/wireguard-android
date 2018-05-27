@@ -169,6 +169,7 @@ public class TunnelEditorFragment extends BaseFragment {
             tunnel = newTunnel;
             message = getString(R.string.tunnel_create_success, tunnel.getName());
             Log.d(TAG, message);
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
