@@ -94,9 +94,10 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
             if (Application.getComponent().getBackendType() != WgQuickBackend.class) {
-                final Preference toolsInstaller =
-                        getPreferenceManager().findPreference("tools_installer");
-                getPreferenceScreen().removePreference(toolsInstaller);
+                Preference pref = getPreferenceManager().findPreference("tools_installer");
+                getPreferenceScreen().removePreference(pref);
+                pref = getPreferenceManager().findPreference("restore_on_boot");
+                getPreferenceScreen().removePreference(pref);
             }
         }
     }
