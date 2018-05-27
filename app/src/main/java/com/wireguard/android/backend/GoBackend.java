@@ -6,6 +6,7 @@
 
 package com.wireguard.android.backend;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ParcelFileDescriptor;
@@ -13,9 +14,11 @@ import android.support.v4.util.ArraySet;
 import android.util.Log;
 
 import com.wireguard.android.Application;
+import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
 import com.wireguard.config.IPCidr;
 import com.wireguard.config.Interface;
@@ -158,6 +161,10 @@ public final class GoBackend implements Backend {
             final VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
+            final Intent configureIntent = new Intent(context, MainActivity.class);
+            configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0));
+
             for (final IPCidr addr : config.getInterface().getAddresses())
                 builder.addAddress(addr.getAddress(), addr.getCidr());
 
@@ -202,6 +209,7 @@ public final class GoBackend implements Backend {
     }
 
     private void startVpnService() {
+        Log.d(TAG, "Requesting to start VpnService");
         context.startService(new Intent(context, VpnService.class));
     }
 
@@ -224,6 +232,16 @@ public final class GoBackend implements Backend {
             }
             vpnService = vpnService.newIncompleteFuture();
             super.onDestroy();
+        }
+
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            vpnService.complete(this);
+            if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
+                Log.d(TAG, "Service started by Always-on VPN feature");
+                Application.getComponent().getTunnelManager().restoreState(true).whenComplete(ExceptionLoggers.D);
+            }
+            return super.onStartCommand(intent, flags, startId);
         }
     }
 }

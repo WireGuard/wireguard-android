@@ -24,6 +24,7 @@ import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.config.Config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -55,6 +56,8 @@ public final class TunnelManager extends BaseObservable {
     private final ObservableSortedKeyedList<String, Tunnel> tunnels =
             new ObservableSortedKeyedArrayList<>(COMPARATOR);
     private Tunnel lastUsedTunnel;
+    private boolean haveLoaded;
+    private ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
 
     @Inject
     public TunnelManager(final AsyncWorker asyncWorker, final Backend backend,
@@ -140,12 +143,27 @@ public final class TunnelManager extends BaseObservable {
                 .whenComplete(ExceptionLoggers.E);
     }
 
+    @SuppressWarnings("unchecked")
     private void onTunnelsLoaded(final Iterable<String> present, final Collection<String> running) {
         for (final String name : present)
             addToList(name, null, running.contains(name) ? State.UP : State.DOWN);
         final String lastUsedName = preferences.getString(KEY_LAST_USED_TUNNEL, null);
         if (lastUsedName != null)
             setLastUsedTunnel(tunnels.get(lastUsedName));
+        CompletableFuture<Void> toComplete[];
+        synchronized (delayedLoadRestoreTunnels) {
+            haveLoaded = true;
+            toComplete = delayedLoadRestoreTunnels.toArray(new CompletableFuture[delayedLoadRestoreTunnels.size()]);
+            delayedLoadRestoreTunnels.clear();
+        }
+        restoreState(true).whenComplete((v, t) -> {
+            for (final CompletableFuture<Void> f : toComplete) {
+                if (t == null)
+                    f.complete(v);
+                else
+                    f.completeExceptionally(t);
+            }
+        });
     }
 
     public void refreshTunnelStates() {
@@ -157,9 +175,16 @@ public final class TunnelManager extends BaseObservable {
                 .whenComplete(ExceptionLoggers.E);
     }
 
-    public CompletionStage<Void> restoreState() {
-        if (!preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
+    public CompletionStage<Void> restoreState(boolean force) {
+        if (!force && !preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
             return CompletableFuture.completedFuture(null);
+        synchronized (delayedLoadRestoreTunnels) {
+            if (!haveLoaded) {
+                CompletableFuture<Void> f = new CompletableFuture<>();
+                delayedLoadRestoreTunnels.add(f);
+                return f;
+            }
+        }
         final Set<String> previouslyRunning = preferences.getStringSet(KEY_RUNNING_TUNNELS, null);
         if (previouslyRunning == null)
             return CompletableFuture.completedFuture(null);
@@ -236,6 +261,7 @@ public final class TunnelManager extends BaseObservable {
             tunnel.onStateChanged(e == null ? newState : tunnel.getState());
             if (e == null && newState == State.UP)
                 setLastUsedTunnel(tunnel);
+            saveState();
         });
     }
 }

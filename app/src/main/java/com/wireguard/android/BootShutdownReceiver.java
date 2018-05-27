@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
 
@@ -19,13 +20,16 @@ public class BootShutdownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        if (Application.getComponent().getBackendType() != WgQuickBackend.class) {
+            return;
+        }
         final String action = intent.getAction();
         if (action == null)
             return;
         final TunnelManager tunnelManager = Application.getComponent().getTunnelManager();
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             Log.i(TAG, "Broadcast receiver restoring state (boot)");
-            tunnelManager.restoreState().whenComplete(ExceptionLoggers.D);
+            tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D);
         } else if (Intent.ACTION_SHUTDOWN.equals(action)) {
             Log.i(TAG, "Broadcast receiver saving state (shutdown)");
             tunnelManager.saveState();
