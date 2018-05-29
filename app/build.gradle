@@ -33,7 +33,6 @@ ext {
     databindingVersion = '3.1.2'
     supportLibsVersion = '27.1.1'
     daggerVersion = '2.14.1'
-    fabLibVersion = '1.10.1'
     streamsupportVersion = '1.6.0'
 }
 
@@ -45,8 +44,12 @@ dependencies {
     implementation "com.android.support:design:$supportLibsVersion"
     implementation "com.android.support:preference-v14:$supportLibsVersion"
     implementation "com.android.support:support-annotations:$supportLibsVersion"
-    implementation "com.getbase:floatingactionbutton:$fabLibVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
 }
