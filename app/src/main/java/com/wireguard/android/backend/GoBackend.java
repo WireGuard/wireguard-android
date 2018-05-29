@@ -19,6 +19,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
 import com.wireguard.config.IPCidr;
 import com.wireguard.config.Interface;
@@ -38,15 +39,12 @@ public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
     private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
 
-    static {
-        System.loadLibrary("wg-go");
-    }
-
     private final Context context;
     private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
 
     public GoBackend(final Context context) {
+        SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
     }
 
