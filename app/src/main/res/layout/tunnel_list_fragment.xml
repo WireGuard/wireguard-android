@@ -29,7 +29,7 @@
             app:items="@{tunnels}"
             app:layout="@{@layout/tunnel_list_item}" />
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
+        <com.wireguard.android.widget.fab.FloatingActionsMenu
             android:id="@+id/create_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             app:fab_labelsPosition="left"
             app:layout_dodgeInsetEdges="bottom">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
+            <com.wireguard.android.widget.fab.FloatingActionButton
                 android:id="@+id/create_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 app:fab_size="mini"
                 app:fab_title="@string/create_empty" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
+            <com.wireguard.android.widget.fab.FloatingActionButton
                 android:id="@+id/create_from_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,6 +56,6 @@
                 app:fab_icon="@drawable/ic_action_open"
                 app:fab_size="mini"
                 app:fab_title="@string/create_from_file" />
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </com.wireguard.android.widget.fab.FloatingActionsMenu>
     </android.support.design.widget.CoordinatorLayout>
 </layout>
