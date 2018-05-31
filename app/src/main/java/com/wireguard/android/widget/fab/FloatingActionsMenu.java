@@ -22,6 +22,7 @@ import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.TouchDelegate;
@@ -415,8 +416,8 @@ public class FloatingActionsMenu extends ViewGroup {
             if (button == mAddButton || title == null ||
                     button.getTag(R.id.fab_label) != null) continue;
 
-            final TextView label = new TextView(context);
-            label.setTextAppearance(context, mLabelsStyle);
+            final AppCompatTextView label = new AppCompatTextView(context);
+            label.setTextAppearance(getContext(), mLabelsStyle);
             label.setText(button.getTitle());
             addView(label);
 
