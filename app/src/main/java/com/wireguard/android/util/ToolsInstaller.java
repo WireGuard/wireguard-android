@@ -57,9 +57,10 @@ public final class ToolsInstaller {
         if (path == null)
             return INSTALL_DIRS[0];
         final List<String> paths = Arrays.asList(path.split(":"));
-        for (final File dir : INSTALL_DIRS)
+        for (final File dir : INSTALL_DIRS) {
             if (paths.contains(dir.getPath()) && dir.isDirectory())
                 return dir;
+        }
         return null;
     }
 
