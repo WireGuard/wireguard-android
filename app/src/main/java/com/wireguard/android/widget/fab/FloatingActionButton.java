@@ -57,10 +57,14 @@ public class FloatingActionButton extends AppCompatImageButton {
     }
 
     void init(final Context context, final AttributeSet attributeSet) {
-        final TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.FloatingActionButton, 0, 0);
-        mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal, getColor(android.R.color.holo_blue_dark));
-        mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed, getColor(android.R.color.holo_blue_light));
-        mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled, getColor(android.R.color.darker_gray));
+        final TypedArray attr = context.obtainStyledAttributes(attributeSet,
+                R.styleable.FloatingActionButton, 0, 0);
+        mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal,
+                getColor(R.color.color_accent));
+        mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed,
+                getColor(R.color.color_accent_dark));
+        mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled,
+                getColor(android.R.color.darker_gray));
         mSize = attr.getInt(R.styleable.FloatingActionButton_fab_size, SIZE_NORMAL);
         mIcon = attr.getResourceId(R.styleable.FloatingActionButton_fab_icon, 0);
         mTitle = attr.getString(R.styleable.FloatingActionButton_fab_title);
