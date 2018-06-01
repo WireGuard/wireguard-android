@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/list_item_activated" android:state_activated="true" />
-    <item android:drawable="@android:color/transparent" />
+    <item android:drawable="@color/list_item_activated" android:state_activated="true" /> <!-- TODO(msf): themeify this -->
+    <item android:drawable="@android:color/transparent" /> <!-- TODO(msf): themeify this -->
 </selector>

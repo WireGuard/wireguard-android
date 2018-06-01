@@ -51,7 +51,7 @@
                 android:background="@null"
                 android:contentDescription="@string/delete"
                 android:onClick="@{() -> collection.remove(item)}"
-                android:src="@drawable/ic_action_delete_black" />
+                android:src="@drawable/ic_action_delete" />
 
             <TextView
                 android:id="@+id/public_key_label"

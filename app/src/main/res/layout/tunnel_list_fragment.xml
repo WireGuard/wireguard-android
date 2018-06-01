@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestCreateConfig}"
-                app:fab_icon="@drawable/ic_action_edit"
+                app:fab_icon="@drawable/ic_action_edit_inverse"
                 app:fab_size="mini"
                 app:fab_title="@string/create_empty" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestImportConfig}"
-                app:fab_icon="@drawable/ic_action_open"
+                app:fab_icon="@drawable/ic_action_open_inverse"
                 app:fab_size="mini"
                 app:fab_title="@string/create_from_file" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>

@@ -16,6 +16,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.wireguard.android.R;
@@ -38,7 +39,7 @@ public class AddFloatingActionButton extends FloatingActionButton {
     @Override
     void init(final Context context, final AttributeSet attributeSet) {
         final TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.AddFloatingActionButton, 0, 0);
-        mPlusColor = attr.getColor(R.styleable.AddFloatingActionButton_fab_plusIconColor, getColor(android.R.color.white));
+        mPlusColor = attr.getColor(R.styleable.AddFloatingActionButton_fab_plusIconColor, FloatingActionButton.getColorFromTheme(context, android.R.attr.colorBackground, android.R.color.white));
         attr.recycle();
 
         super.init(context, attributeSet);
@@ -59,7 +60,7 @@ public class AddFloatingActionButton extends FloatingActionButton {
     }
 
     public void setPlusColorResId(@ColorRes final int plusColor) {
-        setPlusColor(getColor(plusColor));
+        setPlusColor(ContextCompat.getColor(getContext(), plusColor));
     }
 
     @Override
