@@ -16,6 +16,7 @@ import com.wireguard.android.Application;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
+import com.wireguard.android.util.Topic;
 
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
  * Base class for activities that need to remember the currently-selected tunnel.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements Topic.Subscriber {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
@@ -40,6 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        subscribeTopics();
+
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
         String savedTunnelName = null;
         if (savedInstanceState != null)
@@ -60,6 +63,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unsubscribeTopics();
+        super.onDestroy();
     }
 
     @Override
@@ -104,5 +113,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         private SelectionChangeRegistry() {
             super(new SelectionChangeNotifier());
         }
+    }
+
+    @Override
+    public void onTopicPublished(Topic topic) {
+        recreate();
+    }
+
+    @Override
+    public Topic[] getSubscription() {
+        return new Topic[] { Application.getComponent().getThemeChangeTopic() };
     }
 }

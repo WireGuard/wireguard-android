@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
@@ -22,6 +23,7 @@ import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
+import com.wireguard.android.util.Topic;
 
 import java.io.File;
 import java.util.concurrent.Executor;
@@ -66,6 +68,8 @@ public class Application extends android.app.Application {
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
+
+        Topic getThemeChangeTopic();
     }
 
     @Qualifier
@@ -86,6 +90,10 @@ public class Application extends android.app.Application {
 
         private ApplicationModule(final Application application) {
             context = application.getApplicationContext();
+
+            AppCompatDelegate.setDefaultNightMode(
+                    getPreferences(context).getBoolean("dark_theme", false) ?
+                          AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         }
 
         @ApplicationScope
@@ -109,6 +117,12 @@ public class Application extends android.app.Application {
         @Provides
         public static ConfigStore getConfigStore(@ApplicationContext final Context context) {
             return new FileConfigStore(context);
+        }
+
+        @ApplicationScope
+        @Provides
+        public static Topic getThemeChangeTopic() {
+            return new Topic();
         }
 
 

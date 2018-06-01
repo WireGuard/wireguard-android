@@ -6,12 +6,14 @@
 
 package com.wireguard.android.activity;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.WgQuickBackend;
+import com.wireguard.android.util.Topic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +33,7 @@ import java.util.Map;
  * Interface for changing application-global persistent settings.
  */
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements Topic.Subscriber {
     private final Map<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
     private int permissionRequestCounter;
 
@@ -56,11 +59,18 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        subscribeTopics();
         if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new SettingsFragment())
                     .commit();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unsubscribeTopics();
+        super.onDestroy();
     }
 
     @Override
@@ -89,7 +99,17 @@ public class SettingsActivity extends AppCompatActivity {
         void done(String[] permissions, int[] grantResults);
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
+    @Override
+    public void onTopicPublished(Topic topic) {
+        recreate();
+    }
+
+    @Override
+    public Topic[] getSubscription() {
+        return new Topic[] { Application.getComponent().getThemeChangeTopic() };
+    }
+
+    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
@@ -98,6 +118,27 @@ public class SettingsActivity extends AppCompatActivity {
                 getPreferenceScreen().removePreference(pref);
                 pref = getPreferenceManager().findPreference("restore_on_boot");
                 getPreferenceScreen().removePreference(pref);
+            }
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onPause() {
+            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+            super.onPause();
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if ("dark_theme".equals(key)) {
+                AppCompatDelegate.setDefaultNightMode(
+                        sharedPreferences.getBoolean(key, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+                Application.getComponent().getThemeChangeTopic().publish(false);
             }
         }
     }
