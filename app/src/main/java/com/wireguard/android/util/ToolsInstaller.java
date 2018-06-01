@@ -10,6 +10,7 @@ import android.content.Context;
 import android.system.OsConstants;
 import android.util.Log;
 
+import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.util.RootShell.NoRootException;
@@ -17,10 +18,13 @@ import com.wireguard.android.util.RootShell.NoRootException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import java9.util.concurrent.CompletionStage;
 
 /**
  * Helper to install WireGuard tools to the system partition.
@@ -50,6 +54,15 @@ public final class ToolsInstaller {
         localBinaryDir = new File(context.getCacheDir(), "bin");
         nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
         this.rootShell = rootShell;
+    }
+
+    public CompletionStage<String> getVersion() {
+        return Application.getComponent().getAsyncWorker().supplyAsync(() -> {
+            final ArrayList<String> output = new ArrayList<>();
+            if (rootShell.run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
+                throw new RuntimeException("Unable to determine kernel module version");
+            return output.get(0);
+        });
     }
 
     private static File getInstallDir() {

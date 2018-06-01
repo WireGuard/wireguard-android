@@ -56,6 +56,10 @@ public final class GoBackend implements Backend {
 
     private static native int wgTurnOn(String ifName, int tunFd, String settings);
 
+    private static native String wgVersion();
+
+    public static String getVersion() { return wgVersion(); }
+
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
         if (tunnel.getState() == State.UP) {

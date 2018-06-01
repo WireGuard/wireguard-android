@@ -13,4 +13,5 @@
         android:summaryOn="@string/dark_theme_summary_on"
         android:summaryOff="@string/dark_theme_summary_off"
         android:title="@string/dark_theme_title" />
+    <com.wireguard.android.preference.VersionPreference />
 </PreferenceScreen>
