@@ -415,10 +415,10 @@ public class FloatingActionButton extends AppCompatImageButton {
     public @interface FAB_SIZE {
     }
 
-    private static class TranslucentLayerDrawable extends LayerDrawable {
+    private static final class TranslucentLayerDrawable extends LayerDrawable {
         private final int mAlpha;
 
-        public TranslucentLayerDrawable(final int alpha, final Drawable... layers) {
+        private TranslucentLayerDrawable(final int alpha, final Drawable... layers) {
             super(layers);
             mAlpha = alpha;
         }
