@@ -160,4 +160,9 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 	return fd
 }
 
+//export wgVersion
+func wgVersion() string {
+	return WireGuardGoVersion
+}
+
 func main() {}
