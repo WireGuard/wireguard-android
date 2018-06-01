@@ -20,8 +20,8 @@ android {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 419
-        versionName '0.0.20180529'
+        versionCode 420
+        versionName '0.0.20180601'
     }
     externalNativeBuild {
         cmake {
