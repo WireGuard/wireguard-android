@@ -15,6 +15,8 @@ import android.graphics.drawable.*;
 import android.graphics.drawable.ShapeDrawable.ShaderFactory;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.annotation.*;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -56,15 +58,25 @@ public class FloatingActionButton extends AppCompatImageButton {
         init(context, attrs);
     }
 
+    //TODO(msf): make not terrible
+    public static int getColorFromTheme(final Context context, final int themeResource, @ColorRes final int fallback) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{themeResource});
+        try {
+            return a.getColor(0, ContextCompat.getColor(context, fallback));
+        } finally {
+            a.recycle();
+        }
+    }
+
     void init(final Context context, final AttributeSet attributeSet) {
         final TypedArray attr = context.obtainStyledAttributes(attributeSet,
                 R.styleable.FloatingActionButton, 0, 0);
         mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal,
-                getColor(R.color.color_accent));
+                getColorFromTheme(context, android.R.attr.colorAccent, android.R.color.holo_blue_bright));
         mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed,
-                getColor(R.color.color_accent_dark));
+                darkenOrLightenColor(mColorNormal)); //TODO(msf): use getColorForState on the accent color from theme instead to get darker states
         mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled,
-                getColor(android.R.color.darker_gray));
+                ContextCompat.getColor(context, android.R.color.darker_gray)); //TODO(msf): load from theme
         mSize = attr.getInt(R.styleable.FloatingActionButton_fab_size, SIZE_NORMAL);
         mIcon = attr.getResourceId(R.styleable.FloatingActionButton_fab_icon, 0);
         mTitle = attr.getString(R.styleable.FloatingActionButton_fab_title);
@@ -128,7 +140,7 @@ public class FloatingActionButton extends AppCompatImageButton {
     }
 
     public void setColorNormalResId(@ColorRes final int colorNormal) {
-        setColorNormal(getColor(colorNormal));
+        setColorNormal(ContextCompat.getColor(getContext(), colorNormal));
     }
 
     /**
@@ -146,7 +158,7 @@ public class FloatingActionButton extends AppCompatImageButton {
     }
 
     public void setColorPressedResId(@ColorRes final int colorPressed) {
-        setColorPressed(getColor(colorPressed));
+        setColorPressed(ContextCompat.getColor(getContext(), colorPressed));
     }
 
     /**
@@ -164,7 +176,7 @@ public class FloatingActionButton extends AppCompatImageButton {
     }
 
     public void setColorDisabledResId(@ColorRes final int colorDisabled) {
-        setColorDisabled(getColor(colorDisabled));
+        setColorDisabled(ContextCompat.getColor(getContext(), colorDisabled));
     }
 
     public boolean isStrokeVisible() {
@@ -176,10 +188,6 @@ public class FloatingActionButton extends AppCompatImageButton {
             mStrokeVisible = visible;
             updateBackground();
         }
-    }
-
-    int getColor(@ColorRes final int id) {
-        return getResources().getColor(id);
     }
 
     float getDimension(@DimenRes final int id) {
@@ -251,7 +259,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         if (mIconDrawable != null) {
             return mIconDrawable;
         } else if (mIcon != 0) {
-            return getResources().getDrawable(mIcon, null);
+            return ContextCompat.getDrawable(getContext(), mIcon);
         } else {
             return new ColorDrawable(Color.TRANSPARENT);
         }
@@ -311,7 +319,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         return shapeDrawable;
     }
 
-    private int opacityToAlpha(final float opacity) {
+    private static int opacityToAlpha(final float opacity) {
         return (int) (255f * opacity);
     }
 
@@ -321,6 +329,19 @@ public class FloatingActionButton extends AppCompatImageButton {
 
     private static int lightenColor(final int argb) {
         return adjustColorBrightness(argb, 1.1f);
+    }
+
+    public static int darkenOrLightenColor(final int argb) {
+        final float[] hsv = new float[3];
+        Color.colorToHSV(argb, hsv);
+        final float factor;
+        if (hsv[2] < 0.2)
+            factor = 1.2f;
+        else
+            factor = 0.8f;
+
+        hsv[2] = Math.min(hsv[2] * factor, 1f);
+        return Color.HSVToColor(Color.alpha(argb), hsv);
     }
 
     private static int adjustColorBrightness(final int argb, final float factor) {

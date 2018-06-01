@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!--TODO(zx2c4): set this once we have a color decided: <item name="colorAccent">@color/accent</item>-->
+    </style>
 
     <style name="SettingsTheme" parent="AppTheme">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -9,6 +11,7 @@
 
     <style name="fab_label" parent="android:TextAppearance.DeviceDefault.Inverse">
         <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">#ffffff</item> <!-- TODO(msf): themeify this -->
     </style>
 
 </resources>

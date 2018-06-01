@@ -6,5 +6,5 @@
         android:left="8dp"
         android:right="8dp"
         android:top="4dp" />
-    <solid android:color="?android:attr/colorPrimary" />
+    <solid android:color="#444444" /> <!-- TODO(msf): themeify this -->
 </shape>
