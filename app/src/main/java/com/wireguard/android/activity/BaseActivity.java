@@ -11,6 +11,7 @@ import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.backend.GoBackend;
@@ -18,6 +19,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.Topic;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -25,6 +27,8 @@ import java.util.Objects;
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements Topic.Subscriber {
+    private static final String TAG = "WireGuard/" + BaseActivity.class.getSimpleName();
+
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
@@ -117,6 +121,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Topic.Su
 
     @Override
     public void onTopicPublished(Topic topic) {
+        try {
+            Field f = getResources().getClass().getDeclaredField("mResourcesImpl");
+            f.setAccessible(true);
+            Object o = f.get(getResources());
+            f = o.getClass().getDeclaredField("mDrawableCache");
+            f.setAccessible(true);
+            o = f.get(o);
+            f = o.getClass().getSuperclass().getDeclaredField("mThemedEntries");
+            f.setAccessible(true);
+            o = f.get(o);
+            o.getClass().getMethod("clear").invoke(o);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to flush icon cache", e);
+        }
         recreate();
     }
 
