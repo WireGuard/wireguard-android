@@ -10,6 +10,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
@@ -26,12 +28,12 @@ import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
 
+@SuppressWarnings("ReturnOfInnerClass")
 public class FloatingActionsMenu extends ViewGroup {
     public static final int EXPAND_UP = 0;
     public static final int EXPAND_DOWN = 1;
@@ -44,9 +46,9 @@ public class FloatingActionsMenu extends ViewGroup {
     private static final int ANIMATION_DURATION = 300;
     private static final float COLLAPSED_PLUS_ROTATION = 0f;
     private static final float EXPANDED_PLUS_ROTATION = 90f + 45f;
-    private static final Interpolator sExpandInterpolator = new OvershootInterpolator();
-    private static final Interpolator sCollapseInterpolator = new DecelerateInterpolator(3f);
-    private static final Interpolator sAlphaExpandInterpolator = new DecelerateInterpolator();
+    private static final TimeInterpolator EXPAND_INTERPOLATOR = new OvershootInterpolator();
+    private static final TimeInterpolator COLLAPSE_INTERPOLATOR = new DecelerateInterpolator(3f);
+    private static final TimeInterpolator ALPHA_EXPAND_INTERPOLATOR = new DecelerateInterpolator();
     private int mAddButtonPlusColor;
     private int mAddButtonColorNormal;
     private int mAddButtonColorPressed;
@@ -74,7 +76,7 @@ public class FloatingActionsMenu extends ViewGroup {
         this(context, null);
     }
 
-    public FloatingActionsMenu(final Context context, AttributeSet attrs) {
+    public FloatingActionsMenu(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -134,7 +136,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 final RotatingDrawable rotatingDrawable = new RotatingDrawable(super.getIconDrawable());
                 mRotatingDrawable = rotatingDrawable;
 
-                final OvershootInterpolator interpolator = new OvershootInterpolator();
+                final TimeInterpolator interpolator = new OvershootInterpolator();
 
                 final ObjectAnimator collapseAnimator = ObjectAnimator.ofFloat(rotatingDrawable, "rotation", EXPANDED_PLUS_ROTATION, COLLAPSED_PLUS_ROTATION);
                 final ObjectAnimator expandAnimator = ObjectAnimator.ofFloat(rotatingDrawable, "rotation", COLLAPSED_PLUS_ROTATION, EXPANDED_PLUS_ROTATION);
@@ -151,12 +153,7 @@ public class FloatingActionsMenu extends ViewGroup {
 
         mAddButton.setId(R.id.fab_expand_menu_button);
         mAddButton.setSize(mAddButtonSize);
-        mAddButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggle();
-            }
-        });
+        mAddButton.setOnClickListener(v -> toggle());
 
         addView(mAddButton, super.generateDefaultLayoutParams());
         mButtonsCount++;
@@ -194,7 +191,7 @@ public class FloatingActionsMenu extends ViewGroup {
         int maxLabelWidth = 0;
 
         for (int i = 0; i < mButtonsCount; i++) {
-            View child = getChildAt(i);
+            final View child = getChildAt(i);
 
             if (child.getVisibility() == GONE) {
                 continue;
@@ -214,17 +211,17 @@ public class FloatingActionsMenu extends ViewGroup {
             }
 
             if (!expandsHorizontally()) {
-                TextView label = (TextView) child.getTag(R.id.fab_label);
+                final TextView label = (TextView) child.getTag(R.id.fab_label);
                 if (label != null) {
                     maxLabelWidth = Math.max(maxLabelWidth, label.getMeasuredWidth());
                 }
             }
         }
 
-        if (!expandsHorizontally()) {
-            width = mMaxButtonWidth + (maxLabelWidth > 0 ? maxLabelWidth + mLabelsMargin : 0);
-        } else {
+        if (expandsHorizontally()) {
             height = mMaxButtonHeight;
+        } else {
+            width = mMaxButtonWidth + (maxLabelWidth > 0 ? maxLabelWidth + mLabelsMargin : 0);
         }
 
         switch (mExpandDirection) {
@@ -243,7 +240,7 @@ public class FloatingActionsMenu extends ViewGroup {
         setMeasuredDimension(width, height);
     }
 
-    private int adjustForOvershoot(final int dimension) {
+    private static int adjustForOvershoot(final int dimension) {
         return dimension * 12 / 10;
     }
 
@@ -290,7 +287,7 @@ public class FloatingActionsMenu extends ViewGroup {
                     child.setTranslationY(mExpanded ? expandedTranslation : collapsedTranslation);
                     child.setAlpha(mExpanded ? 1f : 0f);
 
-                    LayoutParams params = (LayoutParams) child.getLayoutParams();
+                    final LayoutParams params = (LayoutParams) child.getLayoutParams();
                     params.mCollapseDir.setFloatValues(expandedTranslation, collapsedTranslation);
                     params.mExpandDir.setFloatValues(collapsedTranslation, expandedTranslation);
                     params.setAnimationsTarget(child);
@@ -322,7 +319,7 @@ public class FloatingActionsMenu extends ViewGroup {
                         label.setTranslationY(mExpanded ? expandedTranslation : collapsedTranslation);
                         label.setAlpha(mExpanded ? 1f : 0f);
 
-                        LayoutParams labelParams = (LayoutParams) label.getLayoutParams();
+                        final LayoutParams labelParams = (LayoutParams) label.getLayoutParams();
                         labelParams.mCollapseDir.setFloatValues(expandedTranslation, collapsedTranslation);
                         labelParams.mExpandDir.setFloatValues(collapsedTranslation, expandedTranslation);
                         labelParams.setAnimationsTarget(label);
@@ -525,6 +522,7 @@ public class FloatingActionsMenu extends ViewGroup {
             return mRotation;
         }
 
+        @Keep
         @SuppressWarnings("UnusedDeclaration")
         public void setRotation(final float rotation) {
             mRotation = rotation;
@@ -544,12 +542,12 @@ public class FloatingActionsMenu extends ViewGroup {
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
 
             @Override
-            public SavedState createFromParcel(Parcel in) {
+            public SavedState createFromParcel(final Parcel in) {
                 return new SavedState(in);
             }
 
             @Override
-            public SavedState[] newArray(int size) {
+            public SavedState[] newArray(final int size) {
                 return new SavedState[size];
             }
         };
@@ -582,10 +580,10 @@ public class FloatingActionsMenu extends ViewGroup {
         LayoutParams(final ViewGroup.LayoutParams source) {
             super(source);
 
-            mExpandDir.setInterpolator(sExpandInterpolator);
-            mExpandAlpha.setInterpolator(sAlphaExpandInterpolator);
-            mCollapseDir.setInterpolator(sCollapseInterpolator);
-            mCollapseAlpha.setInterpolator(sCollapseInterpolator);
+            mExpandDir.setInterpolator(EXPAND_INTERPOLATOR);
+            mExpandAlpha.setInterpolator(ALPHA_EXPAND_INTERPOLATOR);
+            mCollapseDir.setInterpolator(COLLAPSE_INTERPOLATOR);
+            mCollapseAlpha.setInterpolator(COLLAPSE_INTERPOLATOR);
 
             mCollapseAlpha.setProperty(View.ALPHA);
             mCollapseAlpha.setFloatValues(1f, 0f);

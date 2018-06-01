@@ -51,7 +51,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         init(context, attrs);
     }
 
-    public FloatingActionButton(Context context, AttributeSet attrs, int defStyle) {
+    public FloatingActionButton(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
     }
@@ -294,7 +294,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         return drawable;
     }
 
-    private Drawable createOuterStrokeDrawable(final float strokeWidth) {
+    private static Drawable createOuterStrokeDrawable(final float strokeWidth) {
         final ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
 
         final Paint paint = shapeDrawable.getPaint();
@@ -311,15 +311,15 @@ public class FloatingActionButton extends AppCompatImageButton {
         return (int) (255f * opacity);
     }
 
-    private int darkenColor(final int argb) {
+    private static int darkenColor(final int argb) {
         return adjustColorBrightness(argb, 0.9f);
     }
 
-    private int lightenColor(final int argb) {
+    private static int lightenColor(final int argb) {
         return adjustColorBrightness(argb, 1.1f);
     }
 
-    private int adjustColorBrightness(final int argb, final float factor) {
+    private static int adjustColorBrightness(final int argb, final float factor) {
         final float[] hsv = new float[3];
         Color.colorToHSV(argb, hsv);
 
@@ -328,7 +328,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         return Color.HSVToColor(Color.alpha(argb), hsv);
     }
 
-    private int halfTransparent(final int argb) {
+    private static int halfTransparent(final int argb) {
         return Color.argb(
                 Color.alpha(argb) / 2,
                 Color.red(argb),
@@ -337,7 +337,7 @@ public class FloatingActionButton extends AppCompatImageButton {
         );
     }
 
-    private int opaque(final int argb) {
+    private static int opaque(final int argb) {
         return Color.rgb(
                 Color.red(argb),
                 Color.green(argb),
