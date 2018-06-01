@@ -49,11 +49,11 @@ JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetSocketV
 
 JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
 {
+	jstring ret;
 	struct go_string s = wgVersion();
 	char *cstr = malloc(s.n + 1);
 	if (!cstr)
 		return NULL;
-	jstring ret;
 	memcpy(cstr, s.str, s.n);
 	cstr[s.n] = '\0';
 	ret = (*env)->NewStringUTF(env, cstr);
