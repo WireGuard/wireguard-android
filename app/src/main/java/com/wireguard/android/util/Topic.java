@@ -24,7 +24,9 @@ public class Topic {
         if (subscribers == null) {
             subscribers = new LinkedList<>();
         }
-        subscribers.add(new WeakReference<>(sub));
+        synchronized (subscribers) {
+            subscribers.add(new WeakReference<>(sub));
+        }
     }
 
     public void unsubscribe() {
@@ -32,10 +34,12 @@ public class Topic {
     }
 
     public void unsubscribe(Subscriber sub) {
-        for (Iterator<WeakReference<Subscriber>> i = subscribers.iterator(); i.hasNext();) {
-            WeakReference<Subscriber> subscriber = i.next();
-            if (subscriber.get() == null || subscriber.get() == sub) {
-                i.remove();
+        synchronized (subscribers) {
+            for (Iterator<WeakReference<Subscriber>> i = subscribers.iterator(); i.hasNext(); ) {
+                WeakReference<Subscriber> subscriber = i.next();
+                if (subscriber.get() == null || subscriber.get() == sub) {
+                    i.remove();
+                }
             }
         }
     }
@@ -58,7 +62,11 @@ public class Topic {
             state = PUBLISHED;
         this.results = results;
         if (subscribers != null) {
-            for (WeakReference<Subscriber> subscriber : subscribers) {
+            List<WeakReference<Subscriber>> subscribersCopy = new LinkedList<>();
+            synchronized (subscribers) {
+                subscribersCopy.addAll(subscribers);
+            }
+            for (WeakReference<Subscriber> subscriber : subscribersCopy) {
                 if (subscriber.get() != null)
                     subscriber.get().onTopicPublished(this);
             }
@@ -86,12 +94,15 @@ public class Topic {
                 topic.subscribe(this);
             }
         }
+
         default void unsubscribeTopics() {
             for (Topic event : getSubscription()) {
                 event.unsubscribe(this);
             }
         }
+
         void onTopicPublished(Topic topic);
+
         Topic[] getSubscription();
     }
 }
