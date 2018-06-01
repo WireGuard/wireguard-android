@@ -6,5 +6,5 @@
         android:left="8dp"
         android:right="8dp"
         android:top="4dp" />
-    <solid android:color="#444444" /> <!-- TODO(msf): themeify this -->
+    <solid android:color="@color/fab_label_background_color" />
 </shape>

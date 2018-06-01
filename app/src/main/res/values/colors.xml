@@ -4,4 +4,6 @@
     <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
     <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
     <color name="accent">#2196F3</color>
+    <color name="fab_label_text_color">#ffffff</color>
+    <color name="fab_label_background_color">#444444</color>
 </resources>
