@@ -29,6 +29,9 @@
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
     <string name="create_from_file">Create from file or archive</string>
+    <string name="dark_theme_title">Use dark theme</string>
+    <string name="dark_theme_summary_on">Currently using dark night theme</string>
+    <string name="dark_theme_summary_off">Currently using light day theme</string>
     <string name="delete">Delete</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
