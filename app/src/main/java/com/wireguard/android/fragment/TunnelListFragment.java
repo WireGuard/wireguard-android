@@ -343,7 +343,11 @@ public class TunnelListFragment extends BaseFragment {
 
         private void updateTitle(final ActionMode mode) {
             final int count = (int) getCheckedPositions().count();
-            mode.setTitle(resources.getQuantityString(R.plurals.delete_title, count, count));
+            if (count == 0) {
+                mode.setTitle("");
+            } else {
+                mode.setTitle(resources.getQuantityString(R.plurals.delete_title, count, count));
+            }
         }
     }
 
