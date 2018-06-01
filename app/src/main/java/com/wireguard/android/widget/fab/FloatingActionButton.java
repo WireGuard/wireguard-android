@@ -7,6 +7,7 @@
 package com.wireguard.android.widget.fab;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.graphics.Paint.Style;
@@ -16,9 +17,9 @@ import android.graphics.drawable.ShapeDrawable.ShaderFactory;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.annotation.*;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
@@ -58,14 +59,13 @@ public class FloatingActionButton extends AppCompatImageButton {
         init(context, attrs);
     }
 
-    //TODO(msf): make not terrible
     public static int getColorFromTheme(final Context context, final int themeResource, @ColorRes final int fallback) {
-        TypedArray a = context.getTheme().obtainStyledAttributes(new int[]{themeResource});
-        try {
-            return a.getColor(0, ContextCompat.getColor(context, fallback));
-        } finally {
-            a.recycle();
-        }
+        final TypedValue typedValue = new TypedValue();
+        final Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(themeResource, typedValue, true);
+        @ColorInt final int color = typedValue.data;
+        return color == 0 ? fallback : color;
+
     }
 
     void init(final Context context, final AttributeSet attributeSet) {

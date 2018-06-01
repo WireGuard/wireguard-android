@@ -3,6 +3,5 @@
     <!-- TODO(msf): remove these two hard-coded colors -->
     <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
     <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
-
-    <!-- TODO(zx2c4): set this once we have a color decided - <color name="accent">#2196F3</color> -->
+    <color name="accent">#2196F3</color>
 </resources>
