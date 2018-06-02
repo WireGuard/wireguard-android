@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Topic {
 
     private static final int NON_INIT = 0;
@@ -20,27 +24,24 @@ public class Topic {
     private List<WeakReference<Subscriber>> subscribers;
     private Object[] results;
 
-    public void subscribe(Subscriber sub) {
-        if (subscribers == null) {
-            subscribers = new LinkedList<>();
-        }
-        synchronized (subscribers) {
-            subscribers.add(new WeakReference<>(sub));
-        }
+    public Topic() {
+        subscribers = new SyncArrayList<>();
     }
 
-    public void unsubscribe() {
-        subscribers = null;
+    public synchronized void subscribe(Subscriber sub) {
+        subscribers.add(new WeakReference<>(sub));
     }
 
-    public void unsubscribe(Subscriber sub) {
-        synchronized (subscribers) {
-            for (Iterator<WeakReference<Subscriber>> i = subscribers.iterator(); i.hasNext(); ) {
-                WeakReference<Subscriber> subscriber = i.next();
-                if (subscriber.get() == null || subscriber.get() == sub) {
-                    i.remove();
-                }
-            }
+    public synchronized void unsubscribe() {
+        subscribers = new SyncArrayList<>();
+    }
+
+    public synchronized void unsubscribe(Subscriber sub) {
+        List<WeakReference<Subscriber>> subs = subscribers;
+        subscribers = new ArrayList<>();
+        for (WeakReference<Subscriber> subscriber : subs) {
+            if (subscriber.get() != null && subscriber.get() != sub)
+                subscribers.add(subscriber);
         }
     }
 
@@ -61,15 +62,11 @@ public class Topic {
         if (record)
             state = PUBLISHED;
         this.results = results;
-        if (subscribers != null) {
-            List<WeakReference<Subscriber>> subscribersCopy = new LinkedList<>();
-            synchronized (subscribers) {
-                subscribersCopy.addAll(subscribers);
-            }
-            for (WeakReference<Subscriber> subscriber : subscribersCopy) {
-                if (subscriber.get() != null)
-                    subscriber.get().onTopicPublished(this);
-            }
+        // Snapshot
+        List<WeakReference<Subscriber>> subs = subscribers;
+        for (WeakReference<Subscriber> subscriber : subs) {
+            if (subscriber != null && subscriber.get() != null)
+                subscriber.get().onTopicPublished(this);
         }
     }
 
@@ -94,15 +91,19 @@ public class Topic {
                 topic.subscribe(this);
             }
         }
-
         default void unsubscribeTopics() {
             for (Topic event : getSubscription()) {
                 event.unsubscribe(this);
             }
         }
-
         void onTopicPublished(Topic topic);
-
         Topic[] getSubscription();
+    }
+
+    private static class SyncArrayList<E> extends ArrayList<E> {
+        @Override
+        public synchronized boolean add(E e) {
+            return super.add(e);
+        }
     }
 }
