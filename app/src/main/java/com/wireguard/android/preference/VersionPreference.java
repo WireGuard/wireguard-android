@@ -27,10 +27,9 @@ public class VersionPreference extends Preference {
             versionSummary = getContext().getString(R.string.version_userspace_summary, GoBackend.getVersion());
         } else if (Application.getComponent().getBackendType() == WgQuickBackend.class) {
             Application.getComponent().getToolsInstaller().getVersion().whenComplete((version, exception) -> {
-                if (exception == null)
-                    versionSummary = getContext().getString(R.string.version_kernel_summary, version);
-                else
-                    versionSummary = getContext().getString(R.string.version_kernel_unknown_summary);
+                versionSummary = exception == null
+                        ? getContext().getString(R.string.version_kernel_summary, version)
+                        : getContext().getString(R.string.version_kernel_unknown_summary);
                 notifyChanged();
             });
         }

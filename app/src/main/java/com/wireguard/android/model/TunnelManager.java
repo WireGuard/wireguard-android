@@ -57,7 +57,7 @@ public final class TunnelManager extends BaseObservable {
             new ObservableSortedKeyedArrayList<>(COMPARATOR);
     private Tunnel lastUsedTunnel;
     private boolean haveLoaded;
-    private ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
+    private final ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
 
     @Inject
     public TunnelManager(final AsyncWorker asyncWorker, final Backend backend,
@@ -150,7 +150,7 @@ public final class TunnelManager extends BaseObservable {
         final String lastUsedName = preferences.getString(KEY_LAST_USED_TUNNEL, null);
         if (lastUsedName != null)
             setLastUsedTunnel(tunnels.get(lastUsedName));
-        CompletableFuture<Void> toComplete[];
+        final CompletableFuture<Void>[] toComplete;
         synchronized (delayedLoadRestoreTunnels) {
             haveLoaded = true;
             toComplete = delayedLoadRestoreTunnels.toArray(new CompletableFuture[delayedLoadRestoreTunnels.size()]);
@@ -175,12 +175,12 @@ public final class TunnelManager extends BaseObservable {
                 .whenComplete(ExceptionLoggers.E);
     }
 
-    public CompletionStage<Void> restoreState(boolean force) {
+    public CompletionStage<Void> restoreState(final boolean force) {
         if (!force && !preferences.getBoolean(KEY_RESTORE_ON_BOOT, false))
             return CompletableFuture.completedFuture(null);
         synchronized (delayedLoadRestoreTunnels) {
             if (!haveLoaded) {
-                CompletableFuture<Void> f = new CompletableFuture<>();
+                final CompletableFuture<Void> f = new CompletableFuture<>();
                 delayedLoadRestoreTunnels.add(f);
                 return f;
             }

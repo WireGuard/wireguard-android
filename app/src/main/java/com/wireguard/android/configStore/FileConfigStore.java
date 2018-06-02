@@ -42,7 +42,7 @@ public final class FileConfigStore implements ConfigStore {
         final File file = fileFor(name);
         if (!file.createNewFile())
             throw new IOException("Configuration file " + file.getName() + " already exists");
-        try (FileOutputStream stream = new FileOutputStream(file, false)) {
+        try (final FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
         return config;
@@ -70,7 +70,7 @@ public final class FileConfigStore implements ConfigStore {
 
     @Override
     public Config load(final String name) throws IOException {
-        try (FileInputStream stream = new FileInputStream(fileFor(name))) {
+        try (final FileInputStream stream = new FileInputStream(fileFor(name))) {
             return Config.from(stream);
         }
     }
@@ -95,7 +95,7 @@ public final class FileConfigStore implements ConfigStore {
         final File file = fileFor(name);
         if (!file.isFile())
             throw new FileNotFoundException("Configuration file " + file.getName() + " not found");
-        try (FileOutputStream stream = new FileOutputStream(file, false)) {
+        try (final FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
         }
         return config;

@@ -81,8 +81,7 @@ public class ZipExporterPreference extends Preference {
                                     toString().getBytes(StandardCharsets.UTF_8));
                         }
                         zip.closeEntry();
-                        zip.close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // noinspection ResultOfMethodCallIgnored
                         file.delete();
                         throw e;

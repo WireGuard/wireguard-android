@@ -75,7 +75,8 @@ public class LogExporterPreference extends Preference {
                         throw new Exception(errors.toString());
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
+                // noinspection ResultOfMethodCallIgnored
                 file.delete();
                 throw e;
             }
