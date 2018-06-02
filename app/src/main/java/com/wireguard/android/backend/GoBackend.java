@@ -137,7 +137,7 @@ public final class GoBackend implements Backend {
             // Build config
             final Interface iface = config.getInterface();
             final String goConfig;
-            try (Formatter fmt = new Formatter(new StringBuilder())) {
+            try (final Formatter fmt = new Formatter(new StringBuilder())) {
                 fmt.format("replace_peers=true\n");
                 if (iface.getPrivateKey() != null)
                     fmt.format("private_key=%s\n", KeyEncoding.keyToHex(KeyEncoding.keyFromBase64(iface.getPrivateKey())));
@@ -184,11 +184,12 @@ public final class GoBackend implements Backend {
             builder.setMtu(mtu);
 
             builder.setBlocking(true);
-            final ParcelFileDescriptor tun = builder.establish();
-            if (tun == null)
-                throw new Exception("Unable to create tun device");
+            try (final ParcelFileDescriptor tun = builder.establish()) {
+                if (tun == null)
+                    throw new Exception("Unable to create tun device");
 
-            currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), goConfig);
+                currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), goConfig);
+            }
             if (currentTunnelHandle < 0)
                 throw new Exception("Unable to turn tunnel on (wgTurnOn return " + currentTunnelHandle + ')');
 
@@ -237,7 +238,7 @@ public final class GoBackend implements Backend {
         }
 
         @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
+        public int onStartCommand(final Intent intent, final int flags, final int startId) {
             vpnService.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");

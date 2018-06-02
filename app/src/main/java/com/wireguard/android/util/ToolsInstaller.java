@@ -58,7 +58,7 @@ public final class ToolsInstaller {
 
     public CompletionStage<String> getVersion() {
         return Application.getComponent().getAsyncWorker().supplyAsync(() -> {
-            final ArrayList<String> output = new ArrayList<>();
+            final List<String> output = new ArrayList<>();
             if (rootShell.run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
                 throw new RuntimeException("Unable to determine kernel module version");
             return output.get(0);

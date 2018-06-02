@@ -100,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
     }
 
     @Override
-    public void onTopicPublished(Topic topic) {
+    public void onTopicPublished(final Topic topic) {
         recreate();
     }
 
@@ -134,7 +134,7 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
         }
 
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
             if ("dark_theme".equals(key)) {
                 AppCompatDelegate.setDefaultNightMode(
                         sharedPreferences.getBoolean(key, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);

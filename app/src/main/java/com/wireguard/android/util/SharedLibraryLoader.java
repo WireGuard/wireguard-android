@@ -22,7 +22,7 @@ public final class SharedLibraryLoader {
     private SharedLibraryLoader() {
     }
 
-    public static final void loadSharedLibrary(final Context context, final String libName) {
+    public static void loadSharedLibrary(final Context context, final String libName) {
         Throwable noAbiException;
         try {
             System.loadLibrary(libName);
@@ -35,12 +35,12 @@ public final class SharedLibraryLoader {
         final ZipFile zipFile;
         try {
             zipFile = new ZipFile(new File(context.getApplicationInfo().sourceDir), ZipFile.OPEN_READ);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
 
         final String mappedLibName = System.mapLibraryName(libName);
-        byte buffer[] = new byte[1024 * 32];
+        final byte[] buffer = new byte[1024 * 32];
         for (final String abi : Build.SUPPORTED_ABIS) {
             final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
             final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
@@ -50,13 +50,13 @@ public final class SharedLibraryLoader {
             try {
                 f = File.createTempFile("lib", ".so", context.getCacheDir());
                 Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + f.getAbsolutePath() + " and loading");
-                FileOutputStream out = new FileOutputStream(f);
-                InputStream in = zipFile.getInputStream(zipEntry);
-                int len;
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
+                try (final FileOutputStream out = new FileOutputStream(f);
+                     final InputStream in = zipFile.getInputStream(zipEntry)) {
+                    int len;
+                    while ((len = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
                 }
-                out.close();
                 System.load(f.getAbsolutePath());
                 return;
             } catch (Exception e) {
@@ -64,6 +64,7 @@ public final class SharedLibraryLoader {
                 noAbiException = e;
             } finally {
                 if (f != null)
+                    // noinspection ResultOfMethodCallIgnored
                     f.delete();
             }
         }

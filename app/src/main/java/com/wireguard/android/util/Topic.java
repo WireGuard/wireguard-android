@@ -28,7 +28,7 @@ public class Topic {
         subscribers = new SyncArrayList<>();
     }
 
-    public synchronized void subscribe(Subscriber sub) {
+    public synchronized void subscribe(final Subscriber sub) {
         subscribers.add(new WeakReference<>(sub));
     }
 
@@ -36,10 +36,10 @@ public class Topic {
         subscribers = new SyncArrayList<>();
     }
 
-    public synchronized void unsubscribe(Subscriber sub) {
+    public synchronized void unsubscribe(final Subscriber sub) {
         List<WeakReference<Subscriber>> subs = subscribers;
         subscribers = new ArrayList<>();
-        for (WeakReference<Subscriber> subscriber : subs) {
+        for (final WeakReference<Subscriber> subscriber : subs) {
             if (subscriber.get() != null && subscriber.get() != sub)
                 subscribers.add(subscriber);
         }
@@ -64,7 +64,7 @@ public class Topic {
         this.results = results;
         // Snapshot
         List<WeakReference<Subscriber>> subs = subscribers;
-        for (WeakReference<Subscriber> subscriber : subs) {
+        for (final WeakReference<Subscriber> subscriber : subs) {
             if (subscriber != null && subscriber.get() != null)
                 subscriber.get().onTopicPublished(this);
         }
@@ -84,7 +84,7 @@ public class Topic {
 
     public interface Subscriber {
         default void subscribeTopics() {
-            for (Topic topic : getSubscription()) {
+            for (final Topic topic : getSubscription()) {
                 if (topic.isPublished()) {
                     onTopicPublished(topic);
                 }
@@ -92,7 +92,7 @@ public class Topic {
             }
         }
         default void unsubscribeTopics() {
-            for (Topic event : getSubscription()) {
+            for (final Topic event : getSubscription()) {
                 event.unsubscribe(this);
             }
         }
@@ -102,7 +102,7 @@ public class Topic {
 
     private static class SyncArrayList<E> extends ArrayList<E> {
         @Override
-        public synchronized boolean add(E e) {
+        public synchronized boolean add(final E e) {
             return super.add(e);
         }
     }
