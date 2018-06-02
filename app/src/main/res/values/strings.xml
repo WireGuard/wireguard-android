@@ -76,9 +76,9 @@
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
     <string name="version_title">WireGuard for Android v%s"</string>
-    <string name="version_kernel_summary">Using kernel module implementation v%s</string>
-    <string name="version_kernel_unknown_summary">Using unknown kernel module implementation</string>
-    <string name="version_userspace_summary">Using Go userspace implementation v%s</string>
+    <string name="version_kernel_summary">Kernel module backend v%s</string>
+    <string name="version_kernel_unknown_summary">Unknown kernel module version</string>
+    <string name="version_userspace_summary">Go userspace backend v%s</string>
     <string name="zip_exporter_title">Export tunnels to zip file</string>
     <string name="zip_export_error">Unable to export tunnels: %s</string>
     <string name="zip_export_success">Saved to %s</string>
