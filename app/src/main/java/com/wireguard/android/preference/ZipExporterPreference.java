@@ -99,9 +99,9 @@ public class ZipExporterPreference extends Preference {
             Snackbar.make(
                     getPrefActivity(this).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
+            setEnabled(true);
         } else {
             exportedFilePath = filePath;
-            setEnabled(false);
             notifyChanged();
         }
     }
@@ -123,8 +123,10 @@ public class ZipExporterPreference extends Preference {
         getPrefActivity(this).ensurePermissions(
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 (permissions, granted) -> {
-                    if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED)
+                    if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED) {
+                        setEnabled(false);
                         exportZip();
+                    }
                 });
     }
 
