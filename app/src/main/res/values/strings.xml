@@ -39,9 +39,6 @@
     <string name="error_down">Error bringing down tunnel: %s</string>
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
-    <string name="export_error">Unable to export tunnels: %s</string>
-    <string name="export_success">Saved to %s</string>
-    <string name="export_summary">Zip file will be saved to downloads folder</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
@@ -51,6 +48,10 @@
     <string name="import_success">Imported “%s”</string>
     <string name="interface_title">Interface</string>
     <string name="listen_port">Listen port</string>
+    <string name="log_exporter_title">Export log file</string>
+    <string name="log_export_error">Unable to export log: %s</string>
+    <string name="log_export_success">Saved to %s</string>
+    <string name="log_export_summary">Log file will be saved to downloads folder</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
     <string name="peer">Peer</string>
@@ -79,4 +80,7 @@
     <string name="version_kernel_unknown_summary">Using unknown kernel module implementation</string>
     <string name="version_userspace_summary">Using Go userspace implementation v%s</string>
     <string name="zip_exporter_title">Export tunnels to zip file</string>
+    <string name="zip_export_error">Unable to export tunnels: %s</string>
+    <string name="zip_export_success">Saved to %s</string>
+    <string name="zip_export_summary">Zip file will be saved to downloads folder</string>
 </resources>

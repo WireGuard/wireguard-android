@@ -17,12 +17,9 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.Application.ApplicationComponent;
 import com.wireguard.android.R;
 import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.TunnelManager;
-import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
 
@@ -44,16 +41,10 @@ import java9.util.concurrent.CompletableFuture;
 public class ZipExporterPreference extends Preference {
     private static final String TAG = "WireGuard/" + ZipExporterPreference.class.getSimpleName();
 
-    private final AsyncWorker asyncWorker;
-    private final TunnelManager tunnelManager;
     private String exportedFilePath;
 
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ZipExporterPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        final ApplicationComponent applicationComponent = Application.getComponent();
-        asyncWorker = applicationComponent.getAsyncWorker();
-        tunnelManager = applicationComponent.getTunnelManager();
     }
 
     private static SettingsActivity getPrefActivity(final Preference preference) {
@@ -67,7 +58,7 @@ public class ZipExporterPreference extends Preference {
     }
 
     private void exportZip() {
-        final List<Tunnel> tunnels = new ArrayList<>(tunnelManager.getTunnels());
+        final List<Tunnel> tunnels = new ArrayList<>(Application.getComponent().getTunnelManager().getTunnels());
         final List<CompletableFuture<Config>> futureConfigs = new ArrayList<>(tunnels.size());
         for (final Tunnel tunnel : tunnels)
             futureConfigs.add(tunnel.getConfigAsync().toCompletableFuture());
@@ -76,7 +67,7 @@ public class ZipExporterPreference extends Preference {
             return;
         }
         CompletableFuture.allOf(futureConfigs.toArray(new CompletableFuture[futureConfigs.size()]))
-                .whenComplete((ignored1, exception) -> asyncWorker.supplyAsync(() -> {
+                .whenComplete((ignored1, exception) -> Application.getComponent().getAsyncWorker().supplyAsync(() -> {
                     if (exception != null)
                         throw exception;
                     final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -103,7 +94,7 @@ public class ZipExporterPreference extends Preference {
     private void exportZipComplete(final String filePath, final Throwable throwable) {
         if (throwable != null) {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
-            final String message = getContext().getString(R.string.export_error, error);
+            final String message = getContext().getString(R.string.zip_export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
                     getPrefActivity(this).findViewById(android.R.id.content),
@@ -118,8 +109,8 @@ public class ZipExporterPreference extends Preference {
     @Override
     public CharSequence getSummary() {
         return exportedFilePath == null ?
-                getContext().getString(R.string.export_summary) :
-                getContext().getString(R.string.export_success, exportedFilePath);
+                getContext().getString(R.string.zip_export_summary) :
+                getContext().getString(R.string.zip_export_success, exportedFilePath);
     }
 
     @Override
