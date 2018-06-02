@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.wireguard.android.preference.VersionPreference android:icon="@mipmap/ic_launcher_round" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="restore_on_boot"
@@ -14,5 +15,4 @@
         android:summaryOn="@string/dark_theme_summary_on"
         android:summaryOff="@string/dark_theme_summary_off"
         android:title="@string/dark_theme_title" />
-    <com.wireguard.android.preference.VersionPreference />
 </PreferenceScreen>
