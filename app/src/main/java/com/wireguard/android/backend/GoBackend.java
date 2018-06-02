@@ -187,7 +187,7 @@ public final class GoBackend implements Backend {
             try (final ParcelFileDescriptor tun = builder.establish()) {
                 if (tun == null)
                     throw new Exception("Unable to create tun device");
-
+                Log.d(TAG, "Go backend v" + wgVersion());
                 currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), goConfig);
             }
             if (currentTunnelHandle < 0)
