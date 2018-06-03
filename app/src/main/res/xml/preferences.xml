@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.wireguard.android.preference.VersionPreference android:icon="@mipmap/ic_launcher_round" />
+    <com.wireguard.android.preference.VersionPreference android:icon="@mipmap/ic_launcher" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="restore_on_boot"
