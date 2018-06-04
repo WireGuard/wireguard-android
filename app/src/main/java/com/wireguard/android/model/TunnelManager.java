@@ -284,6 +284,12 @@ public final class TunnelManager extends BaseObservable {
                 return;
             }
 
+            /* We disable the below, for now, as the security model of allowing this
+             * might take a bit more consideration.
+             */
+            if (true)
+                return;
+
             final State state;
             if ("com.wireguard.android.action.SET_TUNNEL_UP".equals(action))
                 state = State.UP;
