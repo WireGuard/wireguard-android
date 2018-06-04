@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.WgQuickBackend;
-import com.wireguard.android.util.Topic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +32,7 @@ import java.util.Map;
  * Interface for changing application-global persistent settings.
  */
 
-public class SettingsActivity extends AppCompatActivity implements Topic.Subscriber {
+public class SettingsActivity extends ThemeChangeAwareActivity {
     private final Map<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
     private int permissionRequestCounter;
 
@@ -59,18 +58,11 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        subscribeTopics();
         if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, new SettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        unsubscribeTopics();
-        super.onDestroy();
     }
 
     @Override
@@ -99,18 +91,7 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
         void done(String[] permissions, int[] grantResults);
     }
 
-    @Override
-    public void onTopicPublished(final Topic topic) {
-        if (topic == Application.getComponent().getThemeChangeTopic())
-            recreate();
-    }
-
-    @Override
-    public Topic[] getSubscription() {
-        return new Topic[] { Application.getComponent().getThemeChangeTopic() };
-    }
-
-    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
@@ -119,27 +100,6 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
                 getPreferenceScreen().removePreference(pref);
                 pref = getPreferenceManager().findPreference("restore_on_boot");
                 getPreferenceScreen().removePreference(pref);
-            }
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onPause() {
-            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-            super.onPause();
-        }
-
-        @Override
-        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-            if ("dark_theme".equals(key)) {
-                AppCompatDelegate.setDefaultNightMode(
-                        sharedPreferences.getBoolean(key, false) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-                Application.getComponent().getThemeChangeTopic().publish(false);
             }
         }
     }

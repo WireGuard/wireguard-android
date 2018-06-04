@@ -11,24 +11,19 @@ import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
-import com.wireguard.android.util.Topic;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
  * Base class for activities that need to remember the currently-selected tunnel.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements Topic.Subscriber {
-    private static final String TAG = "WireGuard/" + BaseActivity.class.getSimpleName();
-
+public abstract class BaseActivity extends ThemeChangeAwareActivity {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
@@ -45,8 +40,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Topic.Su
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        subscribeTopics();
-
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
         String savedTunnelName = null;
         if (savedInstanceState != null)
@@ -67,12 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Topic.Su
                 startActivityForResult(intent, 0);
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        unsubscribeTopics();
-        super.onDestroy();
     }
 
     @Override
@@ -117,36 +104,5 @@ public abstract class BaseActivity extends AppCompatActivity implements Topic.Su
         private SelectionChangeRegistry() {
             super(new SelectionChangeNotifier());
         }
-    }
-
-    @Override
-    public void onTopicPublished(final Topic topic) {
-        if (topic == Application.getComponent().getThemeChangeTopic()) {
-            try {
-                Field f;
-                Object o = getResources();
-                try {
-                    f = o.getClass().getDeclaredField("mResourcesImpl");
-                    f.setAccessible(true);
-                    o = f.get(o);
-                } catch (final Exception ignored) { }
-                f = o.getClass().getDeclaredField("mDrawableCache");
-                f.setAccessible(true);
-                o = f.get(o);
-                try {
-                    o.getClass().getMethod("onConfigurationChange", int.class).invoke(o, -1);
-                } catch (final Exception ignored) {
-                    o.getClass().getMethod("clear").invoke(o);
-                }
-            } catch (final Exception e) {
-                Log.e(TAG, "Failed to flush drawable cache", e);
-            }
-            recreate();
-        }
-    }
-
-    @Override
-    public Topic[] getSubscription() {
-        return new Topic[] { Application.getComponent().getThemeChangeTopic() };
     }
 }
