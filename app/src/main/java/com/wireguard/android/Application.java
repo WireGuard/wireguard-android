@@ -23,7 +23,6 @@ import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
-import com.wireguard.android.util.Topic;
 
 import java.io.File;
 import java.util.concurrent.Executor;
@@ -68,8 +67,6 @@ public class Application extends android.app.Application {
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
-
-        Topic getThemeChangeTopic();
     }
 
     @Qualifier
@@ -118,13 +115,6 @@ public class Application extends android.app.Application {
         public static ConfigStore getConfigStore(@ApplicationContext final Context context) {
             return new FileConfigStore(context);
         }
-
-        @ApplicationScope
-        @Provides
-        public static Topic getThemeChangeTopic() {
-            return new Topic();
-        }
-
 
         @ApplicationScope
         @Provides
