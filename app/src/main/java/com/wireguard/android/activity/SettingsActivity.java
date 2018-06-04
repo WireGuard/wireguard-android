@@ -101,7 +101,8 @@ public class SettingsActivity extends AppCompatActivity implements Topic.Subscri
 
     @Override
     public void onTopicPublished(final Topic topic) {
-        recreate();
+        if (topic == Application.getComponent().getThemeChangeTopic())
+            recreate();
     }
 
     @Override
