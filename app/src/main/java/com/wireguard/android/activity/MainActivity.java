@@ -131,7 +131,6 @@ public class MainActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
         moveToState(newTunnel != null ? State.DETAIL : State.LIST);
