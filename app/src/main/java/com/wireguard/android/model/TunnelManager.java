@@ -6,11 +6,15 @@
 
 package com.wireguard.android.model;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 
+import com.wireguard.android.Application;
 import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.BR;
 import com.wireguard.android.backend.Backend;
@@ -263,5 +267,38 @@ public final class TunnelManager extends BaseObservable {
                 setLastUsedTunnel(tunnel);
             saveState();
         });
+    }
+
+    public static final class IntentReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            final TunnelManager manager = Application.getComponent().getTunnelManager();
+            if (intent == null)
+                return;
+            final String action = intent.getAction();
+            if (action == null)
+                return;
+
+            if ("com.wireguard.android.action.REFRESH_TUNNEL_STATES".equals(action)) {
+                manager.refreshTunnelStates();
+                return;
+            }
+
+            final State state;
+            if ("com.wireguard.android.action.SET_TUNNEL_UP".equals(action))
+                state = State.UP;
+            else if ("com.wireguard.android.action.SET_TUNNEL_DOWN".equals(action))
+                state = State.DOWN;
+            else
+                return;
+
+            final String tunnelName = intent.getStringExtra("tunnel");
+            if (tunnelName == null)
+                return;
+            final Tunnel tunnel = manager.getTunnels().get(tunnelName);
+            if (tunnel == null)
+                return;
+            manager.setTunnelState(tunnel, state);
+        }
     }
 }
