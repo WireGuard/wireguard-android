@@ -64,7 +64,7 @@ public class LogExporterPreference extends Preference {
 
             try {
                 final Process process = Runtime.getRuntime().exec(new String[]{
-                        "logcat", "-b", "all", "-d", "-v", "threadtime", "--pid", Integer.toString(android.os.Process.myPid()), "-f", file.getAbsolutePath(), "*:V"});
+                        "logcat", "-b", "all", "-d", "-v", "threadtime", "-f", file.getAbsolutePath(), "*:V"});
                 if (process.waitFor() != 0) {
                     try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
                         final StringBuilder errors = new StringBuilder();
