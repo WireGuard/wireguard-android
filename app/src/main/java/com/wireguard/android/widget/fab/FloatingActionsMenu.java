@@ -415,7 +415,7 @@ public class FloatingActionsMenu extends ViewGroup {
                     button.getTag(R.id.fab_label) != null) continue;
 
             final AppCompatTextView label = new AppCompatTextView(context);
-            label.setTextAppearance(getContext(), mLabelsStyle);
+            label.setTextAppearance(context, mLabelsStyle);
             label.setText(button.getTitle());
             addView(label);
 
