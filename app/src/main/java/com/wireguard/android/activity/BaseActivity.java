@@ -120,18 +120,26 @@ public abstract class BaseActivity extends AppCompatActivity implements Topic.Su
     }
 
     @Override
-    public void onTopicPublished(Topic topic) {
+    public void onTopicPublished(final Topic topic) {
         if (topic == Application.getComponent().getThemeChangeTopic()) {
             try {
-                Field f = getResources().getClass().getDeclaredField("mResourcesImpl");
-                f.setAccessible(true);
-                Object o = f.get(getResources());
+                Field f;
+                Object o = getResources();
+                try {
+                    f = o.getClass().getDeclaredField("mResourcesImpl");
+                    f.setAccessible(true);
+                    o = f.get(o);
+                } catch (final Exception ignored) { }
                 f = o.getClass().getDeclaredField("mDrawableCache");
                 f.setAccessible(true);
                 o = f.get(o);
-                o.getClass().getMethod("onConfigurationChange", int.class).invoke(o, -1);
-            } catch (Exception e) {
-                Log.e(TAG, "Failed to flush icon cache", e);
+                try {
+                    o.getClass().getMethod("onConfigurationChange", int.class).invoke(o, -1);
+                } catch (final Exception ignored) {
+                    o.getClass().getMethod("clear").invoke(o);
+                }
+            } catch (final Exception e) {
+                Log.e(TAG, "Failed to flush drawable cache", e);
             }
             recreate();
         }
