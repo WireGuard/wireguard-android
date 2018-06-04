@@ -388,11 +388,6 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     @Override
-    protected boolean checkLayoutParams(final ViewGroup.LayoutParams p) {
-        return super.checkLayoutParams(p);
-    }
-
-    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
