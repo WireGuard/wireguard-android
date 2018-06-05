@@ -6,6 +6,7 @@
 
 package com.wireguard.android.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -82,6 +83,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    // We use onTouchListener here to avoid the UI click sound, hence
+    // calling View#performClick defeats the purpose of it.
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
