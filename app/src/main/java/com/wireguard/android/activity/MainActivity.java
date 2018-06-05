@@ -72,11 +72,8 @@ public class MainActivity extends BaseActivity {
     public void onBackPressed() {
         TunnelListFragment fragment = null;
         try {
-            fragment =
-                    ((TunnelListFragment)
-                            getSupportFragmentManager().getFragments().get(0));
-        } catch (final ClassCastException ignored) {
-        }
+            fragment = ((TunnelListFragment) getSupportFragmentManager().getFragments().get(0));
+        } catch (final ClassCastException ignored) { }
         if (fragment == null || !fragment.collapseActionMenu()) {
             if (!moveToState(State.ofLayer(state.layer - 1)))
                 super.onBackPressed();
