@@ -29,7 +29,7 @@ GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDAR
 
 GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
 ifeq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
-$(info Using system go)
+$(info Using system Go)
 else
 export GOROOT := $(CURDIR)/goroot
 export PATH := $(GOROOT)/bin:$(PATH)
@@ -41,18 +41,18 @@ $(GOROOT)/bin/go:
 	rm -rf "$(GOROOT)"
 	mkdir -p "$(GOROOT)"
 	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
-	patch -p1 -f -N -r- -d"$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
+	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
 $(DESTDIR)/libwg-go.so: $(GOROOT)/bin/go
 endif
 
 $(shell test "$$(cat .gobuildversion 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.so")
 
 $(DESTDIR)/libwg-go.so: $(FILES) src/git.zx2c4.com/wireguard-go/api-android.go src/git.zx2c4.com/wireguard-go/tun/api-android.go src/git.zx2c4.com/wireguard-go/jni.c
+	@goroot="$$(go env GOROOT)" || exit 1; patch -p1 -f -R -s --dry-run -d "$$goroot" < goruntime-boottime-over-monotonic.diff >/dev/null 2>&1 || { echo "ERROR: Your system's Go is not patched to use the suspend-aware monotonic clock. Please try again after having run: \`patch -p1 -d \"$$goroot\" < \"$(CURDIR)/goruntime-boottime-over-monotonic.diff\"\`."; exit 1; }
 	find . -name '*.go' -type l -delete
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE))) $(FILE);)
-	patch -p1 -f -R -s --dry-run -d"$$(go env GOROOT)" < goruntime-boottime-over-monotonic.diff
 	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
 	GOPATH=$(PWD) go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared git.zx2c4.com/wireguard-go
 	go version > .gobuildversion
