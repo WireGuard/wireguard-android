@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().getFragments().get(0));
         } catch (final ClassCastException ignored) {
         }
-        if (fragment == null || !(fragment.collapseActionMenu())) {
+        if (fragment == null || !fragment.collapseActionMenu()) {
             if (!moveToState(State.ofLayer(state.layer - 1)))
                 super.onBackPressed();
         }
