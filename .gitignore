@@ -13,3 +13,5 @@ build/
 *.class
 *.dex
 *.iml
+*.jks
+keystore.properties
