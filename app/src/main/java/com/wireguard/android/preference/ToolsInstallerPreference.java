@@ -26,7 +26,7 @@ import com.wireguard.android.util.ToolsInstaller;
 public class ToolsInstallerPreference extends Preference {
     private final AsyncWorker asyncWorker;
     private final ToolsInstaller toolsInstaller;
-    private State state = State.INITIAL;
+    private State state;
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ToolsInstallerPreference(final Context context, final AttributeSet attrs) {
@@ -34,6 +34,7 @@ public class ToolsInstallerPreference extends Preference {
         final ApplicationComponent applicationComponent = Application.getComponent();
         asyncWorker = applicationComponent.getAsyncWorker();
         toolsInstaller = applicationComponent.getToolsInstaller();
+        state = initialState();
     }
 
     @Override
@@ -54,12 +55,12 @@ public class ToolsInstallerPreference extends Preference {
 
     private void onCheckResult(final Integer result, final Throwable throwable) {
         setState(throwable == null && result == OsConstants.EALREADY ?
-                State.ALREADY : State.INITIAL);
+                State.ALREADY : initialState());
     }
 
     @Override
     protected void onClick() {
-        setState(State.WORKING);
+        setState(workingState());
         asyncWorker.supplyAsync(toolsInstaller::install).whenComplete(this::onInstallResult);
     }
 
@@ -68,7 +69,7 @@ public class ToolsInstallerPreference extends Preference {
         if (throwable != null)
             nextState = State.FAILURE;
         else if (result == OsConstants.EXIT_SUCCESS)
-            nextState = State.SUCCESS;
+            nextState = successState();
         else if (result == OsConstants.EALREADY)
             nextState = State.ALREADY;
         else
@@ -85,12 +86,25 @@ public class ToolsInstallerPreference extends Preference {
         notifyChanged();
     }
 
+    private State initialState() {
+        return toolsInstaller.willInstallAsMagiskModule() ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
+    }
+    private State workingState() {
+        return toolsInstaller.willInstallAsMagiskModule() ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
+    }
+    private State successState() {
+        return toolsInstaller.willInstallAsMagiskModule() ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
+    }
+
     private enum State {
         ALREADY(R.string.tools_installer_already, false),
         FAILURE(R.string.tools_installer_failure, true),
-        INITIAL(R.string.tools_installer_initial, true),
-        SUCCESS(R.string.tools_installer_success, false),
-        WORKING(R.string.tools_installer_working, false);
+        INITIAL_SYSTEM(R.string.tools_installer_initial_system, true),
+        SUCCESS_SYSTEM(R.string.tools_installer_success_system, false),
+        WORKING_SYSTEM(R.string.tools_installer_working_system, false),
+        INITIAL_MAGISK(R.string.tools_installer_initial_magisk, true),
+        SUCCESS_MAGISK(R.string.tools_installer_success_magisk, false),
+        WORKING_MAGISK(R.string.tools_installer_working_magisk, false);
 
         private final int messageResourceId;
         private final boolean shouldEnableView;
