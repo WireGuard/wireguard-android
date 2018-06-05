@@ -230,6 +230,12 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        binding.createMenu.collapse();
+        super.onPause();
+    }
+
+    @Override
     public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
         // Do nothing.
     }
