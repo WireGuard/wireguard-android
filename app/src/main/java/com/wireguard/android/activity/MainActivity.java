@@ -95,6 +95,15 @@ public class MainActivity extends BaseActivity {
             moveToState(initialState);
         }
         updateActionBar();
+        final int actionBarId = getResources().getIdentifier("action_bar", "id", getPackageName());
+        if (actionBarId != 0 && findViewById(actionBarId) != null) {
+            findViewById(actionBarId).setOnTouchListener((v, e) -> {
+                try {
+                    ((TunnelListFragment) getSupportFragmentManager().getFragments().get(0)).collapseActionMenu();
+                } catch (final ClassCastException ignored) { }
+                return false;
+            });
+        }
     }
 
     @Override
