@@ -26,7 +26,7 @@ import com.wireguard.android.util.ToolsInstaller;
 public class ToolsInstallerPreference extends Preference {
     private final AsyncWorker asyncWorker;
     private final ToolsInstaller toolsInstaller;
-    private State state;
+    private State state = State.INITIAL;
 
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ToolsInstallerPreference(final Context context, final AttributeSet attrs) {
@@ -34,7 +34,6 @@ public class ToolsInstallerPreference extends Preference {
         final ApplicationComponent applicationComponent = Application.getComponent();
         asyncWorker = applicationComponent.getAsyncWorker();
         toolsInstaller = applicationComponent.getToolsInstaller();
-        state = initialState();
     }
 
     @Override
@@ -87,16 +86,17 @@ public class ToolsInstallerPreference extends Preference {
     }
 
     private State initialState() {
-        return toolsInstaller.willInstallAsMagiskModule() ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
+        return toolsInstaller.willInstallAsMagiskModule(false) ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
     }
     private State workingState() {
-        return toolsInstaller.willInstallAsMagiskModule() ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
+        return toolsInstaller.willInstallAsMagiskModule(false) ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
     }
     private State successState() {
-        return toolsInstaller.willInstallAsMagiskModule() ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
+        return toolsInstaller.willInstallAsMagiskModule(false) ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
     }
 
     private enum State {
+        INITIAL(R.string.tools_installer_initial, true),
         ALREADY(R.string.tools_installer_already, false),
         FAILURE(R.string.tools_installer_failure, true),
         INITIAL_SYSTEM(R.string.tools_installer_initial_system, true),

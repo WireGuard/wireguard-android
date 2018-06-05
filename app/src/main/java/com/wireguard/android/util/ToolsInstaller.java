@@ -80,6 +80,7 @@ public final class ToolsInstaller {
     }
 
     public int areInstalled() throws NoRootException {
+        willInstallAsMagiskModule(true);
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
         final StringBuilder script = new StringBuilder();
@@ -116,9 +117,11 @@ public final class ToolsInstaller {
         }
     }
 
-    public boolean willInstallAsMagiskModule() {
+    public boolean willInstallAsMagiskModule(boolean checkForIt) {
         synchronized (lock) {
             if (installAsMagiskModule == null) {
+                if (!checkForIt)
+                    throw new RuntimeException("Expected to already know whether this is a Magisk system");
                 try {
                     installAsMagiskModule = rootShell.run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
                 } catch (final Exception ignored) {
@@ -168,7 +171,7 @@ public final class ToolsInstaller {
     }
 
     public int install() throws NoRootException {
-        return willInstallAsMagiskModule() ? installMagisk() : installSystem();
+        return willInstallAsMagiskModule(true) ? installMagisk() : installSystem();
     }
 
     public int symlink() throws NoRootException {
