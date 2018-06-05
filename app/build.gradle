@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+final def keystorePropertiesFile = rootProject.file("keystore.properties")
+
 android {
     buildToolsVersion '27.0.3'
     compileOptions {
@@ -16,6 +20,28 @@ android {
         targetSdkVersion 27
         versionCode 422
         versionName '0.0.20180605'
+    }
+    // If the keystore file exists
+    if (keystorePropertiesFile.exists()) {
+        // Initialize a new Properties() object called keystoreProperties.
+        final def keystoreProperties = new Properties()
+
+        // Load your keystore.properties file into the keystoreProperties object.
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        signingConfigs {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
+        }
     }
     externalNativeBuild {
         cmake {
