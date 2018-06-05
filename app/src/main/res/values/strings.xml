@@ -69,6 +69,7 @@
     <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
     <string name="tools_installer_failure">Unable to install command-line tools (no root?)</string>
+    <string name="tools_installer_initial">Install optional tools for scripting</string>
     <string name="tools_installer_initial_system">Install optional tools for scripting into the system partition</string>
     <string name="tools_installer_initial_magisk">Install optional tools for scripting as Magisk module</string>
     <string name="tools_installer_success_system">wg and wg-quick installed into the system partition</string>
