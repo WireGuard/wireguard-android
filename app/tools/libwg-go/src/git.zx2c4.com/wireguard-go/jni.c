@@ -12,7 +12,7 @@ extern int wgTurnOn(struct go_string ifname, int tun_fd, struct go_string settin
 extern void wgTurnOff(int handle);
 extern int wgGetSocketV4(int handle);
 extern int wgGetSocketV6(int handle);
-extern struct go_string wgVersion();
+extern char *wgVersion();
 
 JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgTurnOn(JNIEnv *env, jclass c, jstring ifname, jint tun_fd, jstring settings)
 {
@@ -50,13 +50,10 @@ JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetSocketV
 JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
 {
 	jstring ret;
-	struct go_string s = wgVersion();
-	char *cstr = malloc(s.n + 1);
-	if (!cstr)
+	char *version = wgVersion();
+	if (!version)
 		return NULL;
-	memcpy(cstr, s.str, s.n);
-	cstr[s.n] = '\0';
-	ret = (*env)->NewStringUTF(env, cstr);
-	free(cstr);
+	ret = (*env)->NewStringUTF(env, version);
+	free(version);
 	return ret;
 }
