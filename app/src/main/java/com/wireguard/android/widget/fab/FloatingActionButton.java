@@ -7,7 +7,6 @@
 package com.wireguard.android.widget.fab;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.graphics.Paint.Style;
@@ -19,7 +18,6 @@ import android.support.annotation.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
@@ -60,12 +58,12 @@ public class FloatingActionButton extends AppCompatImageButton {
     }
 
     public static int getColorFromTheme(final Context context, final int themeResource, @ColorRes final int fallback) {
-        final TypedValue typedValue = new TypedValue();
-        final Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(themeResource, typedValue, true);
-        @ColorInt final int color = typedValue.data;
-        return color == 0 ? fallback : color;
-
+        final TypedArray a = context.obtainStyledAttributes(new int[]{themeResource});
+        try {
+            return a.getColor(0, ContextCompat.getColor(context, fallback));
+        } finally {
+            a.recycle();
+        }
     }
 
     void init(final Context context, final AttributeSet attributeSet) {
@@ -222,6 +220,7 @@ public class FloatingActionButton extends AppCompatImageButton {
 
         final LayerDrawable layerDrawable = new LayerDrawable(
                 new Drawable[]{
+                        //TODO(msf); replace these pngs with programatic elevation
                         getResources().getDrawable(mSize == SIZE_NORMAL ? R.drawable.fab_bg_normal : R.drawable.fab_bg_mini, null),
                         createFillDrawable(strokeWidth),
                         createOuterStrokeDrawable(strokeWidth),
