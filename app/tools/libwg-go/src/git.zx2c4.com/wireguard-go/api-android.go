@@ -161,8 +161,8 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 }
 
 //export wgVersion
-func wgVersion() string {
-	return WireGuardGoVersion
+func wgVersion() *C.char {
+	return C.CString(WireGuardGoVersion)
 }
 
 func main() {}
