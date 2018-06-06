@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- TODO(msf): remove these 3 hard-coded colors and replace with theme colors -->
+    <!-- TODO(msf): remove these 4 hard-coded colors and replace with theme colors -->
     <color name="list_item_activated">#cfd8dc</color> <!-- Blue Grey 200 -->
     <color name="list_item_ripple">#808e95</color> <!-- Blue Grey 200 dark -->
+    <color name="fab_label_text_color">#ffffff</color>
     <color name="fab_label_background_color">#444444</color>
 
     <color name="accent">#2196F3</color>
