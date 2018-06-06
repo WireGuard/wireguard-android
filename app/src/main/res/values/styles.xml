@@ -11,6 +11,7 @@
 
     <style name="fab_label" parent="TextAppearance.AppCompat.Inverse">
         <item name="android:background">@drawable/fab_label_background</item>
+        <item name="android:textColor">@color/fab_label_text_color</item>
     </style>
 
 </resources>
