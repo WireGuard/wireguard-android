@@ -56,9 +56,8 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
 
         if (Application.getBackendType() == GoBackend.class) {
             final Intent intent = GoBackend.VpnService.prepare(this);
-            if (intent != null) {
+            if (intent != null)
                 startActivityForResult(intent, 0);
-            }
         }
     }
 
