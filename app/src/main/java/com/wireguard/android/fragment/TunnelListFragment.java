@@ -34,7 +34,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.Application.ApplicationComponent;
 import com.wireguard.android.R;
 import com.wireguard.android.activity.TunnelCreatorActivity;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
@@ -70,9 +69,7 @@ public class TunnelListFragment extends BaseFragment {
     private final MultiChoiceModeListener actionModeListener = new ActionModeListener();
     private final ListViewCallbacks listViewCallbacks = new ListViewCallbacks();
     private ActionMode actionMode;
-    private AsyncWorker asyncWorker;
     private TunnelListFragmentBinding binding;
-    private TunnelManager tunnelManager;
 
     public boolean collapseActionMenu() {
         if (binding.createMenu.isExpanded()) {
@@ -90,7 +87,7 @@ public class TunnelListFragment extends BaseFragment {
 
         final Collection<CompletableFuture<Tunnel>> futureTunnels = new ArrayList<>();
         final List<Throwable> throwables = new ArrayList<>();
-        asyncWorker.supplyAsync(() -> {
+        Application.getAsyncWorker().supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
             String name = null;
             try (Cursor cursor = contentResolver.query(uri, columns,
@@ -137,11 +134,11 @@ public class TunnelListFragment extends BaseFragment {
                             throwables.add(e);
                         }
                         if (config != null)
-                            futureTunnels.add(tunnelManager.create(name, config).toCompletableFuture());
+                            futureTunnels.add(Application.getTunnelManager().create(name, config).toCompletableFuture());
                     }
                 }
             } else {
-                futureTunnels.add(tunnelManager.create(name,
+                futureTunnels.add(Application.getTunnelManager().create(name,
                         Config.from(contentResolver.openInputStream(uri))).toCompletableFuture());
             }
 
@@ -190,9 +187,6 @@ public class TunnelListFragment extends BaseFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ApplicationComponent applicationComponent = Application.getComponent();
-        asyncWorker = applicationComponent.getAsyncWorker();
-        tunnelManager = applicationComponent.getTunnelManager();
     }
 
     @Override
@@ -284,7 +278,7 @@ public class TunnelListFragment extends BaseFragment {
     public void onViewStateRestored(final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         binding.setFragment(this);
-        binding.setTunnels(tunnelManager.getTunnels());
+        binding.setTunnels(Application.getTunnelManager().getTunnels());
     }
 
     private final class ActionModeListener implements MultiChoiceModeListener {

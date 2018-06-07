@@ -51,7 +51,7 @@ public class LogExporterPreference extends Preference {
     }
 
     private void exportLog() {
-        Application.getComponent().getAsyncWorker().supplyAsync(() -> {
+        Application.getAsyncWorker().supplyAsync(() -> {
             final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             final File file = new File(path, "wireguard-log.txt");
             if (!path.isDirectory() && !path.mkdirs())

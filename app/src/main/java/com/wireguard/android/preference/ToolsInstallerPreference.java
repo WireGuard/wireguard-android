@@ -13,10 +13,7 @@ import android.system.OsConstants;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.Application.ApplicationComponent;
 import com.wireguard.android.R;
-import com.wireguard.android.util.AsyncWorker;
-import com.wireguard.android.util.ToolsInstaller;
 
 /**
  * Preference implementing a button that asynchronously runs {@code ToolsInstaller} and displays the
@@ -24,16 +21,10 @@ import com.wireguard.android.util.ToolsInstaller;
  */
 
 public class ToolsInstallerPreference extends Preference {
-    private final AsyncWorker asyncWorker;
-    private final ToolsInstaller toolsInstaller;
     private State state = State.INITIAL;
 
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
     public ToolsInstallerPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        final ApplicationComponent applicationComponent = Application.getComponent();
-        asyncWorker = applicationComponent.getAsyncWorker();
-        toolsInstaller = applicationComponent.getToolsInstaller();
     }
 
     @Override
@@ -49,7 +40,7 @@ public class ToolsInstallerPreference extends Preference {
     @Override
     public void onAttached() {
         super.onAttached();
-        asyncWorker.supplyAsync(toolsInstaller::areInstalled).whenComplete(this::onCheckResult);
+        Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::areInstalled).whenComplete(this::onCheckResult);
     }
 
     private void onCheckResult(final Integer result, final Throwable throwable) {
@@ -60,7 +51,7 @@ public class ToolsInstallerPreference extends Preference {
     @Override
     protected void onClick() {
         setState(workingState());
-        asyncWorker.supplyAsync(toolsInstaller::install).whenComplete(this::onInstallResult);
+        Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::install).whenComplete(this::onInstallResult);
     }
 
     private void onInstallResult(final Integer result, final Throwable throwable) {
@@ -86,13 +77,13 @@ public class ToolsInstallerPreference extends Preference {
     }
 
     private State initialState() {
-        return toolsInstaller.willInstallAsMagiskModule(false) ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
+        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
     }
     private State workingState() {
-        return toolsInstaller.willInstallAsMagiskModule(false) ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
+        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
     }
     private State successState() {
-        return toolsInstaller.willInstallAsMagiskModule(false) ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
+        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
     }
 
     private enum State {

@@ -47,14 +47,14 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
         else if (getIntent() != null)
             savedTunnelName = getIntent().getStringExtra(KEY_SELECTED_TUNNEL);
         if (savedTunnelName != null) {
-            final TunnelManager tunnelManager = Application.getComponent().getTunnelManager();
+            final TunnelManager tunnelManager = Application.getTunnelManager();
             selectedTunnel = tunnelManager.getTunnels().get(savedTunnelName);
         }
 
         // The selected tunnel must be set before the superclass method recreates fragments.
         super.onCreate(savedInstanceState);
 
-        if (Application.getComponent().getBackendType() == GoBackend.class) {
+        if (Application.getBackendType() == GoBackend.class) {
             final Intent intent = GoBackend.VpnService.prepare(this);
             if (intent != null) {
                 startActivityForResult(intent, 0);

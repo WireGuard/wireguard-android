@@ -8,12 +8,7 @@ package com.wireguard.android.util;
 
 import android.os.Handler;
 
-import com.wireguard.android.Application.ApplicationHandler;
-import com.wireguard.android.Application.ApplicationScope;
-
 import java.util.concurrent.Executor;
-
-import javax.inject.Inject;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;
@@ -22,13 +17,11 @@ import java9.util.concurrent.CompletionStage;
  * Helper class for running asynchronous tasks and ensuring they are completed on the main thread.
  */
 
-@ApplicationScope
 public class AsyncWorker {
     private final Executor executor;
     private final Handler handler;
 
-    @Inject
-    AsyncWorker(final Executor executor, @ApplicationHandler final Handler handler) {
+    public AsyncWorker(final Executor executor, final Handler handler) {
         this.executor = executor;
         this.handler = handler;
     }

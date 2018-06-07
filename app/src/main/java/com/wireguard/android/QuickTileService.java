@@ -38,7 +38,6 @@ public class QuickTileService extends TileService {
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
     private Tunnel tunnel;
-    private TunnelManager tunnelManager;
 
     @Override
     public void onClick() {
@@ -54,12 +53,11 @@ public class QuickTileService extends TileService {
     @Override
     public void onCreate() {
         super.onCreate();
-        tunnelManager = Application.getComponent().getTunnelManager();
     }
 
     @Override
     public void onStartListening() {
-        tunnelManager.addOnPropertyChangedCallback(onTunnelChangedCallback);
+        Application.getTunnelManager().addOnPropertyChangedCallback(onTunnelChangedCallback);
         if (tunnel != null)
             tunnel.addOnPropertyChangedCallback(onStateChangedCallback);
         updateTile();
@@ -69,7 +67,7 @@ public class QuickTileService extends TileService {
     public void onStopListening() {
         if (tunnel != null)
             tunnel.removeOnPropertyChangedCallback(onStateChangedCallback);
-        tunnelManager.removeOnPropertyChangedCallback(onTunnelChangedCallback);
+        Application.getTunnelManager().removeOnPropertyChangedCallback(onTunnelChangedCallback);
     }
 
     private void onToggleFinished(@SuppressWarnings("unused") final State state,
@@ -84,7 +82,7 @@ public class QuickTileService extends TileService {
 
     private void updateTile() {
         // Update the tunnel.
-        final Tunnel newTunnel = tunnelManager.getLastUsedTunnel();
+        final Tunnel newTunnel = Application.getTunnelManager().getLastUsedTunnel();
         if (newTunnel != tunnel) {
             if (tunnel != null)
                 tunnel.removeOnPropertyChangedCallback(onStateChangedCallback);

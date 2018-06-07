@@ -9,7 +9,6 @@ package com.wireguard.android.configStore;
 import android.content.Context;
 import android.util.Log;
 
-import com.wireguard.android.Application.ApplicationContext;
 import com.wireguard.config.Config;
 
 import java.io.File;
@@ -32,7 +31,7 @@ public final class FileConfigStore implements ConfigStore {
 
     private final Context context;
 
-    public FileConfigStore(@ApplicationContext final Context context) {
+    public FileConfigStore(final Context context) {
         this.context = context;
     }
 

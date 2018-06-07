@@ -128,7 +128,7 @@ public class TunnelEditorFragment extends BaseFragment {
                 }
                 if (tunnel == null) {
                     Log.d(TAG, "Attempting to create new tunnel " + binding.getConfig().getName());
-                    final TunnelManager manager = Application.getComponent().getTunnelManager();
+                    final TunnelManager manager = Application.getTunnelManager();
                     manager.create(binding.getConfig().getName(), newConfig)
                             .whenComplete(this::onTunnelCreated);
                 } else if (!tunnel.getName().equals(binding.getConfig().getName())) {
