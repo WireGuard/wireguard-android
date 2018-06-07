@@ -13,8 +13,6 @@ import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
-import com.wireguard.android.util.RootShell;
-import com.wireguard.android.util.ToolsInstaller;
 import com.wireguard.config.Config;
 
 import java.io.File;
@@ -40,6 +38,18 @@ public final class WgQuickBackend implements Backend {
     public WgQuickBackend(final Context context) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
     }
+
+    @Override
+    public String getVersion() throws Exception {
+        final List<String> output = new ArrayList<>();
+        if (Application.getRootShell()
+                .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
+            throw new Exception("Unable to determine kernel module version");
+        return output.get(0);
+    }
+
+    @Override
+    public String getTypeName() { return "Kernel module"; }
 
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {

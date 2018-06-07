@@ -58,7 +58,11 @@ public final class GoBackend implements Backend {
 
     private static native String wgVersion();
 
-    public static String getVersion() { return wgVersion(); }
+    @Override
+    public String getVersion() { return wgVersion(); }
+
+    @Override
+    public String getTypeName() { return "Go userspace"; }
 
     @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {

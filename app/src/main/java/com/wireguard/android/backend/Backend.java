@@ -62,4 +62,19 @@ public interface Backend {
      * @return The updated state of the tunnel.
      */
     State setState(Tunnel tunnel, State state) throws Exception;
+
+    /**
+     * Determine version of underlying backend.
+     *
+     * @return The version of the backend.
+     * @throws Exception
+     */
+    String getVersion() throws Exception;
+
+    /**
+     * Determine type name of underlying backend.
+     *
+     * @return Type name
+     */
+    String getTypeName();
 }

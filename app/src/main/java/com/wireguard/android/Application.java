@@ -46,6 +46,10 @@ public class Application extends android.app.Application {
         return get().asyncWorker;
     }
 
+    public static Backend getBackend() {
+        return get().backend;
+    }
+
     public static Class getBackendType() {
         return get().backend.getClass();
     }
