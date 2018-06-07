@@ -67,6 +67,8 @@ public class Application extends android.app.Application {
         ToolsInstaller getToolsInstaller();
 
         TunnelManager getTunnelManager();
+
+        RootShell getRootShell();
     }
 
     @Qualifier
