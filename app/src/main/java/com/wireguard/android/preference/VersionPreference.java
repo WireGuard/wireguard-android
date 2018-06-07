@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
 
@@ -26,23 +27,14 @@ public class VersionPreference extends Preference {
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
-        if (Application.getBackendType() == GoBackend.class) {
-            versionSummary = getContext().getString(R.string.version_userspace_summary, GoBackend.getVersion());
-        } else if (Application.getBackendType() == WgQuickBackend.class) {
-            versionSummary = getContext().getString(R.string.version_kernel_summary_checking);
-            Application.getAsyncWorker().supplyAsync(() -> {
-                final List<String> output = new ArrayList<>();
-                if (Application.getRootShell()
-                        .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-                    throw new RuntimeException("Unable to determine kernel module version");
-                return output.get(0);
-            }).whenComplete((version, exception) -> {
-                versionSummary = exception == null
-                        ? getContext().getString(R.string.version_kernel_summary, version)
-                        : getContext().getString(R.string.version_kernel_summary_unknown);
-                notifyChanged();
-            });
-        }
+        final Backend backend = Application.getBackend();
+        versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase());
+        Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
+            versionSummary = exception == null
+                    ? getContext().getString(R.string.version_summary, backend.getTypeName(), version)
+                    : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase());
+            notifyChanged();
+        });
     }
 
     @Override
