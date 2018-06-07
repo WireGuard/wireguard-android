@@ -16,6 +16,14 @@ import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
+import com.wireguard.android.util.RootShell;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import java9.util.concurrent.CompletionStage;
 
 public class VersionPreference extends Preference {
     private String versionSummary;
@@ -26,10 +34,17 @@ public class VersionPreference extends Preference {
         if (Application.getComponent().getBackendType() == GoBackend.class) {
             versionSummary = getContext().getString(R.string.version_userspace_summary, GoBackend.getVersion());
         } else if (Application.getComponent().getBackendType() == WgQuickBackend.class) {
-            Application.getComponent().getToolsInstaller().getVersion().whenComplete((version, exception) -> {
+            versionSummary = getContext().getString(R.string.version_kernel_summary_checking);
+            Application.getComponent().getAsyncWorker().supplyAsync(() -> {
+                final List<String> output = new ArrayList<>();
+                if (Application.getComponent().getRootShell()
+                        .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
+                    throw new RuntimeException("Unable to determine kernel module version");
+                return output.get(0);
+            }).whenComplete((version, exception) -> {
                 versionSummary = exception == null
                         ? getContext().getString(R.string.version_kernel_summary, version)
-                        : getContext().getString(R.string.version_kernel_unknown_summary);
+                        : getContext().getString(R.string.version_kernel_summary_unknown);
                 notifyChanged();
             });
         }

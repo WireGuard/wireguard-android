@@ -58,15 +58,6 @@ public final class ToolsInstaller {
         this.rootShell = rootShell;
     }
 
-    public CompletionStage<String> getVersion() {
-        return Application.getComponent().getAsyncWorker().supplyAsync(() -> {
-            final List<String> output = new ArrayList<>();
-            if (rootShell.run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-                throw new RuntimeException("Unable to determine kernel module version");
-            return output.get(0);
-        });
-    }
-
     private static File getInstallDir() {
         final String path = System.getenv("PATH");
         if (path == null)
