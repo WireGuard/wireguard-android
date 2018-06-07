@@ -95,7 +95,7 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
-            if (Application.getComponent().getBackendType() != WgQuickBackend.class) {
+            if (Application.getBackendType() != WgQuickBackend.class) {
                 Preference pref = getPreferenceManager().findPreference("tools_installer");
                 getPreferenceScreen().removePreference(pref);
                 pref = getPreferenceManager().findPreference("restore_on_boot");

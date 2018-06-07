@@ -1,12 +1,10 @@
 /*
- * Copyright © 2018 Samuel Holland <samuel@sholland.org>
  * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 package com.wireguard.android;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -25,123 +23,72 @@ import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Executor;
 
-import javax.inject.Qualifier;
-import javax.inject.Scope;
-
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
-
-/**
- * Base context for the WireGuard Android application. This class (instantiated once during the
- * application lifecycle) maintains and mediates access to the global state of the application.
- */
-
 public class Application extends android.app.Application {
-    private static ApplicationComponent component;
+    private static WeakReference<Application> weakSelf;
+    private AsyncWorker asyncWorker;
+    private Backend backend;
+    private RootShell rootShell;
+    private SharedPreferences sharedPreferences;
+    private ToolsInstaller toolsInstaller;
+    private TunnelManager tunnelManager;
+    public Application() {
+        weakSelf = new WeakReference<>(this);
+    }
 
-    public static ApplicationComponent getComponent() {
-        if (component == null)
-            throw new IllegalStateException("Application instance not yet created");
-        return component;
+    public static Application get() {
+        return weakSelf.get();
+    }
+
+    public static AsyncWorker getAsyncWorker() {
+        return get().asyncWorker;
+    }
+
+    public static Class getBackendType() {
+        return get().backend.getClass();
+    }
+
+    public static RootShell getRootShell() {
+        return get().rootShell;
+    }
+
+    public static SharedPreferences getSharedPreferences() {
+        return get().sharedPreferences;
+    }
+
+    public static ToolsInstaller getToolsInstaller() {
+        return get().toolsInstaller;
+    }
+
+    public static TunnelManager getTunnelManager() {
+        return get().tunnelManager;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerApplication_ApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-        component.getTunnelManager().onCreate();
-    }
 
-    @ApplicationScope
-    @Component(modules = ApplicationModule.class)
-    public interface ApplicationComponent {
-        AsyncWorker getAsyncWorker();
+        final Executor executor = AsyncTask.SERIAL_EXECUTOR;
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final ConfigStore configStore = new FileConfigStore(getApplicationContext());
 
-        Class getBackendType();
+        asyncWorker = new AsyncWorker(executor, handler);
+        rootShell = new RootShell(getApplicationContext());
+        toolsInstaller = new ToolsInstaller(getApplicationContext());
 
-        ToolsInstaller getToolsInstaller();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        AppCompatDelegate.setDefaultNightMode(
+                sharedPreferences.getBoolean("dark_theme", false) ?
+                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
 
-        TunnelManager getTunnelManager();
+        if (new File("/sys/module/wireguard").exists())
+            backend = new WgQuickBackend(getApplicationContext());
+        else
+            backend = new GoBackend(getApplicationContext());
 
-        RootShell getRootShell();
-    }
-
-    @Qualifier
-    public @interface ApplicationContext {
-    }
-
-    @Qualifier
-    public @interface ApplicationHandler {
-    }
-
-    @Scope
-    public @interface ApplicationScope {
-    }
-
-    @Module
-    public static final class ApplicationModule {
-        private final Context context;
-
-        private ApplicationModule(final Application application) {
-            context = application.getApplicationContext();
-
-            AppCompatDelegate.setDefaultNightMode(
-                    getPreferences(context).getBoolean("dark_theme", false) ?
-                          AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        }
-
-        @ApplicationScope
-        @Provides
-        public static Backend getBackend(@ApplicationContext final Context context,
-                                         final RootShell rootShell,
-                                         final ToolsInstaller toolsInstaller) {
-            if (new File("/sys/module/wireguard").exists())
-                return new WgQuickBackend(context, rootShell, toolsInstaller);
-            else
-                return new GoBackend(context);
-        }
-
-        @ApplicationScope
-        @Provides
-        public static Class getBackendType(final Backend backend) {
-            return backend.getClass();
-        }
-
-        @ApplicationScope
-        @Provides
-        public static ConfigStore getConfigStore(@ApplicationContext final Context context) {
-            return new FileConfigStore(context);
-        }
-
-        @ApplicationScope
-        @Provides
-        public static Executor getExecutor() {
-            return AsyncTask.SERIAL_EXECUTOR;
-        }
-
-        @ApplicationHandler
-        @ApplicationScope
-        @Provides
-        public static Handler getHandler() {
-            return new Handler(Looper.getMainLooper());
-        }
-
-        @ApplicationScope
-        @Provides
-        public static SharedPreferences getPreferences(@ApplicationContext final Context context) {
-            return PreferenceManager.getDefaultSharedPreferences(context);
-        }
-
-        @ApplicationContext
-        @ApplicationScope
-        @Provides
-        public Context getContext() {
-            return context;
-        }
+        tunnelManager = new TunnelManager(backend, configStore);
+        tunnelManager.onCreate();
     }
 }

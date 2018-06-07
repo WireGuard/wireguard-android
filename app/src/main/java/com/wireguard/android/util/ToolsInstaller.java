@@ -11,27 +11,19 @@ import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.Application.ApplicationContext;
-import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.util.RootShell.NoRootException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import java9.util.concurrent.CompletionStage;
 
 /**
  * Helper to install WireGuard tools to the system partition.
  */
 
-@ApplicationScope
 public final class ToolsInstaller {
     private static final String[][] EXECUTABLES = {
             {"libwg.so", "wg"},
@@ -47,15 +39,12 @@ public final class ToolsInstaller {
     private final File localBinaryDir;
     private final Object lock = new Object();
     private final File nativeLibraryDir;
-    private final RootShell rootShell;
     private Boolean areToolsAvailable;
     private Boolean installAsMagiskModule;
 
-    @Inject
-    public ToolsInstaller(@ApplicationContext final Context context, final RootShell rootShell) {
+    public ToolsInstaller(final Context context) {
         localBinaryDir = new File(context.getCacheDir(), "bin");
         nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
-        this.rootShell = rootShell;
     }
 
     private static File getInstallDir() {
@@ -82,7 +71,7 @@ public final class ToolsInstaller {
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
-            return rootShell.run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         }
@@ -114,7 +103,7 @@ public final class ToolsInstaller {
                 if (!checkForIt)
                     throw new RuntimeException("Expected to already know whether this is a Magisk system");
                 try {
-                    installAsMagiskModule = rootShell.run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
+                    installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
                 } catch (final Exception ignored) {
                     installAsMagiskModule = false;
                 }
@@ -134,7 +123,7 @@ public final class ToolsInstaller {
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
         try {
-            return rootShell.run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         }
@@ -155,7 +144,7 @@ public final class ToolsInstaller {
         script.append("trap - INT TERM EXIT;");
 
         try {
-            return rootShell.run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         }
@@ -182,7 +171,7 @@ public final class ToolsInstaller {
         script.append("exit ").append(OsConstants.EXIT_SUCCESS).append(';');
 
         try {
-            return rootShell.run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
         }

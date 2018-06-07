@@ -9,8 +9,6 @@ package com.wireguard.android.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.wireguard.android.Application.ApplicationContext;
-import com.wireguard.android.Application.ApplicationScope;
 import com.wireguard.android.R;
 
 import java.io.BufferedReader;
@@ -23,13 +21,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 /**
  * Helper class for running commands as root.
  */
 
-@ApplicationScope
 public class RootShell {
     private static final String SU = "su";
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
@@ -44,8 +39,7 @@ public class RootShell {
     private OutputStreamWriter stdin;
     private BufferedReader stdout;
 
-    @Inject
-    public RootShell(@ApplicationContext final Context context) {
+    public RootShell(final Context context) {
         deviceNotRootedMessage = context.getString(R.string.error_root);
         final File cacheDir = context.getCacheDir();
         localBinaryDir = new File(cacheDir, "bin");

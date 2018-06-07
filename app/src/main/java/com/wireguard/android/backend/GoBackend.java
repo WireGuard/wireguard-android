@@ -229,7 +229,7 @@ public final class GoBackend implements Backend {
 
         @Override
         public void onDestroy() {
-            for (final Tunnel tunnel : Application.getComponent().getTunnelManager().getTunnels()) {
+            for (final Tunnel tunnel : Application.getTunnelManager().getTunnels()) {
                 if (tunnel != null && tunnel.getState() != State.DOWN)
                     tunnel.setState(State.DOWN);
             }
@@ -242,7 +242,7 @@ public final class GoBackend implements Backend {
             vpnService.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");
-                Application.getComponent().getTunnelManager().restoreState(true).whenComplete(ExceptionLoggers.D);
+                Application.getTunnelManager().restoreState(true).whenComplete(ExceptionLoggers.D);
             }
             return super.onStartCommand(intent, flags, startId);
         }
