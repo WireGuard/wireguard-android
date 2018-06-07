@@ -269,9 +269,8 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size() + throwables.size(),
                     tunnels.size(), tunnels.size() + throwables.size());
 
-        if (binding != null) {
+        if (binding != null)
             Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
-        }
     }
 
     @Override
