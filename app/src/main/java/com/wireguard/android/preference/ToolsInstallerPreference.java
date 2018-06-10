@@ -11,9 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 import android.system.OsConstants;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.util.ToolsInstaller;
 
 /**
  * Preference implementing a button that asynchronously runs {@code ToolsInstaller} and displays the
@@ -43,28 +45,34 @@ public class ToolsInstallerPreference extends Preference {
         Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::areInstalled).whenComplete(this::onCheckResult);
     }
 
-    private void onCheckResult(final Integer result, final Throwable throwable) {
-        setState(throwable == null && result == OsConstants.EALREADY ?
-                State.ALREADY : initialState());
+    private void onCheckResult(final int state, final Throwable throwable) {
+        if (throwable != null || state == ToolsInstaller.ERROR)
+            setState(State.INITIAL);
+        else if ((state & ToolsInstaller.YES) == ToolsInstaller.YES)
+            setState(State.ALREADY);
+        else if ((state & (ToolsInstaller.MAGISK | ToolsInstaller.NO)) == (ToolsInstaller.MAGISK | ToolsInstaller.NO))
+            setState(State.INITIAL_MAGISK);
+        else if ((state & (ToolsInstaller.SYSTEM | ToolsInstaller.NO)) == (ToolsInstaller.SYSTEM | ToolsInstaller.NO))
+            setState(State.INITIAL_SYSTEM);
+        else
+            setState(State.INITIAL);
     }
 
     @Override
     protected void onClick() {
-        setState(workingState());
+        setState(State.WORKING);
         Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::install).whenComplete(this::onInstallResult);
     }
 
     private void onInstallResult(final Integer result, final Throwable throwable) {
-        final State nextState;
         if (throwable != null)
-            nextState = State.FAILURE;
-        else if (result == OsConstants.EXIT_SUCCESS)
-            nextState = successState();
-        else if (result == OsConstants.EALREADY)
-            nextState = State.ALREADY;
+            setState(State.FAILURE);
+        else if ((result & (ToolsInstaller.YES | ToolsInstaller.MAGISK)) == (ToolsInstaller.YES | ToolsInstaller.MAGISK))
+            setState(State.SUCCESS_MAGISK);
+        else if ((result & (ToolsInstaller.YES | ToolsInstaller.SYSTEM)) == (ToolsInstaller.YES | ToolsInstaller.SYSTEM))
+            setState(State.SUCCESS_SYSTEM);
         else
-            nextState = State.FAILURE;
-        setState(nextState);
+            setState(State.FAILURE);
     }
 
     private void setState(@NonNull final State state) {
@@ -76,26 +84,15 @@ public class ToolsInstallerPreference extends Preference {
         notifyChanged();
     }
 
-    private State initialState() {
-        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.INITIAL_MAGISK : State.INITIAL_SYSTEM;
-    }
-    private State workingState() {
-        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.WORKING_MAGISK : State.WORKING_SYSTEM;
-    }
-    private State successState() {
-        return Application.getToolsInstaller().willInstallAsMagiskModule(false) ? State.SUCCESS_MAGISK : State.SUCCESS_SYSTEM;
-    }
-
     private enum State {
         INITIAL(R.string.tools_installer_initial, true),
         ALREADY(R.string.tools_installer_already, false),
         FAILURE(R.string.tools_installer_failure, true),
+        WORKING(R.string.tools_installer_working, false),
         INITIAL_SYSTEM(R.string.tools_installer_initial_system, true),
         SUCCESS_SYSTEM(R.string.tools_installer_success_system, false),
-        WORKING_SYSTEM(R.string.tools_installer_working_system, false),
         INITIAL_MAGISK(R.string.tools_installer_initial_magisk, true),
-        SUCCESS_MAGISK(R.string.tools_installer_success_magisk, false),
-        WORKING_MAGISK(R.string.tools_installer_working_magisk, false);
+        SUCCESS_MAGISK(R.string.tools_installer_success_magisk, false);
 
         private final int messageResourceId;
         private final boolean shouldEnableView;
