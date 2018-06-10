@@ -70,13 +70,12 @@
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
     <string name="tools_installer_failure">Unable to install command-line tools (no root?)</string>
     <string name="tools_installer_initial">Install optional tools for scripting</string>
+    <string name="tools_installer_working">Installing wg and wg-quick</string>
     <string name="tools_installer_initial_system">Install optional tools for scripting into the system partition</string>
     <string name="tools_installer_initial_magisk">Install optional tools for scripting as Magisk module</string>
     <string name="tools_installer_success_system">wg and wg-quick installed into the system partition</string>
     <string name="tools_installer_success_magisk">wg and wg-quick installed as a Magisk module (reboot required)</string>
     <string name="tools_installer_title">Install command line tools</string>
-    <string name="tools_installer_working_system">Installing wg and wg-quick into the system partition</string>
-    <string name="tools_installer_working_magisk">Installing wg and wg-quick as a Magisk module</string>
     <string name="tunnel_create_error">Unable to create tunnel: %s</string>
     <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>

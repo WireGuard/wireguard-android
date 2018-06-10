@@ -25,6 +25,12 @@ import java.util.List;
  */
 
 public final class ToolsInstaller {
+    public static final int ERROR = 0x0;
+    public static final int YES = 0x1;
+    public static final int NO = 0x2;
+    public static final int MAGISK = 0x4;
+    public static final int SYSTEM = 0x8;
+
     private static final String[][] EXECUTABLES = {
             {"libwg.so", "wg"},
             {"libwg-quick.so", "wg-quick"},
@@ -60,9 +66,8 @@ public final class ToolsInstaller {
     }
 
     public int areInstalled() throws NoRootException {
-        willInstallAsMagiskModule(true);
         if (INSTALL_DIR == null)
-            return OsConstants.ENOENT;
+            return ERROR;
         final StringBuilder script = new StringBuilder();
         for (final String[] names : EXECUTABLES) {
             script.append(String.format("cmp -s '%s' '%s' && ",
@@ -71,9 +76,13 @@ public final class ToolsInstaller {
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
-            return Application.getRootShell().run(null, script.toString());
+            final int ret = Application.getRootShell().run(null, script.toString());
+            if (ret == OsConstants.EALREADY)
+                return willInstallAsMagiskModule() ? YES | MAGISK : YES | SYSTEM;
+            else
+                return willInstallAsMagiskModule() ? NO | MAGISK : NO | SYSTEM;
         } catch (final IOException ignored) {
-            return OsConstants.EXIT_FAILURE;
+            return ERROR;
         }
     }
 
@@ -97,11 +106,9 @@ public final class ToolsInstaller {
         }
     }
 
-    public boolean willInstallAsMagiskModule(boolean checkForIt) {
+    private boolean willInstallAsMagiskModule() {
         synchronized (lock) {
             if (installAsMagiskModule == null) {
-                if (!checkForIt)
-                    throw new RuntimeException("Expected to already know whether this is a Magisk system");
                 try {
                     installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
                 } catch (final Exception ignored) {
@@ -123,9 +130,9 @@ public final class ToolsInstaller {
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
         try {
-            return Application.getRootShell().run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString()) == 0 ? YES | SYSTEM : ERROR;
         } catch (final IOException ignored) {
-            return OsConstants.EXIT_FAILURE;
+            return ERROR;
         }
     }
 
@@ -144,14 +151,14 @@ public final class ToolsInstaller {
         script.append("trap - INT TERM EXIT;");
 
         try {
-            return Application.getRootShell().run(null, script.toString());
+            return Application.getRootShell().run(null, script.toString()) == 0 ? YES | MAGISK : ERROR;
         } catch (final IOException ignored) {
-            return OsConstants.EXIT_FAILURE;
+            return ERROR;
         }
     }
 
     public int install() throws NoRootException {
-        return willInstallAsMagiskModule(true) ? installMagisk() : installSystem();
+        return willInstallAsMagiskModule() ? installMagisk() : installSystem();
     }
 
     public int symlink() throws NoRootException {
