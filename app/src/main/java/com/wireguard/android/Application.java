@@ -87,9 +87,13 @@ public class Application extends android.app.Application {
                 sharedPreferences.getBoolean("dark_theme", false) ?
                         AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
 
-        if (new File("/sys/module/wireguard").exists())
-            backend = new WgQuickBackend(getApplicationContext());
-        else
+        if (new File("/sys/module/wireguard").exists()) {
+            try {
+                rootShell.start();
+                backend = new WgQuickBackend(getApplicationContext());
+            } catch (final Exception ignored) { }
+        }
+        if (backend == null)
             backend = new GoBackend(getApplicationContext());
 
         tunnelManager = new TunnelManager(backend, configStore);
