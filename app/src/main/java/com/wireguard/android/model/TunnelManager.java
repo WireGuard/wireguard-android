@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
-import com.wireguard.android.backend.Backend;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
@@ -47,7 +46,6 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
 
-    private final Backend backend;
     private final ConfigStore configStore;
     private final ObservableSortedKeyedList<String, Tunnel> tunnels =
             new ObservableSortedKeyedArrayList<>(COMPARATOR);
@@ -55,8 +53,7 @@ public final class TunnelManager extends BaseObservable {
     private boolean haveLoaded;
     private final ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
 
-    public TunnelManager(final Backend backend, final ConfigStore configStore) {
-        this.backend = backend;
+    public TunnelManager(final ConfigStore configStore) {
         this.configStore = configStore;
     }
 
@@ -86,12 +83,12 @@ public final class TunnelManager extends BaseObservable {
         tunnels.remove(tunnel);
         return Application.getAsyncWorker().runAsync(() -> {
             if (originalState == State.UP)
-                backend.setState(tunnel, State.DOWN);
+                Application.getBackend().setState(tunnel, State.DOWN);
             try {
                 configStore.delete(tunnel.getName());
             } catch (final Exception e) {
                 if (originalState == State.UP)
-                    backend.setState(tunnel, State.UP);
+                    Application.getBackend().setState(tunnel, State.UP);
                 // Re-throw the exception to fail the completion.
                 throw e;
             }
@@ -116,12 +113,12 @@ public final class TunnelManager extends BaseObservable {
     }
 
     CompletionStage<State> getTunnelState(final Tunnel tunnel) {
-        return Application.getAsyncWorker().supplyAsync(() -> backend.getState(tunnel))
+        return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getState(tunnel))
                 .thenApply(tunnel::onStateChanged);
     }
 
     CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
-        return Application.getAsyncWorker().supplyAsync(() -> backend.getStatistics(tunnel))
+        return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getStatistics(tunnel))
                 .thenApply(tunnel::onStatisticsChanged);
     }
 
@@ -131,7 +128,7 @@ public final class TunnelManager extends BaseObservable {
 
     public void onCreate() {
         Application.getAsyncWorker().supplyAsync(configStore::enumerate)
-                .thenAcceptBoth(Application.getAsyncWorker().supplyAsync(backend::enumerate), this::onTunnelsLoaded)
+                .thenAcceptBoth(Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().enumerate()), this::onTunnelsLoaded)
                 .whenComplete(ExceptionLoggers.E);
     }
 
@@ -159,7 +156,7 @@ public final class TunnelManager extends BaseObservable {
     }
 
     public void refreshTunnelStates() {
-        Application.getAsyncWorker().supplyAsync(backend::enumerate)
+        Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().enumerate())
                 .thenAccept(running -> {
                     for (final Tunnel tunnel : tunnels)
                         tunnel.onStateChanged(running.contains(tunnel.getName()) ? State.UP : State.DOWN);
@@ -207,7 +204,7 @@ public final class TunnelManager extends BaseObservable {
 
     CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
         return Application.getAsyncWorker().supplyAsync(() -> {
-            final Config appliedConfig = backend.applyConfig(tunnel, config);
+            final Config appliedConfig = Application.getBackend().applyConfig(tunnel, config);
             return configStore.save(tunnel.getName(), appliedConfig);
         }).thenApply(tunnel::onConfigChanged);
     }
@@ -227,11 +224,11 @@ public final class TunnelManager extends BaseObservable {
         tunnels.remove(tunnel);
         return Application.getAsyncWorker().supplyAsync(() -> {
             if (originalState == State.UP)
-                backend.setState(tunnel, State.DOWN);
+                Application.getBackend().setState(tunnel, State.DOWN);
             configStore.rename(tunnel.getName(), name);
             final String newName = tunnel.onNameChanged(name);
             if (originalState == State.UP)
-                backend.setState(tunnel, State.UP);
+                Application.getBackend().setState(tunnel, State.UP);
             return newName;
         }).whenComplete((newName, e) -> {
             // On failure, we don't know what state the tunnel might be in. Fix that.
@@ -247,7 +244,7 @@ public final class TunnelManager extends BaseObservable {
     CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.getConfigAsync().thenCompose(x ->
-                Application.getAsyncWorker().supplyAsync(() -> backend.setState(tunnel, state))
+                Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().setState(tunnel, state))
         ).whenComplete((newState, e) -> {
             // Ensure onStateChanged is always called (failure or not), and with the correct state.
             tunnel.onStateChanged(e == null ? newState : tunnel.getState());

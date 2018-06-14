@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
 import com.wireguard.android.Application;
@@ -95,12 +96,21 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
-            if (Application.getBackendType() != WgQuickBackend.class) {
-                Preference pref = getPreferenceManager().findPreference("tools_installer");
-                getPreferenceScreen().removePreference(pref);
-                pref = getPreferenceManager().findPreference("restore_on_boot");
-                getPreferenceScreen().removePreference(pref);
-            }
+            final Preference wgQuickOnlyPrefs[] = {
+                getPreferenceManager().findPreference("tools_installer"),
+                getPreferenceManager().findPreference("restore_on_boot")
+            };
+            for (final Preference pref : wgQuickOnlyPrefs)
+                pref.setVisible(false);
+            final PreferenceScreen screen = getPreferenceScreen();
+            Application.onHaveBackend(backend -> {
+                for (final Preference pref : wgQuickOnlyPrefs) {
+                    if (backend.getClass() == WgQuickBackend.class)
+                        pref.setVisible(true);
+                    else
+                        screen.removePreference(pref);
+                }
+            });
         }
     }
 }

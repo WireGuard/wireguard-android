@@ -24,6 +24,8 @@ import com.wireguard.android.util.ToolsInstaller;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class Application extends android.app.Application {
@@ -34,6 +36,10 @@ public class Application extends android.app.Application {
     private SharedPreferences sharedPreferences;
     private ToolsInstaller toolsInstaller;
     private TunnelManager tunnelManager;
+    private Handler handler;
+    private List<BackendCallback> haveBackendCallbacks = new ArrayList<>();
+    private Object haveBackendCallbacksLock = new Object();
+
     public Application() {
         weakSelf = new WeakReference<>(this);
     }
@@ -47,11 +53,40 @@ public class Application extends android.app.Application {
     }
 
     public static Backend getBackend() {
-        return get().backend;
+        final Application app = get();
+        synchronized(app) {
+            if (app.backend == null) {
+                if (new File("/sys/module/wireguard").exists()) {
+                    try {
+                        app.rootShell.start();
+                        app.backend = new WgQuickBackend(app.getApplicationContext());
+                    } catch (final Exception ignored) { }
+                }
+                if (app.backend == null)
+                    app.backend = new GoBackend(app.getApplicationContext());
+                synchronized (app.haveBackendCallbacksLock) {
+                    for (final BackendCallback callback : app.haveBackendCallbacks)
+                        app.handler.post(() -> callback.callback(app.backend));
+                    app.haveBackendCallbacks = null;
+                }
+            }
+            return app.backend;
+        }
     }
 
-    public static Class getBackendType() {
-        return get().backend.getClass();
+    @FunctionalInterface
+    public interface BackendCallback {
+        void callback(final Backend backend);
+    }
+
+    public static void onHaveBackend(final BackendCallback callback) {
+        final Application app = get();
+        synchronized (app.haveBackendCallbacksLock) {
+            if (app.haveBackendCallbacks == null)
+                callback.callback(app.backend);
+            else
+                app.haveBackendCallbacks.add(callback);
+        }
     }
 
     public static RootShell getRootShell() {
@@ -74,8 +109,8 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
+        handler = new Handler(Looper.getMainLooper());
         final Executor executor = AsyncTask.SERIAL_EXECUTOR;
-        final Handler handler = new Handler(Looper.getMainLooper());
         final ConfigStore configStore = new FileConfigStore(getApplicationContext());
 
         asyncWorker = new AsyncWorker(executor, handler);
@@ -87,16 +122,8 @@ public class Application extends android.app.Application {
                 sharedPreferences.getBoolean("dark_theme", false) ?
                         AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
 
-        if (new File("/sys/module/wireguard").exists()) {
-            try {
-                rootShell.start();
-                backend = new WgQuickBackend(getApplicationContext());
-            } catch (final Exception ignored) { }
-        }
-        if (backend == null)
-            backend = new GoBackend(getApplicationContext());
-
-        tunnelManager = new TunnelManager(backend, configStore);
+        tunnelManager = new TunnelManager(configStore);
+        asyncWorker.runAsync(Application::getBackend);
         tunnelManager.onCreate();
     }
 }
