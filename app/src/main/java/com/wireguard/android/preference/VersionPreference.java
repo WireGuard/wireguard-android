@@ -27,13 +27,14 @@ public class VersionPreference extends Preference {
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
-        final Backend backend = Application.getBackend();
-        versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase());
-        Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
-            versionSummary = exception == null
-                    ? getContext().getString(R.string.version_summary, backend.getTypeName(), version)
-                    : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase());
-            notifyChanged();
+        Application.onHaveBackend(backend -> {
+            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase());
+            Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
+                versionSummary = exception == null
+                        ? getContext().getString(R.string.version_summary, backend.getTypeName(), version)
+                        : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase());
+                notifyChanged();
+            });
         });
     }
 
