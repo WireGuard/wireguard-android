@@ -38,7 +38,7 @@ public class Application extends android.app.Application {
     private TunnelManager tunnelManager;
     private Handler handler;
     private List<BackendCallback> haveBackendCallbacks = new ArrayList<>();
-    private Object haveBackendCallbacksLock = new Object();
+    private final Object haveBackendCallbacksLock = new Object();
 
     public Application() {
         weakSelf = new WeakReference<>(this);
