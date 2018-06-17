@@ -54,7 +54,7 @@ public class Application extends android.app.Application {
 
     public static Backend getBackend() {
         final Application app = get();
-        synchronized(app) {
+        synchronized (app) {
             if (app.backend == null) {
                 if (new File("/sys/module/wireguard").exists()) {
                     try {
