@@ -50,11 +50,6 @@ public class QuickTileService extends TileService {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
     public void onStartListening() {
         Application.getTunnelManager().addOnPropertyChangedCallback(onTunnelChangedCallback);
         if (tunnel != null)
