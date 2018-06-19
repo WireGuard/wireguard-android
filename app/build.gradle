@@ -11,9 +11,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     compileSdkVersion 27
-    dataBinding {
-        enabled true
-    }
+    dataBinding.enabled true
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
