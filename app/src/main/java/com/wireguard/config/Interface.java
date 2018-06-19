@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class Interface {
-    private final List<IPCidr> addressList;
+    private final List<InetNetwork> addressList;
     private final List<InetAddress> dnsList;
     private Keypair keypair;
     private int listenPort;
@@ -39,7 +39,7 @@ public class Interface {
             for (final String addr : addresses) {
                 if (addr.isEmpty())
                     throw new IllegalArgumentException("Address is empty");
-                addressList.add(new IPCidr(addr));
+                addressList.add(new InetNetwork(addr));
             }
         }
     }
@@ -47,7 +47,7 @@ public class Interface {
     private void addDnses(final String[] dnses) {
         if (dnses != null && dnses.length > 0) {
             for (final String dns : dnses) {
-                dnsList.add(Attribute.parseIPString(dns));
+                dnsList.add(InetAddresses.parse(dns));
             }
         }
     }
@@ -58,8 +58,8 @@ public class Interface {
         return Attribute.iterableToString(addressList);
     }
 
-    public IPCidr[] getAddresses() {
-        return addressList.toArray(new IPCidr[addressList.size()]);
+    public InetNetwork[] getAddresses() {
+        return addressList.toArray(new InetNetwork[addressList.size()]);
     }
 
     private String getDnsString() {
