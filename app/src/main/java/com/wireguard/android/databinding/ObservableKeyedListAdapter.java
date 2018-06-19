@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.wireguard.android.BR;
-import com.wireguard.android.util.Keyed;
+import com.wireguard.util.Keyed;
 import com.wireguard.android.util.ObservableKeyedList;
 
 import java.lang.ref.WeakReference;

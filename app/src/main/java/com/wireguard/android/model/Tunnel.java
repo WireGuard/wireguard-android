@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 
 import com.wireguard.android.BR;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.Keyed;
+import com.wireguard.util.Keyed;
 import com.wireguard.config.Config;
 
 import java.util.regex.Pattern;
