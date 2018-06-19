@@ -8,9 +8,6 @@ package com.wireguard.config;
 
 import android.text.TextUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,21 +33,12 @@ enum Attribute {
     private static final String[] EMPTY_LIST = new String[0];
     private static final Map<String, Attribute> KEY_MAP;
     private static final Pattern LIST_SEPARATOR_PATTERN = Pattern.compile("\\s*,\\s*");
-    private static final Method NUMERIC_ADDRESS_PARSER;
     private static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s|=");
 
     static {
         KEY_MAP = new HashMap<>(Attribute.values().length);
         for (final Attribute key : Attribute.values()) {
             KEY_MAP.put(key.token.toLowerCase(), key);
-        }
-    }
-
-    static {
-        try {
-            NUMERIC_ADDRESS_PARSER = InetAddress.class.getMethod("parseNumericAddress", String.class);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -68,21 +56,6 @@ enum Attribute {
 
     public static Attribute match(final CharSequence line) {
         return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0].toLowerCase());
-    }
-
-    public static InetAddress parseIPString(final String address) {
-        if (address == null || address.isEmpty())
-            throw new IllegalArgumentException("Empty address");
-        try {
-            return (InetAddress) NUMERIC_ADDRESS_PARSER.invoke(null, address);
-        } catch (final IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (final InvocationTargetException e) {
-            if (e.getCause() instanceof IllegalArgumentException)
-                throw (IllegalArgumentException) e.getCause();
-            else
-                throw new IllegalArgumentException(e.getCause());
-        }
     }
 
     public static String[] stringToList(final String string) {

@@ -21,7 +21,7 @@ import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
-import com.wireguard.config.IPCidr;
+import com.wireguard.config.InetNetwork;
 import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.KeyEncoding;
@@ -156,7 +156,7 @@ public final class GoBackend implements Backend {
                         fmt.format("endpoint=%s\n", peer.getResolvedEndpointString());
                     if (peer.getPersistentKeepalive() != 0)
                         fmt.format("persistent_keepalive_interval=%d\n", peer.getPersistentKeepalive());
-                    for (final IPCidr addr : peer.getAllowedIPs()) {
+                    for (final InetNetwork addr : peer.getAllowedIPs()) {
                         fmt.format("allowed_ip=%s\n", addr.toString());
                     }
                 }
@@ -171,15 +171,15 @@ public final class GoBackend implements Backend {
             configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0));
 
-            for (final IPCidr addr : config.getInterface().getAddresses())
-                builder.addAddress(addr.getAddress(), addr.getCidr());
+            for (final InetNetwork addr : config.getInterface().getAddresses())
+                builder.addAddress(addr.getAddress(), addr.getMask());
 
             for (final InetAddress addr : config.getInterface().getDnses())
                 builder.addDnsServer(addr.getHostAddress());
 
             for (final Peer peer : config.getPeers()) {
-                for (final IPCidr addr : peer.getAllowedIPs())
-                    builder.addRoute(addr.getAddress(), addr.getCidr());
+                for (final InetNetwork addr : peer.getAllowedIPs())
+                    builder.addRoute(addr.getAddress(), addr.getMask());
             }
 
             int mtu = config.getInterface().getMtu();

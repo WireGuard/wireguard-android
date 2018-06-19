@@ -28,7 +28,7 @@ import java.util.Locale;
  */
 
 public class Peer {
-    private final List<IPCidr> allowedIPsList;
+    private final List<InetNetwork> allowedIPsList;
     private InetSocketAddress endpoint;
     private int persistentKeepalive;
     private String preSharedKey;
@@ -41,13 +41,13 @@ public class Peer {
     private void addAllowedIPs(final String[] allowedIPs) {
         if (allowedIPs != null && allowedIPs.length > 0) {
             for (final String allowedIP : allowedIPs) {
-                allowedIPsList.add(new IPCidr(allowedIP));
+                allowedIPsList.add(new InetNetwork(allowedIP));
             }
         }
     }
 
-    public IPCidr[] getAllowedIPs() {
-        return allowedIPsList.toArray(new IPCidr[allowedIPsList.size()]);
+    public InetNetwork[] getAllowedIPs() {
+        return allowedIPsList.toArray(new InetNetwork[allowedIPsList.size()]);
     }
 
     private String getAllowedIPsString() {
