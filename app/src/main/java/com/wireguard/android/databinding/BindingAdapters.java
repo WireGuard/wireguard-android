@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
-import com.wireguard.android.util.Keyed;
+import com.wireguard.util.Keyed;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;

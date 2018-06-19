@@ -9,6 +9,8 @@ package com.wireguard.android.util;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 
+import com.wireguard.util.Keyed;
+
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Objects;
