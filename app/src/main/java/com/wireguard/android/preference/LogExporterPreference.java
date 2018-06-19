@@ -14,12 +14,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.FragmentUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,16 +37,6 @@ public class LogExporterPreference extends Preference {
 
     public LogExporterPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    private static SettingsActivity getPrefActivity(final Preference preference) {
-        final Context context = preference.getContext();
-        if (context instanceof ContextThemeWrapper) {
-            if (((ContextThemeWrapper) context).getBaseContext() instanceof SettingsActivity) {
-                return ((SettingsActivity) ((ContextThemeWrapper) context).getBaseContext());
-            }
-        }
-        return null;
     }
 
     private void exportLog() {
@@ -90,7 +79,7 @@ public class LogExporterPreference extends Preference {
             final String message = getContext().getString(R.string.log_export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
-                    getPrefActivity(this).findViewById(android.R.id.content),
+                    FragmentUtils.getPrefActivity(this).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
             setEnabled(true);
         } else {
@@ -113,7 +102,7 @@ public class LogExporterPreference extends Preference {
 
     @Override
     protected void onClick() {
-        getPrefActivity(this).ensurePermissions(
+        FragmentUtils.getPrefActivity(this).ensurePermissions(
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 (permissions, granted) -> {
                     if (granted.length > 0 && granted[0] == PackageManager.PERMISSION_GRANTED) {
