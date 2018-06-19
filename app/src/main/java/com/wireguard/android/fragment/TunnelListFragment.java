@@ -38,8 +38,6 @@ import com.wireguard.android.R;
 import com.wireguard.android.activity.TunnelCreatorActivity;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.TunnelManager;
-import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
 

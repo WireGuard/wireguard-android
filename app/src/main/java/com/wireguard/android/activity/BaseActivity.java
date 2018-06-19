@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.backend.GoBackend;

@@ -14,12 +14,6 @@ import android.util.AttributeSet;
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
-import com.wireguard.android.backend.Backend;
-import com.wireguard.android.backend.GoBackend;
-import com.wireguard.android.backend.WgQuickBackend;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VersionPreference extends Preference {
     private String versionSummary;
