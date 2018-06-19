@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
 
 import java.util.Objects;
