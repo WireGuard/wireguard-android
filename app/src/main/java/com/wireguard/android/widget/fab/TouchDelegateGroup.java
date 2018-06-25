@@ -13,11 +13,11 @@ import android.view.TouchDelegate;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class TouchDelegateGroup extends TouchDelegate {
     private static final Rect USELESS_HACKY_RECT = new Rect();
-    private final List<TouchDelegate> mTouchDelegates = new ArrayList<>();
+    private final Collection<TouchDelegate> mTouchDelegates = new ArrayList<>();
     private TouchDelegate mCurrentTouchDelegate;
     private boolean mEnabled;
 
@@ -49,8 +49,7 @@ public class TouchDelegateGroup extends TouchDelegate {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                for (int i = 0; i < mTouchDelegates.size(); i++) {
-                    final TouchDelegate touchDelegate = mTouchDelegates.get(i);
+		for (final TouchDelegate touchDelegate : mTouchDelegates) {
                     if (touchDelegate.onTouchEvent(event)) {
                         mCurrentTouchDelegate = touchDelegate;
                         return true;

@@ -466,7 +466,7 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
 
         mAddButton.setEnabled(enabled);
