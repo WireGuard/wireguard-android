@@ -27,7 +27,7 @@ public final class SharedLibraryLoader {
         try {
             System.loadLibrary(libName);
             return;
-        } catch (UnsatisfiedLinkError e) {
+        } catch (final UnsatisfiedLinkError e) {
             Log.d(TAG, "Failed to load library normally, so attempting to extract from apk", e);
             noAbiException = e;
         }
@@ -59,7 +59,7 @@ public final class SharedLibraryLoader {
                 }
                 System.load(f.getAbsolutePath());
                 return;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Log.d(TAG, "Failed to load library apk:/" + libZipPath, e);
                 noAbiException = e;
             } finally {
