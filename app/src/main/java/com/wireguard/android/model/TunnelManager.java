@@ -112,12 +112,12 @@ public final class TunnelManager extends BaseObservable {
                 .thenApply(tunnel::onConfigChanged);
     }
 
-    CompletionStage<State> getTunnelState(final Tunnel tunnel) {
+    static CompletionStage<State> getTunnelState(final Tunnel tunnel) {
         return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getState(tunnel))
                 .thenApply(tunnel::onStateChanged);
     }
 
-    CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
+    static CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
         return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getStatistics(tunnel))
                 .thenApply(tunnel::onStatisticsChanged);
     }

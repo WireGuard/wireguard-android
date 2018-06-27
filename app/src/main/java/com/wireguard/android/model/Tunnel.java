@@ -80,21 +80,21 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     }
 
     public CompletionStage<State> getStateAsync() {
-        return manager.getTunnelState(this);
+        return TunnelManager.getTunnelState(this);
     }
 
     @Bindable
     public Statistics getStatistics() {
         // FIXME: Check age of statistics.
         if (statistics == null)
-            manager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E);
+            TunnelManager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E);
         return statistics;
     }
 
     public CompletionStage<Statistics> getStatisticsAsync() {
         // FIXME: Check age of statistics.
         if (statistics == null)
-            return manager.getTunnelStatistics(this);
+            return TunnelManager.getTunnelStatistics(this);
         return CompletableFuture.completedFuture(statistics);
     }
 
