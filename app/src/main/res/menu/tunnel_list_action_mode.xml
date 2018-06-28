@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_action_select_all"
+        android:alphabeticShortcut="s"
+        android:icon="@drawable/ic_action_select_all"
+        android:title="@string/select_all"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_action_delete"
         android:alphabeticShortcut="d"
         android:icon="@drawable/ic_action_delete"

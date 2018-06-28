@@ -305,6 +305,10 @@ public class TunnelListFragment extends BaseFragment {
                             .whenComplete(TunnelListFragment.this::onTunnelDeletionFinished);
                     mode.finish();
                     return true;
+                case R.id.menu_action_select_all:
+                    for (int i = 0; i < tunnelList.getAdapter().getCount(); ++i)
+                        tunnelList.setItemChecked(i, true);
+                    return true;
                 default:
                     return false;
             }
