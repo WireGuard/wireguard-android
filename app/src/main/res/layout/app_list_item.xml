@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.wireguard.android.model.ApplicationData" />
+
+        <variable
+            name="collection"
+            type="com.wireguard.android.util.ObservableKeyedList&lt;String, com.wireguard.android.model.ApplicationData&gt;" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.model.ApplicationData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background_anim"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:onClick="@{(view) -> item.setExcludedFromTunnel(!item.excludedFromTunnel)}">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@{item.icon}" />
+
+        <TextView
+            android:id="@+id/app_name"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:text="@{key}" />
+
+        <CheckBox
+            android:id="@+id/excluded_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={item.excludedFromTunnel}" />
+
+    </LinearLayout>
+</layout>

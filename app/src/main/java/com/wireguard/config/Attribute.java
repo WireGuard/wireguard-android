@@ -18,10 +18,11 @@ import java.util.regex.Pattern;
  * The set of valid attributes for an interface or peer in a WireGuard configuration file.
  */
 
-enum Attribute {
+public enum Attribute {
     ADDRESS("Address"),
     ALLOWED_IPS("AllowedIPs"),
     DNS("DNS"),
+    EXCLUDED_APPLICATIONS("ExcludedApplications"),
     ENDPOINT("Endpoint"),
     LISTEN_PORT("ListenPort"),
     MTU("MTU"),
@@ -59,7 +60,7 @@ enum Attribute {
     }
 
     public static String[] stringToList(final String string) {
-        if (string == null)
+        if (TextUtils.isEmpty(string))
             return EMPTY_LIST;
         return LIST_SEPARATOR_PATTERN.split(string.trim());
     }

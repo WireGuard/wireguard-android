@@ -171,6 +171,9 @@ public final class GoBackend implements Backend {
             configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0));
 
+            for (final String excludedApplication : config.getInterface().getExcludedApplications())
+                builder.addDisallowedApplication(excludedApplication);
+
             for (final InetNetwork addr : config.getInterface().getAddresses())
                 builder.addAddress(addr.getAddress(), addr.getMask());
 
@@ -250,5 +253,6 @@ public final class GoBackend implements Backend {
             }
             return super.onStartCommand(intent, flags, startId);
         }
+
     }
 }
