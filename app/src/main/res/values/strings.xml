@@ -24,6 +24,7 @@
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
+    <string name="cancel">Cancel</string>
     <string name="config_save_error">Unable to save configuration for “%s”: %s</string>
     <string name="config_save_success">Successfully saved configuration for “%s”</string>
     <string name="create_activity_title">Create WireGuard Tunnel</string>
@@ -37,9 +38,11 @@
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
+    <string name="error_fetching_apps">Error fetching apps list: %s</string>
     <string name="error_down">Error bringing down tunnel: %s</string>
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
+    <string name="excluded_applications">Excluded Applications</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
@@ -66,6 +69,8 @@
     <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
+    <string name="set_excluded_applications">Set Excluded Applications</string>
+    <string name="set_exclusions">Set Exclusions</string>
     <string name="settings">Settings</string>
     <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
@@ -85,6 +90,7 @@
     <string name="version_summary">%s backend v%s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>
+    <string name="x_excluded_applications">%d Excluded Applications</string>
     <string name="zip_exporter_title">Export tunnels to zip file</string>
     <string name="zip_export_error">Unable to export tunnels: %s</string>
     <string name="zip_export_success">Saved to %s</string>

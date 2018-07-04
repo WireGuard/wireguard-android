@@ -16,6 +16,7 @@ import com.wireguard.crypto.Keypair;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ import java.util.List;
 public class Interface {
     private final List<InetNetwork> addressList;
     private final List<InetAddress> dnsList;
+    private final List<String> excludedApplications;
     private Keypair keypair;
     private int listenPort;
     private int mtu;
@@ -32,6 +34,7 @@ public class Interface {
     public Interface() {
         addressList = new ArrayList<>();
         dnsList = new ArrayList<>();
+        excludedApplications = new ArrayList<>();
     }
 
     private void addAddresses(final String[] addresses) {
@@ -49,6 +52,12 @@ public class Interface {
             for (final String dns : dnses) {
                 dnsList.add(InetAddresses.parse(dns));
             }
+        }
+    }
+
+    private void addExcludedApplications(final String[] applications) {
+        if (applications != null && applications.length > 0) {
+            excludedApplications.addAll(Arrays.asList(applications));
         }
     }
 
@@ -77,6 +86,16 @@ public class Interface {
 
     public InetAddress[] getDnses() {
         return dnsList.toArray(new InetAddress[dnsList.size()]);
+    }
+
+    private String getExcludedApplicationsString() {
+        if (excludedApplications.isEmpty())
+            return null;
+        return Attribute.iterableToString(excludedApplications);
+    }
+
+    public String[] getExcludedApplications() {
+        return excludedApplications.toArray(new String[excludedApplications.size()]);
     }
 
     public int getListenPort() {
@@ -120,6 +139,9 @@ public class Interface {
             case DNS:
                 addDnses(key.parseList(line));
                 break;
+            case EXCLUDED_APPLICATIONS:
+                addExcludedApplications(key.parseList(line));
+                break;
             case LISTEN_PORT:
                 setListenPortString(key.parse(line));
                 break;
@@ -142,6 +164,11 @@ public class Interface {
     private void setDnsString(final String dnsString) {
         dnsList.clear();
         addDnses(Attribute.stringToList(dnsString));
+    }
+
+    private void setExcludedApplicationsString(final String applicationsString) {
+        excludedApplications.clear();
+        addExcludedApplications(Attribute.stringToList(applicationsString));
     }
 
     private void setListenPort(final int listenPort) {
@@ -179,6 +206,8 @@ public class Interface {
             sb.append(Attribute.ADDRESS.composeWith(addressList));
         if (!dnsList.isEmpty())
             sb.append(Attribute.DNS.composeWith(getDnsStrings()));
+        if (!excludedApplications.isEmpty())
+            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications));
         if (listenPort != 0)
             sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
         if (mtu != 0)
@@ -202,6 +231,7 @@ public class Interface {
         };
         private String addresses;
         private String dnses;
+        private String excludedApplications;
         private String listenPort;
         private String mtu;
         private String privateKey;
@@ -219,11 +249,13 @@ public class Interface {
             privateKey = in.readString();
             listenPort = in.readString();
             mtu = in.readString();
+            excludedApplications = in.readString();
         }
 
         public void commitData(final Interface parent) {
             parent.setAddressString(addresses);
             parent.setDnsString(dnses);
+            parent.setExcludedApplicationsString(excludedApplications);
             parent.setPrivateKey(privateKey);
             parent.setListenPortString(listenPort);
             parent.setMtuString(mtu);
@@ -255,6 +287,11 @@ public class Interface {
         }
 
         @Bindable
+        public String getExcludedApplications() {
+            return excludedApplications;
+        }
+
+        @Bindable
         public String getListenPort() {
             return listenPort;
         }
@@ -277,6 +314,7 @@ public class Interface {
         protected void loadData(final Interface parent) {
             addresses = parent.getAddressString();
             dnses = parent.getDnsString();
+            excludedApplications = parent.getExcludedApplicationsString();
             publicKey = parent.getPublicKey();
             privateKey = parent.getPrivateKey();
             listenPort = parent.getListenPortString();
@@ -291,6 +329,11 @@ public class Interface {
         public void setDnses(final String dnses) {
             this.dnses = dnses;
             notifyPropertyChanged(BR.dnses);
+        }
+
+        public void setExcludedApplications(final String excludedApplications) {
+            this.excludedApplications = excludedApplications;
+            notifyPropertyChanged(BR.excludedApplications);
         }
 
         public void setListenPort(final String listenPort) {
@@ -324,6 +367,7 @@ public class Interface {
             dest.writeString(privateKey);
             dest.writeString(listenPort);
             dest.writeString(mtu);
+            dest.writeString(excludedApplications);
         }
     }
 }

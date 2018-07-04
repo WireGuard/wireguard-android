@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.wireguard.android.model.ApplicationData" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.AppListDialogFragment" />
+
+        <variable
+            name="appData"
+            type="com.wireguard.android.util.ObservableKeyedList&lt;String, ApplicationData&gt;" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="200dp" >
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/app_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:items="@{appData}"
+            app:layout="@{@layout/app_list_item}" />
+
+    </FrameLayout>
+
+
+</layout>

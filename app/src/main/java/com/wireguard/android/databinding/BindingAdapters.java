@@ -9,16 +9,18 @@ package com.wireguard.android.databinding;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableList;
 import android.databinding.adapters.ListenerUtil;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.wireguard.android.R;
-import com.wireguard.util.Keyed;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
+import com.wireguard.util.Keyed;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -91,9 +93,39 @@ public final class BindingAdapters {
         adapter.setList(newList);
     }
 
+    @BindingAdapter({"items", "layout"})
+    public static <K, E extends Keyed<? extends K>>
+    void setItems(final RecyclerView view,
+                  final ObservableKeyedList<K, E> oldList, final int oldLayoutId,
+                  final ObservableKeyedList<K, E> newList, final int newLayoutId) {
+        if (view.getLayoutManager() == null)
+            view.setLayoutManager(new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false));
+
+        if (oldList == newList && oldLayoutId == newLayoutId)
+            return;
+        // The ListAdapter interface is not generic, so this cannot be checked.
+        @SuppressWarnings("unchecked") ObservableKeyedRecyclerViewAdapter<K, E> adapter =
+                (ObservableKeyedRecyclerViewAdapter<K, E>) view.getAdapter();
+        // If the layout changes, any existing adapter must be replaced.
+        if (adapter != null && oldList != null && oldLayoutId != newLayoutId) {
+            adapter.setList(null);
+            adapter = null;
+        }
+        // Avoid setting an adapter when there is no new list or layout.
+        if (newList == null || newLayoutId == 0)
+            return;
+        if (adapter == null) {
+            adapter = new ObservableKeyedRecyclerViewAdapter<>(view.getContext(), newLayoutId, newList);
+            view.setAdapter(adapter);
+        }
+        // Either the list changed, or this is an entirely new listener because the layout changed.
+        adapter.setList(newList);
+    }
+
     @BindingAdapter("onBeforeCheckedChanged")
     public static void setOnBeforeCheckedChanged(final ToggleSwitch view,
                                                  final OnBeforeCheckedChangeListener listener) {
         view.setOnBeforeCheckedChangeListener(listener);
     }
+
 }

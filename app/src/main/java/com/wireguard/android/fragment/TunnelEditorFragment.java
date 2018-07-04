@@ -11,6 +11,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,16 +25,20 @@ import android.widget.Toast;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
+import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.config.Attribute;
 import com.wireguard.config.Config;
+
+import java.util.List;
 
 /**
  * Fragment for editing a WireGuard configuration.
  */
 
-public class TunnelEditorFragment extends BaseFragment {
+public class TunnelEditorFragment extends BaseFragment implements AppExclusionListener {
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_ORIGINAL_NAME = "original_name";
     private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
@@ -202,6 +207,8 @@ public class TunnelEditorFragment extends BaseFragment {
 
     @Override
     public void onViewStateRestored(final Bundle savedInstanceState) {
+        binding.setFragment(this);
+
         if (savedInstanceState == null) {
             onSelectedTunnelChanged(null, getSelectedTunnel());
         } else {
@@ -216,4 +223,23 @@ public class TunnelEditorFragment extends BaseFragment {
 
         super.onViewStateRestored(savedInstanceState);
     }
+
+    public void onRequestSetExcludedApplications(@SuppressWarnings("unused") final View view) {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            String[] excludedApps = excludedApplications();
+            AppListDialogFragment fragment = AppListDialogFragment.newInstance(excludedApps, this);
+            fragment.show(getFragmentManager(), null);
+        }
+    }
+
+    @Override
+    public void onExcludedAppsSelected(List<String> excludedApps) {
+        binding.getConfig().getInterfaceSection().setExcludedApplications(Attribute.iterableToString(excludedApps));
+    }
+
+    public String[] excludedApplications() {
+       return Attribute.stringToList(binding.getConfig().getInterfaceSection().getExcludedApplications());
+    }
+
 }
