@@ -69,7 +69,10 @@
     <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
-    <string name="set_excluded_applications">Set Excluded Applications</string>
+    <plurals name="set_excluded_applications">
+        <item quantity="one">%d Excluded Application</item>
+        <item quantity="other">%d Excluded Applications</item>
+    </plurals>
     <string name="set_exclusions">Set Exclusions</string>
     <string name="settings">Settings</string>
     <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
+ * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * SPDX-License-Identifier:
+ */
+
 package com.wireguard.android.databinding;
 
 import android.content.Context;
@@ -57,12 +63,12 @@ class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extend
     }
 
     @NonNull @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         return new ViewHolder(DataBindingUtil.inflate(layoutInflater, layoutId, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.binding.setVariable(BR.collection, list);
         holder.binding.setVariable(BR.key, getKey(position));
         holder.binding.setVariable(BR.item, getItem(position));
@@ -125,7 +131,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extend
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final ViewDataBinding binding;
 
-        public ViewHolder(ViewDataBinding binding) {
+        public ViewHolder(final ViewDataBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;
