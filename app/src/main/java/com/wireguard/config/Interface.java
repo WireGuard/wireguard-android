@@ -292,6 +292,11 @@ public class Interface {
         }
 
         @Bindable
+        public int getExcludedApplicationsCount() {
+            return Attribute.stringToList(excludedApplications).length;
+        }
+
+        @Bindable
         public String getListenPort() {
             return listenPort;
         }
@@ -334,6 +339,7 @@ public class Interface {
         public void setExcludedApplications(final String excludedApplications) {
             this.excludedApplications = excludedApplications;
             notifyPropertyChanged(BR.excludedApplications);
+            notifyPropertyChanged(BR.excludedApplicationsCount);
         }
 
         public void setListenPort(final String listenPort) {

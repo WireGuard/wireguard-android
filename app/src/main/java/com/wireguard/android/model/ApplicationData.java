@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
+ * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * SPDX-License-Identifier:
+ */
+
 package com.wireguard.android.model;
 
 import android.databinding.BaseObservable;
@@ -15,7 +21,7 @@ public class ApplicationData extends BaseObservable implements Keyed<String> {
     @NonNull private final String packageName;
     private boolean excludedFromTunnel;
 
-    public ApplicationData(@NonNull Drawable icon, @NonNull String name, @NonNull String packageName, boolean excludedFromTunnel) {
+    public ApplicationData(@NonNull final Drawable icon, @NonNull final String name, @NonNull final String packageName, final boolean excludedFromTunnel) {
         this.icon = icon;
         this.name = name;
         this.packageName = packageName;
@@ -42,7 +48,7 @@ public class ApplicationData extends BaseObservable implements Keyed<String> {
         return excludedFromTunnel;
     }
 
-    public void setExcludedFromTunnel(boolean excludedFromTunnel) {
+    public void setExcludedFromTunnel(final boolean excludedFromTunnel) {
         this.excludedFromTunnel = excludedFromTunnel;
         notifyPropertyChanged(BR.excludedFromTunnel);
     }

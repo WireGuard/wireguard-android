@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
+ * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * SPDX-License-Identifier:
+ */
+
 package com.wireguard.android.fragment;
 
 import android.app.Activity;
@@ -33,20 +39,19 @@ public class AppListDialogFragment extends DialogFragment {
     private static final String KEY_EXCLUDED_APPS = "excludedApps";
 
     private List<String> currentlyExcludedApps;
-    private Tunnel tunnel;
     private final ObservableKeyedList<String, ApplicationData> appData = new ObservableKeyedArrayList<>();
 
-    public static <T extends Fragment & AppExclusionListener> AppListDialogFragment newInstance(String[] excludedApps, T target) {
-        Bundle extras = new Bundle();
+    public static <T extends Fragment & AppExclusionListener> AppListDialogFragment newInstance(final String[] excludedApps, final T target) {
+        final Bundle extras = new Bundle();
         extras.putStringArray(KEY_EXCLUDED_APPS, excludedApps);
-        AppListDialogFragment fragment = new AppListDialogFragment();
+        final AppListDialogFragment fragment = new AppListDialogFragment();
         fragment.setTargetFragment(target, 0);
         fragment.setArguments(extras);
         return fragment;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
@@ -55,14 +60,11 @@ public class AppListDialogFragment extends DialogFragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        if (context instanceof BaseActivity) {
-            tunnel = ((BaseActivity) context).getSelectedTunnel();
-        }
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.excluded_applications);
 
         AppListDialogFragmentBinding binding = AppListDialogFragmentBinding.inflate(getActivity().getLayoutInflater(), null, false);
@@ -88,11 +90,11 @@ public class AppListDialogFragment extends DialogFragment {
 
         final PackageManager pm = activity.getPackageManager();
         Application.getAsyncWorker().supplyAsync(() -> {
-            Intent launcherIntent = new Intent(Intent.ACTION_MAIN, null);
+            final Intent launcherIntent = new Intent(Intent.ACTION_MAIN, null);
             launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> resolveInfos = pm.queryIntentActivities(launcherIntent, 0);
+            final List<ResolveInfo> resolveInfos = pm.queryIntentActivities(launcherIntent, 0);
 
-            List<ApplicationData> appData = new ArrayList<>();
+            final List<ApplicationData> appData = new ArrayList<>();
             for (ResolveInfo resolveInfo : resolveInfos) {
                 String packageName = resolveInfo.activityInfo.packageName;
                 appData.add(new ApplicationData(resolveInfo.loadIcon(pm), resolveInfo.loadLabel(pm).toString(), packageName, currentlyExcludedApps.contains(packageName)));
@@ -115,7 +117,7 @@ public class AppListDialogFragment extends DialogFragment {
 
     void setExclusionsAndDismiss() {
         final List<String> excludedApps = new ArrayList<>();
-        for (ApplicationData data : appData) {
+        for (final ApplicationData data : appData) {
             if (data.isExcludedFromTunnel()) {
                 excludedApps.add(data.getPackageName());
             }
