@@ -1,6 +1,6 @@
 /*
  * Copyright © 2016 Southern Storm Software, Pty Ltd.
- * SPDX-License-Identifier: MIT
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package com.wireguard.crypto;

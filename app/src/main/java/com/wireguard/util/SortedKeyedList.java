@@ -1,6 +1,6 @@
 /*
  * Copyright © 2018 Samuel Holland <samuel@sholland.org>
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package com.wireguard.util;
