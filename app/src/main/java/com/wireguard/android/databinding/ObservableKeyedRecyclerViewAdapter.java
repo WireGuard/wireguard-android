@@ -1,7 +1,7 @@
 /*
  * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
  * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
- * SPDX-License-Identifier:
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package com.wireguard.android.databinding;
