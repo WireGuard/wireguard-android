@@ -4,6 +4,7 @@
 
     <data>
 
+        <import type="android.view.View"/>
         <import type="com.wireguard.android.widget.KeyInputFilter" />
 
         <variable
@@ -103,12 +104,22 @@
                 android:inputType="textNoSuggestions|textVisiblePassword"
                 android:text="@={item.allowedIPs}" />
 
+            <CheckBox
+                android:id="@+id/exclude_private_ips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/allowed_ips_text"
+                android:visibility="@{(item.allowedIPsContainsDefaultRoute || item.allowedIPsContainsDefaultRouteModRFC1918) ? View.VISIBLE : View.GONE}"
+                android:checked="@{item.allowedIPsContainsDefaultRouteModRFC1918}"
+                android:onClick="@{() -> item.toggleExcludePrivateIPs()}"
+                android:text="@string/exclude_private_ips" />
+
             <TextView
                 android:id="@+id/endpoint_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/allowed_ips_text"
+                android:layout_below="@+id/exclude_private_ips"
                 android:layout_toStartOf="@+id/persistent_keepalive_label"
                 android:labelFor="@+id/endpoint_text"
                 android:text="@string/endpoint" />

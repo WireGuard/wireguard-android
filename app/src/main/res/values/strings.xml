@@ -43,6 +43,7 @@
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="excluded_applications">Excluded Applications</string>
+    <string name="exclude_private_ips">Exclude Private IPs</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
