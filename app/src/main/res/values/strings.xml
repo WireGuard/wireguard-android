@@ -34,6 +34,7 @@
     <string name="dark_theme_summary_on">Currently using dark night theme</string>
     <string name="dark_theme_summary_off">Currently using light day theme</string>
     <string name="delete">Delete</string>
+    <string name="deselect_all">Deselect All</string>
     <string name="select_all">Select all</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
