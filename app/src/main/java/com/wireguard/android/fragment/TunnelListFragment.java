@@ -16,26 +16,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.activity.TunnelCreatorActivity;
+import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
@@ -47,13 +42,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import java9.util.concurrent.CompletableFuture;
-import java9.util.stream.Collectors;
-import java9.util.stream.IntStream;
 import java9.util.stream.StreamSupport;
 
 /**
@@ -64,8 +59,7 @@ public class TunnelListFragment extends BaseFragment {
     private static final int REQUEST_IMPORT = 1;
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
 
-    private final MultiChoiceModeListener actionModeListener = new ActionModeListener();
-    private final ListViewCallbacks listViewCallbacks = new ListViewCallbacks();
+    private final ActionModeListener actionModeListener = new ActionModeListener();
     private ActionMode actionMode;
     private TunnelListFragmentBinding binding;
 
@@ -182,20 +176,19 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
-        binding.tunnelList.setMultiChoiceModeListener(actionModeListener);
-        binding.tunnelList.setOnItemClickListener(listViewCallbacks);
-        binding.tunnelList.setOnItemLongClickListener(listViewCallbacks);
-        binding.tunnelList.setOnTouchListener(listViewCallbacks);
+
+        binding.tunnelList.setOnTouchListener((view, motionEvent) -> {
+            if (binding != null) {
+                binding.createMenu.collapse();
+            }
+            return false;
+        });
         binding.executePendingBindings();
         return binding.getRoot();
     }
@@ -276,38 +269,54 @@ public class TunnelListFragment extends BaseFragment {
         super.onViewStateRestored(savedInstanceState);
         binding.setFragment(this);
         binding.setTunnels(Application.getTunnelManager().getTunnels());
+        binding.setRowConfigurationHandler(new ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<Tunnel>() {
+            @Override
+            public void onConfigureRow(View view, Tunnel tunnel, int position) {
+                view.setOnClickListener(clicked -> {
+                    if (actionMode == null) {
+                        setSelectedTunnel(tunnel);
+                    } else {
+                        actionModeListener.toggleItemChecked(position);
+                    }
+                });
+                view.setOnLongClickListener(clicked -> {
+                    actionModeListener.toggleItemChecked(position);
+                    return true;
+                });
+
+                view.setActivated(actionModeListener.checkedItems.contains(position));
+            }
+        });
     }
 
-    private final class ActionModeListener implements MultiChoiceModeListener {
-        private Resources resources;
-        private AbsListView tunnelList;
+    private final class ActionModeListener implements ActionMode.Callback {
+        private final Set<Integer> checkedItems = new HashSet<>();
 
-        private IntStream getCheckedPositions() {
-            final SparseBooleanArray checkedItemPositions = tunnelList.getCheckedItemPositions();
-            return IntStream.range(0, checkedItemPositions.size())
-                    .filter(checkedItemPositions::valueAt)
-                    .map(checkedItemPositions::keyAt);
-        }
+        private Resources resources;
 
         @Override
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_action_delete:
-                    // Must operate in two steps: positions change once we start deleting things.
-                    final List<Tunnel> tunnelsToDelete = getCheckedPositions()
-                            .mapToObj(pos -> (Tunnel) tunnelList.getItemAtPosition(pos))
-                            .collect(Collectors.toList());
+                    List<Tunnel> tunnelsToDelete = new ArrayList<>();
+                    for (Integer position : checkedItems) {
+                        tunnelsToDelete.add(Application.getTunnelManager().getTunnels().get(position));
+                    }
+
                     final CompletableFuture[] futures = StreamSupport.stream(tunnelsToDelete)
                             .map(Tunnel::delete)
                             .toArray(CompletableFuture[]::new);
                     CompletableFuture.allOf(futures)
                             .thenApply(x -> futures.length)
                             .whenComplete(TunnelListFragment.this::onTunnelDeletionFinished);
+
+                    checkedItems.clear();
                     mode.finish();
                     return true;
                 case R.id.menu_action_select_all:
-                    for (int i = 0; i < tunnelList.getAdapter().getCount(); ++i)
-                        tunnelList.setItemChecked(i, true);
+                    for (int i = 0; i < Application.getTunnelManager().getTunnels().size(); ++i) {
+                        setItemChecked(i, true);
+                    }
                     return true;
                 default:
                     return false;
@@ -317,9 +326,9 @@ public class TunnelListFragment extends BaseFragment {
         @Override
         public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
             actionMode = mode;
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 resources = getActivity().getResources();
-            tunnelList = binding.tunnelList;
+            }
             mode.getMenuInflater().inflate(R.menu.tunnel_list_action_mode, menu);
             return true;
         }
@@ -328,12 +337,31 @@ public class TunnelListFragment extends BaseFragment {
         public void onDestroyActionMode(final ActionMode mode) {
             actionMode = null;
             resources = null;
+
+            checkedItems.clear();
+            binding.tunnelList.getAdapter().notifyDataSetChanged();
         }
 
-        @Override
-        public void onItemCheckedStateChanged(final ActionMode mode, final int position,
-                                              final long id, final boolean checked) {
-            updateTitle(mode);
+        void toggleItemChecked(int position) {
+            setItemChecked(position, !checkedItems.contains(position));
+        }
+
+        void setItemChecked(int position, boolean checked) {
+            if (checked) {
+                checkedItems.add(position);
+            } else {
+                checkedItems.remove(position);
+            }
+
+            if (actionMode == null && !checkedItems.isEmpty() && getActivity() != null) {
+                ((AppCompatActivity) getActivity()).startSupportActionMode(this);
+            } else if (actionMode != null && checkedItems.isEmpty()) {
+                actionMode.finish();
+            }
+
+            binding.tunnelList.getAdapter().notifyItemChanged(position);
+
+            updateTitle(actionMode);
         }
 
         @Override
@@ -342,8 +370,12 @@ public class TunnelListFragment extends BaseFragment {
             return false;
         }
 
-        private void updateTitle(final ActionMode mode) {
-            final int count = (int) getCheckedPositions().count();
+        private void updateTitle(@Nullable final ActionMode mode) {
+            if (mode == null) {
+                return;
+            }
+
+            final int count = checkedItems.size();
             if (count == 0) {
                 mode.setTitle("");
             } else {
@@ -352,30 +384,4 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    private final class ListViewCallbacks
-            implements OnItemClickListener, OnItemLongClickListener, OnTouchListener {
-        @Override
-        public void onItemClick(final AdapterView<?> parent, final View view,
-                                final int position, final long id) {
-            setSelectedTunnel((Tunnel) parent.getItemAtPosition(position));
-        }
-
-        @Override
-        public boolean onItemLongClick(final AdapterView<?> parent, final View view,
-                                       final int position, final long id) {
-            if (actionMode != null)
-                return false;
-            if (binding != null)
-                binding.tunnelList.setItemChecked(position, true);
-            return true;
-        }
-
-        @Override
-        @SuppressLint("ClickableViewAccessibility")
-        public boolean onTouch(final View view, final MotionEvent motionEvent) {
-            if (binding != null)
-                binding.createMenu.collapse();
-            return false;
-        }
-    }
 }

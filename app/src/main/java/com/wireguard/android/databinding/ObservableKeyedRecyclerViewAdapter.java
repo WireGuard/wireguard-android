@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.wireguard.android.BR;
@@ -26,12 +27,13 @@ import java.lang.ref.WeakReference;
  * A generic {@code RecyclerView.Adapter} backed by a {@code ObservableKeyedList}.
  */
 
-class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extends Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder> {
+public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extends Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder> {
 
     private final OnListChangedCallback<E> callback = new OnListChangedCallback<>(this);
     private final int layoutId;
     private final LayoutInflater layoutInflater;
     private ObservableKeyedList<K, E> list;
+    private RowConfigurationHandler rowConfigurationHandler;
 
     ObservableKeyedRecyclerViewAdapter(final Context context, final int layoutId,
                                        final ObservableKeyedList<K, E> list) {
@@ -67,12 +69,17 @@ class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extend
         return new ViewHolder(DataBindingUtil.inflate(layoutInflater, layoutId, parent, false));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.binding.setVariable(BR.collection, list);
         holder.binding.setVariable(BR.key, getKey(position));
         holder.binding.setVariable(BR.item, getItem(position));
         holder.binding.executePendingBindings();
+
+        if (rowConfigurationHandler != null) {
+            rowConfigurationHandler.onConfigureRow(holder.binding.getRoot(), getItem(position), position);
+        }
     }
 
     void setList(final ObservableKeyedList<K, E> newList) {
@@ -83,6 +90,10 @@ class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extend
             list.addOnListChangedCallback(callback);
         }
         notifyDataSetChanged();
+    }
+
+    void setRowConfigurationHandler(final RowConfigurationHandler rowConfigurationHandler) {
+        this.rowConfigurationHandler = rowConfigurationHandler;
     }
 
     private static final class OnListChangedCallback<E extends Keyed<?>>
@@ -136,6 +147,10 @@ class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extend
 
             this.binding = binding;
         }
+    }
+
+    public interface RowConfigurationHandler<T> {
+        void onConfigureRow(View view, T item, int position);
     }
 
 }

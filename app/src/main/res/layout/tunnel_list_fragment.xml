@@ -11,6 +11,10 @@
             type="com.wireguard.android.fragment.TunnelListFragment" />
 
         <variable
+            name="rowConfigurationHandler"
+            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+
+        <variable
             name="tunnels"
             type="com.wireguard.android.util.ObservableKeyedList&lt;String, Tunnel&gt;" />
     </data>
@@ -21,13 +25,14 @@
         android:layout_height="match_parent"
         android:background="?android:attr/colorBackground">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/tunnel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:choiceMode="multipleChoiceModal"
             app:items="@{tunnels}"
-            app:layout="@{@layout/tunnel_list_item}" />
+            app:layout="@{@layout/tunnel_list_item}"
+            app:configurationHandler="@{rowConfigurationHandler}" />
 
         <com.wireguard.android.widget.fab.FloatingActionsMenu
             android:id="@+id/create_menu"
