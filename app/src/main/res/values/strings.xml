@@ -44,7 +44,7 @@
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="excluded_applications">Excluded Applications</string>
-    <string name="exclude_private_ips">Exclude Private IPs</string>
+    <string name="exclude_private_ips">Exclude private IPs</string>
     <string name="generate">Generate</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
@@ -95,7 +95,6 @@
     <string name="version_summary">%s backend v%s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>
-    <string name="x_excluded_applications">%d Excluded Applications</string>
     <string name="zip_exporter_title">Export tunnels to zip file</string>
     <string name="zip_export_error">Unable to export tunnels: %s</string>
     <string name="zip_export_success">Saved to %s</string>
