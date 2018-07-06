@@ -9,6 +9,7 @@ package com.wireguard.android.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -73,13 +74,19 @@ public class AppListDialogFragment extends DialogFragment {
 
         alertDialogBuilder.setPositiveButton(R.string.set_exclusions, (dialog, which) -> setExclusionsAndDismiss());
         alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setNeutralButton(R.string.deselect_all, (dialog, which) -> { });
 
         binding.setFragment(this);
         binding.setAppData(appData);
 
         loadData();
 
-        return alertDialogBuilder.create();
+        final AlertDialog dialog = alertDialogBuilder.create();
+        dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(view -> {
+                for (final ApplicationData app : appData)
+                    app.setExcludedFromTunnel(false);
+        }));
+        return dialog;
     }
 
     private void loadData() {
