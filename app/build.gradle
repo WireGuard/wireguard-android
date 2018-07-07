@@ -40,6 +40,10 @@ android {
         release {
             if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
         }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
     }
     externalNativeBuild {
         cmake {

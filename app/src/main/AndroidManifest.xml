@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
-        android:name="com.wireguard.android.permission.CONTROL_TUNNELS"
+        android:name="${applicationId}.permission.CONTROL_TUNNELS"
         android:protectionLevel="dangerous"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/permission_label"
@@ -59,7 +59,7 @@
 
         <receiver
             android:name=".model.TunnelManager$IntentReceiver"
-            android:permission="com.wireguard.android.permission.CONTROL_TUNNELS">
+            android:permission="${applicationId}.permission.CONTROL_TUNNELS">
             <intent-filter>
                 <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
                 <action android:name="com.wireguard.android.action.SET_TUNNEL_UP" />
