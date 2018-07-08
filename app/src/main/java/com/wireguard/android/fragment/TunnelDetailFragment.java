@@ -69,7 +69,9 @@ public class TunnelDetailFragment extends BaseFragment {
 
     @Override
     public void onViewStateRestored(final Bundle savedInstanceState) {
+        binding.setFragment(this);
         onSelectedTunnelChanged(null, getSelectedTunnel());
         super.onViewStateRestored(savedInstanceState);
     }
+
 }

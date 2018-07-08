@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.wireguard.android.BR;
@@ -78,7 +77,7 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
         holder.binding.executePendingBindings();
 
         if (rowConfigurationHandler != null) {
-            rowConfigurationHandler.onConfigureRow(holder.binding.getRoot(), getItem(position), position);
+            rowConfigurationHandler.onConfigureRow(holder.binding, getItem(position), position);
         }
     }
 
@@ -149,8 +148,8 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
         }
     }
 
-    public interface RowConfigurationHandler<T> {
-        void onConfigureRow(View view, T item, int position);
+    public interface RowConfigurationHandler<B extends ViewDataBinding, T> {
+        void onConfigureRow(B binding, T item, int position);
     }
 
 }

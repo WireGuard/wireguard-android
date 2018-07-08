@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="com.wireguard.android.fragment.TunnelController" />
-
         <import type="com.wireguard.android.model.Tunnel" />
 
         <import type="com.wireguard.android.model.Tunnel.State" />
@@ -21,6 +19,10 @@
         <variable
             name="item"
             type="com.wireguard.android.model.Tunnel" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelListFragment" />
     </data>
 
     <RelativeLayout
@@ -49,6 +51,6 @@
             android:layout_alignBaseline="@+id/tunnel_name"
             android:layout_alignParentEnd="true"
             app:checked="@{item.state == State.UP}"
-            app:onBeforeCheckedChanged="@{TunnelController::setTunnelState}" />
+            app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
     </RelativeLayout>
 </layout>
