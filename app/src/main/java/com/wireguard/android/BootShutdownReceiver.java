@@ -21,7 +21,7 @@ public class BootShutdownReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         Application.onHaveBackend(backend -> {
-            if (backend.getClass() != WgQuickBackend.class)
+            if (!(backend instanceof WgQuickBackend))
                 return;
             final String action = intent.getAction();
             if (action == null)
