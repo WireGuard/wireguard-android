@@ -32,8 +32,10 @@ import com.wireguard.android.R;
 import com.wireguard.android.activity.TunnelCreatorActivity;
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
+import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;
@@ -269,23 +271,21 @@ public class TunnelListFragment extends BaseFragment {
         super.onViewStateRestored(savedInstanceState);
         binding.setFragment(this);
         binding.setTunnels(Application.getTunnelManager().getTunnels());
-        binding.setRowConfigurationHandler(new ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<Tunnel>() {
-            @Override
-            public void onConfigureRow(View view, Tunnel tunnel, int position) {
-                view.setOnClickListener(clicked -> {
-                    if (actionMode == null) {
-                        setSelectedTunnel(tunnel);
-                    } else {
-                        actionModeListener.toggleItemChecked(position);
-                    }
-                });
-                view.setOnLongClickListener(clicked -> {
+        binding.setRowConfigurationHandler((ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, Tunnel>) (binding, tunnel, position) -> {
+            binding.setFragment(this);
+            binding.getRoot().setOnClickListener(clicked -> {
+                if (actionMode == null) {
+                    setSelectedTunnel(tunnel);
+                } else {
                     actionModeListener.toggleItemChecked(position);
-                    return true;
-                });
+                }
+            });
+            binding.getRoot().setOnLongClickListener(clicked -> {
+                actionModeListener.toggleItemChecked(position);
+                return true;
+            });
 
-                view.setActivated(actionModeListener.checkedItems.contains(position));
-            }
+            binding.getRoot().setActivated(actionModeListener.checkedItems.contains(position));
         });
     }
 

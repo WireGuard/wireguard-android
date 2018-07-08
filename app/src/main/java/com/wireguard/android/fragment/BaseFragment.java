@@ -7,11 +7,25 @@
 package com.wireguard.android.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.View;
 
+import com.wireguard.android.Application;
+import com.wireguard.android.R;
 import com.wireguard.android.activity.BaseActivity;
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener;
+import com.wireguard.android.backend.GoBackend;
+import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
+import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.util.ExceptionLoggers;
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -19,7 +33,12 @@ import com.wireguard.android.model.Tunnel;
  */
 
 public abstract class BaseFragment extends Fragment implements OnSelectedTunnelChangedListener {
+    private static final String TAG = "WireGuard/" + BaseFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_VPN_PERMISSION = 23491;
+
     private BaseActivity activity;
+    private Tunnel pendingTunnel;
+    private Boolean pendingTunnelUp;
 
     protected Tunnel getSelectedTunnel() {
         return activity != null ? activity.getSelectedTunnel() : null;
@@ -44,8 +63,64 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
         super.onDetach();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_VPN_PERMISSION) {
+            if (pendingTunnel != null && pendingTunnelUp != null)
+                setTunnelStateWithPermissionsResult(pendingTunnel, pendingTunnelUp);
+            pendingTunnel = null;
+            pendingTunnelUp = null;
+        }
+    }
+
     protected void setSelectedTunnel(final Tunnel tunnel) {
         if (activity != null)
             activity.setSelectedTunnel(tunnel);
     }
+
+    public void setTunnelState(final View view, final boolean checked) {
+        final ViewDataBinding binding = DataBindingUtil.findBinding(view);
+        final Tunnel tunnel;
+        if (binding instanceof TunnelDetailFragmentBinding)
+            tunnel = ((TunnelDetailFragmentBinding) binding).getTunnel();
+        else if (binding instanceof TunnelListItemBinding)
+            tunnel = ((TunnelListItemBinding) binding).getItem();
+        else
+            return;
+
+        Application.onHaveBackend(backend -> {
+            if (backend instanceof GoBackend) {
+                final Intent intent = GoBackend.VpnService.prepare(view.getContext());
+                if (intent != null) {
+                    pendingTunnel = tunnel;
+                    pendingTunnelUp = checked;
+                    startActivityForResult(intent, REQUEST_CODE_VPN_PERMISSION);
+                    return;
+                }
+            }
+
+            setTunnelStateWithPermissionsResult(tunnel, checked);
+        });
+    }
+
+    private void setTunnelStateWithPermissionsResult(@NonNull final Tunnel tunnel, final boolean checked) {
+        tunnel.setState(State.of(checked)).whenComplete((state, throwable) -> {
+            if (throwable == null)
+                return;
+            final View view = getView();
+            if (view == null) {
+                Log.e(TAG, "setTunnelStateWithPermissionsResult() with no view");
+                return;
+            }
+            final Context context = view.getContext();
+            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final int messageResId = checked ? R.string.error_up : R.string.error_down;
+            final String message = context.getString(messageResId, error);
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+            Log.e(TAG, message, throwable);
+        });
+    }
+
 }

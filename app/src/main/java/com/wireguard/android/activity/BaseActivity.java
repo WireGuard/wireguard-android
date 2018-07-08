@@ -6,13 +6,11 @@
 
 package com.wireguard.android.activity;
 
-import android.content.Intent;
 import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
 
@@ -52,14 +50,6 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
 
         // The selected tunnel must be set before the superclass method recreates fragments.
         super.onCreate(savedInstanceState);
-
-        Application.onHaveBackend(backend -> {
-            if (backend instanceof GoBackend) {
-                final Intent intent = GoBackend.VpnService.prepare(this);
-                if (intent != null)
-                    startActivityForResult(intent, 0);
-            }
-        });
     }
 
     @Override

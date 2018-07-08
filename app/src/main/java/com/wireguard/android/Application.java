@@ -25,7 +25,7 @@ import com.wireguard.android.util.ToolsInstaller;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.Executor;
 
 public class Application extends android.app.Application {
@@ -37,7 +37,7 @@ public class Application extends android.app.Application {
     private ToolsInstaller toolsInstaller;
     private TunnelManager tunnelManager;
     private Handler handler;
-    private List<BackendCallback> haveBackendCallbacks = new ArrayList<>();
+    private Collection<BackendCallback> haveBackendCallbacks = new ArrayList<>();
     private final Object haveBackendCallbacksLock = new Object();
 
     public Application() {
