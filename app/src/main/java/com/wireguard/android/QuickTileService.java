@@ -10,6 +10,10 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.databinding.Observable;
 import android.databinding.Observable.OnPropertyChangedCallback;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
@@ -21,6 +25,7 @@ import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.widget.SlashDrawable;
 
 import java.util.Objects;
 
@@ -37,6 +42,26 @@ public class QuickTileService extends TileService {
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
     private Tunnel tunnel;
+    private Icon iconOn;
+    private Icon iconOff;
+
+    @Override
+    public void onCreate() {
+        final SlashDrawable icon = new SlashDrawable(getResources().getDrawable(R.drawable.ic_tile));
+        icon.setAnimationEnabled(false); /* Unfortunately we can't have animations, since Icons are marshaled. */
+        icon.setSlashed(false);
+        Bitmap b = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        icon.setBounds(0, 0, c.getWidth(), c.getHeight());
+        icon.draw(c);
+        iconOn = Icon.createWithBitmap(b);
+        icon.setSlashed(true);
+        b = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        c = new Canvas(b);
+        icon.setBounds(0, 0, c.getWidth(), c.getHeight());
+        icon.draw(c);
+        iconOff = Icon.createWithBitmap(b);
+    }
 
     @Override
     public void onClick() {
@@ -99,10 +124,7 @@ public class QuickTileService extends TileService {
             return;
         tile.setLabel(label);
         if (tile.getState() != state) {
-            // The icon must be changed every time the state changes, or the shade will not change.
-            final Integer iconResource = state == Tile.STATE_ACTIVE ? R.drawable.ic_tile
-                    : R.drawable.ic_tile_disabled;
-            tile.setIcon(Icon.createWithResource(this, iconResource));
+            tile.setIcon(state == Tile.STATE_ACTIVE ? iconOn : iconOff);
             tile.setState(state);
         }
         tile.updateTile();
