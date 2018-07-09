@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -109,16 +110,14 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
         tunnel.setState(State.of(checked)).whenComplete((state, throwable) -> {
             if (throwable == null)
                 return;
-            final View view = getView();
-            if (view == null) {
-                Log.e(TAG, "setTunnelStateWithPermissionsResult() with no view");
-                return;
-            }
-            final Context context = view.getContext();
             final String error = ExceptionLoggers.unwrapMessage(throwable);
             final int messageResId = checked ? R.string.error_up : R.string.error_down;
-            final String message = context.getString(messageResId, error);
-            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+            final String message = getContext().getString(messageResId, error);
+            final View view = getView();
+            if (view != null)
+                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+            else
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             Log.e(TAG, message, throwable);
         });
     }
