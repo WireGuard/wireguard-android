@@ -43,13 +43,14 @@ public class TouchDelegateGroup extends TouchDelegate {
 
     @Override
     public boolean onTouchEvent(@NonNull final MotionEvent event) {
-        if (!mEnabled) return false;
+        if (!mEnabled)
+            return false;
 
         TouchDelegate delegate = null;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-		for (final TouchDelegate touchDelegate : mTouchDelegates) {
+                for (final TouchDelegate touchDelegate : mTouchDelegates) {
                     if (touchDelegate.onTouchEvent(event)) {
                         mCurrentTouchDelegate = touchDelegate;
                         return true;
