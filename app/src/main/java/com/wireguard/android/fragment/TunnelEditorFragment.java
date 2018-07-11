@@ -8,6 +8,8 @@ package com.wireguard.android.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.Observable;
+import android.databinding.ObservableList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -23,6 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.wireguard.android.Application;
+import com.wireguard.android.BR;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener;
@@ -31,6 +34,7 @@ import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Attribute;
 import com.wireguard.config.Config;
+import com.wireguard.config.Peer;
 
 import java.util.List;
 
@@ -79,11 +83,52 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         inflater.inflate(R.menu.config_editor, menu);
     }
 
+    private final ObservableList.OnListChangedCallback<? extends ObservableList<Peer.Observable>> breakObjectListOrientedLayeringHandler = new ObservableList.OnListChangedCallback<ObservableList<Peer.Observable>>() {
+        @Override
+        public void onChanged(final ObservableList<Peer.Observable> sender) { }
+        @Override
+        public void onItemRangeChanged(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) { }
+        @Override
+        public void onItemRangeMoved(final ObservableList<Peer.Observable> sender, final int fromPosition, final int toPosition, final int itemCount) { }
+
+        @Override
+        public void onItemRangeInserted(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
+            breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+        }
+        @Override
+        public void onItemRangeRemoved(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
+            breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+        }
+    };
+
+    private final Observable.OnPropertyChangedCallback breakObjectOrientedLayeringHandler = new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(final Observable sender, final int propertyId) {
+            final Config.Observable config = binding.getConfig();
+            if (config == null)
+                return;
+            if (propertyId == BR.config) {
+                config.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                config.getInterfaceSection().addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                config.getPeers().addOnListChangedCallback(breakObjectListOrientedLayeringHandler);
+            } else if (propertyId == BR.dnses || propertyId == BR.peers)
+                ;
+            else
+                return;
+            final int numSiblings = config.getPeers().size() - 1;
+            for (final Peer.Observable peer : config.getPeers()) {
+                peer.setInterfaceDNSRoutes(config.getInterfaceSection().getDnses());
+                peer.setNumSiblings(numSiblings);
+            }
+        }
+    };
+
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
+        binding.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
         binding.executePendingBindings();
         return binding.getRoot();
     }
