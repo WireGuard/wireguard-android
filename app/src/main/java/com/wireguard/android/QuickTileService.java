@@ -45,6 +45,7 @@ public class QuickTileService extends TileService {
     private Icon iconOn;
     private Icon iconOff;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
         final SlashDrawable icon = new SlashDrawable(getResources().getDrawable(R.drawable.ic_tile));

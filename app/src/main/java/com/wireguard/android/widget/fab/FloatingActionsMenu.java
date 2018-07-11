@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import com.wireguard.android.R;
 
-@SuppressWarnings("ReturnOfInnerClass")
 public class FloatingActionsMenu extends ViewGroup {
     public static final int EXPAND_UP = 0;
     public static final int EXPAND_DOWN = 1;
