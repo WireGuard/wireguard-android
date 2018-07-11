@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -213,6 +214,8 @@ public class Peer {
         private String persistentKeepalive;
         private String preSharedKey;
         private String publicKey;
+        private List<String> interfaceDNSRoutes;
+        private int numSiblings;
 
         public Observable(final Peer parent) {
             loadData(parent);
@@ -224,6 +227,9 @@ public class Peer {
             persistentKeepalive = in.readString();
             preSharedKey = in.readString();
             publicKey = in.readString();
+            numSiblings = in.readInt();
+            interfaceDNSRoutes = new ArrayList<>();
+            in.readStringList(interfaceDNSRoutes);
         }
 
         public static Observable newInstance() {
@@ -251,34 +257,34 @@ public class Peer {
         private static final List<String> DEFAULT_ROUTE_MOD_RFC1918_V4 = Arrays.asList("0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3", "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7", "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16", "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10", "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4");
 
         public void toggleExcludePrivateIPs() {
-            final HashSet<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
+            final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
             final boolean hasDefaultRoute = ips.contains(DEFAULT_ROUTE_V4);
             final boolean hasDefaultRouteModRFC1918 = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-            if (hasDefaultRoute && hasDefaultRouteModRFC1918)
-                ips.removeAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-            else if (hasDefaultRoute) {
-                ips.remove(DEFAULT_ROUTE_V4);
+            if ((!hasDefaultRoute && !hasDefaultRouteModRFC1918) || numSiblings > 0)
+                return;
+            ips.clear();
+            if (hasDefaultRoute) {
                 ips.addAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-            } else if (hasDefaultRouteModRFC1918) {
-                ips.removeAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
+                ips.addAll(interfaceDNSRoutes);
+            } else if (hasDefaultRouteModRFC1918)
                 ips.add(DEFAULT_ROUTE_V4);
-            }
             setAllowedIPs(Attribute.iterableToString(ips));
+        }
+
+        @Bindable
+        public boolean getCanToggleExcludePrivateIPs() {
+            final Collection<String> ips = Arrays.asList(Attribute.stringToList(allowedIPs));
+            return numSiblings == 0 && (ips.contains(DEFAULT_ROUTE_V4) || ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4));
+        }
+
+        @Bindable
+        public boolean getIsExcludePrivateIPsOn() {
+            return numSiblings == 0 && Arrays.asList(Attribute.stringToList(allowedIPs)).containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
         }
 
         @Bindable
         public String getAllowedIPs() {
             return allowedIPs;
-        }
-
-        @Bindable
-        public boolean getAllowedIPsContainsDefaultRoute() {
-            return Arrays.asList(Attribute.stringToList(allowedIPs)).contains(DEFAULT_ROUTE_V4);
-        }
-
-        @Bindable
-        public boolean getAllowedIPsContainsDefaultRouteModRFC1918() {
-            return Arrays.asList(Attribute.stringToList(allowedIPs)).containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
         }
 
         @Bindable
@@ -307,13 +313,14 @@ public class Peer {
             persistentKeepalive = parent.getPersistentKeepaliveString();
             preSharedKey = parent.getPreSharedKey();
             publicKey = parent.getPublicKey();
+            interfaceDNSRoutes = new ArrayList<>();
         }
 
         public void setAllowedIPs(final String allowedIPs) {
             this.allowedIPs = allowedIPs;
             notifyPropertyChanged(BR.allowedIPs);
-            notifyPropertyChanged(BR.allowedIPsContainsDefaultRoute);
-            notifyPropertyChanged(BR.allowedIPsContainsDefaultRouteModRFC1918);
+            notifyPropertyChanged(BR.canToggleExcludePrivateIPs);
+            notifyPropertyChanged(BR.isExcludePrivateIPsOn);
         }
 
         public void setEndpoint(final String endpoint) {
@@ -336,6 +343,27 @@ public class Peer {
             notifyPropertyChanged(BR.publicKey);
         }
 
+        public void setInterfaceDNSRoutes(final String dnsServers) {
+            final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
+            final boolean modifyAllowedIPs = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
+
+            ips.removeAll(interfaceDNSRoutes);
+            interfaceDNSRoutes.clear();
+            for (final String dnsServer : Attribute.stringToList(dnsServers)) {
+                if (!dnsServer.contains(":"))
+                    interfaceDNSRoutes.add(dnsServer + "/32");
+            }
+            ips.addAll(interfaceDNSRoutes);
+            if (modifyAllowedIPs)
+                setAllowedIPs(Attribute.iterableToString(ips));
+        }
+
+        public void setNumSiblings(final int num) {
+            numSiblings = num;
+            notifyPropertyChanged(BR.canToggleExcludePrivateIPs);
+            notifyPropertyChanged(BR.isExcludePrivateIPsOn);
+        }
+
         @Override
         public void writeToParcel(final Parcel dest, final int flags) {
             dest.writeString(allowedIPs);
@@ -343,6 +371,8 @@ public class Peer {
             dest.writeString(persistentKeepalive);
             dest.writeString(preSharedKey);
             dest.writeString(publicKey);
+            dest.writeInt(numSiblings);
+            dest.writeStringList(interfaceDNSRoutes);
         }
     }
 }

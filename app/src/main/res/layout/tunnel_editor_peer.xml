@@ -103,10 +103,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/allowed_ips_label"
                 android:layout_alignParentEnd="true"
-                android:checked="@{item.allowedIPsContainsDefaultRouteModRFC1918}"
+                android:checked="@{item.isExcludePrivateIPsOn}"
                 android:onClick="@{() -> item.toggleExcludePrivateIPs()}"
                 android:text="@string/exclude_private_ips"
-                android:visibility="@{(item.allowedIPsContainsDefaultRoute || item.allowedIPsContainsDefaultRouteModRFC1918) ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{item.canToggleExcludePrivateIPs ? View.VISIBLE : View.GONE}" />
 
             <EditText
                 android:id="@+id/allowed_ips_text"
