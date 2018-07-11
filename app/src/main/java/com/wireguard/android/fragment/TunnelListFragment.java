@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -289,7 +288,7 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     private final class ActionModeListener implements ActionMode.Callback {
-        private final Set<Integer> checkedItems = new HashSet<>();
+        private final Collection<Integer> checkedItems = new HashSet<>();
 
         private Resources resources;
 
@@ -297,8 +296,8 @@ public class TunnelListFragment extends BaseFragment {
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_action_delete:
-                    List<Tunnel> tunnelsToDelete = new ArrayList<>();
-                    for (Integer position : checkedItems) {
+                    final Collection<Tunnel> tunnelsToDelete = new ArrayList<>();
+                    for (final Integer position : checkedItems) {
                         tunnelsToDelete.add(Application.getTunnelManager().getTunnels().get(position));
                     }
 
@@ -341,11 +340,11 @@ public class TunnelListFragment extends BaseFragment {
             binding.tunnelList.getAdapter().notifyDataSetChanged();
         }
 
-        void toggleItemChecked(int position) {
+        void toggleItemChecked(final int position) {
             setItemChecked(position, !checkedItems.contains(position));
         }
 
-        void setItemChecked(int position, boolean checked) {
+        void setItemChecked(final int position, final boolean checked) {
             if (checked) {
                 checkedItems.add(position);
             } else {
