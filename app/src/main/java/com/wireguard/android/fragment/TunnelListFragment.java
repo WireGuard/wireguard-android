@@ -35,7 +35,6 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;

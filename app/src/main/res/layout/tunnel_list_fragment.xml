@@ -23,7 +23,8 @@
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/colorBackground">
+        android:background="?android:attr/colorBackground"
+        android:clipChildren="false">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tunnel_list"
@@ -39,27 +40,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="8dp"
+            android:layout_margin="16dp"
             app:fab_labelStyle="@style/fab_label"
-            app:fab_labelsPosition="left"
-            app:layout_dodgeInsetEdges="bottom">
+            android:clipChildren="false"
+            app:fab_labelsPosition="left" >
 
-            <com.wireguard.android.widget.fab.FloatingActionButton
+            <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/create_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestCreateConfig}"
-                app:fab_icon="@drawable/ic_action_edit_inverse"
-                app:fab_size="mini"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_action_edit_inverse"
                 app:fab_title="@string/create_empty" />
 
-            <com.wireguard.android.widget.fab.FloatingActionButton
+            <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/create_from_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestImportConfig}"
-                app:fab_icon="@drawable/ic_action_open_inverse"
-                app:fab_size="mini"
+                app:srcCompat="@drawable/ic_action_open_inverse"
+                app:fabSize="mini"
                 app:fab_title="@string/create_from_file" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
     </android.support.design.widget.CoordinatorLayout>
