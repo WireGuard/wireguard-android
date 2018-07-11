@@ -117,6 +117,7 @@ public class SlashDrawable extends Drawable {
         }
     };
 
+    @SuppressWarnings("unchecked")
     public void setSlashed(final boolean slashed) {
         if (mSlashed == slashed) return;
 
@@ -136,6 +137,7 @@ public class SlashDrawable extends Drawable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void draw(@NonNull final Canvas canvas) {
         canvas.save();
