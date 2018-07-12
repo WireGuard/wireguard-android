@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
+import java9.lang.Iterables;
+
 /**
  * Represents the configuration for a WireGuard peer (a [Peer] block).
  */
@@ -262,7 +264,7 @@ public class Peer {
             final boolean hasDefaultRouteModRFC1918 = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
             if ((!hasDefaultRoute && !hasDefaultRouteModRFC1918) || numSiblings > 0)
                 return;
-            ips.clear();
+            Iterables.removeIf(ips, ip -> !ip.contains(":"));
             if (hasDefaultRoute) {
                 ips.addAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
                 ips.addAll(interfaceDNSRoutes);
