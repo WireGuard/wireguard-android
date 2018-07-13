@@ -107,6 +107,8 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     private final Observable.OnPropertyChangedCallback breakObjectOrientedLayeringHandler = new Observable.OnPropertyChangedCallback() {
         @Override
         public void onPropertyChanged(final Observable sender, final int propertyId) {
+            if (binding == null)
+                return;
             final Config.Observable config = binding.getConfig();
             if (config == null)
                 return;
