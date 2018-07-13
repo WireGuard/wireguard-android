@@ -331,7 +331,7 @@ public class Interface {
             return publicKey;
         }
 
-        protected void loadData(final Interface parent) {
+        private void loadData(final Interface parent) {
             addresses = parent.getAddressString();
             dnses = parent.getDnsString();
             excludedApplications = parent.getExcludedApplicationsString();

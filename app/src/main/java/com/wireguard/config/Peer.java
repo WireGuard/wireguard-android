@@ -315,7 +315,7 @@ public class Peer {
             return publicKey;
         }
 
-        protected void loadData(final Peer parent) {
+        private void loadData(final Peer parent) {
             allowedIPs = parent.getAllowedIPsString();
             endpoint = parent.getEndpointString();
             persistentKeepalive = parent.getPersistentKeepaliveString();
