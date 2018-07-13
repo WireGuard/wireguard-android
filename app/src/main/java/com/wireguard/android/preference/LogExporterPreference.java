@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
@@ -33,7 +34,7 @@ import java.io.InputStreamReader;
 public class LogExporterPreference extends Preference {
     private static final String TAG = "WireGuard/" + LogExporterPreference.class.getSimpleName();
 
-    private String exportedFilePath;
+    @Nullable private String exportedFilePath;
 
     public LogExporterPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -73,7 +74,7 @@ public class LogExporterPreference extends Preference {
         }).whenComplete(this::exportLogComplete);
     }
 
-    private void exportLogComplete(final String filePath, final Throwable throwable) {
+    private void exportLogComplete(final String filePath, @Nullable final Throwable throwable) {
         if (throwable != null) {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
             final String message = getContext().getString(R.string.log_export_error, error);

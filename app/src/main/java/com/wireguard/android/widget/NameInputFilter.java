@@ -6,6 +6,7 @@
 
 package com.wireguard.android.widget;
 
+import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -25,7 +26,7 @@ public class NameInputFilter implements InputFilter {
         return new NameInputFilter();
     }
 
-    @Override
+    @Override @Nullable
     public CharSequence filter(final CharSequence source,
                                final int sStart, final int sEnd,
                                final Spanned dest,

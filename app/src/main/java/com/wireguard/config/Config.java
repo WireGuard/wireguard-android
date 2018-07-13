@@ -12,6 +12,7 @@ import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.android.databinding.library.baseAdapters.BR;
 
@@ -96,13 +97,19 @@ public class Config {
                 return new Observable[size];
             }
         };
-        private String name;
-        private Interface.Observable observableInterface;
-        private ObservableList<Peer.Observable> observablePeers;
+        @Nullable private String name;
+        private final Interface.Observable observableInterface;
+        private final ObservableList<Peer.Observable> observablePeers;
 
-        public Observable(final Config parent, final String name) {
+        public Observable(@Nullable final Config parent, @Nullable final String name) {
             this.name = name;
-            loadData(parent);
+
+            observableInterface = new Interface.Observable(parent == null ? null : parent.interfaceSection);
+            observablePeers = new ObservableArrayList<>();
+            if (parent != null) {
+                for (final Peer peer : parent.getPeers())
+                    observablePeers.add(new Peer.Observable(peer));
+            }
         }
 
         private Observable(final Parcel in) {
@@ -142,15 +149,6 @@ public class Config {
         @Bindable
         public ObservableList<Peer.Observable> getPeers() {
             return observablePeers;
-        }
-
-        protected void loadData(final Config parent) {
-            observableInterface = new Interface.Observable(parent == null ? null : parent.interfaceSection);
-            observablePeers = new ObservableArrayList<>();
-            if (parent != null) {
-                for (final Peer peer : parent.getPeers())
-                    observablePeers.add(new Peer.Observable(peer));
-            }
         }
 
         public void setName(final String name) {

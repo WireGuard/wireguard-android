@@ -5,6 +5,8 @@
 
 package com.wireguard.crypto;
 
+import android.support.annotation.Nullable;
+
 import java.util.Arrays;
 
 /**
@@ -93,7 +95,7 @@ public final class Curve25519 {
      *                   if the base point of the curve should be used.
      */
     public static void eval(final byte[] result, final int offset,
-                            final byte[] privateKey, final byte[] publicKey) {
+                            final byte[] privateKey, @Nullable final byte[] publicKey) {
         final Curve25519 state = new Curve25519();
         try {
             // Unpack the public key value.  If null, use 9 as the base point.

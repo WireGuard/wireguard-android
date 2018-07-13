@@ -12,12 +12,11 @@ import android.databinding.Observable;
 import android.databinding.Observable.OnPropertyChangedCallback;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,9 +40,9 @@ public class QuickTileService extends TileService {
 
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
-    private Tunnel tunnel;
-    private Icon iconOn;
-    private Icon iconOff;
+    @Nullable private Tunnel tunnel;
+    @Nullable private Icon iconOn;
+    @Nullable private Icon iconOff;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -91,7 +90,7 @@ public class QuickTileService extends TileService {
     }
 
     private void onToggleFinished(@SuppressWarnings("unused") final State state,
-                                  final Throwable throwable) {
+                                  @Nullable final Throwable throwable) {
         if (throwable == null)
             return;
         final String error = ExceptionLoggers.unwrapMessage(throwable);

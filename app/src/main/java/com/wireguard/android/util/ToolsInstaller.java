@@ -7,6 +7,7 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.system.OsConstants;
 import android.util.Log;
 
@@ -39,20 +40,21 @@ public final class ToolsInstaller {
             new File("/system/xbin"),
             new File("/system/bin"),
     };
-    private static final File INSTALL_DIR = getInstallDir();
+    @Nullable private static final File INSTALL_DIR = getInstallDir();
     private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
 
     private final File localBinaryDir;
     private final Object lock = new Object();
     private final File nativeLibraryDir;
-    private Boolean areToolsAvailable;
-    private Boolean installAsMagiskModule;
+    @Nullable private Boolean areToolsAvailable;
+    @Nullable private Boolean installAsMagiskModule;
 
     public ToolsInstaller(final Context context) {
         localBinaryDir = new File(context.getCacheDir(), "bin");
         nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
     }
 
+    @Nullable
     private static File getInstallDir() {
         final String path = System.getenv("PATH");
         if (path == null)

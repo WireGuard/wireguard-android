@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArraySet;
 import android.util.Log;
 
@@ -29,6 +30,7 @@ import com.wireguard.crypto.KeyEncoding;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.Formatter;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -40,7 +42,7 @@ public final class GoBackend implements Backend {
     private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
 
     private final Context context;
-    private Tunnel currentTunnel;
+    @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
 
     public GoBackend(final Context context) {
@@ -114,11 +116,13 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
-    private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
+    private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
             throws Exception {
 
         if (state == State.UP) {
             Log.i(TAG, "Bringing tunnel up");
+
+            Objects.requireNonNull(config, "Trying to bring up a tunnel with no config");
 
             if (VpnService.prepare(context) != null)
                 throw new Exception("VPN service not authorized by user");
@@ -245,7 +249,7 @@ public final class GoBackend implements Backend {
         }
 
         @Override
-        public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        public int onStartCommand(@Nullable final Intent intent, final int flags, final int startId) {
             vpnService.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");

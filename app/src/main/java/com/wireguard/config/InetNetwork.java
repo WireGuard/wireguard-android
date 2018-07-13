@@ -6,8 +6,6 @@
 
 package com.wireguard.config;
 
-import android.support.annotation.NonNull;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.Objects;
@@ -16,7 +14,7 @@ public class InetNetwork {
     private final InetAddress address;
     private final int mask;
 
-    public InetNetwork(@NonNull final String input) {
+    public InetNetwork(final String input) {
         final int slash = input.lastIndexOf('/');
         final int rawMask;
         final String rawAddress;
@@ -40,7 +38,6 @@ public class InetNetwork {
         return Objects.equals(address, other.address) && mask == other.mask;
     }
 
-    @NonNull
     public InetAddress getAddress() {
         return address;
     }

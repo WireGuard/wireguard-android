@@ -8,6 +8,7 @@ package com.wireguard.android.widget.fab;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -16,17 +17,17 @@ import com.wireguard.android.R;
 
 public class LabeledFloatingActionButton extends FloatingActionButton {
 
-    private final String title;
+    @Nullable private final String title;
 
     public LabeledFloatingActionButton(final Context context) {
         this(context, null);
     }
 
-    public LabeledFloatingActionButton(final Context context, final AttributeSet attrs) {
+    public LabeledFloatingActionButton(final Context context, @Nullable final AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LabeledFloatingActionButton(final Context context, final AttributeSet attrs, final int defStyle) {
+    public LabeledFloatingActionButton(final Context context, @Nullable final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
 
         final TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.LabeledFloatingActionButton, 0, 0);
@@ -34,10 +35,12 @@ public class LabeledFloatingActionButton extends FloatingActionButton {
         attr.recycle();
     }
 
+    @Nullable
     TextView getLabelView() {
         return (TextView) getTag(R.id.fab_label);
     }
 
+    @Nullable
     public String getTitle() {
         return title;
     }

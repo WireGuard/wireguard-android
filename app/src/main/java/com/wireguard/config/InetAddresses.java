@@ -6,7 +6,6 @@
 
 package com.wireguard.config;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +28,6 @@ public final class InetAddresses {
         // Prevent instantiation.
     }
 
-    @NonNull
     public static InetAddress parse(@Nullable final String address) {
         if (address == null || address.isEmpty())
             throw new IllegalArgumentException("Empty address");

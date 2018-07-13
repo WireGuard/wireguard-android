@@ -11,7 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
@@ -47,9 +47,8 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
 
     private final ConfigStore configStore;
-    private final ObservableSortedKeyedList<String, Tunnel> tunnels =
-            new ObservableSortedKeyedArrayList<>(COMPARATOR);
-    private Tunnel lastUsedTunnel;
+    private final ObservableSortedKeyedList<String, Tunnel> tunnels = new ObservableSortedKeyedArrayList<>(COMPARATOR);
+    @Nullable private Tunnel lastUsedTunnel;
     private boolean haveLoaded;
     private final ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
 
@@ -57,13 +56,13 @@ public final class TunnelManager extends BaseObservable {
         this.configStore = configStore;
     }
 
-    private Tunnel addToList(final String name, final Config config, final State state) {
+    private Tunnel addToList(final String name, @Nullable final Config config, final State state) {
         final Tunnel tunnel = new Tunnel(this, name, config, state);
         tunnels.add(tunnel);
         return tunnel;
     }
 
-    public CompletionStage<Tunnel> create(@NonNull final String name, final Config config) {
+    public CompletionStage<Tunnel> create(final String name, @Nullable final Config config) {
         if (Tunnel.isNameInvalid(name))
             return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
         if (tunnels.containsKey(name)) {
@@ -102,7 +101,7 @@ public final class TunnelManager extends BaseObservable {
         });
     }
 
-    @Bindable
+    @Bindable @Nullable
     public Tunnel getLastUsedTunnel() {
         return lastUsedTunnel;
     }
@@ -191,7 +190,7 @@ public final class TunnelManager extends BaseObservable {
         Application.getSharedPreferences().edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).apply();
     }
 
-    private void setLastUsedTunnel(final Tunnel tunnel) {
+    private void setLastUsedTunnel(@Nullable final Tunnel tunnel) {
         if (tunnel == lastUsedTunnel)
             return;
         lastUsedTunnel = tunnel;
@@ -256,7 +255,7 @@ public final class TunnelManager extends BaseObservable {
 
     public static final class IntentReceiver extends BroadcastReceiver {
         @Override
-        public void onReceive(final Context context, final Intent intent) {
+        public void onReceive(final Context context, @Nullable final Intent intent) {
             final TunnelManager manager = Application.getTunnelManager();
             if (intent == null)
                 return;

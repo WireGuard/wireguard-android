@@ -7,7 +7,7 @@
 package com.wireguard.android.preference;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 
@@ -43,7 +43,7 @@ public class ToolsInstallerPreference extends Preference {
         Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::areInstalled).whenComplete(this::onCheckResult);
     }
 
-    private void onCheckResult(final int state, final Throwable throwable) {
+    private void onCheckResult(final int state, @Nullable final Throwable throwable) {
         if (throwable != null || state == ToolsInstaller.ERROR)
             setState(State.INITIAL);
         else if ((state & ToolsInstaller.YES) == ToolsInstaller.YES)
@@ -62,7 +62,7 @@ public class ToolsInstallerPreference extends Preference {
         Application.getAsyncWorker().supplyAsync(Application.getToolsInstaller()::install).whenComplete(this::onInstallResult);
     }
 
-    private void onInstallResult(final Integer result, final Throwable throwable) {
+    private void onInstallResult(final Integer result, @Nullable final Throwable throwable) {
         if (throwable != null)
             setState(State.FAILURE);
         else if ((result & (ToolsInstaller.YES | ToolsInstaller.MAGISK)) == (ToolsInstaller.YES | ToolsInstaller.MAGISK))
@@ -73,7 +73,7 @@ public class ToolsInstallerPreference extends Preference {
             setState(State.FAILURE);
     }
 
-    private void setState(@NonNull final State state) {
+    private void setState(final State state) {
         if (this.state == state)
             return;
         this.state = state;

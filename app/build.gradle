@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from: 'nonnull.gradle'
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
@@ -56,6 +57,7 @@ ext {
     databindingVersion = '3.1.3'
     supportLibsVersion = '27.1.1'
     streamsupportVersion = '1.6.0'
+    jsr305Version = '3.0.2'
 }
 
 dependencies {
@@ -67,6 +69,7 @@ dependencies {
     implementation "com.android.support:support-annotations:$supportLibsVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
 }
 
 tasks.withType(JavaCompile) {

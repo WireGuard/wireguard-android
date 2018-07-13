@@ -10,7 +10,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
@@ -31,8 +31,8 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
     private final OnListChangedCallback<E> callback = new OnListChangedCallback<>(this);
     private final int layoutId;
     private final LayoutInflater layoutInflater;
-    private ObservableKeyedList<K, E> list;
-    private RowConfigurationHandler rowConfigurationHandler;
+    @Nullable private ObservableKeyedList<K, E> list;
+    @Nullable private RowConfigurationHandler rowConfigurationHandler;
 
     ObservableKeyedRecyclerViewAdapter(final Context context, final int layoutId,
                                        final ObservableKeyedList<K, E> list) {
@@ -46,6 +46,7 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
         return list != null ? list.size() : 0;
     }
 
+    @Nullable
     private E getItem(final int position) {
         if (list == null || position < 0 || position >= list.size())
             return null;
@@ -58,30 +59,34 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
         return key != null ? key.hashCode() : -1;
     }
 
+    @Nullable
     private K getKey(final int position) {
         final E item = getItem(position);
         return item != null ? item.getKey() : null;
     }
 
-    @NonNull @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+    @Override
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         return new ViewHolder(DataBindingUtil.inflate(layoutInflater, layoutId, parent, false));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.binding.setVariable(BR.collection, list);
         holder.binding.setVariable(BR.key, getKey(position));
         holder.binding.setVariable(BR.item, getItem(position));
         holder.binding.executePendingBindings();
 
         if (rowConfigurationHandler != null) {
-            rowConfigurationHandler.onConfigureRow(holder.binding, getItem(position), position);
+            E item = getItem(position);
+            if (item != null) {
+                rowConfigurationHandler.onConfigureRow(holder.binding, item, position);
+            }
         }
     }
 
-    void setList(final ObservableKeyedList<K, E> newList) {
+    void setList(@Nullable final ObservableKeyedList<K, E> newList) {
         if (list != null)
             list.removeOnListChangedCallback(callback);
         list = newList;

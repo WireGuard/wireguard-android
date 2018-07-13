@@ -7,6 +7,7 @@
 package com.wireguard.android.util;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.wireguard.android.R;
@@ -34,10 +35,10 @@ public class RootShell {
     private final File localTemporaryDir;
     private final Object lock = new Object();
     private final String preamble;
-    private Process process;
-    private BufferedReader stderr;
-    private OutputStreamWriter stdin;
-    private BufferedReader stdout;
+    @Nullable private Process process;
+    @Nullable private BufferedReader stderr;
+    @Nullable private OutputStreamWriter stdin;
+    @Nullable private BufferedReader stdout;
 
     public RootShell(final Context context) {
         deviceNotRootedMessage = context.getString(R.string.error_root);
@@ -80,7 +81,7 @@ public class RootShell {
      * @param command Command to run as root.
      * @return The exit value of the command.
      */
-    public int run(final Collection<String> output, final String command)
+    public int run(@Nullable final Collection<String> output, final String command)
             throws IOException, NoRootException {
         synchronized (lock) {
             /* Start inside synchronized block to prevent a concurrent call to stop(). */

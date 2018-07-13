@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
@@ -40,7 +41,7 @@ import java9.util.concurrent.CompletableFuture;
 public class ZipExporterPreference extends Preference {
     private static final String TAG = "WireGuard/" + ZipExporterPreference.class.getSimpleName();
 
-    private String exportedFilePath;
+    @Nullable private String exportedFilePath;
 
     public ZipExporterPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -79,7 +80,7 @@ public class ZipExporterPreference extends Preference {
                 }).whenComplete(this::exportZipComplete));
     }
 
-    private void exportZipComplete(final String filePath, final Throwable throwable) {
+    private void exportZipComplete(@Nullable final String filePath, @Nullable final Throwable throwable) {
         if (throwable != null) {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
             final String message = getContext().getString(R.string.zip_export_error, error);

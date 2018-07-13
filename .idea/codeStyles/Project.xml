@@ -94,6 +94,8 @@
       <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="JAVA">
+      <option name="METHOD_ANNOTATION_WRAP" value="0" />
+      <option name="FIELD_ANNOTATION_WRAP" value="0" />
       <arrangement>
         <groups />
         <rules>

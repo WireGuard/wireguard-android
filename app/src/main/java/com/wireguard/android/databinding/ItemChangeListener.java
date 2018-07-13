@@ -9,6 +9,7 @@ package com.wireguard.android.databinding;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import com.wireguard.android.BR;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 /**
  * Helper class for binding an ObservableList to the children of a ViewGroup.
@@ -26,7 +28,7 @@ class ItemChangeListener<T> {
     private final ViewGroup container;
     private final int layoutId;
     private final LayoutInflater layoutInflater;
-    private ObservableList<T> list;
+    @Nullable private ObservableList<T> list;
 
     ItemChangeListener(final ViewGroup container, final int layoutId) {
         this.container = container;
@@ -34,17 +36,21 @@ class ItemChangeListener<T> {
         layoutInflater = LayoutInflater.from(container.getContext());
     }
 
-    private View getView(final int position, final View convertView) {
-        ViewDataBinding binding = DataBindingUtil.getBinding(convertView);
-        if (binding == null)
+    private View getView(final int position, @Nullable final View convertView) {
+        ViewDataBinding binding = convertView != null ? DataBindingUtil.getBinding(convertView) : null;
+        if (binding == null) {
             binding = DataBindingUtil.inflate(layoutInflater, layoutId, container, false);
+        }
+
+        Objects.requireNonNull(list, "Trying to get a view while list is still null");
+
         binding.setVariable(BR.collection, list);
         binding.setVariable(BR.item, list.get(position));
         binding.executePendingBindings();
         return binding.getRoot();
     }
 
-    void setList(final ObservableList<T> newList) {
+    void setList(@Nullable final ObservableList<T> newList) {
         if (list != null)
             list.removeOnListChangedCallback(callback);
         list = newList;

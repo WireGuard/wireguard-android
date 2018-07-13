@@ -9,36 +9,32 @@ package com.wireguard.android.model;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 
 import com.wireguard.android.BR;
 import com.wireguard.util.Keyed;
 
 public class ApplicationData extends BaseObservable implements Keyed<String> {
 
-    @NonNull private final Drawable icon;
-    @NonNull private final String name;
-    @NonNull private final String packageName;
+    private final Drawable icon;
+    private final String name;
+    private final String packageName;
     private boolean excludedFromTunnel;
 
-    public ApplicationData(@NonNull final Drawable icon, @NonNull final String name, @NonNull final String packageName, final boolean excludedFromTunnel) {
+    public ApplicationData(final Drawable icon, final String name, final String packageName, final boolean excludedFromTunnel) {
         this.icon = icon;
         this.name = name;
         this.packageName = packageName;
         this.excludedFromTunnel = excludedFromTunnel;
     }
 
-    @NonNull
     public Drawable getIcon() {
         return icon;
     }
 
-    @NonNull
     public String getName() {
         return name;
     }
 
-    @NonNull
     public String getPackageName() {
         return packageName;
     }

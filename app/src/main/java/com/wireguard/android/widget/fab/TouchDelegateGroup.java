@@ -7,7 +7,7 @@
 package com.wireguard.android.widget.fab;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -18,14 +18,14 @@ import java.util.Collection;
 public class TouchDelegateGroup extends TouchDelegate {
     private static final Rect USELESS_HACKY_RECT = new Rect();
     private final Collection<TouchDelegate> mTouchDelegates = new ArrayList<>();
-    private TouchDelegate mCurrentTouchDelegate;
+    @Nullable private TouchDelegate mCurrentTouchDelegate;
     private boolean mEnabled;
 
     public TouchDelegateGroup(final View uselessHackyView) {
         super(USELESS_HACKY_RECT, uselessHackyView);
     }
 
-    public void addTouchDelegate(@NonNull final TouchDelegate touchDelegate) {
+    public void addTouchDelegate(final TouchDelegate touchDelegate) {
         mTouchDelegates.add(touchDelegate);
     }
 
@@ -42,7 +42,7 @@ public class TouchDelegateGroup extends TouchDelegate {
     }
 
     @Override
-    public boolean onTouchEvent(@NonNull final MotionEvent event) {
+    public boolean onTouchEvent(final MotionEvent event) {
         if (!mEnabled)
             return false;
 

@@ -8,6 +8,7 @@ package com.wireguard.android.activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -19,7 +20,7 @@ import java.lang.reflect.Field;
 public abstract class ThemeChangeAwareActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + ThemeChangeAwareActivity.class.getSimpleName();
 
-    private static Resources lastResources;
+    @Nullable private static Resources lastResources;
     private static boolean lastDarkMode;
     private static synchronized void invalidateDrawableCache(final Resources resources, final boolean darkMode) {
         if (resources == lastResources && darkMode == lastDarkMode)
@@ -51,7 +52,7 @@ public abstract class ThemeChangeAwareActivity extends AppCompatActivity impleme
 
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Application.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }

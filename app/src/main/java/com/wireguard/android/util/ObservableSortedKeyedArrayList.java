@@ -6,7 +6,7 @@
 
 package com.wireguard.android.util;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wireguard.util.Keyed;
 import com.wireguard.util.SortedKeyedList;
@@ -29,6 +29,7 @@ import java.util.Spliterator;
 
 public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
         extends ObservableKeyedArrayList<K, E> implements ObservableSortedKeyedList<K, E> {
+    @Nullable
     private final Comparator<? super K> comparator;
     private final transient KeyList<K, E> keyList = new KeyList<>(this);
 
@@ -75,7 +76,7 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     }
 
     @Override
-    public boolean addAll(@NonNull final Collection<? extends E> c) {
+    public boolean addAll(final Collection<? extends E> c) {
         boolean didChange = false;
         for (final E e : c)
             if (add(e))
@@ -84,12 +85,13 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     }
 
     @Override
-    public boolean addAll(int index, @NonNull final Collection<? extends E> c) {
+    public boolean addAll(int index, final Collection<? extends E> c) {
         for (final E e : c)
             add(index++, e);
         return true;
     }
 
+    @Nullable
     @Override
     public Comparator<? super K> comparator() {
         return comparator;
@@ -128,7 +130,6 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     }
 
     @Override
-    @NonNull
     public Set<K> keySet() {
         return keyList;
     }
@@ -168,7 +169,6 @@ public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
     }
 
     @Override
-    @NonNull
     public Collection<E> values() {
         return this;
     }

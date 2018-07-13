@@ -9,6 +9,7 @@ package com.wireguard.android.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,8 @@ import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.fragment.TunnelListFragment;
 import com.wireguard.android.model.Tunnel;
 
+import java.util.List;
+
 import java9.util.stream.Stream;
 
 /**
@@ -33,6 +36,7 @@ import java9.util.stream.Stream;
 public class MainActivity extends BaseActivity {
     private static final String KEY_STATE = "fragment_state";
     private static final String TAG = "WireGuard/" + MainActivity.class.getSimpleName();
+
     private State state = State.EMPTY;
 
     private boolean moveToState(final State nextState) {
@@ -70,13 +74,19 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        TunnelListFragment fragment = null;
-        try {
-            fragment = ((TunnelListFragment) getSupportFragmentManager().getFragments().get(0));
-        } catch (final ClassCastException ignored) { }
-        if (fragment == null || !fragment.collapseActionMenu()) {
-            if (!moveToState(State.ofLayer(state.layer - 1)))
-                super.onBackPressed();
+        final List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+        boolean handled = false;
+        if (!fragments.isEmpty() && fragments.get(0) instanceof TunnelListFragment) {
+            handled = ((TunnelListFragment) fragments.get(0)).collapseActionMenu();
+        }
+
+        if (!handled) {
+            handled = moveToState(State.ofLayer(state.layer - 1));
+        }
+
+        if (!handled) {
+            super.onBackPressed();
         }
     }
 
@@ -84,7 +94,7 @@ public class MainActivity extends BaseActivity {
     // calling View#performClick defeats the purpose of it.
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         if (savedInstanceState != null && savedInstanceState.getString(KEY_STATE) != null)
@@ -99,9 +109,10 @@ public class MainActivity extends BaseActivity {
         final int actionBarId = getResources().getIdentifier("action_bar", "id", getPackageName());
         if (actionBarId != 0 && findViewById(actionBarId) != null) {
             findViewById(actionBarId).setOnTouchListener((v, e) -> {
-                try {
-                    ((TunnelListFragment) getSupportFragmentManager().getFragments().get(0)).collapseActionMenu();
-                } catch (final ClassCastException ignored) { }
+                final List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                if (!fragments.isEmpty() && fragments.get(0) instanceof TunnelListFragment) {
+                    ((TunnelListFragment) fragments.get(0)).collapseActionMenu();
+                }
                 return false;
             });
         }
@@ -142,7 +153,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         moveToState(newTunnel != null ? State.DETAIL : State.LIST);
     }
 
@@ -157,10 +168,10 @@ public class MainActivity extends BaseActivity {
         DETAIL(TunnelDetailFragment.class, 2),
         EDITOR(TunnelEditorFragment.class, 3);
 
-        private final String fragment;
+        @Nullable private final String fragment;
         private final int layer;
 
-        State(final Class<? extends Fragment> fragment, final int layer) {
+        State(@Nullable final Class<? extends Fragment> fragment, final int layer) {
             this.fragment = fragment != null ? fragment.getName() : null;
             this.layer = layer;
         }
