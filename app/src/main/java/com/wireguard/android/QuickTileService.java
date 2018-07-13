@@ -66,6 +66,9 @@ public class QuickTileService extends TileService {
     @Override
     public void onClick() {
         if (tunnel != null) {
+            final Tile tile = getQsTile();
+            tile.setIcon(tile.getIcon() == iconOn ? iconOff : iconOn);
+            tile.updateTile();
             tunnel.setState(State.TOGGLE).whenComplete(this::onToggleFinished);
         } else {
             final Intent intent = new Intent(this, MainActivity.class);
