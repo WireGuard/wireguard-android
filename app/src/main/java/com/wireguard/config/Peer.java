@@ -350,7 +350,7 @@ public class Peer {
             notifyPropertyChanged(BR.publicKey);
         }
 
-        public void setInterfaceDNSRoutes(final String dnsServers) {
+        public void setInterfaceDNSRoutes(@Nullable final String dnsServers) {
             final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
             final boolean modifyAllowedIPs = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
 
