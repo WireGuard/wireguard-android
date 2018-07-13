@@ -91,6 +91,8 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
             tunnel = ((TunnelListItemBinding) binding).getItem();
         else
             return;
+        if (tunnel == null)
+            return;
 
         Application.onHaveBackend(backend -> {
             if (backend instanceof GoBackend) {
