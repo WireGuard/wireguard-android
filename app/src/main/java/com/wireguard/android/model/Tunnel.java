@@ -8,13 +8,12 @@ package com.wireguard.android.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.wireguard.android.BR;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.util.Keyed;
 import com.wireguard.config.Config;
+import com.wireguard.util.Keyed;
 
 import java.util.regex.Pattern;
 
@@ -30,20 +29,20 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,15}");
 
     private final TunnelManager manager;
-    private Config config;
+    @Nullable private Config config;
     private String name;
     private State state;
-    private Statistics statistics;
+    @Nullable private Statistics statistics;
 
-    Tunnel(@NonNull final TunnelManager manager, @NonNull final String name,
-           @Nullable final Config config, @NonNull final State state) {
+    Tunnel(final TunnelManager manager, final String name,
+           @Nullable final Config config, final State state) {
         this.manager = manager;
         this.name = name;
         this.config = config;
         this.state = state;
     }
 
-    public static boolean isNameInvalid(@NonNull final CharSequence name) {
+    public static boolean isNameInvalid(final CharSequence name) {
         return !NAME_PATTERN.matcher(name).matches();
     }
 
@@ -51,7 +50,7 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return manager.delete(this);
     }
 
-    @Bindable
+    @Bindable @Nullable
     public Config getConfig() {
         if (config == null)
             manager.getTunnelConfig(this).whenComplete(ExceptionLoggers.E);
@@ -83,7 +82,7 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return TunnelManager.getTunnelState(this);
     }
 
-    @Bindable
+    @Bindable @Nullable
     public Statistics getStatistics() {
         // FIXME: Check age of statistics.
         if (statistics == null)
@@ -118,25 +117,26 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return state;
     }
 
-    Statistics onStatisticsChanged(final Statistics statistics) {
+    @Nullable
+    Statistics onStatisticsChanged(@Nullable final Statistics statistics) {
         this.statistics = statistics;
         notifyPropertyChanged(BR.statistics);
         return statistics;
     }
 
-    public CompletionStage<Config> setConfig(@NonNull final Config config) {
+    public CompletionStage<Config> setConfig(final Config config) {
         if (!config.equals(this.config))
             return manager.setTunnelConfig(this, config);
         return CompletableFuture.completedFuture(this.config);
     }
 
-    public CompletionStage<String> setName(@NonNull final String name) {
+    public CompletionStage<String> setName(final String name) {
         if (!name.equals(this.name))
             return manager.setTunnelName(this, name);
         return CompletableFuture.completedFuture(this.name);
     }
 
-    public CompletionStage<State> setState(@NonNull final State state) {
+    public CompletionStage<State> setState(final State state) {
         if (state != this.state)
             return manager.setTunnelState(this, state);
         return CompletableFuture.completedFuture(this.state);
@@ -152,6 +152,5 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         }
     }
 
-    public static class Statistics extends BaseObservable {
-    }
+    public static class Statistics extends BaseObservable { }
 }

@@ -7,7 +7,7 @@
 package com.wireguard.android.util;
 
 import android.databinding.ObservableArrayList;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wireguard.util.Keyed;
 
@@ -25,28 +25,28 @@ import java.util.Objects;
 public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
         extends ObservableArrayList<E> implements ObservableKeyedList<K, E> {
     @Override
-    public boolean add(final E e) {
+    public boolean add(@Nullable final E e) {
         if (e == null)
             throw new NullPointerException("Trying to add a null element");
         return super.add(e);
     }
 
     @Override
-    public void add(final int index, final E e) {
+    public void add(final int index, @Nullable final E e) {
         if (e == null)
             throw new NullPointerException("Trying to add a null element");
         super.add(index, e);
     }
 
     @Override
-    public boolean addAll(@NonNull final Collection<? extends E> c) {
+    public boolean addAll(final Collection<? extends E> c) {
         if (c.contains(null))
             throw new NullPointerException("Trying to add a collection with null element(s)");
         return super.addAll(c);
     }
 
     @Override
-    public boolean addAll(final int index, @NonNull final Collection<? extends E> c) {
+    public boolean addAll(final int index, final Collection<? extends E> c) {
         if (c.contains(null))
             throw new NullPointerException("Trying to add a collection with null element(s)");
         return super.addAll(index, c);
@@ -65,13 +65,13 @@ public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
         return indexOfKey(key) >= 0;
     }
 
-    @Override
+    @Override @Nullable
     public E get(final K key) {
         final int index = indexOfKey(key);
         return index >= 0 ? get(index) : null;
     }
 
-    @Override
+    @Override @Nullable
     public E getLast(final K key) {
         final int index = lastIndexOfKey(key);
         return index >= 0 ? get(index) : null;
@@ -100,7 +100,7 @@ public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
     }
 
     @Override
-    public E set(final int index, final E e) {
+    public E set(final int index, @Nullable final E e) {
         if (e == null)
             throw new NullPointerException("Trying to set a null key");
         return super.set(index, e);

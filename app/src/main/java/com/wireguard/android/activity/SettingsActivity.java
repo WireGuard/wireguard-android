@@ -8,12 +8,13 @@ package com.wireguard.android.activity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.SparseArray;
 import android.view.MenuItem;
 
 import com.wireguard.android.Application;
@@ -22,16 +23,14 @@ import com.wireguard.android.backend.WgQuickBackend;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface for changing application-global persistent settings.
  */
 
 public class SettingsActivity extends ThemeChangeAwareActivity {
-    private final Map<Integer, PermissionRequestCallback> permissionRequestCallbacks = new HashMap<>();
+    private final SparseArray<PermissionRequestCallback> permissionRequestCallbacks = new SparseArray<>();
     private int permissionRequestCounter;
 
     public void ensurePermissions(final String[] permissions, final PermissionRequestCallback cb) {
@@ -54,7 +53,7 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
             getSupportFragmentManager().beginTransaction()
@@ -76,8 +75,8 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
 
     @Override
     public void onRequestPermissionsResult(final int requestCode,
-                                           @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults) {
+                                           final String[] permissions,
+                                           final int[] grantResults) {
         final PermissionRequestCallback f = permissionRequestCallbacks.get(requestCode);
         if (f != null) {
             permissionRequestCallbacks.remove(requestCode);

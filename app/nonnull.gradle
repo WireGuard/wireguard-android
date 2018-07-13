@@ -1,0 +1,87 @@
+/*
+ * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+task generateNonNullJavaFiles(dependsOn: "assembleDebug", type: Copy) {
+    group = "Copying"
+    description = "Generate package-info.java classes"
+
+    def basePackage = "com" + File.separatorChar + "wireguard"
+    def mainSrcPhrase = "src" + File.separatorChar + "main" + File.separatorChar +
+            "java" + File.separatorChar
+    def mainTestSrcPhrase = "src" + File.separatorChar + "test" + File.separatorChar +
+            "java" + File.separatorChar
+    def mainAndroidTestSrcPhrase = "src" + File.separatorChar + "androidTest" + File.separatorChar +
+            "java" + File.separatorChar
+
+    def sourceDir = file( "${projectDir}" + File.separatorChar + "src" + File.separatorChar +
+            "main" + File.separatorChar + "java" + File.separatorChar +
+            basePackage )
+    def testSourceDir = file( "${projectDir}" + File.separatorChar + "src" + File.separatorChar +
+            "test" + File.separatorChar + "java" + File.separatorChar +
+            basePackage)
+    def androidTestSourceDir = file( "${projectDir}" + File.separatorChar + "src" + File
+            .separatorChar +
+            "androidTest" + File.separatorChar + "java" + File.separatorChar +
+            basePackage )
+
+    generateInfoFiles(sourceDir, mainSrcPhrase);
+    sourceDir.eachDirRecurse { dir ->
+        generateInfoFiles(dir, mainSrcPhrase)
+    }
+    if (file(testSourceDir).exists()) {
+        generateInfoFiles(testSourceDir, mainTestSrcPhrase);
+        testSourceDir.eachDirRecurse { dir ->
+            generateInfoFiles(dir, mainTestSrcPhrase)
+        }
+    }
+    if (file(androidTestSourceDir).exists()) {
+        generateInfoFiles(androidTestSourceDir, mainAndroidTestSrcPhrase);
+        androidTestSourceDir.eachDirRecurse { dir ->
+            generateInfoFiles(dir, mainAndroidTestSrcPhrase)
+        }
+    }
+    println "[SUCCESS] NonNull generator: package-info.java files checked"
+}
+
+private void generateInfoFiles(File dir, String mainSrcPhrase) {
+    def infoFileContentHeader = getFileContentHeader();
+    def infoFileContentFooter = getFileContentFooter();
+    def infoFilePath = dir.getAbsolutePath() + File.separatorChar + "package-info.java"
+
+    //file(infoFilePath).delete(); //do not use in production code
+    if (!file(infoFilePath).exists()) {
+        def infoFileContentPackage = getFileContentPackage(dir.getAbsolutePath(), mainSrcPhrase);
+        new File(infoFilePath).write(infoFileContentHeader +
+                infoFileContentPackage + infoFileContentFooter)
+        println "[dir] " + infoFilePath + "  created";
+    }
+}
+
+def getFileContentPackage(String path, String mainSrcPhrase) {
+    def mainSrcPhraseIndex = path.indexOf(mainSrcPhrase)
+    def output = path.substring(mainSrcPhraseIndex)
+
+    // Win hotfix
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        output = output.replace("\\", "/")
+        mainSrcPhrase = mainSrcPhrase.replace("\\", "/")
+    }
+
+    return "package " + output.replaceAll(mainSrcPhrase, "").replaceAll(
+                "/", ".") + ";\n"
+}
+
+def getFileContentHeader() {
+    return  "/**\n" +
+            " * Make all method parameters @NonNull by default.\n" +
+            " */\n" +
+            "@NonNullForAll\n"
+}
+
+def getFileContentFooter() {
+    return  "\n" +
+            "import com.wireguard.util.NonNullForAll;\n"
+}
+

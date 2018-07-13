@@ -6,8 +6,9 @@
 
 package com.wireguard.android.util;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+
 import java9.util.concurrent.CompletionException;
 import java9.util.function.BiConsumer;
 
@@ -34,7 +35,6 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
         return throwable;
     }
 
-    @NonNull
     public static String unwrapMessage(Throwable throwable) {
         throwable = unwrap(throwable);
         final String message = throwable.getMessage();
@@ -44,7 +44,7 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
     }
 
     @Override
-    public void accept(final Object result, final Throwable throwable) {
+    public void accept(final Object result, @Nullable final Throwable throwable) {
         if (throwable != null)
             Log.println(Log.ERROR, TAG, Log.getStackTraceString(throwable));
         else if (priority <= Log.DEBUG)

@@ -9,6 +9,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 
@@ -17,7 +18,7 @@ import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
 
 public class VersionPreference extends Preference {
-    private String versionSummary;
+    @Nullable private String versionSummary;
 
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -33,7 +34,7 @@ public class VersionPreference extends Preference {
         });
     }
 
-    @Override
+    @Override @Nullable
     public CharSequence getSummary() {
         return versionSummary;
     }

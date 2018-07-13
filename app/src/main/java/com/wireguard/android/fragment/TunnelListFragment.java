@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -60,20 +59,20 @@ public class TunnelListFragment extends BaseFragment {
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
 
     private final ActionModeListener actionModeListener = new ActionModeListener();
-    private ActionMode actionMode;
-    private TunnelListFragmentBinding binding;
+    @Nullable private ActionMode actionMode;
+    @Nullable private TunnelListFragmentBinding binding;
 
     public boolean collapseActionMenu() {
-        if (binding.createMenu.isExpanded()) {
+        if (binding != null && binding.createMenu.isExpanded()) {
             binding.createMenu.collapse();
             return true;
         }
         return false;
     }
 
-    private void importTunnel(final Uri uri) {
+    private void importTunnel(@Nullable final Uri uri) {
         final Activity activity = getActivity();
-        if (activity == null)
+        if (activity == null || uri == null)
             return;
         final ContentResolver contentResolver = activity.getContentResolver();
 
@@ -165,10 +164,10 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         switch (requestCode) {
             case REQUEST_IMPORT:
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK && data != null)
                     importTunnel(data.getData());
                 return;
             default:
@@ -178,8 +177,8 @@ public class TunnelListFragment extends BaseFragment {
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
 
@@ -216,16 +215,18 @@ public class TunnelListFragment extends BaseFragment {
 
     @Override
     public void onPause() {
-        binding.createMenu.collapse();
+        if (binding != null) {
+            binding.createMenu.collapse();
+        }
         super.onPause();
     }
 
     @Override
-    public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         // Do nothing.
     }
 
-    private void onTunnelDeletionFinished(final Integer count, final Throwable throwable) {
+    private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = getResources().getQuantityString(R.plurals.delete_success, count, count);
@@ -265,8 +266,13 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewStateRestored(final Bundle savedInstanceState) {
+    public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
+        if (binding == null) {
+            return;
+        }
+
         binding.setFragment(this);
         binding.setTunnels(Application.getTunnelManager().getTunnels());
         binding.setRowConfigurationHandler((ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, Tunnel>) (binding, tunnel, position) -> {
@@ -290,7 +296,7 @@ public class TunnelListFragment extends BaseFragment {
     private final class ActionModeListener implements ActionMode.Callback {
         private final Collection<Integer> checkedItems = new HashSet<>();
 
-        private Resources resources;
+        @Nullable private Resources resources;
 
         @Override
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
@@ -357,7 +363,9 @@ public class TunnelListFragment extends BaseFragment {
                 actionMode.finish();
             }
 
-            binding.tunnelList.getAdapter().notifyItemChanged(position);
+            if (binding != null) {
+                binding.tunnelList.getAdapter().notifyItemChanged(position);
+            }
 
             updateTitle(actionMode);
         }

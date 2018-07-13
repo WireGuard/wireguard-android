@@ -7,20 +7,21 @@ package com.wireguard.android.widget;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.Switch;
 
 public class ToggleSwitch extends Switch {
     private boolean isRestoringState;
-    private OnBeforeCheckedChangeListener listener;
-
-    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
-    public ToggleSwitch(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-    }
+    @Nullable private OnBeforeCheckedChangeListener listener;
 
     public ToggleSwitch(final Context context) {
         this(context, null);
+    }
+
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
+    public ToggleSwitch(final Context context, @Nullable final AttributeSet attrs) {
+        super(context, attrs);
     }
 
     @Override

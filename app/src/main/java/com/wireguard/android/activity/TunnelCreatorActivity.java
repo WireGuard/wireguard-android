@@ -7,6 +7,7 @@
 package com.wireguard.android.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;
@@ -18,7 +19,7 @@ import com.wireguard.android.model.Tunnel;
 public class TunnelCreatorActivity extends BaseActivity {
     @Override
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
             getSupportFragmentManager().beginTransaction()
@@ -28,7 +29,7 @@ public class TunnelCreatorActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         finish();
     }
 }

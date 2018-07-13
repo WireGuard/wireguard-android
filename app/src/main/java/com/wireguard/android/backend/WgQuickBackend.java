@@ -7,6 +7,7 @@
 package com.wireguard.android.backend;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.wireguard.android.Application;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import java9.util.stream.Collectors;
@@ -106,8 +108,9 @@ public final class WgQuickBackend implements Backend {
         return getState(tunnel);
     }
 
-    private void setStateInternal(final Tunnel tunnel, final Config config, final State state)
-            throws Exception {
+    private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state) throws Exception {
+        Objects.requireNonNull(config, "Trying to set state with a null config");
+
         final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
         try (final FileOutputStream stream = new FileOutputStream(tempFile, false)) {
             stream.write(config.toString().getBytes(StandardCharsets.UTF_8));

@@ -9,6 +9,7 @@ package com.wireguard.android.activity;
 import android.databinding.CallbackRegistry;
 import android.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
@@ -24,19 +25,19 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
-    private Tunnel selectedTunnel;
+    @Nullable private Tunnel selectedTunnel;
 
-    public void addOnSelectedTunnelChangedListener(
-            final OnSelectedTunnelChangedListener listener) {
+    public void addOnSelectedTunnelChangedListener(final OnSelectedTunnelChangedListener listener) {
         selectionChangeRegistry.add(listener);
     }
 
+    @Nullable
     public Tunnel getSelectedTunnel() {
         return selectedTunnel;
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
         String savedTunnelName = null;
         if (savedInstanceState != null)
@@ -59,14 +60,14 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
         super.onSaveInstanceState(outState);
     }
 
-    protected abstract void onSelectedTunnelChanged(Tunnel oldTunnel, Tunnel newTunnel);
+    protected abstract void onSelectedTunnelChanged(@Nullable Tunnel oldTunnel, @Nullable Tunnel newTunnel);
 
     public void removeOnSelectedTunnelChangedListener(
             final OnSelectedTunnelChangedListener listener) {
         selectionChangeRegistry.remove(listener);
     }
 
-    public void setSelectedTunnel(final Tunnel tunnel) {
+    public void setSelectedTunnel(@Nullable final Tunnel tunnel) {
         final Tunnel oldTunnel = selectedTunnel;
         if (Objects.equals(oldTunnel, tunnel))
             return;
@@ -76,7 +77,7 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
     }
 
     public interface OnSelectedTunnelChangedListener {
-        void onSelectedTunnelChanged(Tunnel oldTunnel, Tunnel newTunnel);
+        void onSelectedTunnelChanged(@Nullable Tunnel oldTunnel, @Nullable Tunnel newTunnel);
     }
 
     private static final class SelectionChangeNotifier

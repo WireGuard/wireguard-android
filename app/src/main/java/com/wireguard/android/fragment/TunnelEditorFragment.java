@@ -11,7 +11,7 @@ import android.content.Context;
 import android.databinding.Observable;
 import android.databinding.ObservableList;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -37,6 +37,7 @@ import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Fragment for editing a WireGuard configuration.
@@ -47,15 +48,17 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     private static final String KEY_ORIGINAL_NAME = "original_name";
     private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
 
-    private TunnelEditorFragmentBinding binding;
-    private Tunnel tunnel;
+    @Nullable private TunnelEditorFragmentBinding binding;
+    @Nullable private Tunnel tunnel;
 
     private void onConfigLoaded(final String name, final Config config) {
-        binding.setConfig(new Config.Observable(config, name));
+        if (binding != null) {
+            binding.setConfig(new Config.Observable(config, name));
+        }
     }
 
     private void onConfigSaved(final Tunnel savedTunnel,
-                               final Throwable throwable) {
+                               @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = getString(R.string.config_save_success, savedTunnel.getName());
@@ -73,7 +76,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -124,8 +127,8 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     };
 
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
         binding.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
@@ -197,14 +200,14 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         outState.putParcelable(KEY_LOCAL_CONFIG, binding.getConfig());
         outState.putString(KEY_ORIGINAL_NAME, tunnel == null ? null : tunnel.getName());
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         tunnel = newTunnel;
         if (binding == null)
             return;
@@ -213,7 +216,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             tunnel.getConfigAsync().thenAccept(a -> onConfigLoaded(tunnel.getName(), a));
     }
 
-    private void onTunnelCreated(final Tunnel newTunnel, final Throwable throwable) {
+    private void onTunnelCreated(final Tunnel newTunnel, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
             tunnel = newTunnel;
@@ -232,7 +235,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     }
 
     private void onTunnelRenamed(final Tunnel renamedTunnel, final Config newConfig,
-                                 final Throwable throwable) {
+                                 @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
             message = getString(R.string.tunnel_rename_success, renamedTunnel.getName());
@@ -251,7 +254,11 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     }
 
     @Override
-    public void onViewStateRestored(final Bundle savedInstanceState) {
+    public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
+        if (binding == null) {
+            return;
+        }
+
         binding.setFragment(this);
 
         if (savedInstanceState == null) {
@@ -271,15 +278,16 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
 
     public void onRequestSetExcludedApplications(@SuppressWarnings("unused") final View view) {
         final FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager != null) {
+        if (fragmentManager != null && binding != null) {
             final String[] excludedApps = Attribute.stringToList(binding.getConfig().getInterfaceSection().getExcludedApplications());
             final AppListDialogFragment fragment = AppListDialogFragment.newInstance(excludedApps, this);
-            fragment.show(getFragmentManager(), null);
+            fragment.show(fragmentManager, null);
         }
     }
 
     @Override
     public void onExcludedAppsSelected(final List<String> excludedApps) {
+        Objects.requireNonNull(binding, "Tried to set excluded apps while no view was loaded");
         binding.getConfig().getInterfaceSection().setExcludedApplications(Attribute.iterableToString(excludedApps));
     }
 

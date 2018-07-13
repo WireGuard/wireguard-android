@@ -7,7 +7,7 @@
 package com.wireguard.android.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,14 +24,16 @@ import com.wireguard.config.Config;
  */
 
 public class TunnelDetailFragment extends BaseFragment {
-    private TunnelDetailFragmentBinding binding;
+    @Nullable private TunnelDetailFragmentBinding binding;
 
     private void onConfigLoaded(final String name, final Config config) {
-        binding.setConfig(new Config.Observable(config, name));
+        if (binding != null) {
+            binding.setConfig(new Config.Observable(config, name));
+        }
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -42,8 +44,8 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelDetailFragmentBinding.inflate(inflater, container, false);
         binding.executePendingBindings();
@@ -57,7 +59,7 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onSelectedTunnelChanged(final Tunnel oldTunnel, final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         if (binding == null)
             return;
         binding.setTunnel(newTunnel);
@@ -68,7 +70,11 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewStateRestored(final Bundle savedInstanceState) {
+    public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
+        if (binding == null) {
+            return;
+        }
+
         binding.setFragment(this);
         onSelectedTunnelChanged(null, getSelectedTunnel());
         super.onViewStateRestored(savedInstanceState);

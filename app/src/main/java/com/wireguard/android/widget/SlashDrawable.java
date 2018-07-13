@@ -25,10 +25,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.FloatProperty;
-
 
 @TargetApi(Build.VERSION_CODES.N)
 public class SlashDrawable extends Drawable {
@@ -53,43 +51,30 @@ public class SlashDrawable extends Drawable {
     // Draw the slash washington-monument style; rotate to no-u-turn style
     private static final float DEFAULT_ROTATION = -45f;
 
-    private Drawable mDrawable;
+    private final Drawable mDrawable;
     private final RectF mSlashRect = new RectF(0, 0, 0, 0);
     private float mRotation;
     private boolean mSlashed;
-    private Mode mTintMode;
-    private ColorStateList mTintList;
     private boolean mAnimationEnabled = true;
 
     public SlashDrawable(final Drawable d) {
-        setDrawable(d);
+        mDrawable = d;
     }
 
     @Override
     public int getIntrinsicHeight() {
-        return mDrawable != null ? mDrawable.getIntrinsicHeight(): 0;
+        return mDrawable.getIntrinsicHeight();
     }
 
     @Override
     public int getIntrinsicWidth() {
-        return mDrawable != null ? mDrawable.getIntrinsicWidth(): 0;
+        return mDrawable.getIntrinsicWidth();
     }
 
     @Override
     protected void onBoundsChange(final Rect bounds) {
         super.onBoundsChange(bounds);
         mDrawable.setBounds(bounds);
-    }
-
-    public void setDrawable(final Drawable d) {
-        mDrawable = d;
-        mDrawable.setCallback(getCallback());
-        mDrawable.setBounds(getBounds());
-        if (mTintMode != null)
-            mDrawable.setTintMode(mTintMode);
-        if (mTintList != null)
-            mDrawable.setTintList(mTintList);
-        invalidateSelf();
     }
 
     public void setRotation(final float rotation) {
@@ -139,7 +124,7 @@ public class SlashDrawable extends Drawable {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void draw(@NonNull final Canvas canvas) {
+    public void draw(final Canvas canvas) {
         canvas.save();
         final Matrix m = new Matrix();
         final int width = getBounds().width();
@@ -201,7 +186,6 @@ public class SlashDrawable extends Drawable {
 
     @Override
     public void setTintList(@Nullable final ColorStateList tint) {
-        mTintList = tint;
         super.setTintList(tint);
         setDrawableTintList(tint);
         mPaint.setColor(tint == null ? 0 : tint.getDefaultColor());
@@ -213,8 +197,7 @@ public class SlashDrawable extends Drawable {
     }
 
     @Override
-    public void setTintMode(@NonNull final Mode tintMode) {
-        mTintMode = tintMode;
+    public void setTintMode(final Mode tintMode) {
         super.setTintMode(tintMode);
         mDrawable.setTintMode(tintMode);
     }

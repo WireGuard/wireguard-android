@@ -6,6 +6,7 @@
 
 package com.wireguard.config;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -59,13 +60,13 @@ public enum Attribute {
         return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0].toLowerCase());
     }
 
-    public static String[] stringToList(final String string) {
+    public static String[] stringToList(@Nullable final String string) {
         if (TextUtils.isEmpty(string))
             return EMPTY_LIST;
         return LIST_SEPARATOR_PATTERN.split(string.trim());
     }
 
-    public String composeWith(final Object value) {
+    public String composeWith(@Nullable final Object value) {
         return String.format("%s = %s%n", token, value);
     }
 
@@ -77,11 +78,13 @@ public enum Attribute {
         return String.format("%s = %s%n", token, iterableToString(value));
     }
 
+    @Nullable
     public String parse(final CharSequence line) {
         final Matcher matcher = pattern.matcher(line);
         return matcher.matches() ? matcher.group(1) : null;
     }
 
+    @Nullable
     public String[] parseList(final CharSequence line) {
         final Matcher matcher = pattern.matcher(line);
         return matcher.matches() ? stringToList(matcher.group(1)) : null;

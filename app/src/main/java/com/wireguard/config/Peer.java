@@ -10,6 +10,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.wireguard.crypto.KeyEncoding;
@@ -34,16 +35,16 @@ import java9.lang.Iterables;
 
 public class Peer {
     private final List<InetNetwork> allowedIPsList;
-    private InetSocketAddress endpoint;
+    @Nullable private InetSocketAddress endpoint;
     private int persistentKeepalive;
-    private String preSharedKey;
-    private String publicKey;
+    @Nullable private String preSharedKey;
+    @Nullable private String publicKey;
 
     public Peer() {
         allowedIPsList = new ArrayList<>();
     }
 
-    private void addAllowedIPs(final String[] allowedIPs) {
+    private void addAllowedIPs(@Nullable final String[] allowedIPs) {
         if (allowedIPs != null && allowedIPs.length > 0) {
             for (final String allowedIP : allowedIPs) {
                 allowedIPsList.add(new InetNetwork(allowedIP));
@@ -55,16 +56,19 @@ public class Peer {
         return allowedIPsList.toArray(new InetNetwork[allowedIPsList.size()]);
     }
 
+    @Nullable
     private String getAllowedIPsString() {
         if (allowedIPsList.isEmpty())
             return null;
         return Attribute.iterableToString(allowedIPsList);
     }
 
+    @Nullable
     public InetSocketAddress getEndpoint() {
         return endpoint;
     }
 
+    @Nullable
     private String getEndpointString() {
         if (endpoint == null)
             return null;
@@ -75,16 +79,19 @@ public class Peer {
         return persistentKeepalive;
     }
 
+    @Nullable
     private String getPersistentKeepaliveString() {
         if (persistentKeepalive == 0)
             return null;
         return Integer.valueOf(persistentKeepalive).toString();
     }
 
+    @Nullable
     public String getPreSharedKey() {
         return preSharedKey;
     }
 
+    @Nullable
     public String getPublicKey() {
         return publicKey;
     }
@@ -130,16 +137,16 @@ public class Peer {
         }
     }
 
-    private void setAllowedIPsString(final String allowedIPsString) {
+    private void setAllowedIPsString(@Nullable final String allowedIPsString) {
         allowedIPsList.clear();
         addAllowedIPs(Attribute.stringToList(allowedIPsString));
     }
 
-    private void setEndpoint(final InetSocketAddress endpoint) {
+    private void setEndpoint(@Nullable final InetSocketAddress endpoint) {
         this.endpoint = endpoint;
     }
 
-    private void setEndpointString(final String endpoint) {
+    private void setEndpointString(@Nullable final String endpoint) {
         if (endpoint != null && !endpoint.isEmpty()) {
             final InetSocketAddress constructedEndpoint;
             if (endpoint.indexOf('/') != -1 || endpoint.indexOf('?') != -1 || endpoint.indexOf('#') != -1)
@@ -160,14 +167,14 @@ public class Peer {
         this.persistentKeepalive = persistentKeepalive;
     }
 
-    private void setPersistentKeepaliveString(final String persistentKeepalive) {
+    private void setPersistentKeepaliveString(@Nullable final String persistentKeepalive) {
         if (persistentKeepalive != null && !persistentKeepalive.isEmpty())
             setPersistentKeepalive(Integer.parseInt(persistentKeepalive, 10));
         else
             setPersistentKeepalive(0);
     }
 
-    private void setPreSharedKey(String preSharedKey) {
+    private void setPreSharedKey(@Nullable String preSharedKey) {
         if (preSharedKey != null && preSharedKey.isEmpty())
             preSharedKey = null;
         if (preSharedKey != null)
@@ -175,7 +182,7 @@ public class Peer {
         this.preSharedKey = preSharedKey;
     }
 
-    private void setPublicKey(String publicKey) {
+    private void setPublicKey(@Nullable String publicKey) {
         if (publicKey != null && publicKey.isEmpty())
             publicKey = null;
         if (publicKey != null)
@@ -211,12 +218,12 @@ public class Peer {
                 return new Observable[size];
             }
         };
-        private String allowedIPs;
-        private String endpoint;
-        private String persistentKeepalive;
-        private String preSharedKey;
-        private String publicKey;
-        private List<String> interfaceDNSRoutes;
+        @Nullable private String allowedIPs;
+        @Nullable private String endpoint;
+        @Nullable private String persistentKeepalive;
+        @Nullable private String preSharedKey;
+        @Nullable private String publicKey;
+        private final List<String> interfaceDNSRoutes = new ArrayList<>();
         private int numSiblings;
 
         public Observable(final Peer parent) {
@@ -230,7 +237,6 @@ public class Peer {
             preSharedKey = in.readString();
             publicKey = in.readString();
             numSiblings = in.readInt();
-            interfaceDNSRoutes = new ArrayList<>();
             in.readStringList(interfaceDNSRoutes);
         }
 
@@ -284,27 +290,27 @@ public class Peer {
             return numSiblings == 0 && Arrays.asList(Attribute.stringToList(allowedIPs)).containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
         }
 
-        @Bindable
+        @Bindable @Nullable
         public String getAllowedIPs() {
             return allowedIPs;
         }
 
-        @Bindable
+        @Bindable @Nullable
         public String getEndpoint() {
             return endpoint;
         }
 
-        @Bindable
+        @Bindable @Nullable
         public String getPersistentKeepalive() {
             return persistentKeepalive;
         }
 
-        @Bindable
+        @Bindable @Nullable
         public String getPreSharedKey() {
             return preSharedKey;
         }
 
-        @Bindable
+        @Bindable @Nullable
         public String getPublicKey() {
             return publicKey;
         }
@@ -315,7 +321,6 @@ public class Peer {
             persistentKeepalive = parent.getPersistentKeepaliveString();
             preSharedKey = parent.getPreSharedKey();
             publicKey = parent.getPublicKey();
-            interfaceDNSRoutes = new ArrayList<>();
         }
 
         public void setAllowedIPs(final String allowedIPs) {

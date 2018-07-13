@@ -20,7 +20,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Keep;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.AppCompatTextView;
@@ -57,32 +57,32 @@ public class FloatingActionsMenu extends ViewGroup {
     private boolean mExpanded;
     private final AnimatorSet mExpandAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
     private final AnimatorSet mCollapseAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
-    private FloatingActionButton mAddButton;
-    private RotatingDrawable mRotatingDrawable;
+    @Nullable private FloatingActionButton mAddButton;
+    @Nullable private RotatingDrawable mRotatingDrawable;
     private int mMaxButtonWidth;
     private int mMaxButtonHeight;
     private int mLabelsStyle;
     private int mLabelsPosition;
     private int mButtonsCount;
-    private TouchDelegateGroup mTouchDelegateGroup;
-    private OnFloatingActionsMenuUpdateListener mListener;
+    @Nullable private TouchDelegateGroup mTouchDelegateGroup;
+    @Nullable private OnFloatingActionsMenuUpdateListener mListener;
     private final Rect touchArea = new Rect(0, 0, 0, 0);
 
     public FloatingActionsMenu(final Context context) {
         this(context, null);
     }
 
-    public FloatingActionsMenu(final Context context, final AttributeSet attrs) {
+    public FloatingActionsMenu(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public FloatingActionsMenu(final Context context, final AttributeSet attrs, final int defStyle) {
+    public FloatingActionsMenu(final Context context, @Nullable final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
     }
 
-    private void init(final Context context, final AttributeSet attributeSet) {
+    private void init(final Context context, @Nullable final AttributeSet attributeSet) {
         mButtonSpacing = (int) (getResources().getDimension(R.dimen.fab_actions_spacing));
         mLabelsMargin = getResources().getDimensionPixelSize(R.dimen.fab_labels_margin);
         mLabelsVerticalOffset = getResources().getDimensionPixelSize(R.dimen.fab_shadow_offset);
@@ -530,7 +530,7 @@ public class FloatingActionsMenu extends ViewGroup {
         }
 
         @Override
-        public void writeToParcel(@NonNull final Parcel out, final int flags) {
+        public void writeToParcel(final Parcel out, final int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(mExpanded ? 1 : 0);
         }

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.wireguard.android.backend.Backend;
@@ -26,18 +27,19 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class Application extends android.app.Application {
-    private static WeakReference<Application> weakSelf;
-    private AsyncWorker asyncWorker;
-    private Backend backend;
-    private RootShell rootShell;
-    private SharedPreferences sharedPreferences;
-    private ToolsInstaller toolsInstaller;
-    private TunnelManager tunnelManager;
-    private Handler handler;
-    private Collection<BackendCallback> haveBackendCallbacks = new ArrayList<>();
+    @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
+    @SuppressWarnings("NullableProblems") private AsyncWorker asyncWorker;
+    @SuppressWarnings("NullableProblems") private RootShell rootShell;
+    @SuppressWarnings("NullableProblems") private SharedPreferences sharedPreferences;
+    @SuppressWarnings("NullableProblems") private ToolsInstaller toolsInstaller;
+    @SuppressWarnings("NullableProblems") private TunnelManager tunnelManager;
+    @SuppressWarnings("NullableProblems") private Handler handler;
+    @Nullable private Backend backend;
+    @Nullable private Collection<BackendCallback> haveBackendCallbacks = new ArrayList<>();
     private final Object haveBackendCallbacksLock = new Object();
 
     public Application() {
@@ -65,9 +67,11 @@ public class Application extends android.app.Application {
                 if (app.backend == null)
                     app.backend = new GoBackend(app.getApplicationContext());
                 synchronized (app.haveBackendCallbacksLock) {
-                    for (final BackendCallback callback : app.haveBackendCallbacks)
-                        app.handler.post(() -> callback.callback(app.backend));
-                    app.haveBackendCallbacks = null;
+                    if (app.haveBackendCallbacks != null) {
+                        for (final BackendCallback callback : app.haveBackendCallbacks)
+                            app.handler.post(() -> callback.callback(app.backend));
+                        app.haveBackendCallbacks = null;
+                    }
                 }
             }
             return app.backend;
@@ -82,10 +86,12 @@ public class Application extends android.app.Application {
     public static void onHaveBackend(final BackendCallback callback) {
         final Application app = get();
         synchronized (app.haveBackendCallbacksLock) {
-            if (app.haveBackendCallbacks == null)
+            if (app.haveBackendCallbacks == null) {
+                Objects.requireNonNull(app.backend, "Backend still null in onHaveBackend call");
                 callback.callback(app.backend);
-            else
+            } else {
                 app.haveBackendCallbacks.add(callback);
+            }
         }
     }
 
