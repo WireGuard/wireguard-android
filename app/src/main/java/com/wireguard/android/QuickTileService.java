@@ -55,12 +55,17 @@ public class QuickTileService extends TileService {
         icon.setBounds(0, 0, c.getWidth(), c.getHeight());
         icon.draw(c);
         iconOn = Icon.createWithBitmap(b);
-        icon.setSlashed(true);
-        b = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        c = new Canvas(b);
-        icon.setBounds(0, 0, c.getWidth(), c.getHeight());
-        icon.draw(c);
-        iconOff = Icon.createWithBitmap(b);
+        /* TODO(msf): Change this to an explicit test for P when we start targetting SDK 28 */
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+            iconOff = iconOn;
+        } else {
+            icon.setSlashed(true);
+            b = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            c = new Canvas(b);
+            icon.setBounds(0, 0, c.getWidth(), c.getHeight());
+            icon.draw(c);
+            iconOff = Icon.createWithBitmap(b);
+        }
     }
 
     @Override
