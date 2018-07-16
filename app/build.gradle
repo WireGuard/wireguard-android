@@ -17,8 +17,8 @@ android {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 432
-        versionName '0.0.20180711'
+        versionCode 433
+        versionName '0.0.20180716'
     }
     // If the keystore file exists
     if (keystorePropertiesFile.exists()) {
