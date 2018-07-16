@@ -34,7 +34,7 @@ public final class InetAddresses {
         try {
             return (InetAddress) PARSER_METHOD.invoke(null, address);
         } catch (final IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getCause() == null ? e : e.getCause());
         }
     }
 }
