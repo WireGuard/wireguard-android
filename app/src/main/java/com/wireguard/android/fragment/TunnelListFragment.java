@@ -26,6 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -35,6 +37,7 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.widget.CustomRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;
@@ -188,6 +191,23 @@ public class TunnelListFragment extends BaseFragment {
                 binding.createMenu.collapse();
             }
             return false;
+        });
+        binding.tunnelList.setOnScrollListener(new CustomRecyclerViewScrollListener() {
+            @Override
+            public void show() {
+                binding.createMenu.animate()
+                        .translationY(0)
+                        .setInterpolator(new DecelerateInterpolator(2))
+                        .start();
+            }
+
+            @Override
+            public void hide() {
+                binding.createMenu.animate()
+                        .translationY(binding.createMenu.getHeight() + getResources().getDimension(R.dimen.fab_margin))
+                        .setInterpolator(new AccelerateInterpolator(2))
+                        .start();
+            }
         });
         binding.executePendingBindings();
         return binding.getRoot();
