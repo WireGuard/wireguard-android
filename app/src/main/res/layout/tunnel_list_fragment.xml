@@ -43,7 +43,8 @@
             android:layout_margin="16dp"
             app:fab_labelStyle="@style/fab_label"
             android:clipChildren="false"
-            app:fab_labelsPosition="left" >
+            app:fab_labelsPosition="left"
+            app:layout_behavior="com.wireguard.android.widget.fab.FloatingActionButtonBehavior" >
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/create_empty"
