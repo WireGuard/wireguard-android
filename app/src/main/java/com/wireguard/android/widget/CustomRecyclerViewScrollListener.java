@@ -8,21 +8,26 @@ package com.wireguard.android.widget;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.wireguard.android.R;
+
 public abstract class CustomRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 
     private int scrollDist;
     private boolean isVisible = true;
-    private static final float FLING_THRESHOLD = 25;
+    private static int flingThreshold;
 
     @Override
     public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        if (isVisible && scrollDist > FLING_THRESHOLD) {
+        if (flingThreshold == 0)
+            flingThreshold = recyclerView.getResources().getDimensionPixelSize(R.dimen.design_fab_size_normal) / 2;
+
+        if (isVisible && scrollDist >= flingThreshold) {
             hide();
             scrollDist = 0;
             isVisible = false;
-        } else if (!isVisible && scrollDist < -FLING_THRESHOLD) {
+        } else if (!isVisible && scrollDist <= -flingThreshold) {
             show();
             scrollDist = 0;
             isVisible = true;
