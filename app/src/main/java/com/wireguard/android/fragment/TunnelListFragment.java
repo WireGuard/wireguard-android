@@ -6,6 +6,7 @@
 
 package com.wireguard.android.fragment;
 
+import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -61,6 +62,8 @@ import java9.util.stream.StreamSupport;
 public class TunnelListFragment extends BaseFragment {
     private static final int REQUEST_IMPORT = 1;
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
+    private static final TimeInterpolator FAB_SHOW_ANIMATION = new DecelerateInterpolator(2);
+    private static final TimeInterpolator FAB_HIDE_ANIMATION = new AccelerateInterpolator(2);
 
     private final ActionModeListener actionModeListener = new ActionModeListener();
     @Nullable private ActionMode actionMode;
@@ -198,7 +201,7 @@ public class TunnelListFragment extends BaseFragment {
             public void show() {
                 binding.createMenu.animate()
                         .translationY(0)
-                        .setInterpolator(new DecelerateInterpolator(2))
+                        .setInterpolator(FAB_SHOW_ANIMATION)
                         .start();
             }
 
@@ -206,7 +209,7 @@ public class TunnelListFragment extends BaseFragment {
             public void hide() {
                 binding.createMenu.animate()
                         .translationY(binding.createMenu.getHeight() + getResources().getDimension(R.dimen.fab_margin))
-                        .setInterpolator(new AccelerateInterpolator(2))
+                        .setInterpolator(FAB_HIDE_ANIMATION)
                         .start();
             }
         });
