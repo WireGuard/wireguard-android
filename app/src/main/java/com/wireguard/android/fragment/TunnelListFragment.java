@@ -179,6 +179,7 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
