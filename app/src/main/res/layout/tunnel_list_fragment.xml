@@ -30,6 +30,8 @@
             android:id="@+id/tunnel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/design_fab_size_normal"
+            android:clipToPadding="false"
             android:choiceMode="multipleChoiceModal"
             app:items="@{tunnels}"
             app:layout="@{@layout/tunnel_list_item}"
