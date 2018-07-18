@@ -39,7 +39,7 @@ public class AppListDialogFragment extends DialogFragment {
 
     private static final String KEY_EXCLUDED_APPS = "excludedApps";
 
-    private final List<String> currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
+    private List<String> currentlyExcludedApps;
     private final ObservableKeyedList<String, ApplicationData> appData = new ObservableKeyedArrayList<>();
 
     public static <T extends Fragment & AppExclusionListener> AppListDialogFragment newInstance(final String[] excludedApps, final T target) {
@@ -49,6 +49,13 @@ public class AppListDialogFragment extends DialogFragment {
         fragment.setTargetFragment(target, 0);
         fragment.setArguments(extras);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
     }
 
     @Override
