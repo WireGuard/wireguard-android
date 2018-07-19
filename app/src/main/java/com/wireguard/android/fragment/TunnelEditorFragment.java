@@ -96,11 +96,13 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
 
         @Override
         public void onItemRangeInserted(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
-            breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+            if (binding != null)
+                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
         }
         @Override
         public void onItemRangeRemoved(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
-            breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+            if (binding != null)
+                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
         }
     };
 
