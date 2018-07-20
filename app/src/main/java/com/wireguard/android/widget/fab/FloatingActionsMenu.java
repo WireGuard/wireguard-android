@@ -67,6 +67,8 @@ public class FloatingActionsMenu extends ViewGroup {
     @Nullable private TouchDelegateGroup mTouchDelegateGroup;
     @Nullable private OnFloatingActionsMenuUpdateListener mListener;
     private final Rect touchArea = new Rect(0, 0, 0, 0);
+    private float scrollYTranslation;
+    private float behaviorYTranslation;
 
     public FloatingActionsMenu(final Context context) {
         this(context, null);
@@ -101,6 +103,24 @@ public class FloatingActionsMenu extends ViewGroup {
         }
 
         createAddButton(context);
+    }
+
+    public float getScrollYTranslation() {
+        return scrollYTranslation;
+    }
+
+    public void setScrollYTranslation(final float scrollYTranslation) {
+        this.scrollYTranslation = scrollYTranslation;
+        setTranslationY(behaviorYTranslation + scrollYTranslation);
+    }
+
+    public float getBehaviorYTranslation() {
+        return behaviorYTranslation;
+    }
+
+    public void setBehaviorYTranslation(final float behaviorYTranslation) {
+        this.behaviorYTranslation = behaviorYTranslation;
+        setTranslationY(behaviorYTranslation + scrollYTranslation);
     }
 
     public void setOnFloatingActionsMenuUpdateListener(final OnFloatingActionsMenuUpdateListener listener) {

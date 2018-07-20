@@ -27,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -38,7 +36,7 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.widget.CustomRecyclerViewScrollListener;
+import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;
@@ -62,8 +60,6 @@ import java9.util.stream.StreamSupport;
 public class TunnelListFragment extends BaseFragment {
     private static final int REQUEST_IMPORT = 1;
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
-    private static final TimeInterpolator FAB_SHOW_ANIMATION = new DecelerateInterpolator(2);
-    private static final TimeInterpolator FAB_HIDE_ANIMATION = new AccelerateInterpolator(2);
 
     private final ActionModeListener actionModeListener = new ActionModeListener();
     @Nullable private ActionMode actionMode;
@@ -196,23 +192,7 @@ public class TunnelListFragment extends BaseFragment {
             }
             return false;
         });
-        binding.tunnelList.setOnScrollListener(new CustomRecyclerViewScrollListener() {
-            @Override
-            public void show() {
-                binding.createMenu.animate()
-                        .translationY(0)
-                        .setInterpolator(FAB_SHOW_ANIMATION)
-                        .start();
-            }
-
-            @Override
-            public void hide() {
-                binding.createMenu.animate()
-                        .translationY(binding.createMenu.getHeight() + getResources().getDimension(R.dimen.fab_margin))
-                        .setInterpolator(FAB_HIDE_ANIMATION)
-                        .start();
-            }
-        });
+        binding.tunnelList.setOnScrollListener(new FloatingActionsMenuRecyclerViewScrollListener(binding.createMenu));
         binding.executePendingBindings();
         return binding.getRoot();
     }

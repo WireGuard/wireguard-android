@@ -25,8 +25,7 @@ public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<Flo
     @Override
     public boolean onDependentViewChanged(final CoordinatorLayout parent, final FloatingActionsMenu child,
                                           final View dependency) {
-        final float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
-        child.setTranslationY(translationY);
+        child.setBehaviorYTranslation(Math.min(0, dependency.getTranslationY() - dependency.getMeasuredHeight()));
         return true;
     }
 }
