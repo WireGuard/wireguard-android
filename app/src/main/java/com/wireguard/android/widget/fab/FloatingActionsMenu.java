@@ -112,7 +112,7 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     private void createAddButton(final Context context) {
-        final RotatingDrawable rotatingDrawable = new RotatingDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_action_add_inverse, context.getTheme()));
+        final RotatingDrawable rotatingDrawable = new RotatingDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_action_add_white, context.getTheme()));
         mRotatingDrawable = rotatingDrawable;
 
         final TimeInterpolator interpolator = new OvershootInterpolator();
