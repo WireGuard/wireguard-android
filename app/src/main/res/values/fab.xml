@@ -27,4 +27,5 @@
             <enum name="right" value="3"/>
         </attr>
     </declare-styleable>
+    <integer name="label_position">0</integer>
 </resources>
