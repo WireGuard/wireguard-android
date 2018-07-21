@@ -8,7 +8,6 @@ package com.wireguard.android.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,10 +21,8 @@ import android.widget.Toast;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.activity.BaseActivity;
 import com.wireguard.android.databinding.AppListDialogFragmentBinding;
 import com.wireguard.android.model.ApplicationData;
-import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableKeyedArrayList;
 import com.wireguard.android.util.ObservableKeyedList;
