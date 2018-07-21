@@ -6,16 +6,12 @@
 package com.wireguard.android.activity;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 
 import com.wireguard.android.Application;
-
-import java.lang.reflect.Field;
 
 public abstract class ThemeChangeAwareActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
