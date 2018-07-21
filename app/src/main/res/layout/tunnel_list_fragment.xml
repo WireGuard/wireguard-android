@@ -39,13 +39,13 @@
 
         <com.wireguard.android.widget.fab.FloatingActionsMenu
             android:id="@+id/create_menu"
+            android:clipChildren="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             app:fab_labelStyle="@style/fab_label"
-            android:clipChildren="false"
-            app:fab_labelsPosition="left"
+            app:fab_labelsPosition="@integer/label_position"
             app:layout_behavior="com.wireguard.android.widget.fab.FloatingActionButtonBehavior" >
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton

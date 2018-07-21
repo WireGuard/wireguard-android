@@ -55,7 +55,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:layout_toStartOf="@+id/tunnel_switch"
                         android:text="@string/interface_title" />
 
                     <com.wireguard.android.widget.ToggleSwitch
