@@ -68,17 +68,27 @@
                 app:fab_title="@string/create_from_file" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
             android:layout_gravity="center">
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:tint="@color/transparent_background_placeholder"
+                android:layout_marginTop="-70dp"
+                android:layout_marginBottom="20dp"
+                android:src="@mipmap/ic_launcher" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:layout_centerInParent="true"
-                android:text="@string/no_tunnels_imported_placeholder" />
-        </RelativeLayout>
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="@string/tunnel_list_placeholder" />
+        </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

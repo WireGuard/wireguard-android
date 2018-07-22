@@ -7,4 +7,7 @@
     <color name="fab_label_background_color">#444444</color>
 
     <color name="accent">#2196F3</color>
+
+    <!-- TODO(msf): replace with ?android:attr/colorBackground with some alpha -->
+    <color name="transparent_background_placeholder">#aafafafa</color>
 </resources>
