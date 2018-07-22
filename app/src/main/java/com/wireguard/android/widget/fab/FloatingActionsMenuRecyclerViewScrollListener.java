@@ -15,7 +15,7 @@ public class FloatingActionsMenuRecyclerViewScrollListener extends RecyclerView.
         this.menu = menu;
     }
 
-    private static float bound(float min, float proposal, float max) {
+    private static float bound(final float min, final float proposal, final float max) {
         return Math.min(max, Math.max(min, proposal));
     }
 
