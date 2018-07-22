@@ -33,6 +33,7 @@
             android:paddingBottom="@{@dimen/design_fab_size_normal * 1.1f}"
             android:clipToPadding="false"
             android:choiceMode="multipleChoiceModal"
+            android:visibility="@{tunnels.size() > 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
             app:items="@{tunnels}"
             app:layout="@{@layout/tunnel_list_item}"
             app:configurationHandler="@{rowConfigurationHandler}" />
@@ -66,5 +67,18 @@
                 app:fabSize="mini"
                 app:fab_title="@string/create_from_file" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_centerInParent="true"
+                android:text="@string/no_tunnels_imported_placeholder" />
+        </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>
