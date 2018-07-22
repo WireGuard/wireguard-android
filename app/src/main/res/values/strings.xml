@@ -99,4 +99,5 @@
     <string name="zip_export_error">Unable to export tunnels: %s</string>
     <string name="zip_export_success">Saved to %s</string>
     <string name="zip_export_summary">Zip file will be saved to downloads folder</string>
+    <string name="no_tunnels_imported_placeholder">Tap the button at the bottom to begin</string>
 </resources>
