@@ -9,11 +9,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=gold")
 
 add_executable(libwg-quick.so wireguard/src/tools/wg-quick/android.c)
-target_compile_options(libwg-quick.so PUBLIC -O3 -std=gnu11 -Wall -pedantic -Wno-missing-field-initializers)
+target_compile_options(libwg-quick.so PUBLIC -O3 -std=gnu11 -Wall -pedantic -Wno-missing-field-initializers -DWG_PACKAGE_NAME=\"${ANDROID_PACKAGE_NAME}\")
 
 file(GLOB WG_SOURCES wireguard/src/tools/*.c libmnl/src/*.c)
 add_executable(libwg.so ${WG_SOURCES})
-target_compile_options(libwg.so PUBLIC -idirafter "${CMAKE_CURRENT_SOURCE_DIR}/libmnl/include/" -I "${CMAKE_CURRENT_SOURCE_DIR}/wireguard/src/tools/" -O3 -std=gnu11 -D_GNU_SOURCE -DHAVE_VISIBILITY_HIDDEN -DRUNSTATEDIR=\"\\\"/data/data/com.wireguard.android/cache\\\"\" -Wno-pointer-arith -Wno-unused-parameter)
+target_compile_options(libwg.so PUBLIC -idirafter "${CMAKE_CURRENT_SOURCE_DIR}/libmnl/include/" -I "${CMAKE_CURRENT_SOURCE_DIR}/wireguard/src/tools/" -O3 -std=gnu11 -D_GNU_SOURCE -DHAVE_VISIBILITY_HIDDEN -DRUNSTATEDIR=\"/data/data/${ANDROID_PACKAGE_NAME}/cache\" -Wno-pointer-arith -Wno-unused-parameter)
 
 add_custom_target(libwg-go.so WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/libwg-go" COMMENT "Building wireguard-go" VERBATIM COMMAND make
     ANDROID_ARCH_NAME=${ANDROID_ARCH_NAME}
