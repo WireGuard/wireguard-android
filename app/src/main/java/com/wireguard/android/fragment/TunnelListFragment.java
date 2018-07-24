@@ -18,6 +18,7 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.util.Log;
@@ -27,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.activity.TunnelCreatorActivity;
@@ -39,6 +42,7 @@ import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollLis
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -70,6 +74,22 @@ public class TunnelListFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    private void importTunnel(@NonNull final String configText) {
+        try {
+            // Ensure the config text is parseable before proceeding…
+            Config.from(configText);
+
+            // Config text is valid, now create the tunnel…
+            final FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                final ConfigNamingDialogFragment fragment = ConfigNamingDialogFragment.newInstance(configText);
+                fragment.show(fragmentManager, null);
+            }
+        } catch (final IllegalArgumentException|IOException exception) {
+            onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
+        }
     }
 
     private void importTunnel(@Nullable final Uri uri) {
@@ -172,6 +192,12 @@ public class TunnelListFragment extends BaseFragment {
                 if (resultCode == Activity.RESULT_OK && data != null)
                     importTunnel(data.getData());
                 return;
+            case IntentIntegrator.REQUEST_CODE:
+                final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                if (result != null && result.getContents() != null) {
+                    importTunnel(result.getContents());
+                }
+                return;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
@@ -213,6 +239,15 @@ public class TunnelListFragment extends BaseFragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         startActivityForResult(intent, REQUEST_IMPORT);
+        if (binding != null)
+            binding.createMenu.collapse();
+    }
+
+    public void onRequestScanQRCode(@SuppressWarnings("unused") final View view) {
+        final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE));
+
         if (binding != null)
             binding.createMenu.collapse();
     }

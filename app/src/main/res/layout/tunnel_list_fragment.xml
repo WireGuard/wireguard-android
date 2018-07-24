@@ -38,6 +38,29 @@
             app:layout="@{@layout/tunnel_list_item}"
             app:configurationHandler="@{rowConfigurationHandler}" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
+            android:layout_gravity="center">
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:tint="@color/transparent_background_placeholder"
+                android:layout_marginTop="-70dp"
+                android:layout_marginBottom="20dp"
+                android:src="@mipmap/ic_launcher" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:text="@string/tunnel_list_placeholder" />
+        </LinearLayout>
+
         <com.wireguard.android.widget.fab.FloatingActionsMenu
             android:id="@+id/create_menu"
             android:clipChildren="false"
@@ -66,29 +89,16 @@
                 app:srcCompat="@drawable/ic_action_open_white"
                 app:fabSize="mini"
                 app:fab_title="@string/create_from_file" />
-        </com.wireguard.android.widget.fab.FloatingActionsMenu>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
-            android:layout_gravity="center">
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/logo_placeholder"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:tint="@color/transparent_background_placeholder"
-                android:layout_marginTop="-70dp"
-                android:layout_marginBottom="20dp"
-                android:src="@mipmap/ic_launcher" />
-            <TextView
+            <com.wireguard.android.widget.fab.LabeledFloatingActionButton
+                android:id="@+id/scan_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:text="@string/tunnel_list_placeholder" />
-        </LinearLayout>
+                android:onClick="@{fragment::onRequestScanQRCode}"
+                app:srcCompat="@drawable/ic_action_scan_qr_code_white"
+                app:fabSize="mini"
+                app:fab_title="@string/scan_qr_code" />
+        </com.wireguard.android.widget.fab.FloatingActionsMenu>
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>

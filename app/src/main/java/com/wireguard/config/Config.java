@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,10 @@ import java.util.List;
 public class Config {
     private final Interface interfaceSection = new Interface();
     private List<Peer> peers = new ArrayList<>();
+
+    public static Config from(final String string) throws IOException {
+        return from(new BufferedReader(new StringReader(string)));
+    }
 
     public static Config from(final InputStream stream) throws IOException {
         return from(new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)));
