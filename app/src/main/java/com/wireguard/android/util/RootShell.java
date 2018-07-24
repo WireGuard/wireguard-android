@@ -10,6 +10,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
 
 import java.io.BufferedReader;
@@ -45,8 +46,8 @@ public class RootShell {
         final File cacheDir = context.getCacheDir();
         localBinaryDir = new File(cacheDir, "bin");
         localTemporaryDir = new File(cacheDir, "tmp");
-        preamble = String.format("export CALLING_PACKAGE=com.wireguard.android PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
-                localBinaryDir, localTemporaryDir);
+        preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
+                BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir);
     }
 
     private static boolean isExecutableInPath(final String name) {
