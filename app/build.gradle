@@ -68,6 +68,7 @@ ext {
     supportLibsVersion = '27.1.1'
     streamsupportVersion = '1.6.0'
     jsr305Version = '3.0.2'
+    zxingEmbeddedVersion = '3.6.0'
 }
 
 dependencies {
@@ -80,6 +81,7 @@ dependencies {
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
+    implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
 }
 
 tasks.withType(JavaCompile) {

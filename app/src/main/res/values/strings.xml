@@ -30,6 +30,7 @@
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
     <string name="create_from_file">Create from file or archive</string>
+    <string name="create_tunnel">Create Tunnel</string>
     <string name="dark_theme_title">Use dark theme</string>
     <string name="dark_theme_summary_on">Currently using dark night theme</string>
     <string name="dark_theme_summary_off">Currently using light day theme</string>
@@ -71,6 +72,7 @@
     <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
+    <string name="scan_qr_code">Scan QR Code</string>
     <plurals name="set_excluded_applications">
         <item quantity="one">%d Excluded Application</item>
         <item quantity="other">%d Excluded Applications</item>
@@ -90,6 +92,7 @@
     <string name="tunnel_create_error">Unable to create tunnel: %s</string>
     <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
     <string name="tunnel_list_placeholder">Add a tunnel using the blue button</string>
+    <string name="tunnel_name">Tunnel Name</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
     <string name="version_title">WireGuard for Android v%s"</string>
