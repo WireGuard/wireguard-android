@@ -13,8 +13,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionsMenu> {
-
-    public FloatingActionButtonBehavior(final Context context, final AttributeSet attrs) { }
+    public FloatingActionButtonBehavior(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
     @Override
     public boolean layoutDependsOn(final CoordinatorLayout parent, final FloatingActionsMenu child,
