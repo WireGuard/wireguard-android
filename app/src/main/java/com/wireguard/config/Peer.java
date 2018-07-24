@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 
 import java9.lang.Iterables;
 
@@ -72,7 +71,7 @@ public class Peer {
     private String getEndpointString() {
         if (endpoint == null)
             return null;
-        return String.format(Locale.getDefault(), "%s:%d", endpoint.getHostString(), endpoint.getPort());
+        return String.format("%s:%d", endpoint.getHostString(), endpoint.getPort());
     }
 
     public int getPersistentKeepalive() {
@@ -104,12 +103,10 @@ public class Peer {
         if (endpoint.isUnresolved())
             throw new UnknownHostException(endpoint.getHostString());
         if (endpoint.getAddress() instanceof Inet6Address)
-            return String.format(Locale.getDefault(),
-                    "[%s]:%d",
+            return String.format("[%s]:%d",
                     endpoint.getAddress().getHostAddress(),
                     endpoint.getPort());
-        return String.format(Locale.getDefault(),
-                "%s:%d",
+        return String.format("%s:%d",
                 endpoint.getAddress().getHostAddress(),
                 endpoint.getPort());
     }
