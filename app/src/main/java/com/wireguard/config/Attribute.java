@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,7 +70,7 @@ public enum Attribute {
     }
 
     public String composeWith(final int value) {
-        return String.format(Locale.getDefault(), "%s = %d%n", token, value);
+        return String.format("%s = %d%n", token, value);
     }
 
     public <T> String composeWith(final Iterable<T> value) {
