@@ -54,5 +54,5 @@ $(DESTDIR)/libwg-go.so: $(FILES) src/git.zx2c4.com/wireguard-go/api-android.go s
 	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sfrt $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE))) $(FILE);)
 	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
-	GOPATH=$(PWD) go build -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared git.zx2c4.com/wireguard-go
+	GOPATH=$(PWD) go build -ldflags="-X main.socketDirectory=/data/data/$(ANDROID_PACKAGE_NAME)/cache/wireguard" -v -o $(DESTDIR)/libwg-go.so -buildmode c-shared git.zx2c4.com/wireguard-go
 	go version > .gobuildversion

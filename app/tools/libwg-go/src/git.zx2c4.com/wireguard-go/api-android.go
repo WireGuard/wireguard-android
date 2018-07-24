@@ -16,6 +16,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math"
+	"net"
 	"os"
 	"os/signal"
 	"runtime"
@@ -33,11 +34,16 @@ func (l AndroidLogger) Write(p []byte) (int, error) {
 	return len(p), nil
 }
 
-var tunnelHandles map[int32]*Device
+type TunnelHandle struct {
+	device *Device
+	uapi   net.Listener
+}
+
+var tunnelHandles map[int32]TunnelHandle
 
 func init() {
 	roamingDisabled = true
-	tunnelHandles = make(map[int32]*Device)
+	tunnelHandles = make(map[int32]TunnelHandle)
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
 	go func() {
@@ -85,6 +91,29 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		return -1
 	}
 
+	uapiFile, err := UAPIOpen(name)
+	if err != nil {
+		unix.Close(int(tun_fd))
+		logger.Error.Println(err)
+		return -1
+	}
+	uapi, err := UAPIListen(name, uapiFile)
+	if err != nil {
+		uapiFile.Close()
+		unix.Close(int(tun_fd))
+		logger.Error.Println(err)
+		return -1
+	}
+	go func() {
+		for {
+			conn, err := uapi.Accept()
+			if err != nil {
+				return
+			}
+			go ipcHandle(device, conn)
+		}
+	}()
+
 	device.Up()
 	logger.Info.Println("Device started")
 
@@ -98,27 +127,28 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		unix.Close(int(tun_fd))
 		return -1
 	}
-	tunnelHandles[i] = device
+	tunnelHandles[i] = TunnelHandle{device: device, uapi: uapi}
 	return i
 }
 
 //export wgTurnOff
 func wgTurnOff(tunnelHandle int32) {
-	device, ok := tunnelHandles[tunnelHandle]
+	handle, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return
 	}
 	delete(tunnelHandles, tunnelHandle)
-	device.Close()
+	handle.uapi.Close()
+	handle.device.Close()
 }
 
 //export wgGetSocketV4
 func wgGetSocketV4(tunnelHandle int32) int32 {
-	device, ok := tunnelHandles[tunnelHandle]
+	handle, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return -1
 	}
-	native, ok := device.net.bind.(*NativeBind)
+	native, ok := handle.device.net.bind.(*NativeBind)
 	if !ok {
 		return -1
 	}
@@ -138,11 +168,11 @@ func wgGetSocketV4(tunnelHandle int32) int32 {
 
 //export wgGetSocketV6
 func wgGetSocketV6(tunnelHandle int32) int32 {
-	device, ok := tunnelHandles[tunnelHandle]
+	handle, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return -1
 	}
-	native, ok := device.net.bind.(*NativeBind)
+	native, ok := handle.device.net.bind.(*NativeBind)
 	if !ok {
 		return -1
 	}
