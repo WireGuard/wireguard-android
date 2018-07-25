@@ -36,6 +36,8 @@ import com.wireguard.config.Attribute;
 import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -106,6 +108,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         }
     };
 
+    private final Collection<Object> breakObjectOrientedLayeringHandlerReceivers = new ArrayList<>();
     private final Observable.OnPropertyChangedCallback breakObjectOrientedLayeringHandler = new Observable.OnPropertyChangedCallback() {
         @Override
         public void onPropertyChanged(final Observable sender, final int propertyId) {
@@ -116,8 +119,11 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
                 return;
             if (propertyId == BR.config) {
                 config.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config);
                 config.getInterfaceSection().addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config.getInterfaceSection());
                 config.getPeers().addOnListChangedCallback(breakObjectListOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config.getPeers());
             } else if (propertyId == BR.dnses || propertyId == BR.peers)
                 ;
             else
@@ -136,13 +142,21 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
         binding.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+        breakObjectOrientedLayeringHandlerReceivers.add(binding);
         binding.executePendingBindings();
         return binding.getRoot();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onDestroyView() {
         binding = null;
+        for (final Object o : breakObjectOrientedLayeringHandlerReceivers) {
+            if (o instanceof Observable)
+                ((Observable)o).removeOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+            else if (o instanceof ObservableList)
+                ((ObservableList)o).removeOnListChangedCallback(breakObjectListOrientedLayeringHandler);
+        }
         super.onDestroyView();
     }
 
