@@ -30,6 +30,7 @@
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
     <string name="create_from_file">Create from file or archive</string>
+    <string name="create_from_qrcode">Create from QR code</string>
     <string name="create_tunnel">Create Tunnel</string>
     <string name="dark_theme_title">Use dark theme</string>
     <string name="dark_theme_summary_on">Currently using dark night theme</string>
@@ -51,6 +52,7 @@
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_random">(random)</string>
+    <string name="import_from_qrcode">Import Tunnel from QR Code</string>
     <string name="import_error">Unable to import tunnel: %s</string>
     <string name="import_success">Imported “%s”</string>
     <string name="interface_title">Interface</string>
@@ -69,10 +71,10 @@
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
     <string name="public_key_description">Public key</string>
+    <string name="qrcode_hint">Tip: generate with `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
-    <string name="scan_qr_code">Scan QR Code</string>
     <plurals name="set_excluded_applications">
         <item quantity="one">%d Excluded Application</item>
         <item quantity="other">%d Excluded Applications</item>
