@@ -5,7 +5,10 @@
 
 package com.wireguard.android;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,13 +26,32 @@ import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
+import org.acra.ACRA;
+import org.acra.annotation.AcraCore;
+import org.acra.annotation.AcraHttpSender;
+import org.acra.data.StringFormat;
+import org.acra.sender.HttpSender;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
+
+@AcraCore(reportFormat = StringFormat.JSON,
+        buildConfigClass = BuildConfig.class,
+        logcatArguments = { "-b", "all", "-d", "-v", "threadtime", "*:V" },
+        excludeMatchingSharedPreferencesKeys={"last_used_tunnel", "enabled_configs"})
+@AcraHttpSender(uri = "https://crashreport.zx2c4.com/android/report",
+        basicAuthLogin = "6RCovLxEVCTXGiW5",
+        basicAuthPassword = "O7I3sVa5ULVdiC51",
+        httpMethod = HttpSender.Method.POST,
+        compress = true)
 public class Application extends android.app.Application {
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
     @SuppressWarnings("NullableProblems") private AsyncWorker asyncWorker;
@@ -44,6 +66,42 @@ public class Application extends android.app.Application {
 
     public Application() {
         weakSelf = new WeakReference<>(this);
+    }
+
+    /* The ACRA password can be trivially reverse engineered and is open source anyway,
+     * so there's no point in trying to protect it. However, we do want to at least
+     * prevent innocent self-builders from uploading stuff to our crash reporter. So, we
+     * check the DN of the certs that signed the apk, without even bothering to try
+     * validating that they're authentic. It's a good enough heuristic.
+     */
+    private static boolean shouldEnableCrashReporting(final Context context) {
+        if (BuildConfig.DEBUG)
+            return false;
+        try {
+            final CertificateFactory cf = CertificateFactory.getInstance("X509");
+            for (final Signature sig : context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures) {
+                try {
+                    for (final String category : ((X509Certificate) cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()))).getSubjectDN().getName().split(", *")) {
+                        final String[] parts = category.split("=", 2);
+                        if (!"O".equals(parts[0]))
+                            continue;
+                        switch (parts[1]) {
+                            case "Google Inc.":
+                            case "fdroid.org":
+                                return true;
+                        }
+                    }
+                } catch (final Exception ignored) { }
+            }
+        } catch (final Exception ignored) { }
+        return false;
+    }
+
+    @Override
+    protected void attachBaseContext(final Context context) {
+        super.attachBaseContext(context);
+        if (shouldEnableCrashReporting(context))
+            ACRA.init(this);
     }
 
     public static Application get() {
@@ -131,5 +189,13 @@ public class Application extends android.app.Application {
         tunnelManager = new TunnelManager(configStore);
         asyncWorker.runAsync(Application::getBackend);
         tunnelManager.onCreate();
+
+        onHaveBackend(backend -> {
+            ACRA.getErrorReporter().putCustomData("backend", backend.getClass().getSimpleName());
+            getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
+                if (exception == null)
+                    ACRA.getErrorReporter().putCustomData("backendVersion", version);
+            });
+        });
     }
 }
