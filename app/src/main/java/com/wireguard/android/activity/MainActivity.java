@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             if (state.layer > 0)
                 transaction.addToBackStack(null);
-            transaction.commit();
+            transaction.commitAllowingStateLoss(); /* TODO: switch back to .commit() when this function is rewritten. */
         } else if (nextState.layer == state.layer - 1) {
             if (fragmentManager.getBackStackEntryCount() == 0)
                 return false;
