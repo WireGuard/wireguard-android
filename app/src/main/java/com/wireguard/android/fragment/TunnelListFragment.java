@@ -83,10 +83,8 @@ public class TunnelListFragment extends BaseFragment {
 
             // Config text is valid, now create the tunnel…
             final FragmentManager fragmentManager = getFragmentManager();
-            if (fragmentManager != null) {
-                final ConfigNamingDialogFragment fragment = ConfigNamingDialogFragment.newInstance(configText);
-                fragment.show(fragmentManager, null);
-            }
+            if (fragmentManager != null)
+                ConfigNamingDialogFragment.newInstance(configText).show(fragmentManager, null);
         } catch (final IllegalArgumentException|IOException exception) {
             onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
         }
@@ -246,6 +244,8 @@ public class TunnelListFragment extends BaseFragment {
     public void onRequestScanQRCode(@SuppressWarnings("unused") final View view) {
         final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
         intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setPrompt(getString(R.string.qrcode_hint));
         intentIntegrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE));
 
         if (binding != null)

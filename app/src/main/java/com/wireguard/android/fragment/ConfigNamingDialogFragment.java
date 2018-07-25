@@ -70,7 +70,7 @@ public class ConfigNamingDialogFragment extends DialogFragment {
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-        alertDialogBuilder.setTitle(R.string.create_tunnel);
+        alertDialogBuilder.setTitle(R.string.import_from_qrcode);
 
         binding = ConfigNamingDialogFragmentBinding.inflate(getActivity().getLayoutInflater(), null, false);
         binding.executePendingBindings();
