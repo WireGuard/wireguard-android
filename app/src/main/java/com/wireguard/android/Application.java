@@ -69,9 +69,10 @@ public class Application extends android.app.Application {
      * check the DN of the certs that signed the apk, without even bothering to try
      * validating that they're authentic. It's a good enough heuristic.
      */
-    private static boolean shouldEnableCrashReporting(final Context context) {
+    @Nullable
+    private static String getInstallSource(final Context context) {
         if (BuildConfig.DEBUG)
-            return false;
+            return null;
         try {
             final CertificateFactory cf = CertificateFactory.getInstance("X509");
             for (final Signature sig : context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures) {
@@ -82,21 +83,25 @@ public class Application extends android.app.Application {
                             continue;
                         switch (parts[1]) {
                             case "Google Inc.":
+                                return "Play Store";
                             case "fdroid.org":
-                                return true;
+                                return "F-Droid";
                         }
                     }
                 } catch (final Exception ignored) { }
             }
         } catch (final Exception ignored) { }
-        return false;
+        return null;
     }
 
     @Override
     protected void attachBaseContext(final Context context) {
         super.attachBaseContext(context);
-        if (shouldEnableCrashReporting(context))
+        final String installSource = getInstallSource(context);
+        if (installSource != null) {
             ACRA.init(this);
+            ACRA.getErrorReporter().putCustomData("installSource", installSource);
+        }
     }
 
     public static Application get() {
@@ -165,9 +170,11 @@ public class Application extends android.app.Application {
 
         asyncWorker.supplyAsync(Application::getBackend).thenAccept(backend -> {
             futureBackend.complete(backend);
-            ACRA.getErrorReporter().putCustomData("backend", backend.getClass().getSimpleName());
-            asyncWorker.supplyAsync(backend::getVersion).thenAccept(version ->
-                    ACRA.getErrorReporter().putCustomData("backendVersion", version));
+            if (ACRA.isInitialised()) {
+                ACRA.getErrorReporter().putCustomData("backend", backend.getClass().getSimpleName());
+                asyncWorker.supplyAsync(backend::getVersion).thenAccept(version ->
+                        ACRA.getErrorReporter().putCustomData("backendVersion", version));
+            }
         });
     }
 }
