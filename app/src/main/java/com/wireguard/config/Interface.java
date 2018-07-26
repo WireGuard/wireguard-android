@@ -140,6 +140,8 @@ public class Interface {
 
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
+        if (key == null)
+            throw new IllegalArgumentException(String.format("Unable to parse line: \"%s\"", line));
         switch (key) {
             case ADDRESS:
                 addAddresses(key.parseList(line));

@@ -113,6 +113,8 @@ public class Peer {
 
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
+        if (key == null)
+            throw new IllegalArgumentException(String.format("Unable to parse line: \"%s\"", line));
         switch (key) {
             case ALLOWED_IPS:
                 addAllowedIPs(key.parseList(line));
