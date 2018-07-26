@@ -55,6 +55,7 @@ public enum Attribute {
         return TextUtils.join(", ", iterable);
     }
 
+    @Nullable
     public static Attribute match(final CharSequence line) {
         return KEY_MAP.get(SEPARATOR_PATTERN.split(line)[0].toLowerCase());
     }

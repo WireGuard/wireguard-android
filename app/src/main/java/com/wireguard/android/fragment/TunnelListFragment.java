@@ -85,7 +85,7 @@ public class TunnelListFragment extends BaseFragment {
             final FragmentManager fragmentManager = getFragmentManager();
             if (fragmentManager != null)
                 ConfigNamingDialogFragment.newInstance(configText).show(fragmentManager, null);
-        } catch (final IllegalArgumentException|IOException exception) {
+        } catch (final Exception exception) {
             onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
         }
     }
