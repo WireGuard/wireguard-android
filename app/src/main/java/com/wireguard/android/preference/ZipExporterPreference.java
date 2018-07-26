@@ -48,7 +48,10 @@ public class ZipExporterPreference extends Preference {
     }
 
     private void exportZip() {
-        final List<Tunnel> tunnels = new ArrayList<>(Application.getTunnelManager().getTunnels());
+        Application.getTunnelManager().getTunnels().thenAccept(this::exportZip);
+    }
+
+    private void exportZip(final List<Tunnel> tunnels) {
         final List<CompletableFuture<Config>> futureConfigs = new ArrayList<>(tunnels.size());
         for (final Tunnel tunnel : tunnels)
             futureConfigs.add(tunnel.getConfigAsync().toCompletableFuture());

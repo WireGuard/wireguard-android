@@ -5,6 +5,8 @@
 
 package com.wireguard.util;
 
+import android.support.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -18,8 +20,10 @@ public interface KeyedList<K, E extends Keyed<? extends K>> extends List<E> {
 
     boolean containsKey(K key);
 
+    @Nullable
     E get(K key);
 
+    @Nullable
     E getLast(K key);
 
     int indexOfKey(K key);
