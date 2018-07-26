@@ -23,7 +23,7 @@ public class VersionPreference extends Preference {
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
-        Application.onHaveBackend(backend -> {
+        Application.getBackendAsync().thenAccept(backend -> {
             versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase());
             Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
                 versionSummary = exception == null
