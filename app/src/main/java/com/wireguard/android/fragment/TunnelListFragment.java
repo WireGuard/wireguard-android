@@ -313,7 +313,7 @@ public class TunnelListFragment extends BaseFragment {
         }
 
         binding.setFragment(this);
-        binding.setTunnels(Application.getTunnelManager().getTunnels());
+        Application.getTunnelManager().getTunnels().thenAccept(binding::setTunnels);
         binding.setRowConfigurationHandler((ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, Tunnel>) (binding, tunnel, position) -> {
             binding.setFragment(this);
             binding.getRoot().setOnClickListener(clicked -> {
@@ -341,25 +341,29 @@ public class TunnelListFragment extends BaseFragment {
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_action_delete:
-                    final Collection<Tunnel> tunnelsToDelete = new ArrayList<>();
-                    for (final Integer position : checkedItems) {
-                        tunnelsToDelete.add(Application.getTunnelManager().getTunnels().get(position));
-                    }
+                    final Iterable<Integer> copyCheckedItems = new HashSet<>(checkedItems);
+                    Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
+                        final Collection<Tunnel> tunnelsToDelete = new ArrayList<>();
+                        for (final Integer position : copyCheckedItems)
+                            tunnelsToDelete.add(tunnels.get(position));
 
-                    final CompletableFuture[] futures = StreamSupport.stream(tunnelsToDelete)
-                            .map(Tunnel::delete)
-                            .toArray(CompletableFuture[]::new);
-                    CompletableFuture.allOf(futures)
-                            .thenApply(x -> futures.length)
-                            .whenComplete(TunnelListFragment.this::onTunnelDeletionFinished);
+                        final CompletableFuture[] futures = StreamSupport.stream(tunnelsToDelete)
+                                .map(Tunnel::delete)
+                                .toArray(CompletableFuture[]::new);
+                        CompletableFuture.allOf(futures)
+                                .thenApply(x -> futures.length)
+                                .whenComplete(TunnelListFragment.this::onTunnelDeletionFinished);
 
+                    });
                     checkedItems.clear();
                     mode.finish();
                     return true;
                 case R.id.menu_action_select_all:
-                    for (int i = 0; i < Application.getTunnelManager().getTunnels().size(); ++i) {
-                        setItemChecked(i, true);
-                    }
+                    Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
+                        for (int i = 0; i < tunnels.size(); ++i) {
+                            setItemChecked(i, true);
+                        }
+                    });
                     return true;
                 default:
                     return false;

@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.TunnelManager;
 
 import java.util.Objects;
 
@@ -39,15 +38,17 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
-        String savedTunnelName = null;
+        final String savedTunnelName;
         if (savedInstanceState != null)
             savedTunnelName = savedInstanceState.getString(KEY_SELECTED_TUNNEL);
         else if (getIntent() != null)
             savedTunnelName = getIntent().getStringExtra(KEY_SELECTED_TUNNEL);
-        if (savedTunnelName != null) {
-            final TunnelManager tunnelManager = Application.getTunnelManager();
-            selectedTunnel = tunnelManager.getTunnels().get(savedTunnelName);
-        }
+        else
+            savedTunnelName = null;
+
+        if (savedTunnelName != null)
+            Application.getTunnelManager().getTunnels()
+                    .thenAccept(tunnels -> setSelectedTunnel(tunnels.get(savedTunnelName)));
 
         // The selected tunnel must be set before the superclass method recreates fragments.
         super.onCreate(savedInstanceState);

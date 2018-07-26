@@ -5,6 +5,8 @@
 
 package com.wireguard.util;
 
+import android.support.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -17,10 +19,12 @@ import java.util.Set;
 public interface SortedKeyedList<K, E extends Keyed<? extends K>> extends KeyedList<K, E> {
     Comparator<? super K> comparator();
 
+    @Nullable
     K firstKey();
 
     Set<K> keySet();
 
+    @Nullable
     K lastKey();
 
     Collection<E> values();

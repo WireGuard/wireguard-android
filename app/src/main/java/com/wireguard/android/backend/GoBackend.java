@@ -240,10 +240,13 @@ public final class GoBackend implements Backend {
 
         @Override
         public void onDestroy() {
-            for (final Tunnel tunnel : Application.getTunnelManager().getTunnels()) {
-                if (tunnel != null && tunnel.getState() != State.DOWN)
-                    tunnel.setState(State.DOWN);
-            }
+            Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
+                for (final Tunnel tunnel : tunnels) {
+                    if (tunnel != null && tunnel.getState() != State.DOWN)
+                        tunnel.setState(State.DOWN);
+                }
+            });
+
             vpnService = vpnService.newIncompleteFuture();
             super.onDestroy();
         }

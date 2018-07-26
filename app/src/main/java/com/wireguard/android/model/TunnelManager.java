@@ -19,7 +19,6 @@ import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.config.Config;
@@ -47,6 +46,7 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
 
     private final ConfigStore configStore;
+    private final CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> completableTunnels = new CompletableFuture<>();
     private final ObservableSortedKeyedList<String, Tunnel> tunnels = new ObservableSortedKeyedArrayList<>(COMPARATOR);
     @Nullable private Tunnel lastUsedTunnel;
     private boolean haveLoaded;
@@ -121,8 +121,8 @@ public final class TunnelManager extends BaseObservable {
                 .thenApply(tunnel::onStatisticsChanged);
     }
 
-    public ObservableKeyedList<String, Tunnel> getTunnels() {
-        return tunnels;
+    public CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> getTunnels() {
+        return completableTunnels;
     }
 
     public void onCreate() {
@@ -152,6 +152,8 @@ public final class TunnelManager extends BaseObservable {
                     f.completeExceptionally(t);
             }
         });
+
+        completableTunnels.complete(tunnels);
     }
 
     public void refreshTunnelStates() {
@@ -285,10 +287,12 @@ public final class TunnelManager extends BaseObservable {
             final String tunnelName = intent.getStringExtra("tunnel");
             if (tunnelName == null)
                 return;
-            final Tunnel tunnel = manager.getTunnels().get(tunnelName);
-            if (tunnel == null)
-                return;
-            manager.setTunnelState(tunnel, state);
+            manager.getTunnels().thenAccept(tunnels -> {
+                final Tunnel tunnel = tunnels.get(tunnelName);
+                if (tunnel == null)
+                    return;
+                manager.setTunnelState(tunnel, state);
+            });
         }
     }
 }
