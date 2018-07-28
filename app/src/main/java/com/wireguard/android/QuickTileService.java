@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.IBinder;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.support.annotation.Nullable;
@@ -43,6 +44,19 @@ public class QuickTileService extends TileService {
     @Nullable private Tunnel tunnel;
     @Nullable private Icon iconOn;
     @Nullable private Icon iconOff;
+
+    /* This works around an annoying unsolved frameworks bug some people are hitting. */
+    @Override
+    @Nullable
+    public IBinder onBind(final Intent intent) {
+        IBinder ret = null;
+        try {
+            ret = super.onBind(intent);
+        } catch (final Exception e) {
+            Log.d(TAG, "Failed to bind to TileService", e);
+        }
+        return ret;
+    }
 
     @SuppressWarnings("deprecation")
     @Override
