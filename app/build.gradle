@@ -19,6 +19,7 @@ android {
         targetSdkVersion 27
         versionCode 437
         versionName '0.0.20180725'
+        buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
     // If the keystore file exists
     if (keystorePropertiesFile.exists()) {

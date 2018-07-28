@@ -6,10 +6,12 @@
 package com.wireguard.android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -97,6 +99,16 @@ public class Application extends android.app.Application {
     @Override
     protected void attachBaseContext(final Context context) {
         super.attachBaseContext(context);
+
+        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            System.exit(0);
+        }
+
         final String installSource = getInstallSource(context);
         if (installSource != null) {
             ACRA.init(this);
