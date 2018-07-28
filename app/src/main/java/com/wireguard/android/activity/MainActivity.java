@@ -10,12 +10,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.wireguard.android.R;
 import com.wireguard.android.fragment.TunnelDetailFragment;
@@ -23,71 +24,46 @@ import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.fragment.TunnelListFragment;
 import com.wireguard.android.model.Tunnel;
 
-import java.util.List;
-
-import java9.util.stream.Stream;
-
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
  * WireGuard application, and contains several fragments for listing, viewing details of, and
  * editing the configuration and interface state of WireGuard tunnels.
  */
 
-public class MainActivity extends BaseActivity {
-    private static final String KEY_STATE = "fragment_state";
-    private static final String TAG = "WireGuard/" + MainActivity.class.getSimpleName();
-
-    private State state = State.EMPTY;
-
-    private boolean moveToState(final State nextState) {
-        if (state == nextState)
-            return false;
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        Log.i(TAG, "Moving from " + state.name() + " to " + nextState.name());
-        if (nextState.layer > state.layer + 1) {
-            moveToState(State.ofLayer(state.layer + 1));
-            moveToState(nextState);
-            return true;
-        } else if (nextState.layer == state.layer + 1) {
-            final Fragment fragment = Fragment.instantiate(this, nextState.fragment);
-            final FragmentTransaction transaction = fragmentManager.beginTransaction()
-                    .replace(R.id.master_fragment, fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            if (state.layer > 0)
-                transaction.addToBackStack(null);
-            transaction.commitAllowingStateLoss(); /* TODO: switch back to .commit() when this function is rewritten. */
-        } else if (nextState.layer == state.layer - 1) {
-            if (fragmentManager.getBackStackEntryCount() == 0)
-                return false;
-            fragmentManager.popBackStack();
-        } else if (nextState.layer < state.layer - 1) {
-            moveToState(State.ofLayer(state.layer - 1));
-            moveToState(nextState);
-            return true;
-        }
-        state = nextState;
-        if (state.layer <= State.LIST.layer)
-            setSelectedTunnel(null);
-        updateActionBar();
-        return true;
-    }
+public class MainActivity extends BaseActivity
+        implements FragmentManager.OnBackStackChangedListener {
+    @Nullable private ActionBar actionBar;
+    private boolean isTwoPaneLayout;
+    @Nullable private TunnelListFragment listFragment;
 
     @Override
     public void onBackPressed() {
-        final List<Fragment> fragments = getSupportFragmentManager().getFragments();
-
-        boolean handled = false;
-        if (!fragments.isEmpty() && fragments.get(0) instanceof TunnelListFragment) {
-            handled = ((TunnelListFragment) fragments.get(0)).collapseActionMenu();
+        final int backStackEntries = getSupportFragmentManager().getBackStackEntryCount();
+        // If the action menu is visible and expanded, collapse it instead of navigating back.
+        if (isTwoPaneLayout || backStackEntries == 0) {
+            if (listFragment != null && listFragment.collapseActionMenu())
+                return;
         }
-
-        if (!handled) {
-            handled = moveToState(State.ofLayer(state.layer - 1));
+        // If the two-pane layout does not have an editor open, going back should exit the app.
+        if (isTwoPaneLayout && backStackEntries <= 1) {
+            finish();
+            return;
         }
-
-        if (!handled) {
-            super.onBackPressed();
+        // Deselect the current tunnel on navigating back from the detail pane to the one-pane list.
+        if (!isTwoPaneLayout && backStackEntries == 1) {
+            setSelectedTunnel(null);
+            return;
         }
+        super.onBackPressed();
+    }
+
+    @Override public void onBackStackChanged() {
+        if (actionBar == null)
+            return;
+        // Do not show the home menu when the two-pane layout is at the detail view (see above).
+        final int backStackEntries = getSupportFragmentManager().getBackStackEntryCount();
+        final int minBackStackEntries = isTwoPaneLayout ? 2 : 1;
+        actionBar.setDisplayHomeAsUpEnabled(backStackEntries >= minBackStackEntries);
     }
 
     // We use onTouchListener here to avoid the UI click sound, hence
@@ -97,25 +73,14 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        if (savedInstanceState != null && savedInstanceState.getString(KEY_STATE) != null)
-            state = State.valueOf(savedInstanceState.getString(KEY_STATE));
-        if (state == State.EMPTY) {
-            State initialState = getSelectedTunnel() != null ? State.DETAIL : State.LIST;
-            if (getIntent() != null && getIntent().getStringExtra(KEY_STATE) != null)
-                initialState = State.valueOf(getIntent().getStringExtra(KEY_STATE));
-            moveToState(initialState);
-        }
-        updateActionBar();
-        final int actionBarId = getResources().getIdentifier("action_bar", "id", getPackageName());
-        if (actionBarId != 0 && findViewById(actionBarId) != null) {
-            findViewById(actionBarId).setOnTouchListener((v, e) -> {
-                final List<Fragment> fragments = getSupportFragmentManager().getFragments();
-                if (!fragments.isEmpty() && fragments.get(0) instanceof TunnelListFragment) {
-                    ((TunnelListFragment) fragments.get(0)).collapseActionMenu();
-                }
-                return false;
-            });
-        }
+        actionBar = getSupportActionBar();
+        isTwoPaneLayout = findViewById(R.id.master_detail_wrapper) instanceof LinearLayout;
+        listFragment = (TunnelListFragment) getSupportFragmentManager().findFragmentByTag("LIST");
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        onBackStackChanged();
+        final View actionBarView = findViewById(R.id.action_bar);
+        if (actionBarView != null)
+            actionBarView.setOnTouchListener((v, e) -> listFragment != null && listFragment.collapseActionMenu());
     }
 
     @Override
@@ -129,11 +94,14 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // The back arrow in the action bar should act the same as the back button.
-                moveToState(State.ofLayer(state.layer - 1));
+                onBackPressed();
                 return true;
             case R.id.menu_action_edit:
-                if (getSelectedTunnel() != null)
-                    moveToState(State.EDITOR);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detail_container, new TunnelEditorFragment())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack(null)
+                        .commit();
                 return true;
             case R.id.menu_action_save:
                 // This menu item is handled by the editor fragment.
@@ -147,37 +115,26 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        outState.putString(KEY_STATE, state.name());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
-        moveToState(newTunnel != null ? State.DETAIL : State.LIST);
-    }
-
-    private void updateActionBar() {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(state.layer > State.LIST.layer);
-    }
-
-    private enum State {
-        EMPTY(null, 0),
-        LIST(TunnelListFragment.class, 1),
-        DETAIL(TunnelDetailFragment.class, 2),
-        EDITOR(TunnelEditorFragment.class, 3);
-
-        @Nullable private final String fragment;
-        private final int layer;
-
-        State(@Nullable final Class<? extends Fragment> fragment, final int layer) {
-            this.fragment = fragment != null ? fragment.getName() : null;
-            this.layer = layer;
+    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel,
+                                           @Nullable final Tunnel newTunnel) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final int backStackEntries = fragmentManager.getBackStackEntryCount();
+        if (newTunnel == null) {
+            // Clear everything off the back stack (all editors and detail fragments).
+            fragmentManager.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return;
         }
-
-        private static State ofLayer(final int layer) {
-            return Stream.of(State.values()).filter(s -> s.layer == layer).findFirst().get();
+        if (backStackEntries == 2) {
+            // Pop the editor off the back stack to reveal the detail fragment. Use the immediate
+            // method to avoid the editor picking up the new tunnel while it is still visible.
+            fragmentManager.popBackStackImmediate();
+        } else if (backStackEntries == 0) {
+            // Create and show a new detail fragment.
+            fragmentManager.beginTransaction()
+                    .add(R.id.detail_container, new TunnelDetailFragment())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 }
