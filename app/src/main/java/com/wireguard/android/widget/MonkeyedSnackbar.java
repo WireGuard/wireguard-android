@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package com.wireguard.android.widget;
 
 import android.support.annotation.NonNull;
@@ -7,12 +12,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 
-import com.wireguard.android.BootShutdownReceiver;
-
 import java.lang.reflect.Field;
 
 public class MonkeyedSnackbar {
-    private static final String TAG = "WireGuard/" + BootShutdownReceiver.class.getSimpleName();
+    private static final String TAG = "WireGuard/" + MonkeyedSnackbar.class.getSimpleName();
 
     public static Snackbar make(@NonNull final View view, @NonNull final CharSequence text,
                                 @BaseTransientBottomBar.Duration final int duration) {
