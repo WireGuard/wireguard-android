@@ -11,12 +11,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 28
+    compileSdkVersion 27
     dataBinding.enabled true
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 437
         versionName '0.0.20180725'
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"

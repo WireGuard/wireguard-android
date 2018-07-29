@@ -58,10 +58,13 @@ public class QuickTileService extends TileService {
         return ret;
     }
 
+    /* TODO: for Android P: Build.VERSION_CODES.P */
+    private static final int BUILD_VERSION_CODES_P = 28;
+
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= BUILD_VERSION_CODES_P) {
             iconOff = iconOn = Icon.createWithResource(this, R.drawable.ic_tile);
             return;
         }
