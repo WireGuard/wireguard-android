@@ -29,4 +29,11 @@ public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<Flo
         child.setBehaviorYTranslation(Math.min(0, dependency.getTranslationY() - dependency.getMeasuredHeight()));
         return true;
     }
+
+    @Override
+    public void onDependentViewRemoved(final CoordinatorLayout parent, FloatingActionsMenu child,
+                                       final View dependency) {
+        // TODO(msf): animate this so it isn't so dramatic when the snackbar is swiped away
+        child.setBehaviorYTranslation(0);
+    }
 }
