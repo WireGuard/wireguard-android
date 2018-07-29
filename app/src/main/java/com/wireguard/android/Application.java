@@ -71,6 +71,7 @@ public class Application extends android.app.Application {
      * check the DN of the certs that signed the apk, without even bothering to try
      * validating that they're authentic. It's a good enough heuristic.
      */
+    @SuppressWarnings("deprecation")
     @Nullable
     private static String getInstallSource(final Context context) {
         if (BuildConfig.DEBUG)
