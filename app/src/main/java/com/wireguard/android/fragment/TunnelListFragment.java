@@ -21,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,6 +39,7 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
@@ -262,7 +264,28 @@ public class TunnelListFragment extends BaseFragment {
 
     @Override
     public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
-        // Do nothing.
+        if (binding == null)
+            return;
+        Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
+            if (newTunnel != null)
+                binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(newTunnel)).itemView.setActivated(true);
+            if (oldTunnel != null)
+                binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(oldTunnel)).itemView.setActivated(false);
+
+        });
+
+        /* Alternative 1: results in sluggish change:
+
+        if (binding.tunnelList.getAdapter() == null)
+            return;
+
+
+         * Alternative 2: results in overly quick change:
+
+        binding.tunnelList.getAdapter().notifyDataSetChanged();
+
+         * Hence, we go with the above.
+         */
     }
 
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
@@ -348,7 +371,11 @@ public class TunnelListFragment extends BaseFragment {
                 return true;
             });
 
-            binding.getRoot().setActivated(actionModeListener.checkedItems.contains(position));
+            if (actionMode != null)
+                binding.getRoot().setActivated(actionModeListener.checkedItems.contains(position));
+            else
+                binding.getRoot().setActivated(getSelectedTunnel() == tunnel);
+
         });
     }
 
@@ -397,6 +424,7 @@ public class TunnelListFragment extends BaseFragment {
                 resources = getActivity().getResources();
             }
             mode.getMenuInflater().inflate(R.menu.tunnel_list_action_mode, menu);
+            binding.tunnelList.getAdapter().notifyDataSetChanged();
             return true;
         }
 
@@ -424,15 +452,16 @@ public class TunnelListFragment extends BaseFragment {
                 checkedItems.remove(position);
             }
 
+            final RecyclerView.Adapter adapter = binding == null ? null : binding.tunnelList.getAdapter();
+
             if (actionMode == null && !checkedItems.isEmpty() && getActivity() != null) {
                 ((AppCompatActivity) getActivity()).startSupportActionMode(this);
             } else if (actionMode != null && checkedItems.isEmpty()) {
                 actionMode.finish();
             }
 
-            if (binding != null && binding.tunnelList.getAdapter() != null) {
-                binding.tunnelList.getAdapter().notifyItemChanged(position);
-            }
+            if (adapter != null)
+                adapter.notifyItemChanged(position);
 
             updateTitle(actionMode);
         }
