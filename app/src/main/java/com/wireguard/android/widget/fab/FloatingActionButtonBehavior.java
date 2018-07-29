@@ -6,13 +6,19 @@
 
 package com.wireguard.android.widget.fab;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionsMenu> {
+
     public FloatingActionButtonBehavior(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
@@ -23,17 +29,39 @@ public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<Flo
         return dependency instanceof Snackbar.SnackbarLayout;
     }
 
+    private static final long ANIMATION_DURATION = 250;
+    private static final TimeInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new FastOutSlowInInterpolator();
+
+    private static void animateChange(final FloatingActionsMenu child, final float destination, final float fullSpan) {
+        final float origin = child.getBehaviorYTranslation();
+        if (Math.abs(destination - origin) < fullSpan / 2) {
+            child.setBehaviorYTranslation(destination);
+            return;
+        }
+        final ValueAnimator animator = new ValueAnimator();
+        animator.setFloatValues(origin, destination);
+        animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
+        animator.setDuration((long)(ANIMATION_DURATION * (Math.abs(destination - origin) / fullSpan)));
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(final Animator a) {
+                child.setBehaviorYTranslation(destination);
+            }
+        });
+        animator.addUpdateListener(a -> child.setBehaviorYTranslation((float)a.getAnimatedValue()));
+        animator.start();
+    }
+
     @Override
     public boolean onDependentViewChanged(final CoordinatorLayout parent, final FloatingActionsMenu child,
                                           final View dependency) {
-        child.setBehaviorYTranslation(Math.min(0, dependency.getTranslationY() - dependency.getMeasuredHeight()));
+        animateChange(child, Math.min(0, dependency.getTranslationY() - dependency.getMeasuredHeight()), dependency.getMeasuredHeight());
         return true;
     }
 
     @Override
-    public void onDependentViewRemoved(final CoordinatorLayout parent, FloatingActionsMenu child,
+    public void onDependentViewRemoved(final CoordinatorLayout parent, final FloatingActionsMenu child,
                                        final View dependency) {
-        // TODO(msf): animate this so it isn't so dramatic when the snackbar is swiped away
-        child.setBehaviorYTranslation(0);
+        animateChange(child, 0, dependency.getMeasuredHeight());
     }
 }
