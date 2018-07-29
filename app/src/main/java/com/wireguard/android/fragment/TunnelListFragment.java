@@ -40,6 +40,7 @@ import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableSortedKeyedList;
+import com.wireguard.android.widget.MonkeyedSnackbar;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
@@ -298,7 +299,7 @@ public class TunnelListFragment extends BaseFragment {
             Log.e(TAG, message, throwable);
         }
         if (binding != null) {
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+            MonkeyedSnackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -324,7 +325,7 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size(), tunnels.size() + throwables.size());
 
         if (binding != null)
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+            MonkeyedSnackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
