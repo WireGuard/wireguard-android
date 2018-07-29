@@ -13,6 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.wireguard.android.widget.MonkeyedSnackbar;
+
 /**
  * Standalone utilities for interacting with the system clipboard.
  */
@@ -33,6 +35,6 @@ public final class ClipboardUtils {
             return;
         final CharSequence description = view.getContentDescription();
         ((ClipboardManager) service).setPrimaryClip(ClipData.newPlainText(description, text));
-        Snackbar.make(view, description + " copied to clipboard", Snackbar.LENGTH_LONG).show();
+        MonkeyedSnackbar.make(view, description + " copied to clipboard", Snackbar.LENGTH_LONG).show();
     }
 }

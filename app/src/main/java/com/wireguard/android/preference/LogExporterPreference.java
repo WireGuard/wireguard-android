@@ -20,6 +20,7 @@ import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.FragmentUtils;
+import com.wireguard.android.widget.MonkeyedSnackbar;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -79,7 +80,7 @@ public class LogExporterPreference extends Preference {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
             final String message = getContext().getString(R.string.log_export_error, error);
             Log.e(TAG, message, throwable);
-            Snackbar.make(
+            MonkeyedSnackbar.make(
                     FragmentUtils.getPrefActivity(this).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
             setEnabled(true);
