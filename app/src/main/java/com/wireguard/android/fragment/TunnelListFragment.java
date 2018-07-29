@@ -305,6 +305,26 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList("CHECKED_ITEMS", actionModeListener.getCheckedItems());
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            final Collection<Integer> checkedItems = savedInstanceState.getIntegerArrayList("CHECKED_ITEMS");
+            if (checkedItems != null) {
+                for (final Integer i : checkedItems)
+                    actionModeListener.setItemChecked(i, true);
+            }
+        }
+    }
+
+    @Override
     public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
@@ -393,6 +413,10 @@ public class TunnelListFragment extends BaseFragment {
             setItemChecked(position, !checkedItems.contains(position));
         }
 
+        public ArrayList<Integer> getCheckedItems() {
+            return new ArrayList<>(checkedItems);
+        }
+
         void setItemChecked(final int position, final boolean checked) {
             if (checked) {
                 checkedItems.add(position);
@@ -406,7 +430,7 @@ public class TunnelListFragment extends BaseFragment {
                 actionMode.finish();
             }
 
-            if (binding != null) {
+            if (binding != null && binding.tunnelList.getAdapter() != null) {
                 binding.tunnelList.getAdapter().notifyItemChanged(position);
             }
 
