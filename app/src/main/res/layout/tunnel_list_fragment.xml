@@ -49,7 +49,7 @@
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_gravity="center"
-                android:tint="@color/transparent_background_placeholder"
+                android:alpha="0.3333333"
                 android:layout_marginTop="-70dp"
                 android:layout_marginBottom="20dp"
                 android:src="@mipmap/ic_launcher" />
