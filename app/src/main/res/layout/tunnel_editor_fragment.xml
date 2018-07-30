@@ -120,7 +120,7 @@
 
                         <TextView
                             android:id="@+id/public_key_text"
-                            style="?android:attr/editTextStyle"
+                            style="?attr/editTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/public_key_label"
