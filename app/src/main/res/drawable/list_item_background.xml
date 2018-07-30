@@ -4,12 +4,12 @@
     <item>
         <selector>
             <item app:state_multiselected="true" android:state_activated="true">
-                <color android:color="?android:attr/colorControlActivated" />
+                <color android:color="?attr/colorControlActivated" />
             </item>
             <item app:state_multiselected="false" android:state_activated="true">
-                <color android:color="?android:attr/colorControlHighlight" />
+                <color android:color="?attr/colorControlHighlight" />
             </item>
         </selector>
     </item>
-    <item android:drawable="?android:attr/selectableItemBackground" />
+    <item android:drawable="?attr/selectableItemBackground" />
 </layer-list>
