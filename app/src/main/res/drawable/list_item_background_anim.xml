@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/list_item_ripple"> <!-- TODO(msf): get color from theme with ?android/attr: -->
-    <item android:drawable="@drawable/list_item_background" />
-    <item android:id="@android:id/mask" android:drawable="@android:color/white" /> <!-- TODO(msf): get color from theme with ?android/attr: -->
-</ripple>
