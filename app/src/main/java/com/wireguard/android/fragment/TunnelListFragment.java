@@ -41,6 +41,7 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.android.widget.MonkeyedSnackbar;
+import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
@@ -263,30 +264,20 @@ public class TunnelListFragment extends BaseFragment {
         super.onPause();
     }
 
+    private MultiselectableRelativeLayout viewForTunnel(final Tunnel tunnel, final List tunnels) {
+        return (MultiselectableRelativeLayout)binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel)).itemView;
+    }
+
     @Override
     public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
         if (binding == null)
             return;
         Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
             if (newTunnel != null)
-                binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(newTunnel)).itemView.setActivated(true);
+                viewForTunnel(newTunnel, tunnels).setSingleSelected(true);
             if (oldTunnel != null)
-                binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(oldTunnel)).itemView.setActivated(false);
-
+                viewForTunnel(oldTunnel, tunnels).setSingleSelected(false);
         });
-
-        /* Alternative 1: results in sluggish change:
-
-        if (binding.tunnelList.getAdapter() == null)
-            return;
-
-
-         * Alternative 2: results in overly quick change:
-
-        binding.tunnelList.getAdapter().notifyDataSetChanged();
-
-         * Hence, we go with the above.
-         */
     }
 
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
@@ -373,10 +364,9 @@ public class TunnelListFragment extends BaseFragment {
             });
 
             if (actionMode != null)
-                binding.getRoot().setActivated(actionModeListener.checkedItems.contains(position));
+                ((MultiselectableRelativeLayout)binding.getRoot()).setMultiSelected(actionModeListener.checkedItems.contains(position));
             else
-                binding.getRoot().setActivated(getSelectedTunnel() == tunnel);
-
+                ((MultiselectableRelativeLayout)binding.getRoot()).setSingleSelected(getSelectedTunnel() == tunnel);
         });
     }
 
@@ -433,7 +423,6 @@ public class TunnelListFragment extends BaseFragment {
         public void onDestroyActionMode(final ActionMode mode) {
             actionMode = null;
             resources = null;
-
             checkedItems.clear();
             binding.tunnelList.getAdapter().notifyDataSetChanged();
         }

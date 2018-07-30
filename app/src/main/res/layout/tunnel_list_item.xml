@@ -25,7 +25,7 @@
             type="com.wireguard.android.fragment.TunnelListFragment" />
     </data>
 
-    <RelativeLayout
+    <com.wireguard.android.widget.MultiselectableRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background"
@@ -51,5 +51,5 @@
             android:layout_alignParentEnd="true"
             app:checked="@{item.state == State.UP}"
             app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
-    </RelativeLayout>
+    </com.wireguard.android.widget.MultiselectableRelativeLayout>
 </layout>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item>
         <selector>
-            <item android:state_activated="true">
+            <item app:state_multiselected="true" android:state_activated="true">
+                <color android:color="?android:attr/colorControlActivated" />
+            </item>
+            <item app:state_multiselected="false" android:state_activated="true">
                 <color android:color="?android:attr/colorControlHighlight" />
-                <!-- TODO(msf): depending on whether or not we are in multiselect mode, choose instead:
-                    <color android:color="?android:attr/colorControlActivated" />
-                -->
             </item>
         </selector>
     </item>
