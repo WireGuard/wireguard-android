@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- TODO(msf): somehow make an additional activated color entry here (or elsewhere?) that
-                    is in use only in multiselect mode, and one that's in use only in ordinary
-		    select mode. In otherwords, we don't want to use the same background color
-		    for both multiselect and normal select (on two column machines).
-    -->
-    <item android:drawable="@color/list_item_activated" android:state_activated="true" /> <!-- TODO(msf): get color from theme with ?android/attr: -->
-    <item android:drawable="@android:color/transparent" /> <!-- TODO(msf): get color from theme with ?android/attr: -->
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <selector>
+            <item android:state_activated="true">
+                <color android:color="?android:attr/colorControlHighlight" />
+                <!-- TODO(msf): depending on whether or not we are in multiselect mode, choose instead:
+                    <color android:color="?android:attr/colorControlActivated" />
+                -->
+            </item>
+        </selector>
+    </item>
+    <item android:drawable="?android:attr/selectableItemBackground" />
+</layer-list>
