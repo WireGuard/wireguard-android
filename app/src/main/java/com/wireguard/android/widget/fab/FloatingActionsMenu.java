@@ -17,6 +17,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Keep;
@@ -392,8 +393,10 @@ public class FloatingActionsMenu extends ViewGroup {
         }
     }
 
+    private static final boolean BROKEN_LABEL_STYLE = Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 && Build.BRAND.equals("ASUS");
+
     private void createLabels() {
-        final Context context = new ContextThemeWrapper(getContext(), mLabelsStyle);
+        final Context context = BROKEN_LABEL_STYLE ? getContext() : new ContextThemeWrapper(getContext(), mLabelsStyle);
 
         for (int i = 0; i < mButtonsCount; i++) {
             final FloatingActionButton button = (FloatingActionButton) getChildAt(i);
@@ -402,7 +405,8 @@ public class FloatingActionsMenu extends ViewGroup {
                 final String title = ((LabeledFloatingActionButton) button).getTitle();
 
                 final AppCompatTextView label = new AppCompatTextView(context);
-                label.setTextAppearance(context, mLabelsStyle);
+                if (!BROKEN_LABEL_STYLE)
+                    label.setTextAppearance(context, mLabelsStyle);
                 label.setText(title);
                 addView(label);
 
