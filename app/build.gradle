@@ -80,12 +80,11 @@ dependencies {
     implementation "com.android.support:design:$supportLibsVersion"
     implementation "com.android.support:preference-v14:$supportLibsVersion"
     implementation "com.android.support:support-annotations:$supportLibsVersion"
-    implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
-    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
+    implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
+    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "ch.acra:acra-http:$acraVersion"
-
 }
 
 tasks.withType(JavaCompile) {
