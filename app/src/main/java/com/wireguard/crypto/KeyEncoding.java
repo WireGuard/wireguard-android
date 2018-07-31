@@ -5,6 +5,9 @@
 
 package com.wireguard.crypto;
 
+import com.wireguard.android.Application;
+import com.wireguard.android.R;
+
 /**
  * This is a specialized constant-time base64 and hex implementation that resists side-channel attacks.
  */
@@ -15,11 +18,11 @@ public final class KeyEncoding {
     public static final int KEY_LENGTH_BASE64 = 44;
     public static final int KEY_LENGTH_HEX = 64;
     private static final String KEY_LENGTH_BASE64_EXCEPTION_MESSAGE =
-            "WireGuard base64 keys must be 44 characters encoding 32 bytes";
+            Application.get().getString(R.string.key_length_base64_exception_message);
     private static final String KEY_LENGTH_EXCEPTION_MESSAGE =
-            "WireGuard keys must be 32 bytes";
+            Application.get().getString(R.string.key_length_exception_message);
     private static final String KEY_LENGTH_HEX_EXCEPTION_MESSAGE =
-            "WireGuard hex keys must be 64 characters encoding 32 bytes";
+            Application.get().getString(R.string.key_length_hex_exception_message);
 
     private KeyEncoding() {
         // Prevent instantiation.

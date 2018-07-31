@@ -8,6 +8,9 @@ package com.wireguard.config;
 
 import android.support.annotation.Nullable;
 
+import com.wireguard.android.Application;
+import com.wireguard.android.R;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -30,7 +33,7 @@ public final class InetAddresses {
 
     public static InetAddress parse(@Nullable final String address) {
         if (address == null || address.isEmpty())
-            throw new IllegalArgumentException("Empty address");
+            throw new IllegalArgumentException(Application.get().getString(R.string.tunnel_error_empty_inetaddress));
         try {
             return (InetAddress) PARSER_METHOD.invoke(null, address);
         } catch (final IllegalAccessException | InvocationTargetException e) {
