@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
+import com.wireguard.android.R;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
@@ -46,6 +47,7 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
 
     private final ConfigStore configStore;
+    private final Context context = Application.get();
     private final CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> completableTunnels = new CompletableFuture<>();
     private final ObservableSortedKeyedList<String, Tunnel> tunnels = new ObservableSortedKeyedArrayList<>(COMPARATOR);
     @Nullable private Tunnel lastUsedTunnel;
@@ -64,9 +66,9 @@ public final class TunnelManager extends BaseObservable {
 
     public CompletionStage<Tunnel> create(final String name, @Nullable final Config config) {
         if (Tunnel.isNameInvalid(name))
-            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
+            return CompletableFuture.failedFuture(new IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name)));
         if (tunnels.containsKey(name)) {
-            final String message = "Tunnel " + name + " already exists";
+            final String message = context.getString(R.string.tunnel_error_already_exists, name);
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
         return Application.getAsyncWorker().supplyAsync(() -> configStore.create(name, config))
@@ -212,9 +214,9 @@ public final class TunnelManager extends BaseObservable {
 
     CompletionStage<String> setTunnelName(final Tunnel tunnel, final String name) {
         if (Tunnel.isNameInvalid(name))
-            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid name"));
+            return CompletableFuture.failedFuture(new IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name)));
         if (tunnels.containsKey(name)) {
-            final String message = "Tunnel " + name + " already exists";
+            final String message = context.getString(R.string.tunnel_error_already_exists, name);
             return CompletableFuture.failedFuture(new IllegalArgumentException(message));
         }
         final State originalState = tunnel.getState();

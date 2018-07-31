@@ -6,13 +6,16 @@
 
 package com.wireguard.config;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.wireguard.android.Application;
 import com.wireguard.android.BR;
+import com.wireguard.android.R;
 import com.wireguard.crypto.Keypair;
 
 import java.net.InetAddress;
@@ -31,6 +34,7 @@ public class Interface {
     @Nullable private Keypair keypair;
     private int listenPort;
     private int mtu;
+    private final Context context = Application.get();
 
     public Interface() {
         addressList = new ArrayList<>();
@@ -42,7 +46,7 @@ public class Interface {
         if (addresses != null && addresses.length > 0) {
             for (final String addr : addresses) {
                 if (addr.isEmpty())
-                    throw new IllegalArgumentException("Address is empty");
+                    throw new IllegalArgumentException(context.getString(R.string.tunnel_error_empty_interface_address));
                 addressList.add(new InetNetwork(addr));
             }
         }
@@ -141,7 +145,7 @@ public class Interface {
     public void parse(final String line) {
         final Attribute key = Attribute.match(line);
         if (key == null)
-            throw new IllegalArgumentException(String.format("Unable to parse line: \"%s\"", line));
+            throw new IllegalArgumentException(String.format(context.getString(R.string.tunnel_error_interface_parse_failed), line));
         switch (key) {
             case ADDRESS:
                 addAddresses(key.parseList(line));

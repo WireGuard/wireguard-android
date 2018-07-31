@@ -6,6 +6,7 @@
 
 package com.wireguard.config;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableArrayList;
@@ -15,6 +16,8 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.android.databinding.library.baseAdapters.BR;
+import com.wireguard.android.Application;
+import com.wireguard.android.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,6 +46,7 @@ public class Config {
 
     public static Config from(final BufferedReader reader) throws IOException {
         final Config config = new Config();
+        final Context context = Application.get();
         Peer currentPeer = null;
         String line;
         boolean inInterfaceSection = false;
@@ -65,11 +69,11 @@ public class Config {
             } else if (currentPeer != null) {
                 currentPeer.parse(line);
             } else {
-                throw new IllegalArgumentException("Invalid configuration line: " + line);
+                throw new IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_config_line, line));
             }
         }
         if (!inInterfaceSection && currentPeer == null) {
-            throw new IllegalArgumentException("Could not find any config information");
+            throw new IllegalArgumentException(context.getString(R.string.tunnel_error_no_config_information));
         }
         return config;
     }
