@@ -91,28 +91,28 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		return -1
 	}
 
+	var uapi net.Listener;
+
 	uapiFile, err := UAPIOpen(name)
 	if err != nil {
-		unix.Close(int(tun_fd))
 		logger.Error.Println(err)
-		return -1
-	}
-	uapi, err := UAPIListen(name, uapiFile)
-	if err != nil {
-		uapiFile.Close()
-		unix.Close(int(tun_fd))
-		logger.Error.Println(err)
-		return -1
-	}
-	go func() {
-		for {
-			conn, err := uapi.Accept()
-			if err != nil {
-				return
-			}
-			go ipcHandle(device, conn)
+	} else {
+		uapi, err = UAPIListen(name, uapiFile)
+		if err != nil {
+			uapiFile.Close()
+			logger.Error.Println(err)
+		} else {
+			go func() {
+				for {
+					conn, err := uapi.Accept()
+					if err != nil {
+						return
+					}
+					go ipcHandle(device, conn)
+				}
+			}()
 		}
-	}()
+	}
 
 	device.Up()
 	logger.Info.Println("Device started")
@@ -138,7 +138,9 @@ func wgTurnOff(tunnelHandle int32) {
 		return
 	}
 	delete(tunnelHandles, tunnelHandle)
-	handle.uapi.Close()
+	if handle.uapi != nil {
+		handle.uapi.Close()
+	}
 	handle.device.Close()
 }
 
