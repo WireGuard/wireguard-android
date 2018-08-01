@@ -6,6 +6,7 @@
 
 package com.wireguard.config;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -66,10 +67,12 @@ public enum Attribute {
         return LIST_SEPARATOR_PATTERN.split(string.trim());
     }
 
+    @SuppressLint("DefaultLocale")
     public String composeWith(@Nullable final Object value) {
         return String.format("%s = %s%n", token, value);
     }
 
+    @SuppressLint("DefaultLocale")
     public String composeWith(final int value) {
         return String.format("%s = %d%n", token, value);
     }

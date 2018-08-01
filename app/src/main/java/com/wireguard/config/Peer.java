@@ -6,6 +6,7 @@
 
 package com.wireguard.config;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
@@ -71,6 +72,7 @@ public class Peer {
         return endpoint;
     }
 
+    @SuppressLint("DefaultLocale")
     @Nullable
     private String getEndpointString() {
         if (endpoint == null)
@@ -102,6 +104,7 @@ public class Peer {
         return publicKey;
     }
 
+    @SuppressLint("DefaultLocale")
     public String getResolvedEndpointString() throws UnknownHostException {
         if (endpoint == null)
             throw new UnknownHostException("{empty}");
