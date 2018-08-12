@@ -58,14 +58,13 @@ public class QuickTileService extends TileService {
         return ret;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             iconOff = iconOn = Icon.createWithResource(this, R.drawable.ic_tile);
             return;
         }
-        final SlashDrawable icon = new SlashDrawable(getResources().getDrawable(R.drawable.ic_tile));
+        final SlashDrawable icon = new SlashDrawable(getResources().getDrawable(R.drawable.ic_tile, Application.get().getTheme()));
         icon.setAnimationEnabled(false); /* Unfortunately we can't have animations, since Icons are marshaled. */
         icon.setSlashed(false);
         Bitmap b = Bitmap.createBitmap(icon.getIntrinsicWidth(), icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
