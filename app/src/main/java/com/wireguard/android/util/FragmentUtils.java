@@ -11,7 +11,11 @@ import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.activity.SettingsActivity;
 
-public class FragmentUtils {
+public final class FragmentUtils {
+
+    private FragmentUtils() {
+        // Prevent instantiation
+    }
 
     public static SettingsActivity getPrefActivity(final Preference preference) {
         final Context context = preference.getContext();
