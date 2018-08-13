@@ -71,7 +71,10 @@ public class Peer {
     private String getEndpointString() {
         if (endpoint == null)
             return null;
-        return String.format("%s:%d", endpoint.getHostString(), endpoint.getPort());
+        if (endpoint.getHostString().contains(":") && !endpoint.getHostString().contains("["))
+            return String.format("[%s]:%d", endpoint.getHostString(), endpoint.getPort());
+        else
+            return String.format("%s:%d", endpoint.getHostString(), endpoint.getPort());
     }
 
     public int getPersistentKeepalive() {
