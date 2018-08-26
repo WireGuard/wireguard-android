@@ -1,7 +1,28 @@
-diff -ru b/src/runtime/sys_linux_386.s a/src/runtime/sys_linux_386.s
---- b/src/runtime/sys_linux_386.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_386.s	2018-05-09 17:09:42.319531743 +0200
-@@ -287,13 +287,13 @@
+From 6f345a38d9533db388009d91d29981673dcf95b4 Mon Sep 17 00:00:00 2001
+From: Jason A. Donenfeld <Jason@zx2c4.com>
+Date: Fri, 04 May 2018 03:48:23 +0200
+Subject: [PATCH] runtime: use CLOCK_BOOTTIME in nanotime on Linux
+
+This makes timers account for having expired while a computer was
+asleep, which is quite common on mobile devices. Note that BOOTTIME is
+identical to MONOTONIC, except that it takes into account time spent
+in suspend. In Linux 4.17, the kernel will actually make MONOTONIC act
+like BOOTTIME anyway, so this switch will additionally unify the
+timer behavior across kernels.
+
+BOOTTIME was introduced into Linux 2.6.39-rc1 with 70a08cca1227d in
+2011.
+
+Fixes #24595
+
+Change-Id: I7b2a6ca0c5bc5fce57ec0eeafe7b68270b429321
+---
+
+diff --git a/src/runtime/sys_linux_386.s b/src/runtime/sys_linux_386.s
+index 8d5a4ff..bfad064 100644
+--- a/src/runtime/sys_linux_386.s
++++ b/src/runtime/sys_linux_386.s
+@@ -285,13 +285,13 @@
  
  	LEAL	8(SP), BX	// &ts (struct timespec)
  	MOVL	BX, 4(SP)
@@ -17,11 +38,12 @@ diff -ru b/src/runtime/sys_linux_386.s a/src/runtime/sys_linux_386.s
  	LEAL	8(SP), CX
  	INVOKE_SYSCALL
  
-diff -ru b/src/runtime/sys_linux_amd64.s a/src/runtime/sys_linux_amd64.s
---- b/src/runtime/sys_linux_amd64.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_amd64.s	2018-05-09 17:09:42.319531743 +0200
-@@ -258,7 +258,7 @@
- 	MOVQ	runtime·__vdso_clock_gettime_sym(SB), AX
+diff --git a/src/runtime/sys_linux_amd64.s b/src/runtime/sys_linux_amd64.s
+index 62d8024..8510be4 100644
+--- a/src/runtime/sys_linux_amd64.s
++++ b/src/runtime/sys_linux_amd64.s
+@@ -257,7 +257,7 @@
+ 	MOVQ	runtime·vdsoClockgettimeSym(SB), AX
  	CMPQ	AX, $0
  	JEQ	fallback
 -	MOVL	$1, DI // CLOCK_MONOTONIC
@@ -29,34 +51,55 @@ diff -ru b/src/runtime/sys_linux_amd64.s a/src/runtime/sys_linux_amd64.s
  	LEAQ	0(SP), SI
  	CALL	AX
  	MOVQ	0(SP), AX	// sec
-diff -ru b/src/runtime/sys_linux_arm64.s a/src/runtime/sys_linux_arm64.s
---- b/src/runtime/sys_linux_arm64.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_arm64.s	2018-05-09 17:12:47.844591628 +0200
-@@ -201,7 +201,7 @@
- 	RET
+diff --git a/src/runtime/sys_linux_arm.s b/src/runtime/sys_linux_arm.s
+index aa39732..d29cb88 100644
+--- a/src/runtime/sys_linux_arm.s
++++ b/src/runtime/sys_linux_arm.s
+@@ -11,7 +11,7 @@
+ #include "textflag.h"
  
- TEXT runtime·nanotime(SB),NOSPLIT,$24-8
--	MOVW	$1, R0 // CLOCK_MONOTONIC
-+	MOVW	$7, R0 // CLOCK_BOOTTIME
- 	MOVD	RSP, R1
- 	MOVD	$SYS_clock_gettime, R8
- 	SVC
-diff -ru b/src/runtime/sys_linux_arm.s a/src/runtime/sys_linux_arm.s
---- b/src/runtime/sys_linux_arm.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_arm.s	2018-05-09 17:13:18.983281049 +0200
-@@ -235,7 +235,7 @@
+ #define CLOCK_REALTIME	0
+-#define CLOCK_MONOTONIC	1
++#define CLOCK_BOOTTIME	7
  
- // int64 nanotime(void)
- TEXT runtime·nanotime(SB),NOSPLIT,$32
--	MOVW	$1, R0  // CLOCK_MONOTONIC
-+	MOVW	$7, R0  // CLOCK_BOOTTIME
- 	MOVW	$8(R13), R1  // timespec
- 	MOVW	$SYS_clock_gettime, R7
- 	SWI	$0
-diff -ru b/src/runtime/sys_linux_mips64x.s a/src/runtime/sys_linux_mips64x.s
---- b/src/runtime/sys_linux_mips64x.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_mips64x.s	2018-05-09 17:09:42.321531721 +0200
-@@ -197,7 +197,7 @@
+ // for EABI, as we don't support OABI
+ #define SYS_BASE 0x0
+@@ -287,7 +287,7 @@
+ 	SUB	$24, R13	// Space for results
+ 	BIC	$0x7, R13	// Align for C code
+ 
+-	MOVW	$CLOCK_MONOTONIC, R0
++	MOVW	$CLOCK_BOOTTIME, R0
+ 	MOVW	$8(R13), R1	// timespec
+ 	MOVW	runtime·vdsoClockgettimeSym(SB), R11
+ 	CMP	$0, R11
+diff --git a/src/runtime/sys_linux_arm64.s b/src/runtime/sys_linux_arm64.s
+index c6afd76..24294e8 100644
+--- a/src/runtime/sys_linux_arm64.s
++++ b/src/runtime/sys_linux_arm64.s
+@@ -13,7 +13,7 @@
+ #define AT_FDCWD -100
+ 
+ #define CLOCK_REALTIME 0
+-#define CLOCK_MONOTONIC 1
++#define CLOCK_BOOTTIME 7
+ 
+ #define SYS_exit		93
+ #define SYS_read		63
+@@ -243,7 +243,7 @@
+ 	BIC	$15, R1
+ 	MOVD	R1, RSP
+ 
+-	MOVW	$CLOCK_MONOTONIC, R0
++	MOVW	$CLOCK_BOOTTIME, R0
+ 	MOVD	runtime·vdsoClockgettimeSym(SB), R2
+ 	CBZ	R2, fallback
+ 	BL	(R2)
+diff --git a/src/runtime/sys_linux_mips64x.s b/src/runtime/sys_linux_mips64x.s
+index 8e64f1c..521062f 100644
+--- a/src/runtime/sys_linux_mips64x.s
++++ b/src/runtime/sys_linux_mips64x.s
+@@ -185,7 +185,7 @@
  	RET
  
  TEXT runtime·nanotime(SB),NOSPLIT,$16
@@ -65,10 +108,11 @@ diff -ru b/src/runtime/sys_linux_mips64x.s a/src/runtime/sys_linux_mips64x.s
  	MOVV	$0(R29), R5
  	MOVV	$SYS_clock_gettime, R2
  	SYSCALL
-diff -ru b/src/runtime/sys_linux_mipsx.s a/src/runtime/sys_linux_mipsx.s
---- b/src/runtime/sys_linux_mipsx.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_mipsx.s	2018-05-09 17:09:42.321531721 +0200
-@@ -202,7 +202,7 @@
+diff --git a/src/runtime/sys_linux_mipsx.s b/src/runtime/sys_linux_mipsx.s
+index a6bca3b..920ed9a 100644
+--- a/src/runtime/sys_linux_mipsx.s
++++ b/src/runtime/sys_linux_mipsx.s
+@@ -189,7 +189,7 @@
  	RET
  
  TEXT runtime·nanotime(SB),NOSPLIT,$8-8
@@ -77,10 +121,11 @@ diff -ru b/src/runtime/sys_linux_mipsx.s a/src/runtime/sys_linux_mipsx.s
  	MOVW	$4(R29), R5
  	MOVW	$SYS_clock_gettime, R2
  	SYSCALL
-diff -ru b/src/runtime/sys_linux_ppc64x.s a/src/runtime/sys_linux_ppc64x.s
---- b/src/runtime/sys_linux_ppc64x.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_ppc64x.s	2018-05-09 17:09:42.322531710 +0200
-@@ -176,7 +176,7 @@
+diff --git a/src/runtime/sys_linux_ppc64x.s b/src/runtime/sys_linux_ppc64x.s
+index 483cb8e..11f3c49 100644
+--- a/src/runtime/sys_linux_ppc64x.s
++++ b/src/runtime/sys_linux_ppc64x.s
+@@ -164,7 +164,7 @@
  	RET
  
  TEXT runtime·nanotime(SB),NOSPLIT,$16
@@ -89,10 +134,11 @@ diff -ru b/src/runtime/sys_linux_ppc64x.s a/src/runtime/sys_linux_ppc64x.s
  	MOVD	$0(R1), R4
  	SYSCALL	$SYS_clock_gettime
  	MOVD	0(R1), R3	// sec
-diff -ru b/src/runtime/sys_linux_s390x.s a/src/runtime/sys_linux_s390x.s
---- b/src/runtime/sys_linux_s390x.s	2018-04-30 22:26:39.000000000 +0200
-+++ a/src/runtime/sys_linux_s390x.s	2018-05-09 17:09:42.322531710 +0200
-@@ -188,7 +188,7 @@
+diff --git a/src/runtime/sys_linux_s390x.s b/src/runtime/sys_linux_s390x.s
+index 1ff110c..e9049e0 100644
+--- a/src/runtime/sys_linux_s390x.s
++++ b/src/runtime/sys_linux_s390x.s
+@@ -176,7 +176,7 @@
  	RET
  
  TEXT runtime·nanotime(SB),NOSPLIT,$16
