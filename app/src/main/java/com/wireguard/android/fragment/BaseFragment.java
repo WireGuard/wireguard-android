@@ -27,7 +27,6 @@ import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.widget.MonkeyedSnackbar;
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -119,7 +118,7 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
             final String message = getContext().getString(messageResId, error);
             final View view = getView();
             if (view != null)
-                MonkeyedSnackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
             else
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             Log.e(TAG, message, throwable);

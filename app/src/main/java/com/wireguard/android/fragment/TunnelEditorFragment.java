@@ -32,7 +32,6 @@ import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.widget.MonkeyedSnackbar;
 import com.wireguard.config.Attribute;
 import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
@@ -73,7 +72,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             message = getString(R.string.config_save_error, savedTunnel.getName(), error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
-                MonkeyedSnackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -196,7 +195,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
                     final String tunnelName = tunnel == null ? binding.getConfig().getName() : tunnel.getName();
                     final String message = getString(R.string.config_save_error, tunnelName, error);
                     Log.e(TAG, message, e);
-                    MonkeyedSnackbar.make(binding.mainContainer, error, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(binding.mainContainer, error, Snackbar.LENGTH_LONG).show();
                     return false;
                 }
                 if (tunnel == null) {
@@ -249,7 +248,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             message = getString(R.string.tunnel_create_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
-                MonkeyedSnackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -268,7 +267,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             message = getString(R.string.tunnel_rename_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
-                MonkeyedSnackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
             }
         }
     }

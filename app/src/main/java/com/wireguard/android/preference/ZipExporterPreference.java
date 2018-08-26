@@ -21,7 +21,6 @@ import com.wireguard.android.R;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.FragmentUtils;
-import com.wireguard.android.widget.MonkeyedSnackbar;
 import com.wireguard.config.Config;
 
 import java.io.File;
@@ -89,7 +88,7 @@ public class ZipExporterPreference extends Preference {
             final String error = ExceptionLoggers.unwrapMessage(throwable);
             final String message = getContext().getString(R.string.zip_export_error, error);
             Log.e(TAG, message, throwable);
-            MonkeyedSnackbar.make(
+            Snackbar.make(
                     FragmentUtils.getPrefActivity(this).findViewById(android.R.id.content),
                     message, Snackbar.LENGTH_LONG).show();
             setEnabled(true);
