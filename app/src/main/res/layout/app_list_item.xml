@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -23,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background"
-        android:padding="16dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:onClick="@{(view) -> item.setExcludedFromTunnel(!item.excludedFromTunnel)}">
+        android:onClick="@{(view) -> item.setExcludedFromTunnel(!item.excludedFromTunnel)}"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/app_icon"

@@ -19,9 +19,9 @@ import java.lang.reflect.Field;
 
 public abstract class ThemeChangeAwareActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + ThemeChangeAwareActivity.class.getSimpleName();
-
-    @Nullable private static Resources lastResources;
     private static boolean lastDarkMode;
+    @Nullable private static Resources lastResources;
+
     private static synchronized void invalidateDrawableCache(final Resources resources, final boolean darkMode) {
         if (resources == lastResources && darkMode == lastDarkMode)
             return;
@@ -33,7 +33,8 @@ public abstract class ThemeChangeAwareActivity extends AppCompatActivity impleme
                 f = o.getClass().getDeclaredField("mResourcesImpl");
                 f.setAccessible(true);
                 o = f.get(o);
-            } catch (final Exception ignored) { }
+            } catch (final Exception ignored) {
+            }
             f = o.getClass().getDeclaredField("mDrawableCache");
             f.setAccessible(true);
             o = f.get(o);

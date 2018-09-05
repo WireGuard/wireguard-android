@@ -12,7 +12,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"
-        android:summaryOn="@string/dark_theme_summary_on"
         android:summaryOff="@string/dark_theme_summary_off"
+        android:summaryOn="@string/dark_theme_summary_on"
         android:title="@string/dark_theme_title" />
 </PreferenceScreen>

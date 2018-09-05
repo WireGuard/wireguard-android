@@ -50,7 +50,8 @@ public class VersionPreference extends Preference {
         intent.setData(Uri.parse("https://www.wireguard.com/"));
         try {
             getContext().startActivity(intent);
-        } catch (final ActivityNotFoundException ignored) { }
+        } catch (final ActivityNotFoundException ignored) {
+        }
     }
 
 }

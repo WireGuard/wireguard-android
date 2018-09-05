@@ -53,14 +53,11 @@ public interface Backend {
     Statistics getStatistics(Tunnel tunnel) throws Exception;
 
     /**
-     * Set the state of a tunnel.
+     * Determine type name of underlying backend.
      *
-     * @param tunnel The tunnel to control the state of.
-     * @param state  The new state for this tunnel. Must be {@code UP}, {@code DOWN}, or
-     *               {@code TOGGLE}.
-     * @return The updated state of the tunnel.
+     * @return Type name
      */
-    State setState(Tunnel tunnel, State state) throws Exception;
+    String getTypeName();
 
     /**
      * Determine version of underlying backend.
@@ -71,9 +68,12 @@ public interface Backend {
     String getVersion() throws Exception;
 
     /**
-     * Determine type name of underlying backend.
+     * Set the state of a tunnel.
      *
-     * @return Type name
+     * @param tunnel The tunnel to control the state of.
+     * @param state  The new state for this tunnel. Must be {@code UP}, {@code DOWN}, or
+     *               {@code TOGGLE}.
+     * @return The updated state of the tunnel.
      */
-    String getTypeName();
+    State setState(Tunnel tunnel, State state) throws Exception;
 }

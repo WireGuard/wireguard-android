@@ -30,6 +30,11 @@ public class ApplicationData extends BaseObservable implements Keyed<String> {
         return icon;
     }
 
+    @Override
+    public String getKey() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }
@@ -46,10 +51,5 @@ public class ApplicationData extends BaseObservable implements Keyed<String> {
     public void setExcludedFromTunnel(final boolean excludedFromTunnel) {
         this.excludedFromTunnel = excludedFromTunnel;
         notifyPropertyChanged(BR.excludedFromTunnel);
-    }
-
-    @Override
-    public String getKey() {
-        return name;
     }
 }

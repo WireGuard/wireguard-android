@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.wireguard.android.Application;
@@ -27,9 +26,8 @@ import java.util.Objects;
 public class ConfigNamingDialogFragment extends DialogFragment {
 
     private static final String KEY_CONFIG_TEXT = "config_text";
-
-    @Nullable private Config config;
     @Nullable private ConfigNamingDialogFragmentBinding binding;
+    @Nullable private Config config;
     @Nullable private InputMethodManager imm;
 
     public static ConfigNamingDialogFragment newInstance(final String configText) {
@@ -40,6 +38,26 @@ public class ConfigNamingDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    private void createTunnelAndDismiss() {
+        if (binding != null) {
+            final String name = binding.tunnelNameText.getText().toString();
+
+            Application.getTunnelManager().create(name, config).whenComplete((tunnel, throwable) -> {
+                if (tunnel != null) {
+                    dismiss();
+                } else {
+                    binding.tunnelNameTextLayout.setError(throwable.getMessage());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        setKeyboardVisible(false);
+        super.dismiss();
+    }
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +66,6 @@ public class ConfigNamingDialogFragment extends DialogFragment {
             config = Config.from(getArguments().getString(KEY_CONFIG_TEXT));
         } catch (final IOException exception) {
             throw new RuntimeException("Invalid config passed to " + getClass().getSimpleName(), exception);
-        }
-    }
-
-    @Override public void onResume() {
-        super.onResume();
-
-        final AlertDialog dialog = (AlertDialog) getDialog();
-        if (dialog != null) {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> createTunnelAndDismiss());
-
-            setKeyboardVisible(true);
         }
     }
 
@@ -81,23 +88,14 @@ public class ConfigNamingDialogFragment extends DialogFragment {
         return alertDialogBuilder.create();
     }
 
-    @Override
-    public void dismiss() {
-        setKeyboardVisible(false);
-        super.dismiss();
-    }
+    @Override public void onResume() {
+        super.onResume();
 
-    private void createTunnelAndDismiss() {
-        if (binding != null) {
-            final String name = binding.tunnelNameText.getText().toString();
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog != null) {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(v -> createTunnelAndDismiss());
 
-            Application.getTunnelManager().create(name, config).whenComplete((tunnel, throwable) -> {
-                if (tunnel != null) {
-                    dismiss();
-                } else {
-                    binding.tunnelNameTextLayout.setError(throwable.getMessage());
-                }
-            });
+            setKeyboardVisible(true);
         }
     }
 

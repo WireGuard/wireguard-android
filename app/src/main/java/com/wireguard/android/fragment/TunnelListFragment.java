@@ -38,13 +38,11 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
-import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.Config;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -186,6 +184,19 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            final Collection<Integer> checkedItems = savedInstanceState.getIntegerArrayList("CHECKED_ITEMS");
+            if (checkedItems != null) {
+                for (final Integer i : checkedItems)
+                    actionModeListener.setItemChecked(i, true);
+            }
+        }
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         switch (requestCode) {
             case REQUEST_IMPORT:
@@ -228,6 +239,14 @@ public class TunnelListFragment extends BaseFragment {
         super.onDestroyView();
     }
 
+    @Override
+    public void onPause() {
+        if (binding != null) {
+            binding.createMenu.collapse();
+        }
+        super.onPause();
+    }
+
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
         if (binding != null)
@@ -255,15 +274,10 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public void onPause() {
-        if (binding != null) {
-            binding.createMenu.collapse();
-        }
-        super.onPause();
-    }
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-    private MultiselectableRelativeLayout viewForTunnel(final Tunnel tunnel, final List tunnels) {
-        return (MultiselectableRelativeLayout)binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel)).itemView;
+        outState.putIntegerArrayList("CHECKED_ITEMS", actionModeListener.getCheckedItems());
     }
 
     @Override
@@ -318,26 +332,6 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putIntegerArrayList("CHECKED_ITEMS", actionModeListener.getCheckedItems());
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            final Collection<Integer> checkedItems = savedInstanceState.getIntegerArrayList("CHECKED_ITEMS");
-            if (checkedItems != null) {
-                for (final Integer i : checkedItems)
-                    actionModeListener.setItemChecked(i, true);
-            }
-        }
-    }
-
-    @Override
     public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
@@ -362,16 +356,24 @@ public class TunnelListFragment extends BaseFragment {
             });
 
             if (actionMode != null)
-                ((MultiselectableRelativeLayout)binding.getRoot()).setMultiSelected(actionModeListener.checkedItems.contains(position));
+                ((MultiselectableRelativeLayout) binding.getRoot()).setMultiSelected(actionModeListener.checkedItems.contains(position));
             else
-                ((MultiselectableRelativeLayout)binding.getRoot()).setSingleSelected(getSelectedTunnel() == tunnel);
+                ((MultiselectableRelativeLayout) binding.getRoot()).setSingleSelected(getSelectedTunnel() == tunnel);
         });
+    }
+
+    private MultiselectableRelativeLayout viewForTunnel(final Tunnel tunnel, final List tunnels) {
+        return (MultiselectableRelativeLayout) binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel)).itemView;
     }
 
     private final class ActionModeListener implements ActionMode.Callback {
         private final Collection<Integer> checkedItems = new HashSet<>();
 
         @Nullable private Resources resources;
+
+        public ArrayList<Integer> getCheckedItems() {
+            return new ArrayList<>(checkedItems);
+        }
 
         @Override
         public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
@@ -425,12 +427,10 @@ public class TunnelListFragment extends BaseFragment {
             binding.tunnelList.getAdapter().notifyDataSetChanged();
         }
 
-        void toggleItemChecked(final int position) {
-            setItemChecked(position, !checkedItems.contains(position));
-        }
-
-        public ArrayList<Integer> getCheckedItems() {
-            return new ArrayList<>(checkedItems);
+        @Override
+        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+            updateTitle(mode);
+            return false;
         }
 
         void setItemChecked(final int position, final boolean checked) {
@@ -454,10 +454,8 @@ public class TunnelListFragment extends BaseFragment {
             updateTitle(actionMode);
         }
 
-        @Override
-        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-            updateTitle(mode);
-            return false;
+        void toggleItemChecked(final int position) {
+            setItemChecked(position, !checkedItems.contains(position));
         }
 
         private void updateTitle(@Nullable final ActionMode mode) {

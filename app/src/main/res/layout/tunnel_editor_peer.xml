@@ -4,7 +4,8 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
         <import type="com.wireguard.android.widget.KeyInputFilter" />
 
         <variable

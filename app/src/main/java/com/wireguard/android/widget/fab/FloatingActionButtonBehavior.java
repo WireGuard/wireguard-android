@@ -18,18 +18,12 @@ import android.view.View;
 
 public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionsMenu> {
 
+    private static final long ANIMATION_DURATION = 250;
+    private static final TimeInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new FastOutSlowInInterpolator();
+
     public FloatingActionButtonBehavior(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
-
-    @Override
-    public boolean layoutDependsOn(final CoordinatorLayout parent, final FloatingActionsMenu child,
-                                   final View dependency) {
-        return dependency instanceof Snackbar.SnackbarLayout;
-    }
-
-    private static final long ANIMATION_DURATION = 250;
-    private static final TimeInterpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new FastOutSlowInInterpolator();
 
     private static void animateChange(final FloatingActionsMenu child, final float destination, final float fullSpan) {
         final float origin = child.getBehaviorYTranslation();
@@ -40,15 +34,21 @@ public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<Flo
         final ValueAnimator animator = new ValueAnimator();
         animator.setFloatValues(origin, destination);
         animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-        animator.setDuration((long)(ANIMATION_DURATION * (Math.abs(destination - origin) / fullSpan)));
+        animator.setDuration((long) (ANIMATION_DURATION * (Math.abs(destination - origin) / fullSpan)));
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(final Animator a) {
                 child.setBehaviorYTranslation(destination);
             }
         });
-        animator.addUpdateListener(a -> child.setBehaviorYTranslation((float)a.getAnimatedValue()));
+        animator.addUpdateListener(a -> child.setBehaviorYTranslation((float) a.getAnimatedValue()));
         animator.start();
+    }
+
+    @Override
+    public boolean layoutDependsOn(final CoordinatorLayout parent, final FloatingActionsMenu child,
+                                   final View dependency) {
+        return dependency instanceof Snackbar.SnackbarLayout;
     }
 
     @Override

@@ -19,7 +19,8 @@ import java.util.zip.ZipFile;
 public final class SharedLibraryLoader {
     private static final String TAG = "WireGuard/" + SharedLibraryLoader.class.getSimpleName();
 
-    private SharedLibraryLoader() { }
+    private SharedLibraryLoader() {
+    }
 
     public static void loadSharedLibrary(final Context context, final String libName) {
         Throwable noAbiException;

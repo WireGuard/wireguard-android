@@ -105,9 +105,9 @@ public class Config {
                 return new Observable[size];
             }
         };
-        @Nullable private String name;
         private final Interface.Observable observableInterface;
         private final ObservableList<Peer.Observable> observablePeers;
+        @Nullable private String name;
 
         public Observable(@Nullable final Config parent, @Nullable final String name) {
             this.name = name;

@@ -30,65 +30,67 @@
             android:id="@+id/tunnel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@{@dimen/design_fab_size_normal * 1.1f}"
-            android:clipToPadding="false"
             android:choiceMode="multipleChoiceModal"
+            android:clipToPadding="false"
+            android:paddingBottom="@{@dimen/design_fab_size_normal * 1.1f}"
             android:visibility="@{tunnels.size() > 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
+            app:configurationHandler="@{rowConfigurationHandler}"
             app:items="@{tunnels}"
-            app:layout="@{@layout/tunnel_list_item}"
-            app:configurationHandler="@{rowConfigurationHandler}" />
+            app:layout="@{@layout/tunnel_list_item}" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="vertical"
-            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
-            android:layout_gravity="center">
+            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}">
+
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/logo_placeholder"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_gravity="center"
-                android:alpha="0.3333333"
-                android:layout_marginTop="-70dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="-70dp"
+                android:alpha="0.3333333"
                 android:src="@mipmap/ic_launcher" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20sp"
-                android:text="@string/tunnel_list_placeholder" />
+                android:text="@string/tunnel_list_placeholder"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <com.wireguard.android.widget.fab.FloatingActionsMenu
             android:id="@+id/create_menu"
-            android:clipChildren="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
+            android:clipChildren="false"
             app:fab_labelStyle="@style/fab_label"
             app:fab_labelsPosition="@integer/label_position"
-            app:layout_behavior="com.wireguard.android.widget.fab.FloatingActionButtonBehavior" >
+            app:layout_behavior="com.wireguard.android.widget.fab.FloatingActionButtonBehavior">
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/create_from_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestImportConfig}"
-                app:srcCompat="@drawable/ic_action_open_white"
                 app:fabSize="mini"
-                app:fab_title="@string/create_from_file" />
+                app:fab_title="@string/create_from_file"
+                app:srcCompat="@drawable/ic_action_open_white" />
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/scan_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestScanQRCode}"
-                app:srcCompat="@drawable/ic_action_scan_qr_code_white"
                 app:fabSize="mini"
-                app:fab_title="@string/create_from_qrcode" />
+                app:fab_title="@string/create_from_qrcode"
+                app:srcCompat="@drawable/ic_action_scan_qr_code_white" />
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton
                 android:id="@+id/create_empty"
@@ -96,8 +98,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestCreateConfig}"
                 app:fabSize="mini"
-                app:srcCompat="@drawable/ic_action_edit_white"
-                app:fab_title="@string/create_empty" />
+                app:fab_title="@string/create_empty"
+                app:srcCompat="@drawable/ic_action_edit_white" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
 
     </android.support.design.widget.CoordinatorLayout>

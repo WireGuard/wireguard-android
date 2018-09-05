@@ -60,12 +60,6 @@ public final class GoBackend implements Backend {
     private static native String wgVersion();
 
     @Override
-    public String getVersion() { return wgVersion(); }
-
-    @Override
-    public String getTypeName() { return "Go userspace"; }
-
-    @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
         if (tunnel.getState() == State.UP) {
             // Restart the tunnel to apply the new config.
@@ -99,6 +93,16 @@ public final class GoBackend implements Backend {
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
         return new Statistics();
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Go userspace";
+    }
+
+    @Override
+    public String getVersion() {
+        return wgVersion();
     }
 
     @Override
