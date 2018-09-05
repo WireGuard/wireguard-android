@@ -53,68 +53,16 @@ import java9.util.concurrent.CompletableFuture;
         compress = true)
 public class Application extends android.app.Application {
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
+    private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
     @SuppressWarnings("NullableProblems") private AsyncWorker asyncWorker;
+    @Nullable private Backend backend;
     @SuppressWarnings("NullableProblems") private RootShell rootShell;
     @SuppressWarnings("NullableProblems") private SharedPreferences sharedPreferences;
     @SuppressWarnings("NullableProblems") private ToolsInstaller toolsInstaller;
     @SuppressWarnings("NullableProblems") private TunnelManager tunnelManager;
-    @Nullable private Backend backend;
-    private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
 
     public Application() {
         weakSelf = new WeakReference<>(this);
-    }
-
-    /* The ACRA password can be trivially reverse engineered and is open source anyway,
-     * so there's no point in trying to protect it. However, we do want to at least
-     * prevent innocent self-builders from uploading stuff to our crash reporter. So, we
-     * check the DN of the certs that signed the apk, without even bothering to try
-     * validating that they're authentic. It's a good enough heuristic.
-     */
-    @SuppressWarnings("deprecation")
-    @Nullable
-    private static String getInstallSource(final Context context) {
-        if (BuildConfig.DEBUG)
-            return null;
-        try {
-            final CertificateFactory cf = CertificateFactory.getInstance("X509");
-            for (final Signature sig : context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures) {
-                try {
-                    for (final String category : ((X509Certificate) cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()))).getSubjectDN().getName().split(", *")) {
-                        final String[] parts = category.split("=", 2);
-                        if (!"O".equals(parts[0]))
-                            continue;
-                        switch (parts[1]) {
-                            case "Google Inc.":
-                                return "Play Store";
-                            case "fdroid.org":
-                                return "F-Droid";
-                        }
-                    }
-                } catch (final Exception ignored) { }
-            }
-        } catch (final Exception ignored) { }
-        return null;
-    }
-
-    @Override
-    protected void attachBaseContext(final Context context) {
-        super.attachBaseContext(context);
-
-        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {
-            final Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            System.exit(0);
-        }
-
-        final String installSource = getInstallSource(context);
-        if (installSource != null) {
-            ACRA.init(this);
-            ACRA.getErrorReporter().putCustomData("installSource", installSource);
-        }
     }
 
     public static Application get() {
@@ -149,6 +97,40 @@ public class Application extends android.app.Application {
         return get().futureBackend;
     }
 
+    /* The ACRA password can be trivially reverse engineered and is open source anyway,
+     * so there's no point in trying to protect it. However, we do want to at least
+     * prevent innocent self-builders from uploading stuff to our crash reporter. So, we
+     * check the DN of the certs that signed the apk, without even bothering to try
+     * validating that they're authentic. It's a good enough heuristic.
+     */
+    @SuppressWarnings("deprecation")
+    @Nullable
+    private static String getInstallSource(final Context context) {
+        if (BuildConfig.DEBUG)
+            return null;
+        try {
+            final CertificateFactory cf = CertificateFactory.getInstance("X509");
+            for (final Signature sig : context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures) {
+                try {
+                    for (final String category : ((X509Certificate) cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()))).getSubjectDN().getName().split(", *")) {
+                        final String[] parts = category.split("=", 2);
+                        if (!"O".equals(parts[0]))
+                            continue;
+                        switch (parts[1]) {
+                            case "Google Inc.":
+                                return "Play Store";
+                            case "fdroid.org":
+                                return "F-Droid";
+                        }
+                    }
+                } catch (final Exception ignored) {
+                }
+            }
+        } catch (final Exception ignored) {
+        }
+        return null;
+    }
+
     public static RootShell getRootShell() {
         return get().rootShell;
     }
@@ -163,6 +145,26 @@ public class Application extends android.app.Application {
 
     public static TunnelManager getTunnelManager() {
         return get().tunnelManager;
+    }
+
+    @Override
+    protected void attachBaseContext(final Context context) {
+        super.attachBaseContext(context);
+
+        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {
+            final Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            System.exit(0);
+        }
+
+        final String installSource = getInstallSource(context);
+        if (installSource != null) {
+            ACRA.init(this);
+            ACRA.getErrorReporter().putCustomData("installSource", installSource);
+        }
     }
 
     @Override

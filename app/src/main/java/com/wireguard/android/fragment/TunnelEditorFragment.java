@@ -48,8 +48,59 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_ORIGINAL_NAME = "original_name";
     private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
-
+    private final Collection<Object> breakObjectOrientedLayeringHandlerReceivers = new ArrayList<>();
     @Nullable private TunnelEditorFragmentBinding binding;
+    private final Observable.OnPropertyChangedCallback breakObjectOrientedLayeringHandler = new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(final Observable sender, final int propertyId) {
+            if (binding == null)
+                return;
+            final Config.Observable config = binding.getConfig();
+            if (config == null)
+                return;
+            if (propertyId == BR.config) {
+                config.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config);
+                config.getInterfaceSection().addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config.getInterfaceSection());
+                config.getPeers().addOnListChangedCallback(breakObjectListOrientedLayeringHandler);
+                breakObjectOrientedLayeringHandlerReceivers.add(config.getPeers());
+            } else if (propertyId == BR.dnses || propertyId == BR.peers)
+                ;
+            else
+                return;
+            final int numSiblings = config.getPeers().size() - 1;
+            for (final Peer.Observable peer : config.getPeers()) {
+                peer.setInterfaceDNSRoutes(config.getInterfaceSection().getDnses());
+                peer.setNumSiblings(numSiblings);
+            }
+        }
+    };
+    private final ObservableList.OnListChangedCallback<? extends ObservableList<Peer.Observable>> breakObjectListOrientedLayeringHandler = new ObservableList.OnListChangedCallback<ObservableList<Peer.Observable>>() {
+        @Override
+        public void onChanged(final ObservableList<Peer.Observable> sender) {
+        }
+
+        @Override
+        public void onItemRangeChanged(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
+        }
+
+        @Override
+        public void onItemRangeInserted(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
+            if (binding != null)
+                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+        }
+
+        @Override
+        public void onItemRangeMoved(final ObservableList<Peer.Observable> sender, final int fromPosition, final int toPosition, final int itemCount) {
+        }
+
+        @Override
+        public void onItemRangeRemoved(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
+            if (binding != null)
+                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
+        }
+    };
     @Nullable private Tunnel tunnel;
 
     private void onConfigLoaded(final String name, final Config config) {
@@ -87,54 +138,6 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         inflater.inflate(R.menu.config_editor, menu);
     }
 
-    private final ObservableList.OnListChangedCallback<? extends ObservableList<Peer.Observable>> breakObjectListOrientedLayeringHandler = new ObservableList.OnListChangedCallback<ObservableList<Peer.Observable>>() {
-        @Override
-        public void onChanged(final ObservableList<Peer.Observable> sender) { }
-        @Override
-        public void onItemRangeChanged(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) { }
-        @Override
-        public void onItemRangeMoved(final ObservableList<Peer.Observable> sender, final int fromPosition, final int toPosition, final int itemCount) { }
-
-        @Override
-        public void onItemRangeInserted(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
-            if (binding != null)
-                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
-        }
-        @Override
-        public void onItemRangeRemoved(final ObservableList<Peer.Observable> sender, final int positionStart, final int itemCount) {
-            if (binding != null)
-                breakObjectOrientedLayeringHandler.onPropertyChanged(binding.getConfig(), BR.peers);
-        }
-    };
-
-    private final Collection<Object> breakObjectOrientedLayeringHandlerReceivers = new ArrayList<>();
-    private final Observable.OnPropertyChangedCallback breakObjectOrientedLayeringHandler = new Observable.OnPropertyChangedCallback() {
-        @Override
-        public void onPropertyChanged(final Observable sender, final int propertyId) {
-            if (binding == null)
-                return;
-            final Config.Observable config = binding.getConfig();
-            if (config == null)
-                return;
-            if (propertyId == BR.config) {
-                config.addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
-                breakObjectOrientedLayeringHandlerReceivers.add(config);
-                config.getInterfaceSection().addOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
-                breakObjectOrientedLayeringHandlerReceivers.add(config.getInterfaceSection());
-                config.getPeers().addOnListChangedCallback(breakObjectListOrientedLayeringHandler);
-                breakObjectOrientedLayeringHandlerReceivers.add(config.getPeers());
-            } else if (propertyId == BR.dnses || propertyId == BR.peers)
-                ;
-            else
-                return;
-            final int numSiblings = config.getPeers().size() - 1;
-            for (final Peer.Observable peer : config.getPeers()) {
-                peer.setInterfaceDNSRoutes(config.getInterfaceSection().getDnses());
-                peer.setNumSiblings(numSiblings);
-            }
-        }
-    };
-
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
@@ -152,11 +155,17 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         binding = null;
         for (final Object o : breakObjectOrientedLayeringHandlerReceivers) {
             if (o instanceof Observable)
-                ((Observable)o).removeOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
+                ((Observable) o).removeOnPropertyChangedCallback(breakObjectOrientedLayeringHandler);
             else if (o instanceof ObservableList)
-                ((ObservableList)o).removeOnListChangedCallback(breakObjectListOrientedLayeringHandler);
+                ((ObservableList) o).removeOnListChangedCallback(breakObjectListOrientedLayeringHandler);
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void onExcludedAppsSelected(final List<String> excludedApps) {
+        Objects.requireNonNull(binding, "Tried to set excluded apps while no view was loaded");
+        binding.getConfig().getInterfaceSection().setExcludedApplications(Attribute.iterableToString(excludedApps));
     }
 
     private void onFinished() {
@@ -214,6 +223,15 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onRequestSetExcludedApplications(@SuppressWarnings("unused") final View view) {
+        final FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null && binding != null) {
+            final String[] excludedApps = Attribute.stringToList(binding.getConfig().getInterfaceSection().getExcludedApplications());
+            final AppListDialogFragment fragment = AppListDialogFragment.newInstance(excludedApps, this);
+            fragment.show(fragmentManager, null);
         }
     }
 
@@ -292,21 +310,6 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         }
 
         super.onViewStateRestored(savedInstanceState);
-    }
-
-    public void onRequestSetExcludedApplications(@SuppressWarnings("unused") final View view) {
-        final FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager != null && binding != null) {
-            final String[] excludedApps = Attribute.stringToList(binding.getConfig().getInterfaceSection().getExcludedApplications());
-            final AppListDialogFragment fragment = AppListDialogFragment.newInstance(excludedApps, this);
-            fragment.show(fragmentManager, null);
-        }
-    }
-
-    @Override
-    public void onExcludedAppsSelected(final List<String> excludedApps) {
-        Objects.requireNonNull(binding, "Tried to set excluded apps while no view was loaded");
-        binding.getConfig().getInterfaceSection().setExcludedApplications(Attribute.iterableToString(excludedApps));
     }
 
 }

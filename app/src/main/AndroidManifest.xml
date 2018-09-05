@@ -11,10 +11,10 @@
 
     <permission
         android:name="${applicationId}.permission.CONTROL_TUNNELS"
-        android:protectionLevel="dangerous"
+        android:description="@string/permission_description"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/permission_label"
-        android:description="@string/permission_description" />
+        android:protectionLevel="dangerous" />
 
     <application
         android:name=".Application"

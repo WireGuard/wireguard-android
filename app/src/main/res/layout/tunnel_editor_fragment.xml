@@ -100,8 +100,8 @@
                             app:filter="@{KeyInputFilter.newInstance()}" />
 
                         <Button
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:id="@+id/generate_private_key_button"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:layout_width="96dp"
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@id/private_key_text"
@@ -217,12 +217,12 @@
                             android:textAlignment="center" />
 
                         <Button
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:id="@+id/set_excluded_applications"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="-8dp"
                             android:layout_below="@+id/dns_servers_text"
+                            android:layout_marginLeft="-8dp"
                             android:onClick="@{fragment::onRequestSetExcludedApplications}"
                             android:text="@{@plurals/set_excluded_applications(config.interfaceSection.excludedApplicationsCount, config.interfaceSection.excludedApplicationsCount)}" />
                     </RelativeLayout>

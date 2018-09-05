@@ -29,13 +29,6 @@ public class TouchDelegateGroup extends TouchDelegate {
         mTouchDelegates.add(touchDelegate);
     }
 
-    public void removeTouchDelegate(final TouchDelegate touchDelegate) {
-        mTouchDelegates.remove(touchDelegate);
-        if (mCurrentTouchDelegate == touchDelegate) {
-            mCurrentTouchDelegate = null;
-        }
-    }
-
     public void clearTouchDelegates() {
         mTouchDelegates.clear();
         mCurrentTouchDelegate = null;
@@ -70,6 +63,13 @@ public class TouchDelegateGroup extends TouchDelegate {
         }
 
         return delegate != null && delegate.onTouchEvent(event);
+    }
+
+    public void removeTouchDelegate(final TouchDelegate touchDelegate) {
+        mTouchDelegates.remove(touchDelegate);
+        if (mCurrentTouchDelegate == touchDelegate) {
+            mCurrentTouchDelegate = null;
+        }
     }
 
     public void setEnabled(final boolean enabled) {

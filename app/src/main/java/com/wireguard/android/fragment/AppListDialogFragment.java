@@ -34,9 +34,8 @@ import java.util.List;
 public class AppListDialogFragment extends DialogFragment {
 
     private static final String KEY_EXCLUDED_APPS = "excludedApps";
-
-    private List<String> currentlyExcludedApps;
     private final ObservableKeyedList<String, ApplicationData> appData = new ObservableKeyedArrayList<>();
+    private List<String> currentlyExcludedApps;
 
     public static <T extends Fragment & AppExclusionListener> AppListDialogFragment newInstance(final String[] excludedApps, final T target) {
         final Bundle extras = new Bundle();
@@ -45,39 +44,6 @@ public class AppListDialogFragment extends DialogFragment {
         fragment.setTargetFragment(target, 0);
         fragment.setArguments(extras);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
-    }
-
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(R.string.excluded_applications);
-
-        final AppListDialogFragmentBinding binding = AppListDialogFragmentBinding.inflate(getActivity().getLayoutInflater(), null, false);
-        binding.executePendingBindings();
-        alertDialogBuilder.setView(binding.getRoot());
-
-        alertDialogBuilder.setPositiveButton(R.string.set_exclusions, (dialog, which) -> setExclusionsAndDismiss());
-        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
-        alertDialogBuilder.setNeutralButton(R.string.deselect_all, (dialog, which) -> { });
-
-        binding.setFragment(this);
-        binding.setAppData(appData);
-
-        loadData();
-
-        final AlertDialog dialog = alertDialogBuilder.create();
-        dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(view -> {
-                for (final ApplicationData app : appData)
-                    app.setExcludedFromTunnel(false);
-        }));
-        return dialog;
     }
 
     private void loadData() {
@@ -111,6 +77,40 @@ public class AppListDialogFragment extends DialogFragment {
                 dismissAllowingStateLoss();
             }
         }));
+    }
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
+    }
+
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(R.string.excluded_applications);
+
+        final AppListDialogFragmentBinding binding = AppListDialogFragmentBinding.inflate(getActivity().getLayoutInflater(), null, false);
+        binding.executePendingBindings();
+        alertDialogBuilder.setView(binding.getRoot());
+
+        alertDialogBuilder.setPositiveButton(R.string.set_exclusions, (dialog, which) -> setExclusionsAndDismiss());
+        alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.setNeutralButton(R.string.deselect_all, (dialog, which) -> {
+        });
+
+        binding.setFragment(this);
+        binding.setAppData(appData);
+
+        loadData();
+
+        final AlertDialog dialog = alertDialogBuilder.create();
+        dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(view -> {
+            for (final ApplicationData app : appData)
+                app.setExcludedFromTunnel(false);
+        }));
+        return dialog;
     }
 
     void setExclusionsAndDismiss() {

@@ -92,8 +92,8 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
             final Preference wgQuickOnlyPrefs[] = {
-                getPreferenceManager().findPreference("tools_installer"),
-                getPreferenceManager().findPreference("restore_on_boot")
+                    getPreferenceManager().findPreference("tools_installer"),
+                    getPreferenceManager().findPreference("restore_on_boot")
             };
             for (final Preference pref : wgQuickOnlyPrefs)
                 pref.setVisible(false);

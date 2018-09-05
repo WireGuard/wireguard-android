@@ -37,11 +37,11 @@ import java9.lang.Iterables;
 
 public class Peer {
     private final List<InetNetwork> allowedIPsList;
+    private final Context context = Application.get();
     @Nullable private InetEndpoint endpoint;
     private int persistentKeepalive;
     @Nullable private String preSharedKey;
     @Nullable private String publicKey;
-    private final Context context = Application.get();
 
     public Peer() {
         allowedIPsList = new ArrayList<>();
@@ -201,13 +201,15 @@ public class Peer {
                 return new Observable[size];
             }
         };
+        private static final List<String> DEFAULT_ROUTE_MOD_RFC1918_V4 = Arrays.asList("0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3", "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7", "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16", "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10", "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4");
+        private static final String DEFAULT_ROUTE_V4 = "0.0.0.0/0";
+        private final List<String> interfaceDNSRoutes = new ArrayList<>();
         @Nullable private String allowedIPs;
         @Nullable private String endpoint;
+        private int numSiblings;
         @Nullable private String persistentKeepalive;
         @Nullable private String preSharedKey;
         @Nullable private String publicKey;
-        private final List<String> interfaceDNSRoutes = new ArrayList<>();
-        private int numSiblings;
 
         public Observable(final Peer parent) {
             loadData(parent);
@@ -244,22 +246,9 @@ public class Peer {
             return 0;
         }
 
-        private static final String DEFAULT_ROUTE_V4 = "0.0.0.0/0";
-        private static final List<String> DEFAULT_ROUTE_MOD_RFC1918_V4 = Arrays.asList("0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3", "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7", "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16", "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10", "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4");
-
-        public void toggleExcludePrivateIPs() {
-            final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
-            final boolean hasDefaultRoute = ips.contains(DEFAULT_ROUTE_V4);
-            final boolean hasDefaultRouteModRFC1918 = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-            if ((!hasDefaultRoute && !hasDefaultRouteModRFC1918) || numSiblings > 0)
-                return;
-            Iterables.removeIf(ips, ip -> !ip.contains(":"));
-            if (hasDefaultRoute) {
-                ips.addAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-                ips.addAll(interfaceDNSRoutes);
-            } else if (hasDefaultRouteModRFC1918)
-                ips.add(DEFAULT_ROUTE_V4);
-            setAllowedIPs(Attribute.iterableToString(ips));
+        @Bindable @Nullable
+        public String getAllowedIPs() {
+            return allowedIPs;
         }
 
         @Bindable
@@ -268,19 +257,14 @@ public class Peer {
             return numSiblings == 0 && (ips.contains(DEFAULT_ROUTE_V4) || ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4));
         }
 
-        @Bindable
-        public boolean getIsExcludePrivateIPsOn() {
-            return numSiblings == 0 && Arrays.asList(Attribute.stringToList(allowedIPs)).containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
-        }
-
-        @Bindable @Nullable
-        public String getAllowedIPs() {
-            return allowedIPs;
-        }
-
         @Bindable @Nullable
         public String getEndpoint() {
             return endpoint;
+        }
+
+        @Bindable
+        public boolean getIsExcludePrivateIPsOn() {
+            return numSiblings == 0 && Arrays.asList(Attribute.stringToList(allowedIPs)).containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
         }
 
         @Bindable @Nullable
@@ -318,21 +302,6 @@ public class Peer {
             notifyPropertyChanged(BR.endpoint);
         }
 
-        public void setPersistentKeepalive(final String persistentKeepalive) {
-            this.persistentKeepalive = persistentKeepalive;
-            notifyPropertyChanged(BR.persistentKeepalive);
-        }
-
-        public void setPreSharedKey(final String preSharedKey) {
-            this.preSharedKey = preSharedKey;
-            notifyPropertyChanged(BR.preSharedKey);
-        }
-
-        public void setPublicKey(final String publicKey) {
-            this.publicKey = publicKey;
-            notifyPropertyChanged(BR.publicKey);
-        }
-
         public void setInterfaceDNSRoutes(@Nullable final String dnsServers) {
             final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
             final boolean modifyAllowedIPs = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
@@ -352,6 +321,36 @@ public class Peer {
             numSiblings = num;
             notifyPropertyChanged(BR.canToggleExcludePrivateIPs);
             notifyPropertyChanged(BR.isExcludePrivateIPsOn);
+        }
+
+        public void setPersistentKeepalive(final String persistentKeepalive) {
+            this.persistentKeepalive = persistentKeepalive;
+            notifyPropertyChanged(BR.persistentKeepalive);
+        }
+
+        public void setPreSharedKey(final String preSharedKey) {
+            this.preSharedKey = preSharedKey;
+            notifyPropertyChanged(BR.preSharedKey);
+        }
+
+        public void setPublicKey(final String publicKey) {
+            this.publicKey = publicKey;
+            notifyPropertyChanged(BR.publicKey);
+        }
+
+        public void toggleExcludePrivateIPs() {
+            final Collection<String> ips = new HashSet<>(Arrays.asList(Attribute.stringToList(allowedIPs)));
+            final boolean hasDefaultRoute = ips.contains(DEFAULT_ROUTE_V4);
+            final boolean hasDefaultRouteModRFC1918 = ips.containsAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
+            if ((!hasDefaultRoute && !hasDefaultRouteModRFC1918) || numSiblings > 0)
+                return;
+            Iterables.removeIf(ips, ip -> !ip.contains(":"));
+            if (hasDefaultRoute) {
+                ips.addAll(DEFAULT_ROUTE_MOD_RFC1918_V4);
+                ips.addAll(interfaceDNSRoutes);
+            } else if (hasDefaultRouteModRFC1918)
+                ips.add(DEFAULT_ROUTE_V4);
+            setAllowedIPs(Attribute.iterableToString(ips));
         }
 
         @Override

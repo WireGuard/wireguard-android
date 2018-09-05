@@ -41,18 +41,6 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public String getVersion() throws Exception {
-        final List<String> output = new ArrayList<>();
-        if (Application.getRootShell()
-                .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-            throw new Exception("Unable to determine kernel module version");
-        return output.get(0);
-    }
-
-    @Override
-    public String getTypeName() { return "Kernel module"; }
-
-    @Override
     public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
         if (tunnel.getState() == State.UP) {
             // Restart the tunnel to apply the new config.
@@ -92,6 +80,20 @@ public final class WgQuickBackend implements Backend {
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
         return new Statistics();
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Kernel module";
+    }
+
+    @Override
+    public String getVersion() throws Exception {
+        final List<String> output = new ArrayList<>();
+        if (Application.getRootShell()
+                .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
+            throw new Exception("Unable to determine kernel module version");
+        return output.get(0);
     }
 
     @Override

@@ -31,95 +31,43 @@ import android.util.FloatProperty;
 @TargetApi(Build.VERSION_CODES.N)
 public class SlashDrawable extends Drawable {
 
-    private static final float CORNER_RADIUS = Build.VERSION.SDK_INT < Build.VERSION_CODES.O ? 0f : 1f;
-    private static final long QS_ANIM_LENGTH = 350;
-
-    private final Path mPath = new Path();
-    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-    // These values are derived in un-rotated (vertical) orientation
-    private static final float SLASH_WIDTH = 1.8384776f;
-    private static final float SLASH_HEIGHT = 28f;
     private static final float CENTER_X = 10.65f;
     private static final float CENTER_Y = 11.869239f;
-    private static final float SCALE = 24f;
-
-    // Bottom is derived during animation
-    private static final float LEFT = (CENTER_X - (SLASH_WIDTH / 2)) / SCALE;
-    private static final float TOP = (CENTER_Y - (SLASH_HEIGHT / 2)) / SCALE;
-    private static final float RIGHT = (CENTER_X + (SLASH_WIDTH / 2)) / SCALE;
+    private static final float CORNER_RADIUS = Build.VERSION.SDK_INT < Build.VERSION_CODES.O ? 0f : 1f;
     // Draw the slash washington-monument style; rotate to no-u-turn style
     private static final float DEFAULT_ROTATION = -45f;
-
-    private final Drawable mDrawable;
-    private final RectF mSlashRect = new RectF(0, 0, 0, 0);
-    private float mRotation;
-    private boolean mSlashed;
-    private boolean mAnimationEnabled = true;
-
-    public SlashDrawable(final Drawable d) {
-        mDrawable = d;
-    }
-
-    @Override
-    public int getIntrinsicHeight() {
-        return mDrawable.getIntrinsicHeight();
-    }
-
-    @Override
-    public int getIntrinsicWidth() {
-        return mDrawable.getIntrinsicWidth();
-    }
-
-    @Override
-    protected void onBoundsChange(final Rect bounds) {
-        super.onBoundsChange(bounds);
-        mDrawable.setBounds(bounds);
-    }
-
-    public void setRotation(final float rotation) {
-        if (mRotation == rotation)
-            return;
-        mRotation = rotation;
-        invalidateSelf();
-    }
-
-    public void setAnimationEnabled(final boolean enabled) {
-        mAnimationEnabled = enabled;
-    }
-
-    // Animate this value on change
-    private float mCurrentSlashLength;
+    private static final long QS_ANIM_LENGTH = 350;
+    private static final float SCALE = 24f;
+    private static final float SLASH_HEIGHT = 28f;
+    // These values are derived in un-rotated (vertical) orientation
+    private static final float SLASH_WIDTH = 1.8384776f;
+    // Bottom is derived during animation
+    private static final float LEFT = (CENTER_X - (SLASH_WIDTH / 2)) / SCALE;
+    private static final float RIGHT = (CENTER_X + (SLASH_WIDTH / 2)) / SCALE;
+    private static final float TOP = (CENTER_Y - (SLASH_HEIGHT / 2)) / SCALE;
     private static final FloatProperty mSlashLengthProp = new FloatProperty<SlashDrawable>("slashLength") {
-        @Override
-        public void setValue(final SlashDrawable object, final float value) {
-            object.mCurrentSlashLength = value;
-        }
-
         @Override
         public Float get(final SlashDrawable object) {
             return object.mCurrentSlashLength;
         }
-    };
 
-    @SuppressWarnings("unchecked")
-    public void setSlashed(final boolean slashed) {
-        if (mSlashed == slashed) return;
-
-        mSlashed = slashed;
-
-        final float end = mSlashed ? SLASH_HEIGHT / SCALE : 0f;
-        final float start = mSlashed ? 0f : SLASH_HEIGHT / SCALE;
-
-        if (mAnimationEnabled) {
-            final ObjectAnimator anim = ObjectAnimator.ofFloat(this, mSlashLengthProp, start, end);
-            anim.addUpdateListener((ValueAnimator valueAnimator) -> invalidateSelf());
-            anim.setDuration(QS_ANIM_LENGTH);
-            anim.start();
-        } else {
-            mCurrentSlashLength = end;
-            invalidateSelf();
+        @Override
+        public void setValue(final SlashDrawable object, final float value) {
+            object.mCurrentSlashLength = value;
         }
+    };
+    private final Drawable mDrawable;
+    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path mPath = new Path();
+    private final RectF mSlashRect = new RectF(0, 0, 0, 0);
+    private boolean mAnimationEnabled = true;
+    // Animate this value on change
+    private float mCurrentSlashLength;
+    private float mRotation;
+    private boolean mSlashed;
+
+    public SlashDrawable(final Drawable d) {
+        mDrawable = d;
     }
 
     @SuppressWarnings("deprecation")
@@ -166,15 +114,76 @@ public class SlashDrawable extends Drawable {
         canvas.restore();
     }
 
+    @Override
+    public int getIntrinsicHeight() {
+        return mDrawable.getIntrinsicHeight();
+    }
+
+    @Override
+    public int getIntrinsicWidth() {
+        return mDrawable.getIntrinsicWidth();
+    }
+
+    @Override
+    public int getOpacity() {
+        return PixelFormat.OPAQUE;
+    }
+
+    @Override
+    protected void onBoundsChange(final Rect bounds) {
+        super.onBoundsChange(bounds);
+        mDrawable.setBounds(bounds);
+    }
+
     private float scale(final float frac, final int width) {
         return frac * width;
     }
 
-    private void updateRect(final float left, final float top, final float right, final float bottom) {
-        mSlashRect.left = left;
-        mSlashRect.top = top;
-        mSlashRect.right = right;
-        mSlashRect.bottom = bottom;
+    @Override
+    public void setAlpha(@IntRange(from = 0, to = 255) final int alpha) {
+        mDrawable.setAlpha(alpha);
+        mPaint.setAlpha(alpha);
+    }
+
+    public void setAnimationEnabled(final boolean enabled) {
+        mAnimationEnabled = enabled;
+    }
+
+    @Override
+    public void setColorFilter(@Nullable final ColorFilter colorFilter) {
+        mDrawable.setColorFilter(colorFilter);
+        mPaint.setColorFilter(colorFilter);
+    }
+
+    private void setDrawableTintList(@Nullable final ColorStateList tint) {
+        mDrawable.setTintList(tint);
+    }
+
+    public void setRotation(final float rotation) {
+        if (mRotation == rotation)
+            return;
+        mRotation = rotation;
+        invalidateSelf();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setSlashed(final boolean slashed) {
+        if (mSlashed == slashed) return;
+
+        mSlashed = slashed;
+
+        final float end = mSlashed ? SLASH_HEIGHT / SCALE : 0f;
+        final float start = mSlashed ? 0f : SLASH_HEIGHT / SCALE;
+
+        if (mAnimationEnabled) {
+            final ObjectAnimator anim = ObjectAnimator.ofFloat(this, mSlashLengthProp, start, end);
+            anim.addUpdateListener((ValueAnimator valueAnimator) -> invalidateSelf());
+            anim.setDuration(QS_ANIM_LENGTH);
+            anim.start();
+        } else {
+            mCurrentSlashLength = end;
+            invalidateSelf();
+        }
     }
 
     @Override
@@ -192,30 +201,16 @@ public class SlashDrawable extends Drawable {
         invalidateSelf();
     }
 
-    private void setDrawableTintList(@Nullable final ColorStateList tint) {
-        mDrawable.setTintList(tint);
-    }
-
     @Override
     public void setTintMode(final Mode tintMode) {
         super.setTintMode(tintMode);
         mDrawable.setTintMode(tintMode);
     }
 
-    @Override
-    public void setAlpha(@IntRange(from = 0, to = 255) final int alpha) {
-        mDrawable.setAlpha(alpha);
-        mPaint.setAlpha(alpha);
-    }
-
-    @Override
-    public void setColorFilter(@Nullable final ColorFilter colorFilter) {
-        mDrawable.setColorFilter(colorFilter);
-        mPaint.setColorFilter(colorFilter);
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.OPAQUE;
+    private void updateRect(final float left, final float top, final float right, final float bottom) {
+        mSlashRect.left = left;
+        mSlashRect.top = top;
+        mSlashRect.right = right;
+        mSlashRect.bottom = bottom;
     }
 }

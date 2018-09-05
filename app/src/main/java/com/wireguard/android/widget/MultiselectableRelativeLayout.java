@@ -12,22 +12,24 @@ import android.widget.RelativeLayout;
 import com.wireguard.android.R;
 
 public class MultiselectableRelativeLayout extends RelativeLayout {
+    private static final int[] STATE_MULTISELECTED = {R.attr.state_multiselected};
+    private boolean multiselected;
+
     public MultiselectableRelativeLayout(final Context context) {
         super(context);
     }
+
     public MultiselectableRelativeLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
+
     public MultiselectableRelativeLayout(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
     public MultiselectableRelativeLayout(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
-
-    private static final int[] STATE_MULTISELECTED = { R.attr.state_multiselected };
-
-    private boolean multiselected;
 
     @Override
     protected int[] onCreateDrawableState(final int extraSpace) {

@@ -40,9 +40,9 @@ public class QuickTileService extends TileService {
 
     private final OnStateChangedCallback onStateChangedCallback = new OnStateChangedCallback();
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
-    @Nullable private Tunnel tunnel;
-    @Nullable private Icon iconOn;
     @Nullable private Icon iconOff;
+    @Nullable private Icon iconOn;
+    @Nullable private Tunnel tunnel;
 
     /* This works around an annoying unsolved frameworks bug some people are hitting. */
     @Override
@@ -55,6 +55,22 @@ public class QuickTileService extends TileService {
             Log.d(TAG, "Failed to bind to TileService", e);
         }
         return ret;
+    }
+
+    @Override
+    public void onClick() {
+        if (tunnel != null) {
+            final Tile tile = getQsTile();
+            if (tile != null) {
+                tile.setIcon(tile.getIcon() == iconOn ? iconOff : iconOn);
+                tile.updateTile();
+            }
+            tunnel.setState(State.TOGGLE).whenComplete(this::onToggleFinished);
+        } else {
+            final Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivityAndCollapse(intent);
+        }
     }
 
     @Override
@@ -77,22 +93,6 @@ public class QuickTileService extends TileService {
         icon.setBounds(0, 0, c.getWidth(), c.getHeight());
         icon.draw(c);
         iconOff = Icon.createWithBitmap(b);
-    }
-
-    @Override
-    public void onClick() {
-        if (tunnel != null) {
-            final Tile tile = getQsTile();
-            if (tile != null) {
-                tile.setIcon(tile.getIcon() == iconOn ? iconOff : iconOn);
-                tile.updateTile();
-            }
-            tunnel.setState(State.TOGGLE).whenComplete(this::onToggleFinished);
-        } else {
-            final Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivityAndCollapse(intent);
-        }
     }
 
     @Override

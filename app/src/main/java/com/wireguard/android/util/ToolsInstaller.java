@@ -26,11 +26,10 @@ import java.util.List;
 
 public final class ToolsInstaller {
     public static final int ERROR = 0x0;
-    public static final int YES = 0x1;
-    public static final int NO = 0x2;
     public static final int MAGISK = 0x4;
+    public static final int NO = 0x2;
     public static final int SYSTEM = 0x8;
-
+    public static final int YES = 0x1;
     private static final String[][] EXECUTABLES = {
             {"libwg.so", "wg"},
             {"libwg-quick.so", "wg-quick"},
@@ -107,34 +106,8 @@ public final class ToolsInstaller {
         }
     }
 
-    private boolean willInstallAsMagiskModule() {
-        synchronized (lock) {
-            if (installAsMagiskModule == null) {
-                try {
-                    installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
-                } catch (final Exception ignored) {
-                    installAsMagiskModule = false;
-                }
-            }
-            return installAsMagiskModule;
-        }
-    }
-
-    private int installSystem() throws NoRootException {
-        if (INSTALL_DIR == null)
-            return OsConstants.ENOENT;
-        final StringBuilder script = new StringBuilder("set -ex; ");
-        script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
-        for (final String[] names : EXECUTABLES) {
-            final File destination = new File(INSTALL_DIR, names[1]);
-            script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
-                    new File(nativeLibraryDir, names[0]), destination, destination, destination));
-        }
-        try {
-            return Application.getRootShell().run(null, script.toString()) == 0 ? YES | SYSTEM : ERROR;
-        } catch (final IOException ignored) {
-            return ERROR;
-        }
+    public int install() throws NoRootException {
+        return willInstallAsMagiskModule() ? installMagisk() : installSystem();
     }
 
     private int installMagisk() throws NoRootException {
@@ -158,8 +131,21 @@ public final class ToolsInstaller {
         }
     }
 
-    public int install() throws NoRootException {
-        return willInstallAsMagiskModule() ? installMagisk() : installSystem();
+    private int installSystem() throws NoRootException {
+        if (INSTALL_DIR == null)
+            return OsConstants.ENOENT;
+        final StringBuilder script = new StringBuilder("set -ex; ");
+        script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
+        for (final String[] names : EXECUTABLES) {
+            final File destination = new File(INSTALL_DIR, names[1]);
+            script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
+                    new File(nativeLibraryDir, names[0]), destination, destination, destination));
+        }
+        try {
+            return Application.getRootShell().run(null, script.toString()) == 0 ? YES | SYSTEM : ERROR;
+        } catch (final IOException ignored) {
+            return ERROR;
+        }
     }
 
     public int symlink() throws NoRootException {
@@ -182,6 +168,19 @@ public final class ToolsInstaller {
             return Application.getRootShell().run(null, script.toString());
         } catch (final IOException ignored) {
             return OsConstants.EXIT_FAILURE;
+        }
+    }
+
+    private boolean willInstallAsMagiskModule() {
+        synchronized (lock) {
+            if (installAsMagiskModule == null) {
+                try {
+                    installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
+                } catch (final Exception ignored) {
+                    installAsMagiskModule = false;
+                }
+            }
+            return installAsMagiskModule;
         }
     }
 }

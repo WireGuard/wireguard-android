@@ -20,7 +20,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="200dp" >
+        android:minHeight="200dp">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminate="true"
-            android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/app_list"

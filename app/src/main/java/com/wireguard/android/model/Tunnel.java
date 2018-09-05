@@ -151,5 +151,6 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         }
     }
 
-    public static class Statistics extends BaseObservable { }
+    public static class Statistics extends BaseObservable {
+    }
 }

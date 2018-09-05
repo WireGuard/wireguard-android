@@ -5,7 +5,7 @@
         android:id="@+id/menu_settings"
         android:alphabeticShortcut="s"
         android:icon="@drawable/ic_settings"
+        android:orderInCategory="1000"
         android:title="@string/settings"
-        app:showAsAction="always"
-        android:orderInCategory="1000" />
+        app:showAsAction="always" />
 </menu>
