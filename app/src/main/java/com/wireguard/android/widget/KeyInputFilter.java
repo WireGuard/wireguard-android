@@ -10,7 +10,7 @@ import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
-import com.wireguard.crypto.KeyEncoding;
+import com.wireguard.crypto.Key;
 
 /**
  * InputFilter for entering WireGuard private/public keys encoded with base64.
@@ -25,7 +25,8 @@ public class KeyInputFilter implements InputFilter {
         return new KeyInputFilter();
     }
 
-    @Override @Nullable
+    @Nullable
+    @Override
     public CharSequence filter(final CharSequence source,
                                final int sStart, final int sEnd,
                                final Spanned dest,
@@ -38,9 +39,9 @@ public class KeyInputFilter implements InputFilter {
             final int dIndex = dStart + (sIndex - sStart);
             // Restrict characters to the base64 character set.
             // Ensure adding this character does not push the length over the limit.
-            if (((dIndex + 1 < KeyEncoding.KEY_LENGTH_BASE64 && isAllowed(c)) ||
-                    (dIndex + 1 == KeyEncoding.KEY_LENGTH_BASE64 && c == '=')) &&
-                    dLength + (sIndex - sStart) < KeyEncoding.KEY_LENGTH_BASE64) {
+            if (((dIndex + 1 < Key.Format.BASE64.getLength() && isAllowed(c)) ||
+                    (dIndex + 1 == Key.Format.BASE64.getLength() && c == '=')) &&
+                    dLength + (sIndex - sStart) < Key.Format.BASE64.getLength()) {
                 ++rIndex;
             } else {
                 if (replacement == null)

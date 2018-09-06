@@ -27,19 +27,21 @@ import com.wireguard.android.util.ObservableKeyedArrayList;
 import com.wireguard.android.util.ObservableKeyedList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import java9.util.Comparators;
 
 public class AppListDialogFragment extends DialogFragment {
 
     private static final String KEY_EXCLUDED_APPS = "excludedApps";
     private final ObservableKeyedList<String, ApplicationData> appData = new ObservableKeyedArrayList<>();
-    private List<String> currentlyExcludedApps;
+    @Nullable private List<String> currentlyExcludedApps;
 
-    public static <T extends Fragment & AppExclusionListener> AppListDialogFragment newInstance(final String[] excludedApps, final T target) {
+    public static <T extends Fragment & AppExclusionListener>
+    AppListDialogFragment newInstance(final ArrayList<String> excludedApps, final T target) {
         final Bundle extras = new Bundle();
-        extras.putStringArray(KEY_EXCLUDED_APPS, excludedApps);
+        extras.putStringArrayList(KEY_EXCLUDED_APPS, excludedApps);
         final AppListDialogFragment fragment = new AppListDialogFragment();
         fragment.setTargetFragment(target, 0);
         fragment.setArguments(extras);
@@ -64,7 +66,7 @@ public class AppListDialogFragment extends DialogFragment {
                 appData.add(new ApplicationData(resolveInfo.loadIcon(pm), resolveInfo.loadLabel(pm).toString(), packageName, currentlyExcludedApps.contains(packageName)));
             }
 
-            Collections.sort(appData, (lhs, rhs) -> lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase()));
+            Collections.sort(appData, Comparators.comparing(ApplicationData::getName, String.CASE_INSENSITIVE_ORDER));
             return appData;
         }).whenComplete(((data, throwable) -> {
             if (data != null) {
@@ -82,12 +84,11 @@ public class AppListDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        currentlyExcludedApps = Arrays.asList(getArguments().getStringArray(KEY_EXCLUDED_APPS));
+        currentlyExcludedApps = getArguments().getStringArrayList(KEY_EXCLUDED_APPS);
     }
 
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable final Bundle savedInstanceState) {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(R.string.excluded_applications);
 

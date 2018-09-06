@@ -64,13 +64,15 @@ public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
         return indexOfKey(key) >= 0;
     }
 
-    @Override @Nullable
+    @Nullable
+    @Override
     public E get(final K key) {
         final int index = indexOfKey(key);
         return index >= 0 ? get(index) : null;
     }
 
-    @Override @Nullable
+    @Nullable
+    @Override
     public E getLast(final K key) {
         final int index = lastIndexOfKey(key);
         return index >= 0 ? get(index) : null;

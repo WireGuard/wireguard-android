@@ -28,8 +28,7 @@ import java.util.Spliterator;
 
 public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
         extends ObservableKeyedArrayList<K, E> implements ObservableSortedKeyedList<K, E> {
-    @Nullable
-    private final Comparator<? super K> comparator;
+    @Nullable private final Comparator<? super K> comparator;
     private final transient KeyList<K, E> keyList = new KeyList<>(this);
 
     @SuppressWarnings("WeakerAccess")

@@ -63,6 +63,7 @@
     <string name="log_export_summary">Log file will be saved to downloads folder</string>
     <string name="mtu">MTU</string>
     <string name="name">Name</string>
+    <string name="parse_error">Cannot parse “%s” at %s</string>
     <string name="peer">Peer</string>
     <string name="permission_label">control WireGuard tunnels</string>
     <string name="permission_description">Allows an app to control WireGuard tunnels. Apps with this permission may enable and disable WireGuard tunnels at will, potentially misdirecting Internet traffic.</string>
@@ -99,13 +100,9 @@
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
     <string name="tunnel_error_invalid_name">Invalid name</string>
     <string name="tunnel_error_already_exists">Tunnel %s already exists</string>
-    <string name="tunnel_error_empty_inetaddress">Empty address</string>
     <string name="tunnel_error_empty_interface_address">Address is empty</string>
-    <string name="tunnel_error_interface_parse_failed">Unable to parse line: “%s”</string>
     <string name="tunnel_error_forbidden_endpoint_chars">Forbidden characters in endpoint</string>
     <string name="tunnel_error_empty_peer_public_key">Peer public key may not be empty</string>
-    <string name="tunnel_error_invalid_config_line">Invalid configuration line: %s</string>
-    <string name="tunnel_error_no_config_information">Could not find any config information</string>
     <string name="key_length_base64_exception_message">WireGuard base64 keys must be 44 characters encoding 32 bytes</string>
     <string name="key_length_exception_message">WireGuard keys must be 32 bytes</string>
     <string name="key_length_hex_exception_message">WireGuard hex keys must be 64 characters encoding 32 bytes</string>

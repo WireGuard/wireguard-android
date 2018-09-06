@@ -11,7 +11,6 @@ import android.view.ContextThemeWrapper;
 import com.wireguard.android.activity.SettingsActivity;
 
 public final class FragmentUtils {
-
     private FragmentUtils() {
         // Prevent instantiation
     }

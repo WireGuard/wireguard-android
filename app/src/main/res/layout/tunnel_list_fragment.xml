@@ -84,7 +84,7 @@
                 app:srcCompat="@drawable/ic_action_open_white" />
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton
-                android:id="@+id/scan_qr_code"
+                android:id="@+id/create_from_qrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestScanQRCode}"
@@ -101,6 +101,5 @@
                 app:fab_title="@string/create_empty"
                 app:srcCompat="@drawable/ic_action_edit_white" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
-
     </android.support.design.widget.CoordinatorLayout>
 </layout>

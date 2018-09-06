@@ -7,26 +7,36 @@ package com.wireguard.config;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.util.Objects;
 
-public class InetNetwork {
+/**
+ * An Internet network, denoted by its address and netmask
+ * <p>
+ * Instances of this class are immutable.
+ */
+public final class InetNetwork {
     private final InetAddress address;
     private final int mask;
 
-    public InetNetwork(final String input) {
-        final int slash = input.lastIndexOf('/');
+    private InetNetwork(final InetAddress address, final int mask) {
+        this.address = address;
+        this.mask = mask;
+    }
+
+    public static InetNetwork parse(final String network) {
+        final int slash = network.lastIndexOf('/');
         final int rawMask;
         final String rawAddress;
         if (slash >= 0) {
-            rawMask = Integer.parseInt(input.substring(slash + 1), 10);
-            rawAddress = input.substring(0, slash);
+            rawMask = Integer.parseInt(network.substring(slash + 1), 10);
+            rawAddress = network.substring(0, slash);
         } else {
             rawMask = -1;
-            rawAddress = input;
+            rawAddress = network;
         }
-        address = InetAddresses.parse(rawAddress);
+        final InetAddress address = InetAddresses.parse(rawAddress);
         final int maxMask = (address instanceof Inet4Address) ? 32 : 128;
-        mask = rawMask >= 0 && rawMask <= maxMask ? rawMask : maxMask;
+        final int mask = rawMask >= 0 && rawMask <= maxMask ? rawMask : maxMask;
+        return new InetNetwork(address, mask);
     }
 
     @Override
@@ -34,7 +44,7 @@ public class InetNetwork {
         if (!(obj instanceof InetNetwork))
             return false;
         final InetNetwork other = (InetNetwork) obj;
-        return Objects.equals(address, other.address) && mask == other.mask;
+        return address.equals(other.address) && mask == other.mask;
     }
 
     public InetAddress getAddress() {

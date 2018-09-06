@@ -10,11 +10,11 @@
 
         <variable
             name="collection"
-            type="android.databinding.ObservableList&lt;com.wireguard.config.Peer.Observable&gt;" />
+            type="android.databinding.ObservableList&lt;com.wireguard.android.viewmodel.PeerProxy&gt;" />
 
         <variable
             name="item"
-            type="com.wireguard.config.Peer.Observable" />
+            type="com.wireguard.android.viewmodel.PeerProxy" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -52,7 +52,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@null"
                 android:contentDescription="@string/delete"
-                android:onClick="@{() -> collection.remove(item)}"
+                android:onClick="@{() -> item.unbind()}"
                 android:src="@drawable/ic_action_delete" />
 
             <TextView
@@ -104,10 +104,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/allowed_ips_label"
                 android:layout_alignParentEnd="true"
-                android:checked="@{item.isExcludePrivateIPsOn}"
-                android:onClick="@{() -> item.toggleExcludePrivateIPs()}"
+                android:checked="@={item.excludingPrivateIps}"
                 android:text="@string/exclude_private_ips"
-                android:visibility="@{item.canToggleExcludePrivateIPs ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{item.ableToExcludePrivateIps ? View.VISIBLE : View.GONE}" />
 
             <EditText
                 android:id="@+id/allowed_ips_text"
@@ -115,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/allowed_ips_label"
                 android:inputType="textNoSuggestions|textVisiblePassword"
-                android:text="@={item.allowedIPs}" />
+                android:text="@={item.allowedIps}" />
 
             <TextView
                 android:id="@+id/endpoint_label"

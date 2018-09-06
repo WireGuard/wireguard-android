@@ -11,15 +11,17 @@
 
         <import type="com.wireguard.android.widget.NameInputFilter" />
 
-        <import type="com.wireguard.config.Peer" />
-
         <variable
             name="fragment"
             type="com.wireguard.android.fragment.TunnelEditorFragment" />
 
         <variable
             name="config"
-            type="com.wireguard.config.Config.Observable" />
+            type="com.wireguard.android.viewmodel.ConfigProxy" />
+
+        <variable
+            name="name"
+            type="String" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -76,7 +78,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/interface_name_label"
                             android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.name}"
+                            android:text="@={name}"
                             app:filter="@{NameInputFilter.newInstance()}" />
 
                         <TextView
@@ -96,7 +98,7 @@
                             android:layout_toStartOf="@+id/generate_private_key_button"
                             android:contentDescription="@string/public_key_description"
                             android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interfaceSection.privateKey}"
+                            android:text="@={config.interface.privateKey}"
                             app:filter="@{KeyInputFilter.newInstance()}" />
 
                         <Button
@@ -107,7 +109,7 @@
                             android:layout_alignBottom="@id/private_key_text"
                             android:layout_alignParentEnd="true"
                             android:layout_below="@+id/private_key_label"
-                            android:onClick="@{() -> config.interfaceSection.generateKeypair()}"
+                            android:onClick="@{() -> config.interface.generateKeyPair()}"
                             android:text="@string/generate" />
 
                         <TextView
@@ -130,7 +132,7 @@
                             android:hint="@string/hint_generated"
                             android:maxLines="1"
                             android:onClick="@{ClipboardUtils::copyTextView}"
-                            android:text="@{config.interfaceSection.publicKey}" />
+                            android:text="@{config.interface.publicKey}" />
 
                         <TextView
                             android:id="@+id/addresses_label"
@@ -150,7 +152,7 @@
                             android:layout_below="@+id/addresses_label"
                             android:layout_toStartOf="@+id/listen_port_text"
                             android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interfaceSection.addresses}" />
+                            android:text="@={config.interface.addresses}" />
 
                         <TextView
                             android:id="@+id/listen_port_label"
@@ -171,7 +173,7 @@
                             android:layout_alignStart="@+id/generate_private_key_button"
                             android:hint="@string/hint_random"
                             android:inputType="number"
-                            android:text="@={config.interfaceSection.listenPort}"
+                            android:text="@={config.interface.listenPort}"
                             android:textAlignment="center" />
 
                         <TextView
@@ -192,7 +194,7 @@
                             android:layout_below="@+id/dns_servers_label"
                             android:layout_toStartOf="@+id/mtu_text"
                             android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interfaceSection.dnses}" />
+                            android:text="@={config.interface.dnsServers}" />
 
                         <TextView
                             android:id="@+id/mtu_label"
@@ -213,7 +215,7 @@
                             android:layout_alignStart="@+id/generate_private_key_button"
                             android:hint="@string/hint_automatic"
                             android:inputType="number"
-                            android:text="@={config.interfaceSection.mtu}"
+                            android:text="@={config.interface.mtu}"
                             android:textAlignment="center" />
 
                         <Button
@@ -224,7 +226,7 @@
                             android:layout_below="@+id/dns_servers_text"
                             android:layout_marginLeft="-8dp"
                             android:onClick="@{fragment::onRequestSetExcludedApplications}"
-                            android:text="@{@plurals/set_excluded_applications(config.interfaceSection.excludedApplicationsCount, config.interfaceSection.excludedApplicationsCount)}" />
+                            android:text="@{@plurals/set_excluded_applications(config.interface.excludedApplications.size, config.interface.excludedApplications.size)}" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
@@ -244,7 +246,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginStart="4dp"
-                    android:onClick="@{() -> config.peers.add(Peer.Observable.newInstance())}"
+                    android:onClick="@{() -> config.addPeer()}"
                     android:text="@string/add_peer" />
             </LinearLayout>
         </ScrollView>

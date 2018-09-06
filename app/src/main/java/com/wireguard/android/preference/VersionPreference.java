@@ -34,7 +34,8 @@ public class VersionPreference extends Preference {
         });
     }
 
-    @Override @Nullable
+    @Nullable
+    @Override
     public CharSequence getSummary() {
         return versionSummary;
     }

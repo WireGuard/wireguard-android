@@ -49,7 +49,8 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return manager.delete(this);
     }
 
-    @Bindable @Nullable
+    @Bindable
+    @Nullable
     public Config getConfig() {
         if (config == null)
             manager.getTunnelConfig(this).whenComplete(ExceptionLoggers.E);
@@ -81,7 +82,8 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return TunnelManager.getTunnelState(this);
     }
 
-    @Bindable @Nullable
+    @Bindable
+    @Nullable
     public Statistics getStatistics() {
         // FIXME: Check age of statistics.
         if (statistics == null)
