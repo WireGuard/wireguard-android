@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.config.Config;
 
 /**
  * Fragment that shows details about a specific tunnel.
@@ -24,12 +23,6 @@ import com.wireguard.config.Config;
 
 public class TunnelDetailFragment extends BaseFragment {
     @Nullable private TunnelDetailFragmentBinding binding;
-
-    private void onConfigLoaded(final String name, final Config config) {
-        if (binding != null) {
-            binding.setConfig(new Config.Observable(config, name));
-        }
-    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -65,7 +58,7 @@ public class TunnelDetailFragment extends BaseFragment {
         if (newTunnel == null)
             binding.setConfig(null);
         else
-            newTunnel.getConfigAsync().thenAccept(a -> onConfigLoaded(newTunnel.getName(), a));
+            newTunnel.getConfigAsync().thenAccept(binding::setConfig);
     }
 
     @Override

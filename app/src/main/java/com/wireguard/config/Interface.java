@@ -5,395 +5,345 @@
 
 package com.wireguard.config;
 
-import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-import com.wireguard.android.Application;
-import com.wireguard.android.BR;
-import com.wireguard.android.R;
-import com.wireguard.crypto.Keypair;
+import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyPair;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import java9.util.Lists;
+import java9.util.Optional;
+import java9.util.stream.Collectors;
+import java9.util.stream.Stream;
+import java9.util.stream.StreamSupport;
 
 /**
- * Represents the configuration for a WireGuard interface (an [Interface] block).
+ * Represents the configuration for a WireGuard interface (an [Interface] block). Interfaces must
+ * have a private key (used to initialize a {@code KeyPair}), and may optionally have several other
+ * attributes.
+ * <p>
+ * Instances of this class are immutable.
  */
+public final class Interface {
+    private static final int MAX_UDP_PORT = 65535;
+    private static final int MIN_UDP_PORT = 0;
 
-public class Interface {
-    private final List<InetNetwork> addressList;
-    private final Context context = Application.get();
-    private final List<InetAddress> dnsList;
-    private final List<String> excludedApplications;
-    @Nullable private Keypair keypair;
-    private int listenPort;
-    private int mtu;
+    private final Set<InetNetwork> addresses;
+    private final Set<InetAddress> dnsServers;
+    private final Set<String> excludedApplications;
+    private final KeyPair keyPair;
+    private final Optional<Integer> listenPort;
+    private final Optional<Integer> mtu;
 
-    public Interface() {
-        addressList = new ArrayList<>();
-        dnsList = new ArrayList<>();
-        excludedApplications = new ArrayList<>();
+    private Interface(final Builder builder) {
+        // Defensively copy to ensure immutability even if the Builder is reused.
+        addresses = Collections.unmodifiableSet(new LinkedHashSet<>(builder.addresses));
+        dnsServers = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsServers));
+        excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
+        keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
+        listenPort = builder.listenPort;
+        mtu = builder.mtu;
     }
 
-    private void addAddresses(@Nullable final String[] addresses) {
-        if (addresses != null && addresses.length > 0) {
-            for (final String addr : addresses) {
-                if (addr.isEmpty())
-                    throw new IllegalArgumentException(context.getString(R.string.tunnel_error_empty_interface_address));
-                addressList.add(new InetNetwork(addr));
+    /**
+     * Parses an series of "KEY = VALUE" lines into an {@code Interface}. Throws
+     * {@link ParseException} if the input is not well-formed or contains unknown attributes.
+     *
+     * @param lines An iterable sequence of lines, containing at least a private key attribute
+     * @return An {@code Interface} with all of the attributes from {@code lines} set
+     */
+    public static Interface parse(final Iterable<? extends CharSequence> lines) throws ParseException {
+        final Builder builder = new Builder();
+        for (final CharSequence line : lines) {
+            final Attribute attribute = Attribute.parse(line)
+                    .orElseThrow(() -> new ParseException("[Interface]", line, "Syntax error"));
+            switch (attribute.getKey().toLowerCase()) {
+                case "address":
+                    builder.parseAddresses(attribute.getValue());
+                    break;
+                case "dns":
+                    builder.parseDnsServers(attribute.getValue());
+                    break;
+                case "excludedapplications":
+                    builder.parseExcludedApplications(attribute.getValue());
+                    break;
+                case "listenport":
+                    builder.parseListenPort(attribute.getValue());
+                    break;
+                case "mtu":
+                    builder.parseMtu(attribute.getValue());
+                    break;
+                case "privatekey":
+                    builder.parsePrivateKey(attribute.getValue());
+                    break;
+                default:
+                    throw new ParseException("[Interface]", attribute.getKey(), "Unknown attribute");
             }
         }
-    }
-
-    private void addDnses(@Nullable final String[] dnses) {
-        if (dnses != null && dnses.length > 0) {
-            for (final String dns : dnses) {
-                dnsList.add(InetAddresses.parse(dns));
-            }
-        }
-    }
-
-    private void addExcludedApplications(@Nullable final String[] applications) {
-        if (applications != null && applications.length > 0) {
-            excludedApplications.addAll(Arrays.asList(applications));
-        }
-    }
-
-    @Nullable
-    private String getAddressString() {
-        if (addressList.isEmpty())
-            return null;
-        return Attribute.iterableToString(addressList);
-    }
-
-    public InetNetwork[] getAddresses() {
-        return addressList.toArray(new InetNetwork[addressList.size()]);
-    }
-
-    @Nullable
-    private String getDnsString() {
-        if (dnsList.isEmpty())
-            return null;
-        return Attribute.iterableToString(getDnsStrings());
-    }
-
-    private List<String> getDnsStrings() {
-        final List<String> strings = new ArrayList<>();
-        for (final InetAddress addr : dnsList)
-            strings.add(addr.getHostAddress());
-        return strings;
-    }
-
-    public InetAddress[] getDnses() {
-        return dnsList.toArray(new InetAddress[dnsList.size()]);
-    }
-
-    public String[] getExcludedApplications() {
-        return excludedApplications.toArray(new String[excludedApplications.size()]);
-    }
-
-    @Nullable
-    private String getExcludedApplicationsString() {
-        if (excludedApplications.isEmpty())
-            return null;
-        return Attribute.iterableToString(excludedApplications);
-    }
-
-    public int getListenPort() {
-        return listenPort;
-    }
-
-    @Nullable
-    private String getListenPortString() {
-        if (listenPort == 0)
-            return null;
-        return Integer.valueOf(listenPort).toString();
-    }
-
-    public int getMtu() {
-        return mtu;
-    }
-
-    @Nullable
-    private String getMtuString() {
-        if (mtu == 0)
-            return null;
-        return Integer.toString(mtu);
-    }
-
-    @Nullable
-    public String getPrivateKey() {
-        if (keypair == null)
-            return null;
-        return keypair.getPrivateKey();
-    }
-
-    @Nullable
-    public String getPublicKey() {
-        if (keypair == null)
-            return null;
-        return keypair.getPublicKey();
-    }
-
-    public void parse(final String line) {
-        final Attribute key = Attribute.match(line);
-        if (key == null)
-            throw new IllegalArgumentException(String.format(context.getString(R.string.tunnel_error_interface_parse_failed), line));
-        switch (key) {
-            case ADDRESS:
-                addAddresses(key.parseList(line));
-                break;
-            case DNS:
-                addDnses(key.parseList(line));
-                break;
-            case EXCLUDED_APPLICATIONS:
-                addExcludedApplications(key.parseList(line));
-                break;
-            case LISTEN_PORT:
-                setListenPortString(key.parse(line));
-                break;
-            case MTU:
-                setMtuString(key.parse(line));
-                break;
-            case PRIVATE_KEY:
-                setPrivateKey(key.parse(line));
-                break;
-            default:
-                throw new IllegalArgumentException(line);
-        }
-    }
-
-    private void setAddressString(@Nullable final String addressString) {
-        addressList.clear();
-        addAddresses(Attribute.stringToList(addressString));
-    }
-
-    private void setDnsString(@Nullable final String dnsString) {
-        dnsList.clear();
-        addDnses(Attribute.stringToList(dnsString));
-    }
-
-    private void setExcludedApplicationsString(@Nullable final String applicationsString) {
-        excludedApplications.clear();
-        addExcludedApplications(Attribute.stringToList(applicationsString));
-    }
-
-    private void setListenPort(final int listenPort) {
-        this.listenPort = listenPort;
-    }
-
-    private void setListenPortString(@Nullable final String port) {
-        if (port != null && !port.isEmpty())
-            setListenPort(Integer.parseInt(port, 10));
-        else
-            setListenPort(0);
-    }
-
-    private void setMtu(final int mtu) {
-        this.mtu = mtu;
-    }
-
-    private void setMtuString(@Nullable final String mtu) {
-        if (mtu != null && !mtu.isEmpty())
-            setMtu(Integer.parseInt(mtu, 10));
-        else
-            setMtu(0);
-    }
-
-    private void setPrivateKey(@Nullable String privateKey) {
-        if (privateKey != null && privateKey.isEmpty())
-            privateKey = null;
-        keypair = privateKey == null ? null : new Keypair(privateKey);
+        return builder.build();
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof Interface))
+            return false;
+        final Interface other = (Interface) obj;
+        return addresses.equals(other.addresses)
+                && dnsServers.equals(other.dnsServers)
+                && excludedApplications.equals(other.excludedApplications)
+                && keyPair.equals(other.keyPair)
+                && listenPort.equals(other.listenPort)
+                && mtu.equals(other.mtu);
+    }
+
+    /**
+     * Returns the set of IP addresses assigned to the interface.
+     *
+     * @return a set of {@link InetNetwork}s
+     */
+    public Set<InetNetwork> getAddresses() {
+        // The collection is already immutable.
+        return addresses;
+    }
+
+    /**
+     * Returns the set of DNS servers associated with the interface.
+     *
+     * @return a set of {@link InetAddress}es
+     */
+    public Set<InetAddress> getDnsServers() {
+        // The collection is already immutable.
+        return dnsServers;
+    }
+
+    /**
+     * Returns the set of applications excluded from using the interface.
+     *
+     * @return a set of package names
+     */
+    public Set<String> getExcludedApplications() {
+        // The collection is already immutable.
+        return excludedApplications;
+    }
+
+    /**
+     * Returns the public/private key pair used by the interface.
+     *
+     * @return a key pair
+     */
+    public KeyPair getKeyPair() {
+        return keyPair;
+    }
+
+    /**
+     * Returns the UDP port number that the WireGuard interface will listen on.
+     *
+     * @return a UDP port number, or {@code Optional.empty()} if none is configured
+     */
+    public Optional<Integer> getListenPort() {
+        return listenPort;
+    }
+
+    /**
+     * Returns the MTU used for the WireGuard interface.
+     *
+     * @return the MTU, or {@code Optional.empty()} if none is configured
+     */
+    public Optional<Integer> getMtu() {
+        return mtu;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = 31 * hash + addresses.hashCode();
+        hash = 31 * hash + dnsServers.hashCode();
+        hash = 31 * hash + excludedApplications.hashCode();
+        hash = 31 * hash + keyPair.hashCode();
+        hash = 31 * hash + listenPort.hashCode();
+        hash = 31 * hash + mtu.hashCode();
+        return hash;
+    }
+
+    /**
+     * Converts the {@code Interface} into a string suitable for debugging purposes. The {@code
+     * Interface} is identified by its public key and (if set) the port used for its UDP socket.
+     *
+     * @return A concise single-line identifier for the {@code Interface}
+     */
+    @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder().append("[Interface]\n");
-        if (!addressList.isEmpty())
-            sb.append(Attribute.ADDRESS.composeWith(addressList));
-        if (!dnsList.isEmpty())
-            sb.append(Attribute.DNS.composeWith(getDnsStrings()));
-        if (!excludedApplications.isEmpty())
-            sb.append(Attribute.EXCLUDED_APPLICATIONS.composeWith(excludedApplications));
-        if (listenPort != 0)
-            sb.append(Attribute.LISTEN_PORT.composeWith(listenPort));
-        if (mtu != 0)
-            sb.append(Attribute.MTU.composeWith(mtu));
-        if (keypair != null)
-            sb.append(Attribute.PRIVATE_KEY.composeWith(keypair.getPrivateKey()));
+        final StringBuilder sb = new StringBuilder("(Interface ");
+        sb.append(keyPair.getPublicKey().toBase64());
+        listenPort.ifPresent(lp -> sb.append(" @").append(lp));
+        sb.append(')');
         return sb.toString();
     }
 
-    public static class Observable extends BaseObservable implements Parcelable {
-        public static final Creator<Observable> CREATOR = new Creator<Observable>() {
-            @Override
-            public Observable createFromParcel(final Parcel in) {
-                return new Observable(in);
-            }
+    /**
+     * Converts the {@code Interface} into a string suitable for inclusion in a {@code wg-quick}
+     * configuration file.
+     *
+     * @return The {@code Interface} represented as a series of "Key = Value" lines
+     */
+    public String toWgQuickString() {
+        final StringBuilder sb = new StringBuilder();
+        if (!addresses.isEmpty())
+            sb.append("Address = ").append(Attribute.join(addresses)).append('\n');
+        if (!dnsServers.isEmpty()) {
+            final List<String> dnsServerStrings = StreamSupport.stream(dnsServers)
+                    .map(InetAddress::getHostAddress)
+                    .collect(Collectors.toUnmodifiableList());
+            sb.append("DNS = ").append(Attribute.join(dnsServerStrings)).append('\n');
+        }
+        if (!excludedApplications.isEmpty())
+            sb.append("ExcludedApplications = ").append(Attribute.join(excludedApplications)).append('\n');
+        listenPort.ifPresent(lp -> sb.append("ListenPort = ").append(lp).append('\n'));
+        mtu.ifPresent(m -> sb.append("MTU = ").append(m).append('\n'));
+        sb.append("PrivateKey = ").append(keyPair.getPrivateKey().toBase64()).append('\n');
+        return sb.toString();
+    }
 
-            @Override
-            public Observable[] newArray(final int size) {
-                return new Observable[size];
-            }
-        };
-        @Nullable private String addresses;
-        @Nullable private String dnses;
-        @Nullable private String excludedApplications;
-        @Nullable private String listenPort;
-        @Nullable private String mtu;
-        @Nullable private String privateKey;
-        @Nullable private String publicKey;
+    /**
+     * Serializes the {@code Interface} for use with the WireGuard cross-platform userspace API.
+     * Note that not all attributes are included in this representation.
+     *
+     * @return the {@code Interface} represented as a series of "KEY=VALUE" lines
+     */
+    public String toWgUserspaceString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("private_key=").append(keyPair.getPrivateKey().toHex()).append('\n');
+        listenPort.ifPresent(lp -> sb.append("listen_port=").append(lp).append('\n'));
+        return sb.toString();
+    }
 
-        public Observable(@Nullable final Interface parent) {
-            if (parent != null)
-                loadData(parent);
+    @SuppressWarnings("UnusedReturnValue")
+    public static final class Builder {
+        // Defaults to an empty set.
+        private final Set<InetNetwork> addresses = new LinkedHashSet<>();
+        // Defaults to an empty set.
+        private final Set<InetAddress> dnsServers = new LinkedHashSet<>();
+        // Defaults to an empty set.
+        private final Set<String> excludedApplications = new LinkedHashSet<>();
+        // No default; must be provided before building.
+        @Nullable private KeyPair keyPair;
+        // Defaults to not present.
+        private Optional<Integer> listenPort = Optional.empty();
+        // Defaults to not present.
+        private Optional<Integer> mtu = Optional.empty();
+
+        public Builder addAddress(final InetNetwork address) {
+            addresses.add(address);
+            return this;
         }
 
-        private Observable(final Parcel in) {
-            addresses = in.readString();
-            dnses = in.readString();
-            publicKey = in.readString();
-            privateKey = in.readString();
-            listenPort = in.readString();
-            mtu = in.readString();
-            excludedApplications = in.readString();
+        public Builder addAddresses(final Collection<InetNetwork> addresses) {
+            this.addresses.addAll(addresses);
+            return this;
         }
 
-        public void commitData(final Interface parent) {
-            parent.setAddressString(addresses);
-            parent.setDnsString(dnses);
-            parent.setExcludedApplicationsString(excludedApplications);
-            parent.setPrivateKey(privateKey);
-            parent.setListenPortString(listenPort);
-            parent.setMtuString(mtu);
-            loadData(parent);
-            notifyChange();
+        public Builder addDnsServer(final InetAddress dnsServer) {
+            dnsServers.add(dnsServer);
+            return this;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
+        public Builder addDnsServers(final Collection<? extends InetAddress> dnsServers) {
+            this.dnsServers.addAll(dnsServers);
+            return this;
         }
 
-        public void generateKeypair() {
-            final Keypair keypair = new Keypair();
-            privateKey = keypair.getPrivateKey();
-            publicKey = keypair.getPublicKey();
-            notifyPropertyChanged(BR.privateKey);
-            notifyPropertyChanged(BR.publicKey);
+        public Interface build() {
+            return new Interface(this);
         }
 
-        @Nullable
-        @Bindable
-        public String getAddresses() {
-            return addresses;
+        public Builder excludeApplication(final String application) {
+            excludedApplications.add(application);
+            return this;
         }
 
-        @Nullable
-        @Bindable
-        public String getDnses() {
-            return dnses;
+        public Builder excludeApplications(final Collection<String> applications) {
+            excludedApplications.addAll(applications);
+            return this;
         }
 
-        @Nullable
-        @Bindable
-        public String getExcludedApplications() {
-            return excludedApplications;
-        }
-
-        @Bindable
-        public int getExcludedApplicationsCount() {
-            return Attribute.stringToList(excludedApplications).length;
-        }
-
-        @Nullable
-        @Bindable
-        public String getListenPort() {
-            return listenPort;
-        }
-
-        @Nullable
-        @Bindable
-        public String getMtu() {
-            return mtu;
-        }
-
-        @Nullable
-        @Bindable
-        public String getPrivateKey() {
-            return privateKey;
-        }
-
-        @Nullable
-        @Bindable
-        public String getPublicKey() {
-            return publicKey;
-        }
-
-        private void loadData(final Interface parent) {
-            addresses = parent.getAddressString();
-            dnses = parent.getDnsString();
-            excludedApplications = parent.getExcludedApplicationsString();
-            publicKey = parent.getPublicKey();
-            privateKey = parent.getPrivateKey();
-            listenPort = parent.getListenPortString();
-            mtu = parent.getMtuString();
-        }
-
-        public void setAddresses(final String addresses) {
-            this.addresses = addresses;
-            notifyPropertyChanged(BR.addresses);
-        }
-
-        public void setDnses(final String dnses) {
-            this.dnses = dnses;
-            notifyPropertyChanged(BR.dnses);
-        }
-
-        public void setExcludedApplications(final String excludedApplications) {
-            this.excludedApplications = excludedApplications;
-            notifyPropertyChanged(BR.excludedApplications);
-            notifyPropertyChanged(BR.excludedApplicationsCount);
-        }
-
-        public void setListenPort(final String listenPort) {
-            this.listenPort = listenPort;
-            notifyPropertyChanged(BR.listenPort);
-        }
-
-        public void setMtu(final String mtu) {
-            this.mtu = mtu;
-            notifyPropertyChanged(BR.mtu);
-        }
-
-        public void setPrivateKey(final String privateKey) {
-            this.privateKey = privateKey;
-
+        public Builder parseAddresses(final CharSequence addresses) throws ParseException {
             try {
-                publicKey = new Keypair(privateKey).getPublicKey();
-            } catch (final IllegalArgumentException ignored) {
-                publicKey = "";
+                final List<InetNetwork> parsed = Stream.of(Attribute.split(addresses))
+                        .map(InetNetwork::parse)
+                        .collect(Collectors.toUnmodifiableList());
+                return addAddresses(parsed);
+            } catch (final IllegalArgumentException e) {
+                throw new ParseException("Address", addresses, e);
             }
-
-            notifyPropertyChanged(BR.privateKey);
-            notifyPropertyChanged(BR.publicKey);
         }
 
-        @Override
-        public void writeToParcel(final Parcel dest, final int flags) {
-            dest.writeString(addresses);
-            dest.writeString(dnses);
-            dest.writeString(publicKey);
-            dest.writeString(privateKey);
-            dest.writeString(listenPort);
-            dest.writeString(mtu);
-            dest.writeString(excludedApplications);
+        public Builder parseDnsServers(final CharSequence dnsServers) throws ParseException {
+            try {
+                final List<InetAddress> parsed = Stream.of(Attribute.split(dnsServers))
+                        .map(InetAddresses::parse)
+                        .collect(Collectors.toUnmodifiableList());
+                return addDnsServers(parsed);
+            } catch (final IllegalArgumentException e) {
+                throw new ParseException("DNS", dnsServers, e);
+            }
+        }
+
+        public Builder parseExcludedApplications(final CharSequence apps) throws ParseException {
+            try {
+                return excludeApplications(Lists.of(Attribute.split(apps)));
+            } catch (final IllegalArgumentException e) {
+                throw new ParseException("ExcludedApplications", apps, e);
+            }
+        }
+
+        public Builder parseListenPort(final String listenPort) throws ParseException {
+            try {
+                return setListenPort(Integer.parseInt(listenPort));
+            } catch (final IllegalArgumentException e) {
+                throw new ParseException("ListenPort", listenPort, e);
+            }
+        }
+
+        public Builder parseMtu(final String mtu) throws ParseException {
+            try {
+                return setMtu(Integer.parseInt(mtu));
+            } catch (final IllegalArgumentException e) {
+                throw new ParseException("MTU", mtu, e);
+            }
+        }
+
+        public Builder parsePrivateKey(final String privateKey) throws ParseException {
+            try {
+                return setKeyPair(new KeyPair(Key.fromBase64(privateKey)));
+            } catch (final Key.KeyFormatException e) {
+                throw new ParseException("PrivateKey", "(omitted)", e);
+            }
+        }
+
+        public Builder setKeyPair(final KeyPair keyPair) {
+            this.keyPair = keyPair;
+            return this;
+        }
+
+        public Builder setListenPort(final int listenPort) {
+            if (listenPort < MIN_UDP_PORT || listenPort > MAX_UDP_PORT)
+                throw new IllegalArgumentException("ListenPort must be a valid UDP port number");
+            this.listenPort = listenPort == 0 ? Optional.empty() : Optional.of(listenPort);
+            return this;
+        }
+
+        public Builder setMtu(final int mtu) {
+            if (mtu < 0)
+                throw new IllegalArgumentException("MTU must not be negative");
+            this.mtu = mtu == 0 ? Optional.empty() : Optional.of(mtu);
+            return this;
         }
     }
 }

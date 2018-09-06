@@ -114,7 +114,7 @@ public final class WgQuickBackend implements Backend {
 
         final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
         try (final FileOutputStream stream = new FileOutputStream(tempFile, false)) {
-            stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
+            stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }
         String command = String.format("wg-quick %s '%s'",
                 state.toString().toLowerCase(), tempFile.getAbsolutePath());

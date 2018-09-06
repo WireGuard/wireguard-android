@@ -19,7 +19,7 @@
 
         <variable
             name="config"
-            type="com.wireguard.config.Config.Observable" />
+            type="com.wireguard.config.Config" />
     </data>
 
     <ScrollView
@@ -102,7 +102,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:onClick="@{ClipboardUtils::copyTextView}"
-                        android:text="@{config.interfaceSection.publicKey}" />
+                        android:text="@{config.interface.keyPair.publicKey.toBase64}" />
 
                     <TextView
                         android:id="@+id/addresses_label"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/addresses_label"
                         android:contentDescription="@string/addresses"
-                        android:text="@{config.interfaceSection.addresses}" />
+                        android:text="@{config.interface.addresses}" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

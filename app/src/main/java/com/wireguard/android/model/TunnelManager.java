@@ -44,6 +44,7 @@ public final class TunnelManager extends BaseObservable {
     private static final String KEY_LAST_USED_TUNNEL = "last_used_tunnel";
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
+
     private final CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> completableTunnels = new CompletableFuture<>();
     private final ConfigStore configStore;
     private final Context context = Application.get();
@@ -111,7 +112,8 @@ public final class TunnelManager extends BaseObservable {
         });
     }
 
-    @Bindable @Nullable
+    @Bindable
+    @Nullable
     public Tunnel getLastUsedTunnel() {
         return lastUsedTunnel;
     }

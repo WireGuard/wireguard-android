@@ -539,7 +539,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 return new SavedState[size];
             }
         };
-        public boolean mExpanded;
+        private boolean mExpanded;
 
         public SavedState(final Parcelable parcel) {
             super(parcel);

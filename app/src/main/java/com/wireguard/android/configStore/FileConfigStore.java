@@ -9,6 +9,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.wireguard.config.Config;
+import com.wireguard.config.ParseException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +42,7 @@ public final class FileConfigStore implements ConfigStore {
         if (!file.createNewFile())
             throw new IOException("Configuration file " + file.getName() + " already exists");
         try (final FileOutputStream stream = new FileOutputStream(file, false)) {
-            stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
+            stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }
         return config;
     }
@@ -67,9 +68,9 @@ public final class FileConfigStore implements ConfigStore {
     }
 
     @Override
-    public Config load(final String name) throws IOException {
+    public Config load(final String name) throws IOException, ParseException {
         try (final FileInputStream stream = new FileInputStream(fileFor(name))) {
-            return Config.from(stream);
+            return Config.parse(stream);
         }
     }
 
@@ -94,7 +95,7 @@ public final class FileConfigStore implements ConfigStore {
         if (!file.isFile())
             throw new FileNotFoundException("Configuration file " + file.getName() + " not found");
         try (final FileOutputStream stream = new FileOutputStream(file, false)) {
-            stream.write(config.toString().getBytes(StandardCharsets.UTF_8));
+            stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }
         return config;
     }

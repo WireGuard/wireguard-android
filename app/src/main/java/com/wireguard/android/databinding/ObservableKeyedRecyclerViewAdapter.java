@@ -73,7 +73,7 @@ public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>>
         holder.binding.executePendingBindings();
 
         if (rowConfigurationHandler != null) {
-            E item = getItem(position);
+            final E item = getItem(position);
             if (item != null) {
                 rowConfigurationHandler.onConfigureRow(holder.binding, item, position);
             }

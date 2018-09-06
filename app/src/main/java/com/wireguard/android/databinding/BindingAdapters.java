@@ -6,20 +6,29 @@
 package com.wireguard.android.databinding;
 
 import android.databinding.BindingAdapter;
+import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
+import android.databinding.ViewDataBinding;
 import android.databinding.adapters.ListenerUtil;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wireguard.android.BR;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.android.widget.ToggleSwitch;
 import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
+import com.wireguard.config.Attribute;
+import com.wireguard.config.InetNetwork;
 import com.wireguard.util.Keyed;
+
+import java9.util.Optional;
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -42,9 +51,10 @@ public final class BindingAdapters {
     }
 
     @BindingAdapter({"items", "layout"})
-    public static <E> void setItems(final LinearLayout view,
-                                    final ObservableList<E> oldList, final int oldLayoutId,
-                                    final ObservableList<E> newList, final int newLayoutId) {
+    public static <E>
+    void setItems(final LinearLayout view,
+                  @Nullable final ObservableList<E> oldList, final int oldLayoutId,
+                  @Nullable final ObservableList<E> newList, final int newLayoutId) {
         if (oldList == newList && oldLayoutId == newLayoutId)
             return;
         ItemChangeListener<E> listener = ListenerUtil.getListener(view, R.id.item_change_listener);
@@ -66,11 +76,34 @@ public final class BindingAdapters {
         listener.setList(newList);
     }
 
+    @BindingAdapter({"items", "layout"})
+    public static <E>
+    void setItems(final LinearLayout view,
+                  @Nullable final Iterable<E> oldList, final int oldLayoutId,
+                  @Nullable final Iterable<E> newList, final int newLayoutId) {
+        if (oldList == newList && oldLayoutId == newLayoutId)
+            return;
+        view.removeAllViews();
+        if (newList == null)
+            return;
+        final LayoutInflater layoutInflater = LayoutInflater.from(view.getContext());
+        for (final E item : newList) {
+            final ViewDataBinding binding =
+                    DataBindingUtil.inflate(layoutInflater, newLayoutId, view, false);
+            binding.setVariable(BR.collection, newList);
+            binding.setVariable(BR.item, item);
+            binding.executePendingBindings();
+            view.addView(binding.getRoot());
+        }
+    }
+
     @BindingAdapter(requireAll = false, value = {"items", "layout", "configurationHandler"})
     public static <K, E extends Keyed<? extends K>>
     void setItems(final RecyclerView view,
-                  final ObservableKeyedList<K, E> oldList, final int oldLayoutId, final RowConfigurationHandler oldRowConfigurationHandler,
-                  final ObservableKeyedList<K, E> newList, final int newLayoutId, final RowConfigurationHandler newRowConfigurationHandler) {
+                  @Nullable final ObservableKeyedList<K, E> oldList, final int oldLayoutId,
+                  final RowConfigurationHandler oldRowConfigurationHandler,
+                  @Nullable final ObservableKeyedList<K, E> newList, final int newLayoutId,
+                  final RowConfigurationHandler newRowConfigurationHandler) {
         if (view.getLayoutManager() == null)
             view.setLayoutManager(new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false));
 
@@ -103,4 +136,13 @@ public final class BindingAdapters {
         view.setOnBeforeCheckedChangeListener(listener);
     }
 
+    @BindingAdapter("android:text")
+    public static void setText(final TextView view, final Optional<?> text) {
+        view.setText(text.map(Object::toString).orElse(""));
+    }
+
+    @BindingAdapter("android:text")
+    public static void setText(final TextView view, @Nullable final Iterable<InetNetwork> networks) {
+        view.setText(networks != null ? Attribute.join(networks) : "");
+    }
 }

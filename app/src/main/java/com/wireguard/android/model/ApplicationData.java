@@ -13,7 +13,6 @@ import com.wireguard.android.BR;
 import com.wireguard.util.Keyed;
 
 public class ApplicationData extends BaseObservable implements Keyed<String> {
-
     private final Drawable icon;
     private final String name;
     private final String packageName;
