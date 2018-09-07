@@ -1,6 +1,6 @@
 /*
  * Copyright © 2018 The Android Open Source Project
- * Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * Copyright © 2018 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
