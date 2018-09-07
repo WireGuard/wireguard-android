@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Eric Kuck <eric@bluelinelabs.com>.
+ * Copyright © 2017-2018 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
