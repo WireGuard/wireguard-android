@@ -37,7 +37,7 @@ import java9.lang.Iterables;
 
 public class Peer {
     private final List<InetNetwork> allowedIPsList;
-    @Nullable private InetSocketAddress endpoint;
+    @Nullable private InetEndpoint endpoint;
     private int persistentKeepalive;
     @Nullable private String preSharedKey;
     @Nullable private String publicKey;
@@ -67,19 +67,15 @@ public class Peer {
     }
 
     @Nullable
-    public InetSocketAddress getEndpoint() {
+    public InetEndpoint getEndpoint() {
         return endpoint;
     }
 
-    @SuppressLint("DefaultLocale")
     @Nullable
     private String getEndpointString() {
         if (endpoint == null)
             return null;
-        if (endpoint.getHostString().contains(":") && !endpoint.getHostString().contains("["))
-            return String.format("[%s]:%d", endpoint.getHostString(), endpoint.getPort());
-        else
-            return String.format("%s:%d", endpoint.getHostString(), endpoint.getPort());
+        return endpoint.getEndpoint();
     }
 
     public int getPersistentKeepalive() {
@@ -103,21 +99,10 @@ public class Peer {
         return publicKey;
     }
 
-    @SuppressLint("DefaultLocale")
     public String getResolvedEndpointString() throws UnknownHostException {
         if (endpoint == null)
             throw new UnknownHostException("{empty}");
-        if (endpoint.isUnresolved())
-            endpoint = new InetSocketAddress(endpoint.getHostString(), endpoint.getPort());
-        if (endpoint.isUnresolved())
-            throw new UnknownHostException(endpoint.getHostString());
-        if (endpoint.getAddress() instanceof Inet6Address)
-            return String.format("[%s]:%d",
-                    endpoint.getAddress().getHostAddress(),
-                    endpoint.getPort());
-        return String.format("%s:%d",
-                endpoint.getAddress().getHostAddress(),
-                endpoint.getPort());
+        return endpoint.getResolvedEndpoint();
     }
 
     public void parse(final String line) {
@@ -150,24 +135,14 @@ public class Peer {
         addAllowedIPs(Attribute.stringToList(allowedIPsString));
     }
 
-    private void setEndpoint(@Nullable final InetSocketAddress endpoint) {
+    private void setEndpoint(@Nullable final InetEndpoint endpoint) {
         this.endpoint = endpoint;
     }
 
     private void setEndpointString(@Nullable final String endpoint) {
-        if (endpoint != null && !endpoint.isEmpty()) {
-            final InetSocketAddress constructedEndpoint;
-            if (endpoint.indexOf('/') != -1 || endpoint.indexOf('?') != -1 || endpoint.indexOf('#') != -1)
-                throw new IllegalArgumentException(context.getString(R.string.tunnel_error_forbidden_endpoint_chars));
-            final URI uri;
-            try {
-                uri = new URI("wg://" + endpoint);
-            } catch (final URISyntaxException e) {
-                throw new IllegalArgumentException(e);
-            }
-            constructedEndpoint = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-            setEndpoint(constructedEndpoint);
-        } else
+        if (endpoint != null && !endpoint.isEmpty())
+            setEndpoint(new InetEndpoint(endpoint));
+        else
             setEndpoint(null);
     }
 
