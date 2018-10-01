@@ -2,7 +2,7 @@
 #
 # Copyright © 2017-2018 WireGuard LLC. All Rights Reserved.
 
-FILES := $(filter-out %/main.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go))
+FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go))
 
 NDK_GO_ARCH_MAP_x86 := 386
 NDK_GO_ARCH_MAP_x86_64 := amd64
