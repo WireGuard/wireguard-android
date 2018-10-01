@@ -25,7 +25,7 @@
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
     <string name="cancel">Cancel</string>
-    <string name="config_save_error">Unable to save configuration for “%s”: %s</string>
+    <string name="config_save_error">Unable to save configuration for “%1$s”: %2$s</string>
     <string name="config_save_success">Successfully saved configuration for “%s”</string>
     <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_empty">Create from scratch</string>
@@ -110,7 +110,7 @@
     <string name="key_length_exception_message">WireGuard keys must be 32 bytes</string>
     <string name="key_length_hex_exception_message">WireGuard hex keys must be 64 characters encoding 32 bytes</string>
     <string name="version_title">WireGuard for Android v%s"</string>
-    <string name="version_summary">%s backend v%s</string>
+    <string name="version_summary">%1$s backend v%2$s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>
     <string name="zip_exporter_title">Export tunnels to zip file</string>
