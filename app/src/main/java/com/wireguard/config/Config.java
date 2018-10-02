@@ -6,16 +6,16 @@
 package com.wireguard.config;
 
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
-import com.android.databinding.library.baseAdapters.BR;
 import com.wireguard.android.Application;
+import com.wireguard.android.BR;
 import com.wireguard.android.R;
 
 import java.io.BufferedReader;

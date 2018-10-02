@@ -9,14 +9,14 @@
 
         <variable
             name="collection"
-            type="android.databinding.ObservableList&lt;com.wireguard.config.Peer.Observable&gt;" />
+            type="androidx.databinding.ObservableList&lt;com.wireguard.config.Peer.Observable&gt;" />
 
         <variable
             name="item"
             type="com.wireguard.config.Peer.Observable" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -157,5 +157,5 @@
                 android:text="@={item.persistentKeepalive}"
                 android:textAlignment="center" />
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

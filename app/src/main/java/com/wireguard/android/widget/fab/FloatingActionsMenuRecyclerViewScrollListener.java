@@ -5,7 +5,7 @@
 
 package com.wireguard.android.widget.fab;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class FloatingActionsMenuRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     private static final float SCALE_FACTOR = 1.5f;

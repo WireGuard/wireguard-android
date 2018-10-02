@@ -19,14 +19,14 @@
             type="com.wireguard.android.util.ObservableKeyedList&lt;String, Tunnel&gt;" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/colorBackground"
         android:clipChildren="false">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tunnel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
             android:orientation="vertical"
             android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
             android:layout_gravity="center">
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/logo_placeholder"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
@@ -100,5 +100,5 @@
                 app:fab_title="@string/create_empty" />
         </com.wireguard.android.widget.fab.FloatingActionsMenu>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -30,7 +30,7 @@
             android:indeterminate="true"
             android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/app_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

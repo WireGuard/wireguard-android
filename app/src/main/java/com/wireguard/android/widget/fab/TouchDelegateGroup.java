@@ -7,7 +7,7 @@
 package com.wireguard.android.widget.fab;
 
 import android.graphics.Rect;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
 import android.view.View;

@@ -65,21 +65,21 @@ android {
 }
 
 ext {
-    databindingVersion = '3.1.3'
-    supportLibsVersion = '27.1.1'
+    databindingVersion = '1.0.0'
+    androidXVersion = '1.0.0'
     streamsupportVersion = '1.6.0'
     jsr305Version = '3.0.2'
     zxingEmbeddedVersion = '3.6.0'
-    acraVersion = '5.2.0-rc2'
+    acraVersion = '5.2.0'
 }
 
 dependencies {
-    implementation "com.android.databinding:library:$databindingVersion"
-    implementation "com.android.support:appcompat-v7:$supportLibsVersion"
-    implementation "com.android.support:cardview-v7:$supportLibsVersion"
-    implementation "com.android.support:design:$supportLibsVersion"
-    implementation "com.android.support:preference-v14:$supportLibsVersion"
-    implementation "com.android.support:support-annotations:$supportLibsVersion"
+    implementation "androidx.databinding:databinding-runtime:$databindingVersion"
+    implementation "androidx.appcompat:appcompat:$androidXVersion"
+    implementation "androidx.cardview:cardview:$androidXVersion"
+    implementation "com.google.android.material:material:$androidXVersion"
+    implementation "androidx.legacy:legacy-preference-v14:$androidXVersion"
+    implementation "androidx.annotation:annotation:$androidXVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"

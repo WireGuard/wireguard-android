@@ -5,7 +5,7 @@
 
 package com.wireguard.android.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import java9.util.concurrent.CompletionException;

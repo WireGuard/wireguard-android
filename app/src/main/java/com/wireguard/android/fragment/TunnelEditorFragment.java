@@ -7,12 +7,12 @@ package com.wireguard.android.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.databinding.Observable;
-import android.databinding.ObservableList;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableList;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;

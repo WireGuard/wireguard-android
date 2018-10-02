@@ -5,7 +5,7 @@
 
 package com.wireguard.android.widget;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;

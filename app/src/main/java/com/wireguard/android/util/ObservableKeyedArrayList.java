@@ -5,8 +5,8 @@
 
 package com.wireguard.android.util;
 
-import android.databinding.ObservableArrayList;
-import android.support.annotation.Nullable;
+import androidx.databinding.ObservableArrayList;
+import androidx.annotation.Nullable;
 
 import com.wireguard.util.Keyed;
 

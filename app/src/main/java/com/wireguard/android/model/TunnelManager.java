@@ -8,9 +8,9 @@ package com.wireguard.android.model;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.support.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;

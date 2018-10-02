@@ -7,8 +7,8 @@ package com.wireguard.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.databinding.Observable;
-import android.databinding.Observable.OnPropertyChangedCallback;
+import androidx.databinding.Observable;
+import androidx.databinding.Observable.OnPropertyChangedCallback;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Icon;
@@ -16,7 +16,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 

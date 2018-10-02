@@ -5,7 +5,7 @@
 
 package com.wireguard.android.util;
 
-import android.databinding.ObservableList;
+import androidx.databinding.ObservableList;
 
 import com.wireguard.util.Keyed;
 import com.wireguard.util.KeyedList;
