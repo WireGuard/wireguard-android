@@ -25,6 +25,7 @@ add_custom_target(libwg-go.so WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/lib
     CFLAGS=${CMAKE_C_FLAGS}\ -Wno-unused-command-line-argument
     LDFLAGS=${CMAKE_SHARED_LINKER_FLAGS}\ -fuse-ld=gold
     DESTDIR=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+    BUILDDIR=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/../generated-src
 )
 # Hack to make it actually build as part of the default target
 add_dependencies(libwg.so libwg-go.so)
