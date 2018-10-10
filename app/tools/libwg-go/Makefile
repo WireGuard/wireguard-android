@@ -27,16 +27,11 @@ default: $(DESTDIR)/libwg-go.so
 
 GOBUILDARCH := $(NDK_GO_ARCH_MAP_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOBUILDVERSION := 1.11
+GOBUILDVERSION := 1.11.1
 GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
 GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
-
-GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
-HAVE_PATCHED_GO := $(shell patch -p1 -f -R -s --dry-run -d "$$(go env GOROOT)" < $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/goruntime-boottime-over-monotonic.diff >/dev/null 2>&1 && echo yes)
-ifeq ($(GOBUILDVERSION_NEEDED)|$(HAVE_PATCHED_GO),$(GOBUILDVERSION_CURRENT)|yes)
-$(info Using system Go)
-else
 export GOROOT := $(BUILDDIR)/goroot
+export GOPATH := $(BUILDDIR)/gopath
 export PATH := $(GOROOT)/bin:$(PATH)
 GOBUILDVERSION_CURRENT := $(shell $(GOROOT)/bin/go version 2>/dev/null)
 ifneq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
@@ -47,8 +42,6 @@ $(GOROOT)/bin/go:
 	mkdir -p "$(GOROOT)"
 	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
 	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
-$(BUILDDIR)/.prepared: $(GOROOT)/bin/go
-endif
 
 $(shell test "$$(cat .gobuildversion 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.so")
 
@@ -62,11 +55,11 @@ endef
 $(foreach FILE,$(UPSTREAM_FILES),$(eval $(call copy-src-to-build,../wireguard-go/,$(FILE))))
 $(foreach FILE,$(DOWNSTREAM_FILES),$(eval $(call copy-src-to-build,src/,$(FILE))))
 
-$(BUILDDIR)/.prepared:
-	cd "$(BUILDDIR)" && if ! GOPATH="$(BUILDDIR)/gopath" go get; then chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; rm -rf "$(BUILDDIR)/gopath/pkg/mod"; exit 1; fi
-	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"
+$(BUILDDIR)/.prepared: $(GOROOT)/bin/go
+	cd "$(BUILDDIR)" && go get || { chmod -fR +w "$(GOPATH)/pkg/mod"; rm -rf "$(GOPATH)/pkg/mod"; exit 1; }
+	chmod -fR +w "$(GOPATH)/pkg/mod"
 	touch "$@"
 
 $(DESTDIR)/libwg-go.so: $(BUILDDIR)/.prepared
-	cd "$(BUILDDIR)" && GOPATH="$(BUILDDIR)/gopath" go build -ldflags="-X main.socketDirectory=/data/data/$(ANDROID_PACKAGE_NAME)/cache/wireguard" -v -o "$@" -buildmode c-shared
+	cd "$(BUILDDIR)" && go build -ldflags="-X main.socketDirectory=/data/data/$(ANDROID_PACKAGE_NAME)/cache/wireguard" -v -o "$@" -buildmode c-shared
 	go version > .gobuildversion
