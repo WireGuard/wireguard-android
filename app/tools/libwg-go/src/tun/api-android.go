@@ -10,8 +10,8 @@ import (
 	"os"
 )
 
-func CreateTUNFromFD(tun_fd int) (TUNDevice, string, error) {
-	file := os.NewFile(uintptr(tun_fd), "/dev/tun")
+func CreateTUNFromFD(tunFd int) (TUNDevice, string, error) {
+	file := os.NewFile(uintptr(tunFd), "/dev/tun")
 	tun := &nativeTun{
 		tunFile: file,
 		fd:      file.Fd(),
@@ -20,7 +20,7 @@ func CreateTUNFromFD(tun_fd int) (TUNDevice, string, error) {
 		nopi:    true,
 	}
 	var err error
-	tun.fdCancel, err = rwcancel.NewRWCancel(tun_fd)
+	tun.fdCancel, err = rwcancel.NewRWCancel(tunFd)
 	if err != nil {
 		return nil, "", err
 	}
