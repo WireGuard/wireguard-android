@@ -60,7 +60,7 @@ func init() {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
+func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 	interfaceName := string([]byte(ifnameRef))
 
 	logger := &Logger{
@@ -71,9 +71,9 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 
 	logger.Debug.Println("Debug log enabled")
 
-	tun, name, err := tun.CreateTUNFromFD(int(tun_fd))
+	tun, name, err := tun.CreateTUNFromFD(int(tunFd))
 	if err != nil {
-		unix.Close(int(tun_fd))
+		unix.Close(int(tunFd))
 		logger.Error.Println(err)
 		return -1
 	}
@@ -86,7 +86,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	setError := ipcSetOperation(device, bufferedSettings)
 	if setError != nil {
-		unix.Close(int(tun_fd))
+		unix.Close(int(tunFd))
 		logger.Error.Println(setError)
 		return -1
 	}
@@ -124,7 +124,7 @@ func wgTurnOn(ifnameRef string, tun_fd int32, settings string) int32 {
 		}
 	}
 	if i == math.MaxInt32 {
-		unix.Close(int(tun_fd))
+		unix.Close(int(tunFd))
 		return -1
 	}
 	tunnelHandles[i] = TunnelHandle{device: device, uapi: uapi}
