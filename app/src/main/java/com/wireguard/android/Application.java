@@ -8,8 +8,6 @@ package com.wireguard.android;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -27,30 +25,11 @@ import com.wireguard.android.util.AsyncWorker;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
-import org.acra.ACRA;
-import org.acra.annotation.AcraCore;
-import org.acra.annotation.AcraHttpSender;
-import org.acra.data.StringFormat;
-import org.acra.sender.HttpSender;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 
 import java9.util.concurrent.CompletableFuture;
 
-
-@AcraCore(reportFormat = StringFormat.JSON,
-        buildConfigClass = BuildConfig.class,
-        logcatArguments = {"-b", "all", "-d", "-v", "threadtime", "*:V"},
-        excludeMatchingSharedPreferencesKeys = {"last_used_tunnel", "enabled_configs"})
-@AcraHttpSender(uri = "https://crashreport.zx2c4.com/android/report",
-        basicAuthLogin = "6RCovLxEVCTXGiW5",
-        basicAuthPassword = "O7I3sVa5ULVdiC51",
-        httpMethod = HttpSender.Method.POST,
-        compress = true)
 public class Application extends android.app.Application {
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
     private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
@@ -97,40 +76,6 @@ public class Application extends android.app.Application {
         return get().futureBackend;
     }
 
-    /* The ACRA password can be trivially reverse engineered and is open source anyway,
-     * so there's no point in trying to protect it. However, we do want to at least
-     * prevent innocent self-builders from uploading stuff to our crash reporter. So, we
-     * check the DN of the certs that signed the apk, without even bothering to try
-     * validating that they're authentic. It's a good enough heuristic.
-     */
-    @SuppressWarnings("deprecation")
-    @Nullable
-    private static String getInstallSource(final Context context) {
-        if (BuildConfig.DEBUG)
-            return null;
-        try {
-            final CertificateFactory cf = CertificateFactory.getInstance("X509");
-            for (final Signature sig : context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES).signatures) {
-                try {
-                    for (final String category : ((X509Certificate) cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()))).getSubjectDN().getName().split(", *")) {
-                        final String[] parts = category.split("=", 2);
-                        if (!"O".equals(parts[0]))
-                            continue;
-                        switch (parts[1]) {
-                            case "Google Inc.":
-                                return "Play Store";
-                            case "fdroid.org":
-                                return "F-Droid";
-                        }
-                    }
-                } catch (final Exception ignored) {
-                }
-            }
-        } catch (final Exception ignored) {
-        }
-        return null;
-    }
-
     public static RootShell getRootShell() {
         return get().rootShell;
     }
@@ -159,12 +104,6 @@ public class Application extends android.app.Application {
             startActivity(intent);
             System.exit(0);
         }
-
-        final String installSource = getInstallSource(context);
-        if (installSource != null) {
-            ACRA.init(this);
-            ACRA.getErrorReporter().putCustomData("installSource", installSource);
-        }
     }
 
     @Override
@@ -183,13 +122,6 @@ public class Application extends android.app.Application {
         tunnelManager = new TunnelManager(new FileConfigStore(getApplicationContext()));
         tunnelManager.onCreate();
 
-        asyncWorker.supplyAsync(Application::getBackend).thenAccept(backend -> {
-            futureBackend.complete(backend);
-            if (ACRA.isInitialised()) {
-                ACRA.getErrorReporter().putCustomData("backend", backend.getClass().getSimpleName());
-                asyncWorker.supplyAsync(backend::getVersion).thenAccept(version ->
-                        ACRA.getErrorReporter().putCustomData("backendVersion", version));
-            }
-        });
+        asyncWorker.supplyAsync(Application::getBackend).thenAccept(futureBackend::complete);
     }
 }
