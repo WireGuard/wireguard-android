@@ -43,50 +43,59 @@ public final class Config {
      * @return a {@code Config} instance representing the supplied configuration
      */
     public static Config parse(final InputStream stream) throws IOException, ParseException {
+        return parse(new BufferedReader(new InputStreamReader(stream)));
+    }
+
+    /**
+     * Parses an series of "Interface" and "Peer" sections into a {@code Config}. Throws
+     * {@link ParseException} if the input is not well-formed or contains unparseable sections.
+     *
+     * @param reader a BufferedReader of UTF-8 text that is interpreted as a WireGuard configuration file
+     * @return a {@code Config} instance representing the supplied configuration
+     */
+    public static Config parse(final BufferedReader reader) throws IOException, ParseException {
         final Builder builder = new Builder();
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            final Collection<String> interfaceLines = new ArrayList<>();
-            final Collection<String> peerLines = new ArrayList<>();
-            boolean inInterfaceSection = false;
-            boolean inPeerSection = false;
-            @Nullable String line;
-            while ((line = reader.readLine()) != null) {
-                final int commentIndex = line.indexOf('#');
-                if (commentIndex != -1)
-                    line = line.substring(0, commentIndex);
-                line = line.trim();
-                if (line.isEmpty())
-                    continue;
-                if (line.startsWith("[")) {
-                    // Consume all [Peer] lines read so far.
-                    if (inPeerSection) {
-                        builder.parsePeer(peerLines);
-                        peerLines.clear();
-                    }
-                    if ("[Interface]".equalsIgnoreCase(line)) {
-                        inInterfaceSection = true;
-                        inPeerSection = false;
-                    } else if ("[Peer]".equalsIgnoreCase(line)) {
-                        inInterfaceSection = false;
-                        inPeerSection = true;
-                    } else {
-                        throw new ParseException("top level", line, "Unknown section name");
-                    }
-                } else if (inInterfaceSection) {
-                    interfaceLines.add(line);
-                } else if (inPeerSection) {
-                    peerLines.add(line);
-                } else {
-                    throw new ParseException("top level", line, "Expected [Interface] or [Peer]");
+        final Collection<String> interfaceLines = new ArrayList<>();
+        final Collection<String> peerLines = new ArrayList<>();
+        boolean inInterfaceSection = false;
+        boolean inPeerSection = false;
+        @Nullable String line;
+        while ((line = reader.readLine()) != null) {
+            final int commentIndex = line.indexOf('#');
+            if (commentIndex != -1)
+                line = line.substring(0, commentIndex);
+            line = line.trim();
+            if (line.isEmpty())
+                continue;
+            if (line.startsWith("[")) {
+                // Consume all [Peer] lines read so far.
+                if (inPeerSection) {
+                    builder.parsePeer(peerLines);
+                    peerLines.clear();
                 }
+                if ("[Interface]".equalsIgnoreCase(line)) {
+                    inInterfaceSection = true;
+                    inPeerSection = false;
+                } else if ("[Peer]".equalsIgnoreCase(line)) {
+                    inInterfaceSection = false;
+                    inPeerSection = true;
+                } else {
+                    throw new ParseException("top level", line, "Unknown section name");
+                }
+            } else if (inInterfaceSection) {
+                interfaceLines.add(line);
+            } else if (inPeerSection) {
+                peerLines.add(line);
+            } else {
+                throw new ParseException("top level", line, "Expected [Interface] or [Peer]");
             }
-            if (inPeerSection)
-                builder.parsePeer(peerLines);
-            else if (!inInterfaceSection)
-                throw new ParseException("top level", "", "Empty configuration");
-            // Combine all [Interface] sections in the file.
-            builder.parseInterface(interfaceLines);
         }
+        if (inPeerSection)
+            builder.parsePeer(peerLines);
+        else if (!inInterfaceSection)
+            throw new ParseException("top level", "", "Empty configuration");
+        // Combine all [Interface] sections in the file.
+        builder.parseInterface(interfaceLines);
         return builder.build();
     }
 
