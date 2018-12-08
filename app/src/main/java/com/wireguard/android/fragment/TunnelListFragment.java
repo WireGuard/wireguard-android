@@ -43,8 +43,10 @@ import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollLis
 import com.wireguard.config.Config;
 import com.wireguard.config.ParseException;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -122,7 +124,8 @@ public class TunnelListFragment extends BaseFragment {
                 throw new IllegalArgumentException("File must be .conf or .zip");
 
             if (isZip) {
-                try (ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri))) {
+                try (ZipInputStream zip = new ZipInputStream(contentResolver.openInputStream(uri));
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(zip))) {
                     ZipEntry entry;
                     while ((entry = zip.getNextEntry()) != null) {
                         if (entry.isDirectory())
@@ -140,7 +143,7 @@ public class TunnelListFragment extends BaseFragment {
                             continue;
                         Config config = null;
                         try {
-                            config = Config.parse(zip);
+                            config = Config.parse(reader);
                         } catch (Exception e) {
                             throwables.add(e);
                         }
