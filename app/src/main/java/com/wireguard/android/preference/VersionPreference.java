@@ -17,6 +17,8 @@ import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
 
+import java.util.Locale;
+
 public class VersionPreference extends Preference {
     @Nullable private String versionSummary;
 
@@ -24,11 +26,11 @@ public class VersionPreference extends Preference {
         super(context, attrs);
 
         Application.getBackendAsync().thenAccept(backend -> {
-            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase());
+            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase(Locale.ENGLISH));
             Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
                 versionSummary = exception == null
                         ? getContext().getString(R.string.version_summary, backend.getTypeName(), version)
-                        : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase());
+                        : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase(Locale.ENGLISH));
                 notifyChanged();
             });
         });
