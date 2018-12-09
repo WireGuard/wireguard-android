@@ -53,6 +53,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -117,8 +118,8 @@ public class TunnelListFragment extends BaseFragment {
                     throw new IllegalArgumentException("Illegal file name: " + name);
                 name = name.substring(idx + 1);
             }
-            boolean isZip = name.toLowerCase().endsWith(".zip");
-            if (name.toLowerCase().endsWith(".conf"))
+            boolean isZip = name.toLowerCase(Locale.ENGLISH).endsWith(".zip");
+            if (name.toLowerCase(Locale.ENGLISH).endsWith(".conf"))
                 name = name.substring(0, name.length() - ".conf".length());
             else if (!isZip)
                 throw new IllegalArgumentException("File must be .conf or .zip");
@@ -137,7 +138,7 @@ public class TunnelListFragment extends BaseFragment {
                                 continue;
                             name = name.substring(name.lastIndexOf('/') + 1);
                         }
-                        if (name.toLowerCase().endsWith(".conf"))
+                        if (name.toLowerCase(Locale.ENGLISH).endsWith(".conf"))
                             name = name.substring(0, name.length() - ".conf".length());
                         else
                             continue;

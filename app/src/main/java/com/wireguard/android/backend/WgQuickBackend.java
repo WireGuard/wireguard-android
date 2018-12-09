@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -117,7 +118,7 @@ public final class WgQuickBackend implements Backend {
             stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }
         String command = String.format("wg-quick %s '%s'",
-                state.toString().toLowerCase(), tempFile.getAbsolutePath());
+                state.toString().toLowerCase(Locale.ENGLISH), tempFile.getAbsolutePath());
         if (state == State.UP)
             command = "cat /sys/module/wireguard/version && " + command;
         final int result = Application.getRootShell().run(null, command);

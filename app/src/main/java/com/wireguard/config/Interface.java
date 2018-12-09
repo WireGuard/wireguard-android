@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -64,7 +65,7 @@ public final class Interface {
         for (final CharSequence line : lines) {
             final Attribute attribute = Attribute.parse(line)
                     .orElseThrow(() -> new ParseException("[Interface]", line, "Syntax error"));
-            switch (attribute.getKey().toLowerCase()) {
+            switch (attribute.getKey().toLowerCase(Locale.ENGLISH)) {
                 case "address":
                     builder.parseAddresses(attribute.getValue());
                     break;
