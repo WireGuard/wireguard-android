@@ -70,7 +70,7 @@ public class ZipExporterPreference extends Preference {
                         for (int i = 0; i < futureConfigs.size(); ++i) {
                             zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
                             zip.write(futureConfigs.get(i).getNow(null).
-                                    toString().getBytes(StandardCharsets.UTF_8));
+                                    toWgQuickString().getBytes(StandardCharsets.UTF_8));
                         }
                         zip.closeEntry();
                     } catch (final Exception e) {
