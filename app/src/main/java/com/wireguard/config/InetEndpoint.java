@@ -51,6 +51,8 @@ public final class InetEndpoint {
         } catch (final URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+        if (uri.getPort() < 0)
+            throw new IllegalArgumentException("An endpoint must specify a port (e.g. 51820)");
         try {
             InetAddresses.parse(uri.getHost());
             // Parsing ths host as a numeric address worked, so we don't need to do DNS lookups.
