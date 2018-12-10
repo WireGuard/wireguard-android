@@ -1,0 +1,291 @@
+diff --git a/src/syscall/syscall_linux_386.go b/src/syscall/syscall_linux_386.go
+index 49db72450f..6e162ebb41 100644
+--- a/src/syscall/syscall_linux_386.go
++++ b/src/syscall/syscall_linux_386.go
+@@ -62,8 +62,6 @@ func Pipe2(p []int, flags int) (err error) {
+ //sysnb	InotifyInit() (fd int, err error)
+ //sys	Ioperm(from int, num int, on int) (err error)
+ //sys	Iopl(level int) (err error)
+-//sys	Lchown(path string, uid int, gid int) (err error) = SYS_LCHOWN32
+-//sys	Lstat(path string, stat *Stat_t) (err error) = SYS_LSTAT64
+ //sys	Pread(fd int, p []byte, offset int64) (n int, err error) = SYS_PREAD64
+ //sys	Pwrite(fd int, p []byte, offset int64) (n int, err error) = SYS_PWRITE64
+ //sys	sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) = SYS_SENDFILE64
+@@ -74,7 +72,6 @@ func Pipe2(p []int, flags int) (err error) {
+ //sysnb	Setresuid(ruid int, euid int, suid int) (err error) = SYS_SETRESUID32
+ //sysnb	Setreuid(ruid int, euid int) (err error) = SYS_SETREUID32
+ //sys	Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n int, err error)
+-//sys	Stat(path string, stat *Stat_t) (err error) = SYS_STAT64
+ //sys	SyncFileRange(fd int, off int64, n int64, flags int) (err error)
+ //sys	Truncate(path string, length int64) (err error) = SYS_TRUNCATE64
+ //sysnb	getgroups(n int, list *_Gid_t) (nn int, err error) = SYS_GETGROUPS32
+@@ -84,6 +81,18 @@ func Pipe2(p []int, flags int) (err error) {
+ //sys	mmap2(addr uintptr, length uintptr, prot int, flags int, fd int, pageOffset uintptr) (xaddr uintptr, err error)
+ //sys	EpollWait(epfd int, events []EpollEvent, msec int) (n int, err error)
+ 
++func Stat(path string, stat *Stat_t) (err error) {
++	return fstatat(_AT_FDCWD, path, stat, 0)
++}
++
++func Lchown(path string, uid int, gid int) (err error) {
++	return Fchownat(_AT_FDCWD, path, uid, gid, _AT_SYMLINK_NOFOLLOW)
++}
++
++func Lstat(path string, stat *Stat_t) (err error) {
++	return fstatat(_AT_FDCWD, path, stat, _AT_SYMLINK_NOFOLLOW)
++}
++
+ func mmap(addr uintptr, length uintptr, prot int, flags int, fd int, offset int64) (xaddr uintptr, err error) {
+ 	page := uintptr(offset / 4096)
+ 	if offset != int64(page)*4096 {
+diff --git a/src/syscall/syscall_linux_amd64.go b/src/syscall/syscall_linux_amd64.go
+index 1a21d9db6f..f740ab4e72 100644
+--- a/src/syscall/syscall_linux_amd64.go
++++ b/src/syscall/syscall_linux_amd64.go
+@@ -22,9 +22,7 @@ const (
+ //sysnb	InotifyInit() (fd int, err error)
+ //sys	Ioperm(from int, num int, on int) (err error)
+ //sys	Iopl(level int) (err error)
+-//sys	Lchown(path string, uid int, gid int) (err error)
+ //sys	Listen(s int, n int) (err error)
+-//sys	Lstat(path string, stat *Stat_t) (err error)
+ //sys	Pread(fd int, p []byte, offset int64) (n int, err error) = SYS_PREAD64
+ //sys	Pwrite(fd int, p []byte, offset int64) (n int, err error) = SYS_PWRITE64
+ //sys	Seek(fd int, offset int64, whence int) (off int64, err error) = SYS_LSEEK
+@@ -66,6 +64,14 @@ func Stat(path string, stat *Stat_t) (err error) {
+ 	return fstatat(_AT_FDCWD, path, stat, 0)
+ }
+ 
++func Lchown(path string, uid int, gid int) (err error) {
++	return Fchownat(_AT_FDCWD, path, uid, gid, _AT_SYMLINK_NOFOLLOW)
++}
++
++func Lstat(path string, stat *Stat_t) (err error) {
++	return fstatat(_AT_FDCWD, path, stat, _AT_SYMLINK_NOFOLLOW)
++}
++
+ //go:noescape
+ func gettimeofday(tv *Timeval) (err Errno)
+ 
+diff --git a/src/syscall/syscall_linux_arm.go b/src/syscall/syscall_linux_arm.go
+index b0c0ac7c4f..65543193e1 100644
+--- a/src/syscall/syscall_linux_arm.go
++++ b/src/syscall/syscall_linux_arm.go
+@@ -83,9 +83,7 @@ func Seek(fd int, offset int64, whence int) (newoffset int64, err error) {
+ //sysnb	Getgid() (gid int) = SYS_GETGID32
+ //sysnb	Getuid() (uid int) = SYS_GETUID32
+ //sysnb	InotifyInit() (fd int, err error)
+-//sys	Lchown(path string, uid int, gid int) (err error) = SYS_LCHOWN32
+ //sys	Listen(s int, n int) (err error)
+-//sys	Lstat(path string, stat *Stat_t) (err error) = SYS_LSTAT64
+ //sys	sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) = SYS_SENDFILE64
+ //sys	Select(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timeval) (n int, err error) = SYS__NEWSELECT
+ //sys	Setfsgid(gid int) (err error) = SYS_SETFSGID32
+@@ -96,7 +94,6 @@ func Seek(fd int, offset int64, whence int) (newoffset int64, err error) {
+ //sysnb	Setreuid(ruid int, euid int) (err error) = SYS_SETREUID32
+ //sys	Shutdown(fd int, how int) (err error)
+ //sys	Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n int, err error)
+-//sys	Stat(path string, stat *Stat_t) (err error) = SYS_STAT64
+ 
+ // Vsyscalls on amd64.
+ //sysnb	Gettimeofday(tv *Timeval) (err error)
+@@ -110,6 +107,18 @@ func Seek(fd int, offset int64, whence int) (newoffset int64, err error) {
+ //sys	mmap2(addr uintptr, length uintptr, prot int, flags int, fd int, pageOffset uintptr) (xaddr uintptr, err error)
+ //sys	EpollWait(epfd int, events []EpollEvent, msec int) (n int, err error)
+ 
++func Stat(path string, stat *Stat_t) (err error) {
++	return fstatat(_AT_FDCWD, path, stat, 0)
++}
++
++func Lchown(path string, uid int, gid int) (err error) {
++	return Fchownat(_AT_FDCWD, path, uid, gid, _AT_SYMLINK_NOFOLLOW)
++}
++
++func Lstat(path string, stat *Stat_t) (err error) {
++	return fstatat(_AT_FDCWD, path, stat, _AT_SYMLINK_NOFOLLOW)
++}
++
+ func Fstatfs(fd int, buf *Statfs_t) (err error) {
+ 	_, _, e := Syscall(SYS_FSTATFS64, uintptr(fd), unsafe.Sizeof(*buf), uintptr(unsafe.Pointer(buf)))
+ 	if e != 0 {
+diff --git a/src/syscall/zsyscall_linux_386.go b/src/syscall/zsyscall_linux_386.go
+index 62827f16dc..0882494c47 100644
+--- a/src/syscall/zsyscall_linux_386.go
++++ b/src/syscall/zsyscall_linux_386.go
+@@ -1276,36 +1276,6 @@ func Iopl(level int) (err error) {
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Lchown(path string, uid int, gid int) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LCHOWN32, uintptr(unsafe.Pointer(_p0)), uintptr(uid), uintptr(gid))
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+-func Lstat(path string, stat *Stat_t) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LSTAT64, uintptr(unsafe.Pointer(_p0)), uintptr(unsafe.Pointer(stat)), 0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func Pread(fd int, p []byte, offset int64) (n int, err error) {
+ 	var _p0 unsafe.Pointer
+ 	if len(p) > 0 {
+@@ -1422,21 +1392,6 @@ func Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n i
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Stat(path string, stat *Stat_t) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_STAT64, uintptr(unsafe.Pointer(_p0)), uintptr(unsafe.Pointer(stat)), 0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func SyncFileRange(fd int, off int64, n int64, flags int) (err error) {
+ 	_, _, e1 := Syscall6(SYS_SYNC_FILE_RANGE, uintptr(fd), uintptr(off), uintptr(off>>32), uintptr(n), uintptr(n>>32), uintptr(flags))
+ 	if e1 != 0 {
+diff --git a/src/syscall/zsyscall_linux_amd64.go b/src/syscall/zsyscall_linux_amd64.go
+index b6638269be..9f2046bf93 100644
+--- a/src/syscall/zsyscall_linux_amd64.go
++++ b/src/syscall/zsyscall_linux_amd64.go
+@@ -1261,21 +1261,6 @@ func Iopl(level int) (err error) {
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Lchown(path string, uid int, gid int) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LCHOWN, uintptr(unsafe.Pointer(_p0)), uintptr(uid), uintptr(gid))
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func Listen(s int, n int) (err error) {
+ 	_, _, e1 := Syscall(SYS_LISTEN, uintptr(s), uintptr(n), 0)
+ 	if e1 != 0 {
+@@ -1286,21 +1271,6 @@ func Listen(s int, n int) (err error) {
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Lstat(path string, stat *Stat_t) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LSTAT, uintptr(unsafe.Pointer(_p0)), uintptr(unsafe.Pointer(stat)), 0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func Pread(fd int, p []byte, offset int64) (n int, err error) {
+ 	var _p0 unsafe.Pointer
+ 	if len(p) > 0 {
+diff --git a/src/syscall/zsyscall_linux_arm.go b/src/syscall/zsyscall_linux_arm.go
+index bb20d6e946..3d099aa16d 100644
+--- a/src/syscall/zsyscall_linux_arm.go
++++ b/src/syscall/zsyscall_linux_arm.go
+@@ -1415,21 +1415,6 @@ func InotifyInit() (fd int, err error) {
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Lchown(path string, uid int, gid int) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LCHOWN32, uintptr(unsafe.Pointer(_p0)), uintptr(uid), uintptr(gid))
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func Listen(s int, n int) (err error) {
+ 	_, _, e1 := Syscall(SYS_LISTEN, uintptr(s), uintptr(n), 0)
+ 	if e1 != 0 {
+@@ -1440,21 +1425,6 @@ func Listen(s int, n int) (err error) {
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Lstat(path string, stat *Stat_t) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_LSTAT64, uintptr(unsafe.Pointer(_p0)), uintptr(unsafe.Pointer(stat)), 0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) {
+ 	r0, _, e1 := Syscall6(SYS_SENDFILE64, uintptr(outfd), uintptr(infd), uintptr(unsafe.Pointer(offset)), uintptr(count), 0, 0)
+ 	written = int(r0)
+@@ -1558,21 +1528,6 @@ func Splice(rfd int, roff *int64, wfd int, woff *int64, len int, flags int) (n i
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
+-func Stat(path string, stat *Stat_t) (err error) {
+-	var _p0 *byte
+-	_p0, err = BytePtrFromString(path)
+-	if err != nil {
+-		return
+-	}
+-	_, _, e1 := Syscall(SYS_STAT64, uintptr(unsafe.Pointer(_p0)), uintptr(unsafe.Pointer(stat)), 0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+ func Gettimeofday(tv *Timeval) (err error) {
+ 	_, _, e1 := RawSyscall(SYS_GETTIMEOFDAY, uintptr(unsafe.Pointer(tv)), 0, 0)
+ 	if e1 != 0 {
