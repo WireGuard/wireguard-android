@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.wireguard.android.Application;
+import com.wireguard.android.R;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
@@ -36,9 +37,11 @@ public final class WgQuickBackend implements Backend {
     private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
 
     private final File localTemporaryDir;
+    private final Context context;
 
     public WgQuickBackend(final Context context) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
+        this.context = context;
     }
 
     @Override
@@ -84,8 +87,8 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public String getTypeName() {
-        return "Kernel module";
+    public String getTypePrettyName() {
+        return context.getResources().getString(R.string.type_name_kernel_module);
     }
 
     @Override
@@ -93,7 +96,7 @@ public final class WgQuickBackend implements Backend {
         final List<String> output = new ArrayList<>();
         if (Application.getRootShell()
                 .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-            throw new Exception("Unable to determine kernel module version");
+            throw new Exception(context.getResources().getString(R.string.module_version_error));
         return output.get(0);
     }
 
@@ -125,6 +128,6 @@ public final class WgQuickBackend implements Backend {
         // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
         if (result != 0)
-            throw new Exception("Unable to configure tunnel (wg-quick returned " + result + ')');
+            throw new Exception(context.getResources().getString(R.string.tunnel_config_error));
     }
 }

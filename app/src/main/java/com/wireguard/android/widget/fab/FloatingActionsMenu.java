@@ -218,7 +218,7 @@ public class FloatingActionsMenu extends ViewGroup {
         attr.recycle();
 
         if (mLabelsStyle != 0 && expandsHorizontally()) {
-            throw new IllegalStateException("Action labels in horizontal expand orientation is not supported.");
+            throw new IllegalStateException(getResources().getString(R.string.horizontal_expand_error));
         }
 
         createAddButton(context);

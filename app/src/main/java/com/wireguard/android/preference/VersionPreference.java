@@ -26,11 +26,11 @@ public class VersionPreference extends Preference {
         super(context, attrs);
 
         Application.getBackendAsync().thenAccept(backend -> {
-            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypeName().toLowerCase(Locale.ENGLISH));
+            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypePrettyName().toLowerCase(Locale.ENGLISH));
             Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
                 versionSummary = exception == null
-                        ? getContext().getString(R.string.version_summary, backend.getTypeName(), version)
-                        : getContext().getString(R.string.version_summary_unknown, backend.getTypeName().toLowerCase(Locale.ENGLISH));
+                        ? getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
+                        : getContext().getString(R.string.version_summary_unknown, backend.getTypePrettyName().toLowerCase(Locale.ENGLISH));
                 notifyChanged();
             });
         });

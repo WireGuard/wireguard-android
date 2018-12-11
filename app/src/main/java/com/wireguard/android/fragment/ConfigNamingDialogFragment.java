@@ -24,6 +24,7 @@ import com.wireguard.config.ParseException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ConfigNamingDialogFragment extends DialogFragment {
@@ -68,7 +69,8 @@ public class ConfigNamingDialogFragment extends DialogFragment {
         try {
             config = Config.parse(new ByteArrayInputStream(getArguments().getString(KEY_CONFIG_TEXT).getBytes(StandardCharsets.UTF_8)));
         } catch (final IOException | ParseException exception) {
-            throw new RuntimeException("Invalid config passed to " + getClass().getSimpleName(), exception);
+            throw new RuntimeException(String.format(Locale.getDefault(),
+                    getResources().getString(R.string.invalid_config_error), getClass().getSimpleName()), exception);
         }
     }
 

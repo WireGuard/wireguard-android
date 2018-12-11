@@ -114,4 +114,34 @@
     <string name="zip_export_error">Unable to export tunnels: %s</string>
     <string name="zip_export_success">Saved to %s</string>
     <string name="zip_export_summary">Zip file will be saved to downloads folder</string>
+
+
+    <string name="vpn_not_authed_error">VPN service not authorized by user</string>
+    <string name="vpn_start_error">Unable to start Android VPN service</string>
+    <string name="no_config_error">Trying to bring up a tunnel with no config</string>
+    <string name="tun_create_error">Unable to create tun device</string>
+    <string name="tunnel_on_error">Unable to turn tunnel on (wgTurnOn returned %i)</string>
+    <string name="tunnel_config_error">Unable to configure tunnel (wg-quick returned %i)</string>
+    <string name="module_version_error">Unable to determine kernel module version</string>
+    <string name="config_file_exists_error">Configuration file %s already exists</string>
+    <string name="config_exists_error">Configuration for %s already exists</string>
+    <string name="config_delete_error">Cannot delete configuration file %s</string>
+    <string name="config_rename_error">Cannot rename configuration file %s</string>
+    <string name="config_not_found_error">Configuration file %s not found</string>
+    <string name="no_tunnels_error">No tunnels exist</string>
+    <string name="create_output_dir_error">Cannot create output directory</string>
+    <string name="illegal_filename_error">Illegal file name %s</string>
+    <string name="bad_extension_error">File must be .conf or .zip</string>
+    <string name="no_configs_error">No configurations found</string>
+    <string name="invalid_config_error">Invalid config passed to %s</string>
+    <string name="multiple_tunnels_error">Only one userspace tunnel can run at a time</string>
+    <string name="horizontal_expand_error">Action labels in horizontal expand orientation is not supported.</string>
+    <string name="marker_count_error">Expected 4 markers, received %i</string>
+    <string name="exit_status_read_error">Unable to read exit status</string>
+    <string name="create_bin_dir_error">Could not create local binary directory</string>
+    <string name="create_temp_dir_error">Could not create local temporary directory</string>
+    <string name="shell_start_error">Shell failed to start: %i</string>
+    <string name="tools_unavailable_error">Required tools unavailable</string>
+    <string name="type_name_kernel_module">Kernel module</string>
+    <string name="type_name_go_userspace">Go userspace</string>
 </resources>
