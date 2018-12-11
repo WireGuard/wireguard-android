@@ -30,7 +30,9 @@ public final class Config {
     private final List<Peer> peers;
 
     private Config(final Builder builder) {
-        interfaze = Objects.requireNonNull(builder.interfaze, "An [Interface] section is required");
+        if (builder.interfaze == null)
+            throw new IllegalArgumentException("An [Interface] section is required");
+        interfaze = builder.interfaze;
         // Defensively copy to ensure immutability even if the Builder is reused.
         peers = Collections.unmodifiableList(new ArrayList<>(builder.peers));
     }
