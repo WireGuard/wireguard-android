@@ -56,7 +56,7 @@ public class ZipExporterPreference extends Preference {
             futureConfigs.add(tunnel.getConfigAsync().toCompletableFuture());
         if (futureConfigs.isEmpty()) {
             exportZipComplete(null, new IllegalArgumentException(
-                    getContext().getResources().getString(R.string.no_tunnels_error)));
+                    getContext().getString(R.string.no_tunnels_error)));
             return;
         }
         CompletableFuture.allOf(futureConfigs.toArray(new CompletableFuture[futureConfigs.size()]))
@@ -67,7 +67,7 @@ public class ZipExporterPreference extends Preference {
                     final File file = new File(path, "wireguard-export.zip");
                     if (!path.isDirectory() && !path.mkdirs())
                         throw new IOException(
-                                getContext().getResources().getString(R.string.create_output_dir_error));
+                                getContext().getString(R.string.create_output_dir_error));
                     try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
                         for (int i = 0; i < futureConfigs.size(); ++i) {
                             zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));

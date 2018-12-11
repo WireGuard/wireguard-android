@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -124,10 +123,9 @@ public class RootShell {
                 }
             }
             if (markersSeen != 4)
-                throw new IOException(String.format(Locale.getDefault(),
-                        context.getResources().getString(R.string.marker_count_error), markersSeen));
+                throw new IOException(context.getString(R.string.marker_count_error, markersSeen));
             if (errnoStdout != errnoStderr)
-                throw new IOException(context.getResources().getString(R.string.exit_status_read_error));
+                throw new IOException(context.getString(R.string.exit_status_read_error));
             Log.v(TAG, "exit: " + errnoStdout);
             return errnoStdout;
         }
@@ -140,9 +138,9 @@ public class RootShell {
             if (isRunning())
                 return;
             if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
-                throw new FileNotFoundException(context.getResources().getString(R.string.create_bin_dir_error));
+                throw new FileNotFoundException(context.getString(R.string.create_bin_dir_error));
             if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
-                throw new FileNotFoundException(context.getResources().getString(R.string.create_temp_dir_error));
+                throw new FileNotFoundException(context.getString(R.string.create_temp_dir_error));
             try {
                 final ProcessBuilder builder = new ProcessBuilder().command(SU);
                 builder.environment().put("LC_ALL", "C");
@@ -172,8 +170,7 @@ public class RootShell {
                         if (line.contains("Permission denied"))
                             throw new NoRootException(deviceNotRootedMessage);
                     }
-                    throw new IOException(String.format(Locale.getDefault(),
-                            context.getResources().getString(R.string.shell_start_error), process.exitValue()));
+                    throw new IOException(context.getString(R.string.shell_start_error, process.exitValue()));
                 }
             } catch (final IOException | NoRootException e) {
                 stop();

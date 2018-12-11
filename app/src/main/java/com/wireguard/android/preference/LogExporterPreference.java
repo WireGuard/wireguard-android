@@ -45,7 +45,7 @@ public class LogExporterPreference extends Preference {
             final File file = new File(path, "wireguard-log.txt");
             if (!path.isDirectory() && !path.mkdirs())
                 throw new IOException(
-                        getContext().getResources().getString(R.string.create_output_dir_error));
+                        getContext().getString(R.string.create_output_dir_error));
 
             /* We would like to simply run `builder.redirectOutput(file);`, but this is API 26.
              * Instead we have to do this dance, since logcat appends.
