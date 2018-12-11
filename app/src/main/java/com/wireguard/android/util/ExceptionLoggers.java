@@ -66,7 +66,7 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
                     message = null;
             }
         } else {
-            message = throwable.getMessage();
+            message = innerThrowable.getMessage();
         }
         return message != null ? message : innerThrowable.getClass().getSimpleName();
     }
