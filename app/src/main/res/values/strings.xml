@@ -88,7 +88,7 @@
     <string name="no_config_error">Trying to bring up a tunnel with no config</string>
     <string name="no_configs_error">No configurations found</string>
     <string name="no_tunnels_error">No tunnels exist</string>
-    <string name="parse_error">Cannot parse “%s” at %s</string>
+    <string name="parse_error">Cannot parse “%1$s” at %2$s</string>
     <string name="peer">Peer</string>
     <string name="permission_description">Allows an app to control WireGuard tunnels. Apps with this permission may enable and disable WireGuard tunnels at will, potentially misdirecting Internet traffic.</string>
     <string name="permission_label">control WireGuard tunnels</string>
