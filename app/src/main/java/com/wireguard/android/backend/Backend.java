@@ -57,7 +57,7 @@ public interface Backend {
      *
      * @return Type name
      */
-    String getTypeName();
+    String getTypePrettyName();
 
     /**
      * Determine version of underlying backend.

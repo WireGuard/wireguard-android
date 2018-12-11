@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -30,6 +31,7 @@ public class RootShell {
     private static final String SU = "su";
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
 
+    private final Context context;
     private final String deviceNotRootedMessage;
     private final File localBinaryDir;
     private final File localTemporaryDir;
@@ -47,6 +49,7 @@ public class RootShell {
         localTemporaryDir = new File(cacheDir, "tmp");
         preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
                 BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir);
+        this.context = context;
     }
 
     private static boolean isExecutableInPath(final String name) {
@@ -121,9 +124,10 @@ public class RootShell {
                 }
             }
             if (markersSeen != 4)
-                throw new IOException("Expected 4 markers, received " + markersSeen);
+                throw new IOException(String.format(Locale.getDefault(),
+                        context.getResources().getString(R.string.marker_count_error), markersSeen));
             if (errnoStdout != errnoStderr)
-                throw new IOException("Unable to read exit status");
+                throw new IOException(context.getResources().getString(R.string.exit_status_read_error));
             Log.v(TAG, "exit: " + errnoStdout);
             return errnoStdout;
         }
@@ -136,9 +140,9 @@ public class RootShell {
             if (isRunning())
                 return;
             if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
-                throw new FileNotFoundException("Could not create local binary directory");
+                throw new FileNotFoundException(context.getResources().getString(R.string.create_bin_dir_error));
             if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
-                throw new FileNotFoundException("Could not create local temporary directory");
+                throw new FileNotFoundException(context.getResources().getString(R.string.create_temp_dir_error));
             try {
                 final ProcessBuilder builder = new ProcessBuilder().command(SU);
                 builder.environment().put("LC_ALL", "C");
@@ -168,7 +172,8 @@ public class RootShell {
                         if (line.contains("Permission denied"))
                             throw new NoRootException(deviceNotRootedMessage);
                     }
-                    throw new IOException("Shell failed to start: " + process.exitValue());
+                    throw new IOException(String.format(Locale.getDefault(),
+                            context.getResources().getString(R.string.shell_start_error), process.exitValue()));
                 }
             } catch (final IOException | NoRootException e) {
                 stop();

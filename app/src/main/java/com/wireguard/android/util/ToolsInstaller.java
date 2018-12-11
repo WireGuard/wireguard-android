@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
+import com.wireguard.android.R;
 import com.wireguard.android.util.RootShell.NoRootException;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public final class ToolsInstaller {
     @Nullable private static final File INSTALL_DIR = getInstallDir();
     private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
 
+    private final Context context;
     private final File localBinaryDir;
     private final Object lock = new Object();
     private final File nativeLibraryDir;
@@ -50,6 +52,7 @@ public final class ToolsInstaller {
     public ToolsInstaller(final Context context) {
         localBinaryDir = new File(context.getCacheDir(), "bin");
         nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
+        this.context = context;
     }
 
     @Nullable
@@ -102,7 +105,8 @@ public final class ToolsInstaller {
                 }
             }
             if (!areToolsAvailable)
-                throw new FileNotFoundException("Required tools unavailable");
+                throw new FileNotFoundException(
+                        context.getResources().getString(R.string.tools_unavailable_error));
         }
     }
 
