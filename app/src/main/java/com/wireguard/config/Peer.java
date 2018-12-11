@@ -35,14 +35,12 @@ public final class Peer {
     private final Key publicKey;
 
     private Peer(final Builder builder) {
-        if (builder.publicKey == null)
-            throw new IllegalArgumentException("Peers must have a public key");
         // Defensively copy to ensure immutability even if the Builder is reused.
         allowedIps = Collections.unmodifiableSet(new LinkedHashSet<>(builder.allowedIps));
         endpoint = builder.endpoint;
         persistentKeepalive = builder.persistentKeepalive;
         preSharedKey = builder.preSharedKey;
-        publicKey = builder.publicKey;
+        publicKey = Objects.requireNonNull(builder.publicKey, "Peers must have a public key");
     }
 
     /**
@@ -226,6 +224,8 @@ public final class Peer {
         }
 
         public Peer build() {
+            if (publicKey == null)
+                throw new IllegalArgumentException("Peers must have a public key");
             return new Peer(this);
         }
 

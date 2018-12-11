@@ -106,7 +106,7 @@ public final class ToolsInstaller {
             }
             if (!areToolsAvailable)
                 throw new FileNotFoundException(
-                        context.getResources().getString(R.string.tools_unavailable_error));
+                        context.getString(R.string.tools_unavailable_error));
         }
     }
 

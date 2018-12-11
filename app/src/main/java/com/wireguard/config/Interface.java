@@ -44,14 +44,11 @@ public final class Interface {
     private final Optional<Integer> mtu;
 
     private Interface(final Builder builder) {
-        if (builder.keyPair == null)
-            throw new IllegalArgumentException("Interfaces must have a private key");
-
         // Defensively copy to ensure immutability even if the Builder is reused.
         addresses = Collections.unmodifiableSet(new LinkedHashSet<>(builder.addresses));
         dnsServers = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsServers));
         excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
-        keyPair = builder.keyPair;
+        keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
         listenPort = builder.listenPort;
         mtu = builder.mtu;
     }
@@ -264,6 +261,8 @@ public final class Interface {
         }
 
         public Interface build() {
+            if (keyPair == null)
+                throw new IllegalArgumentException("Interfaces must have a private key");
             return new Interface(this);
         }
 

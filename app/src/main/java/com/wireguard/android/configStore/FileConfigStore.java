@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 import java.util.Set;
 
 import java9.util.stream.Collectors;
@@ -42,8 +41,7 @@ public final class FileConfigStore implements ConfigStore {
         Log.d(TAG, "Creating configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.createNewFile())
-            throw new IOException(String.format(Locale.getDefault(),
-                    context.getResources().getString(R.string.config_file_exists_error), file.getName()));
+            throw new IOException(context.getString(R.string.config_file_exists_error, file.getName()));
         try (final FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }
@@ -55,8 +53,7 @@ public final class FileConfigStore implements ConfigStore {
         Log.d(TAG, "Deleting configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.delete())
-            throw new IOException(String.format(Locale.getDefault(),
-                    context.getResources().getString(R.string.config_delete_error), file.getName()));
+            throw new IOException(context.getString(R.string.config_delete_error, file.getName()));
     }
 
     @Override
@@ -84,13 +81,11 @@ public final class FileConfigStore implements ConfigStore {
         final File file = fileFor(name);
         final File replacementFile = fileFor(replacement);
         if (!replacementFile.createNewFile())
-            throw new IOException(String.format(Locale.getDefault(),
-                    context.getResources().getString(R.string.config_exists_error), replacement));
+            throw new IOException(context.getString(R.string.config_exists_error, replacement));
         if (!file.renameTo(replacementFile)) {
             if (!replacementFile.delete())
                 Log.w(TAG, "Couldn't delete marker file for new name " + replacement);
-            throw new IOException(String.format(Locale.getDefault(),
-                    context.getResources().getString(R.string.config_rename_error), file.getName()));
+            throw new IOException(context.getString(R.string.config_rename_error, file.getName()));
         }
     }
 
@@ -99,8 +94,7 @@ public final class FileConfigStore implements ConfigStore {
         Log.d(TAG, "Saving configuration for tunnel " + name);
         final File file = fileFor(name);
         if (!file.isFile())
-            throw new FileNotFoundException(String.format(Locale.getDefault(),
-                    context.getResources().getString(R.string.config_not_found_error), file.getName()));
+            throw new FileNotFoundException(context.getString(R.string.config_not_found_error, file.getName()));
         try (final FileOutputStream stream = new FileOutputStream(file, false)) {
             stream.write(config.toWgQuickString().getBytes(StandardCharsets.UTF_8));
         }

@@ -27,7 +27,6 @@ import com.wireguard.config.Peer;
 
 import java.net.InetAddress;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +95,7 @@ public final class GoBackend implements Backend {
 
     @Override
     public String getTypePrettyName() {
-        return context.getResources().getString(R.string.type_name_go_userspace);
+        return context.getString(R.string.type_name_go_userspace);
     }
 
     @Override
@@ -112,7 +111,7 @@ public final class GoBackend implements Backend {
         if (state == originalState)
             return originalState;
         if (state == State.UP && currentTunnel != null)
-            throw new IllegalStateException(context.getResources().getString(R.string.multiple_tunnels_error));
+            throw new IllegalStateException(context.getString(R.string.multiple_tunnels_error));
         Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
         setStateInternal(tunnel, tunnel.getConfig(), state);
         return getState(tunnel);
@@ -124,10 +123,10 @@ public final class GoBackend implements Backend {
         if (state == State.UP) {
             Log.i(TAG, "Bringing tunnel up");
 
-            Objects.requireNonNull(config, context.getResources().getString(R.string.no_config_error));
+            Objects.requireNonNull(config, context.getString(R.string.no_config_error));
 
             if (VpnService.prepare(context) != null)
-                throw new Exception(context.getResources().getString(R.string.vpn_not_authed_error));
+                throw new Exception(context.getString(R.string.vpn_not_authed_error));
 
             final VpnService service;
             if (!vpnService.isDone())
@@ -136,7 +135,7 @@ public final class GoBackend implements Backend {
             try {
                 service = vpnService.get(2, TimeUnit.SECONDS);
             } catch (final TimeoutException e) {
-                throw new Exception(context.getResources().getString(R.string.vpn_start_error), e);
+                throw new Exception(context.getString(R.string.vpn_start_error), e);
             }
 
             if (currentTunnelHandle != -1) {
@@ -174,12 +173,12 @@ public final class GoBackend implements Backend {
             builder.setBlocking(true);
             try (final ParcelFileDescriptor tun = builder.establish()) {
                 if (tun == null)
-                    throw new Exception(context.getResources().getString(R.string.tun_create_error));
+                    throw new Exception(context.getString(R.string.tun_create_error));
                 Log.d(TAG, "Go backend v" + wgVersion());
                 currentTunnelHandle = wgTurnOn(tunnel.getName(), tun.detachFd(), goConfig);
             }
             if (currentTunnelHandle < 0)
-                throw new Exception(String.format(Locale.getDefault(), context.getResources().getString(R.string.tunnel_on_error), currentTunnelHandle));
+                throw new Exception(context.getString(R.string.tunnel_on_error, currentTunnelHandle));
 
             currentTunnel = tunnel;
 

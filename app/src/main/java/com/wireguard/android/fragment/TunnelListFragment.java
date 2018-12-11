@@ -115,8 +115,7 @@ public class TunnelListFragment extends BaseFragment {
             int idx = name.lastIndexOf('/');
             if (idx >= 0) {
                 if (idx >= name.length() - 1)
-                    throw new IllegalArgumentException(String.format(Locale.getDefault(),
-                            getResources().getString(R.string.illegal_filename_error), name));
+                    throw new IllegalArgumentException(getResources().getString(R.string.illegal_filename_error, name));
                 name = name.substring(idx + 1);
             }
             boolean isZip = name.toLowerCase(Locale.ENGLISH).endsWith(".zip");

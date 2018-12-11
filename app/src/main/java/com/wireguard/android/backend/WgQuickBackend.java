@@ -88,7 +88,7 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public String getTypePrettyName() {
-        return context.getResources().getString(R.string.type_name_kernel_module);
+        return context.getString(R.string.type_name_kernel_module);
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class WgQuickBackend implements Backend {
         final List<String> output = new ArrayList<>();
         if (Application.getRootShell()
                 .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-            throw new Exception(context.getResources().getString(R.string.module_version_error));
+            throw new Exception(context.getString(R.string.module_version_error));
         return output.get(0);
     }
 
@@ -128,6 +128,6 @@ public final class WgQuickBackend implements Backend {
         // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
         if (result != 0)
-            throw new Exception(context.getResources().getString(R.string.tunnel_config_error));
+            throw new Exception(context.getString(R.string.tunnel_config_error));
     }
 }
