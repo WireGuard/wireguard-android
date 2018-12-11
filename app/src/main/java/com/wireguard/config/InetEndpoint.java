@@ -44,7 +44,7 @@ public final class InetEndpoint {
 
     public static InetEndpoint parse(final String endpoint) {
         if (FORBIDDEN_CHARACTERS.matcher(endpoint).find())
-            throw new IllegalArgumentException("Forbidden characters in Endpoint");
+            throw new IllegalArgumentException("Forbidden characters in endpoint");
         final URI uri;
         try {
             uri = new URI("wg://" + endpoint);
