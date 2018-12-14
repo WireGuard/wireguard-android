@@ -7,7 +7,11 @@ package com.wireguard.config;
 
 import android.support.annotation.Nullable;
 
+import com.wireguard.config.BadConfigException.Location;
+import com.wireguard.config.BadConfigException.Reason;
+import com.wireguard.config.BadConfigException.Section;
 import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.crypto.KeyPair;
 
 import java.net.InetAddress;
@@ -22,7 +26,6 @@ import java.util.Set;
 import java9.util.Lists;
 import java9.util.Optional;
 import java9.util.stream.Collectors;
-import java9.util.stream.Stream;
 import java9.util.stream.StreamSupport;
 
 /**
@@ -60,11 +63,13 @@ public final class Interface {
      * @param lines An iterable sequence of lines, containing at least a private key attribute
      * @return An {@code Interface} with all of the attributes from {@code lines} set
      */
-    public static Interface parse(final Iterable<? extends CharSequence> lines) throws ParseException {
+    public static Interface parse(final Iterable<? extends CharSequence> lines)
+            throws BadConfigException {
         final Builder builder = new Builder();
         for (final CharSequence line : lines) {
-            final Attribute attribute = Attribute.parse(line)
-                    .orElseThrow(() -> new ParseException("[Interface]", line, "Syntax error"));
+            final Attribute attribute = Attribute.parse(line).orElseThrow(() ->
+                    new BadConfigException(Section.INTERFACE, Location.TOP_LEVEL,
+                            Reason.SYNTAX_ERROR, line));
             switch (attribute.getKey().toLowerCase(Locale.ENGLISH)) {
                 case "address":
                     builder.parseAddresses(attribute.getValue());
@@ -85,7 +90,8 @@ public final class Interface {
                     builder.parsePrivateKey(attribute.getValue());
                     break;
                 default:
-                    throw new ParseException("[Interface]", attribute.getKey(), "Unknown attribute");
+                    throw new BadConfigException(Section.INTERFACE, Location.TOP_LEVEL,
+                            Reason.UNKNOWN_ATTRIBUTE, attribute.getKey());
             }
         }
         return builder.build();
@@ -260,9 +266,10 @@ public final class Interface {
             return this;
         }
 
-        public Interface build() {
+        public Interface build() throws BadConfigException {
             if (keyPair == null)
-                throw new IllegalArgumentException("Interfaces must have a private key");
+                throw new BadConfigException(Section.INTERFACE, Location.PRIVATE_KEY,
+                        Reason.MISSING_ATTRIBUTE, null);
             return new Interface(this);
         }
 
@@ -276,57 +283,51 @@ public final class Interface {
             return this;
         }
 
-        public Builder parseAddresses(final CharSequence addresses) throws ParseException {
+        public Builder parseAddresses(final CharSequence addresses) throws BadConfigException {
             try {
-                final List<InetNetwork> parsed = Stream.of(Attribute.split(addresses))
-                        .map(InetNetwork::parse)
-                        .collect(Collectors.toUnmodifiableList());
-                return addAddresses(parsed);
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("Address", addresses, e);
+                for (final String address : Attribute.split(addresses))
+                    addAddress(InetNetwork.parse(address));
+                return this;
+            } catch (final ParseException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.ADDRESS, e);
             }
         }
 
-        public Builder parseDnsServers(final CharSequence dnsServers) throws ParseException {
+        public Builder parseDnsServers(final CharSequence dnsServers) throws BadConfigException {
             try {
-                final List<InetAddress> parsed = Stream.of(Attribute.split(dnsServers))
-                        .map(InetAddresses::parse)
-                        .collect(Collectors.toUnmodifiableList());
-                return addDnsServers(parsed);
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("DNS", dnsServers, e);
+                for (final String dnsServer : Attribute.split(dnsServers))
+                    addDnsServer(InetAddresses.parse(dnsServer));
+                return this;
+            } catch (final ParseException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.DNS, e);
             }
         }
 
-        public Builder parseExcludedApplications(final CharSequence apps) throws ParseException {
-            try {
-                return excludeApplications(Lists.of(Attribute.split(apps)));
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("ExcludedApplications", apps, e);
-            }
+        public Builder parseExcludedApplications(final CharSequence apps) {
+            return excludeApplications(Lists.of(Attribute.split(apps)));
         }
 
-        public Builder parseListenPort(final String listenPort) throws ParseException {
+        public Builder parseListenPort(final String listenPort) throws BadConfigException {
             try {
                 return setListenPort(Integer.parseInt(listenPort));
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("ListenPort", listenPort, e);
+            } catch (final NumberFormatException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.LISTEN_PORT, listenPort, e);
             }
         }
 
-        public Builder parseMtu(final String mtu) throws ParseException {
+        public Builder parseMtu(final String mtu) throws BadConfigException {
             try {
                 return setMtu(Integer.parseInt(mtu));
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("MTU", mtu, e);
+            } catch (final NumberFormatException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.MTU, mtu, e);
             }
         }
 
-        public Builder parsePrivateKey(final String privateKey) throws ParseException {
+        public Builder parsePrivateKey(final String privateKey) throws BadConfigException {
             try {
                 return setKeyPair(new KeyPair(Key.fromBase64(privateKey)));
-            } catch (final Key.KeyFormatException e) {
-                throw new ParseException("PrivateKey", "(omitted)", e);
+            } catch (final KeyFormatException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.PRIVATE_KEY, e);
             }
         }
 
@@ -335,16 +336,18 @@ public final class Interface {
             return this;
         }
 
-        public Builder setListenPort(final int listenPort) {
+        public Builder setListenPort(final int listenPort) throws BadConfigException {
             if (listenPort < MIN_UDP_PORT || listenPort > MAX_UDP_PORT)
-                throw new IllegalArgumentException("ListenPort must be a valid UDP port number");
+                throw new BadConfigException(Section.INTERFACE, Location.LISTEN_PORT,
+                        Reason.INVALID_VALUE, String.valueOf(listenPort));
             this.listenPort = listenPort == 0 ? Optional.empty() : Optional.of(listenPort);
             return this;
         }
 
-        public Builder setMtu(final int mtu) {
+        public Builder setMtu(final int mtu) throws BadConfigException {
             if (mtu < 0)
-                throw new IllegalArgumentException("MTU must not be negative");
+                throw new BadConfigException(Section.INTERFACE, Location.LISTEN_PORT,
+                        Reason.INVALID_VALUE, String.valueOf(mtu));
             this.mtu = mtu == 0 ? Optional.empty() : Optional.of(mtu);
             return this;
         }

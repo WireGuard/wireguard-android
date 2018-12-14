@@ -40,8 +40,8 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
-import com.wireguard.config.ParseException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -89,8 +89,8 @@ public class TunnelListFragment extends BaseFragment {
             final FragmentManager fragmentManager = getFragmentManager();
             if (fragmentManager != null)
                 ConfigNamingDialogFragment.newInstance(configText).show(fragmentManager, null);
-        } catch (final IllegalArgumentException | IOException | ParseException exception) {
-            onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
+        } catch (final BadConfigException | IOException e) {
+            onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(e));
         }
     }
 

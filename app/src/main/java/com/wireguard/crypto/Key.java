@@ -5,6 +5,9 @@
 
 package com.wireguard.crypto;
 
+import com.wireguard.crypto.KeyFormatException.Type;
+
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
@@ -83,10 +86,10 @@ public final class Key {
      * @param str the base64 string representation of a WireGuard key
      * @return the decoded key encapsulated in an immutable container
      */
-    public static Key fromBase64(final String str) {
+    public static Key fromBase64(final String str) throws KeyFormatException {
         final char[] input = str.toCharArray();
         if (input.length != Format.BASE64.length || input[Format.BASE64.length - 1] != '=')
-            throw new KeyFormatException(Format.BASE64);
+            throw new KeyFormatException(Format.BASE64, Type.LENGTH);
         final byte[] key = new byte[Format.BINARY.length];
         int i;
         int ret = 0;
@@ -109,7 +112,7 @@ public final class Key {
         key[i * 3 + 1] = (byte) ((val >>> 8) & 0xff);
 
         if (ret != 0)
-            throw new KeyFormatException(Format.BASE64);
+            throw new KeyFormatException(Format.BASE64, Type.CONTENTS);
         return new Key(key);
     }
 
@@ -120,9 +123,9 @@ public final class Key {
      * @param bytes an array of bytes containing a WireGuard key in binary format
      * @return the key encapsulated in an immutable container
      */
-    public static Key fromBytes(final byte[] bytes) {
+    public static Key fromBytes(final byte[] bytes) throws KeyFormatException {
         if (bytes.length != Format.BINARY.length)
-            throw new KeyFormatException(Format.BINARY);
+            throw new KeyFormatException(Format.BINARY, Type.LENGTH);
         return new Key(bytes);
     }
 
@@ -133,10 +136,10 @@ public final class Key {
      * @param str the hexadecimal string representation of a WireGuard key
      * @return the decoded key encapsulated in an immutable container
      */
-    public static Key fromHex(final String str) {
+    public static Key fromHex(final String str) throws KeyFormatException {
         final char[] input = str.toCharArray();
         if (input.length != Format.HEX.length)
-            throw new KeyFormatException(Format.HEX);
+            throw new KeyFormatException(Format.HEX, Type.LENGTH);
         final byte[] key = new byte[Format.BINARY.length];
         int ret = 0;
         for (int i = 0; i < key.length; ++i) {
@@ -167,8 +170,35 @@ public final class Key {
             key[i] = (byte) (cAcc | cVal);
         }
         if (ret != 0)
-            throw new KeyFormatException(Format.HEX);
+            throw new KeyFormatException(Format.HEX, Type.CONTENTS);
         return new Key(key);
+    }
+
+    /**
+     * Generates a private key using the system's {@link SecureRandom} number generator.
+     *
+     * @return a well-formed random private key
+     */
+    static Key generatePrivateKey() {
+        final SecureRandom secureRandom = new SecureRandom();
+        final byte[] privateKey = new byte[Format.BINARY.getLength()];
+        secureRandom.nextBytes(privateKey);
+        privateKey[0] &= 248;
+        privateKey[31] &= 127;
+        privateKey[31] |= 64;
+        return new Key(privateKey);
+    }
+
+    /**
+     * Generates a public key from an existing private key.
+     *
+     * @param privateKey a private key
+     * @return a well-formed public key that corresponds to the supplied private key
+     */
+    static Key generatePublicKey(final Key privateKey) {
+        final byte[] publicKey = new byte[Format.BINARY.getLength()];
+        Curve25519.eval(publicKey, 0, privateKey.getBytes(), null);
+        return new Key(publicKey);
     }
 
     /**
@@ -236,20 +266,4 @@ public final class Key {
         }
     }
 
-    /**
-     * An exception thrown when attempting to parse an invalid key (too short, too long, or byte
-     * data inappropriate for the format). The format being parsed can be accessed with the
-     * {@link #getFormat} method.
-     */
-    public static final class KeyFormatException extends RuntimeException {
-        private final Format format;
-
-        private KeyFormatException(final Format format) {
-            this.format = format;
-        }
-
-        public Format getFormat() {
-            return format;
-        }
-    }
 }

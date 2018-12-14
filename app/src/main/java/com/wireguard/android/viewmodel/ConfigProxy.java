@@ -10,8 +10,8 @@ import android.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
-import com.wireguard.config.ParseException;
 import com.wireguard.config.Peer;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class ConfigProxy implements Parcelable {
         return peers;
     }
 
-    public Config resolve() throws ParseException {
+    public Config resolve() throws BadConfigException {
         final Collection<Peer> resolvedPeers = new ArrayList<>();
         for (final PeerProxy proxy : peers)
             resolvedPeers.add(proxy.resolve());

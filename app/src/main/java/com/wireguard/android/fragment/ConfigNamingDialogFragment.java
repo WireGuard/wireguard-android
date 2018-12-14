@@ -18,8 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
-import com.wireguard.config.ParseException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -67,8 +67,8 @@ public class ConfigNamingDialogFragment extends DialogFragment {
 
         try {
             config = Config.parse(new ByteArrayInputStream(getArguments().getString(KEY_CONFIG_TEXT).getBytes(StandardCharsets.UTF_8)));
-        } catch (final IOException | ParseException exception) {
-            throw new RuntimeException(getResources().getString(R.string.invalid_config_error, getClass().getSimpleName()), exception);
+        } catch (final BadConfigException | IOException e) {
+            throw new RuntimeException(getResources().getString(R.string.invalid_config_error, getClass().getSimpleName()), e);
         }
     }
 

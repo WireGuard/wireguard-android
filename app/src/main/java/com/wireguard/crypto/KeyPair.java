@@ -5,8 +5,6 @@
 
 package com.wireguard.crypto;
 
-import java.security.SecureRandom;
-
 /**
  * Represents a Curve25519 key pair as used by WireGuard.
  * <p>
@@ -20,7 +18,7 @@ public class KeyPair {
      * Creates a key pair using a newly-generated private key.
      */
     public KeyPair() {
-        this(generatePrivateKey());
+        this(Key.generatePrivateKey());
     }
 
     /**
@@ -30,35 +28,7 @@ public class KeyPair {
      */
     public KeyPair(final Key privateKey) {
         this.privateKey = privateKey;
-        publicKey = generatePublicKey(privateKey);
-    }
-
-    /**
-     * Generates a private key using the system's {@link SecureRandom} number generator.
-     *
-     * @return a well-formed random private key
-     */
-    @SuppressWarnings("MagicNumber")
-    private static Key generatePrivateKey() {
-        final SecureRandom secureRandom = new SecureRandom();
-        final byte[] privateKey = new byte[Key.Format.BINARY.getLength()];
-        secureRandom.nextBytes(privateKey);
-        privateKey[0] &= 248;
-        privateKey[31] &= 127;
-        privateKey[31] |= 64;
-        return Key.fromBytes(privateKey);
-    }
-
-    /**
-     * Generates a public key from an existing private key.
-     *
-     * @param privateKey a private key
-     * @return a well-formed public key that corresponds to the supplied private key
-     */
-    private static Key generatePublicKey(final Key privateKey) {
-        final byte[] publicKey = new byte[Key.Format.BINARY.getLength()];
-        Curve25519.eval(publicKey, 0, privateKey.getBytes(), null);
-        return Key.fromBytes(publicKey);
+        publicKey = Key.generatePublicKey(privateKey);
     }
 
     /**

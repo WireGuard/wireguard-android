@@ -11,8 +11,9 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.ParseException;
-import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyFormatException;
 
 import java9.util.concurrent.CompletionException;
 import java9.util.function.BiConsumer;
@@ -37,6 +38,8 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
     public static Throwable unwrap(final Throwable throwable) {
         if (throwable instanceof CompletionException && throwable.getCause() != null)
             return throwable.getCause();
+        if (throwable instanceof ParseException && throwable.getCause() != null)
+            return throwable.getCause();
         return throwable;
     }
 
@@ -44,13 +47,14 @@ public enum ExceptionLoggers implements BiConsumer<Object, Throwable> {
         final Throwable innerThrowable = unwrap(throwable);
         final Resources resources = Application.get().getResources();
         String message;
-        if (innerThrowable instanceof ParseException) {
-            final ParseException parseException = (ParseException) innerThrowable;
-            message = resources.getString(R.string.parse_error, parseException.getText(), parseException.getContext());
-            if (parseException.getMessage() != null)
-                message += ": " + parseException.getMessage();
-        } else if (innerThrowable instanceof Key.KeyFormatException) {
-            final Key.KeyFormatException keyFormatException = (Key.KeyFormatException) innerThrowable;
+        if (innerThrowable instanceof BadConfigException) {
+            final BadConfigException configException = (BadConfigException) innerThrowable;
+            message = resources.getString(R.string.parse_error, configException.getText(), configException.getLocation());
+            final Throwable cause = unwrap(configException);
+            if (cause.getMessage() != null)
+                message += ": " + cause.getMessage();
+        } else if (innerThrowable instanceof KeyFormatException) {
+            final KeyFormatException keyFormatException = (KeyFormatException) innerThrowable;
             switch (keyFormatException.getFormat()) {
                 case BASE64:
                     message = resources.getString(R.string.key_length_base64_exception_message);

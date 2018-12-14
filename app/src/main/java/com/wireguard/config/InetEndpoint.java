@@ -42,9 +42,9 @@ public final class InetEndpoint {
         this.port = port;
     }
 
-    public static InetEndpoint parse(final String endpoint) {
+    public static InetEndpoint parse(final String endpoint) throws ParseException {
         if (FORBIDDEN_CHARACTERS.matcher(endpoint).find())
-            throw new IllegalArgumentException("Forbidden characters in endpoint");
+            throw new ParseException(InetEndpoint.class, endpoint, "Forbidden characters");
         final URI uri;
         try {
             uri = new URI("wg://" + endpoint);
@@ -52,12 +52,12 @@ public final class InetEndpoint {
             throw new IllegalArgumentException(e);
         }
         if (uri.getPort() < 0)
-            throw new IllegalArgumentException("An endpoint must specify a port (e.g. 51820)");
+            throw new ParseException(InetEndpoint.class, endpoint, "Missing/invalid port number");
         try {
             InetAddresses.parse(uri.getHost());
             // Parsing ths host as a numeric address worked, so we don't need to do DNS lookups.
             return new InetEndpoint(uri.getHost(), true, uri.getPort());
-        } catch (final IllegalArgumentException ignored) {
+        } catch (final ParseException ignored) {
             // Failed to parse the host as a numeric address, so it must be a DNS hostname/FQDN.
             return new InetEndpoint(uri.getHost(), false, uri.getPort());
         }

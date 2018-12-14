@@ -37,17 +37,18 @@ public final class InetAddresses {
      * @param address a string representing the IP address
      * @return an instance of {@link Inet4Address} or {@link Inet6Address}, as appropriate
      */
-    public static InetAddress parse(final String address) {
+    public static InetAddress parse(final String address) throws ParseException {
         if (address.isEmpty())
-            throw new IllegalArgumentException("Empty address");
+            throw new ParseException(InetAddress.class, address, "Empty address");
         try {
             return (InetAddress) PARSER_METHOD.invoke(null, address);
         } catch (final IllegalAccessException | InvocationTargetException e) {
             final Throwable cause = e.getCause();
             // Re-throw parsing exceptions with the original type, as callers might try to catch
             // them. On the other hand, callers cannot be expected to handle reflection failures.
-            throw cause instanceof IllegalArgumentException ?
-                    (IllegalArgumentException) cause : new RuntimeException(e);
+            if (cause instanceof IllegalArgumentException)
+                throw new ParseException(InetAddress.class, address, cause);
+            throw new RuntimeException(e);
         }
     }
 }
