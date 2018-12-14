@@ -7,6 +7,10 @@ package com.wireguard.config;
 
 import android.support.annotation.Nullable;
 
+import com.wireguard.config.BadConfigException.Location;
+import com.wireguard.config.BadConfigException.Reason;
+import com.wireguard.config.BadConfigException.Section;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,23 +41,27 @@ public final class Config {
 
     /**
      * Parses an series of "Interface" and "Peer" sections into a {@code Config}. Throws
-     * {@link ParseException} if the input is not well-formed or contains unparseable sections.
+     * {@link BadConfigException} if the input is not well-formed or contains data that cannot
+     * be parsed.
      *
-     * @param stream a stream of UTF-8 text that is interpreted as a WireGuard configuration file
+     * @param stream a stream of UTF-8 text that is interpreted as a WireGuard configuration
      * @return a {@code Config} instance representing the supplied configuration
      */
-    public static Config parse(final InputStream stream) throws IOException, ParseException {
+    public static Config parse(final InputStream stream)
+            throws IOException, BadConfigException {
         return parse(new BufferedReader(new InputStreamReader(stream)));
     }
 
     /**
      * Parses an series of "Interface" and "Peer" sections into a {@code Config}. Throws
-     * {@link ParseException} if the input is not well-formed or contains unparseable sections.
+     * {@link BadConfigException} if the input is not well-formed or contains data that cannot
+     * be parsed.
      *
-     * @param reader a BufferedReader of UTF-8 text that is interpreted as a WireGuard configuration file
+     * @param reader a BufferedReader of UTF-8 text that is interpreted as a WireGuard configuration
      * @return a {@code Config} instance representing the supplied configuration
      */
-    public static Config parse(final BufferedReader reader) throws IOException, ParseException {
+    public static Config parse(final BufferedReader reader)
+            throws IOException, BadConfigException {
         final Builder builder = new Builder();
         final Collection<String> interfaceLines = new ArrayList<>();
         final Collection<String> peerLines = new ArrayList<>();
@@ -80,20 +88,23 @@ public final class Config {
                     inInterfaceSection = false;
                     inPeerSection = true;
                 } else {
-                    throw new ParseException("top level", line, "Unknown section name");
+                    throw new BadConfigException(Section.CONFIG, Location.TOP_LEVEL,
+                            Reason.UNKNOWN_SECTION, line);
                 }
             } else if (inInterfaceSection) {
                 interfaceLines.add(line);
             } else if (inPeerSection) {
                 peerLines.add(line);
             } else {
-                throw new ParseException("top level", line, "Expected [Interface] or [Peer]");
+                throw new BadConfigException(Section.CONFIG, Location.TOP_LEVEL,
+                        Reason.UNKNOWN_SECTION, line);
             }
         }
         if (inPeerSection)
             builder.parsePeer(peerLines);
         else if (!inInterfaceSection)
-            throw new ParseException("top level", "", "Empty configuration");
+            throw new BadConfigException(Section.CONFIG, Location.TOP_LEVEL,
+                    Reason.MISSING_SECTION, null);
         // Combine all [Interface] sections in the file.
         builder.parseInterface(interfaceLines);
         return builder.build();
@@ -192,11 +203,13 @@ public final class Config {
             return new Config(this);
         }
 
-        public Builder parseInterface(final Iterable<? extends CharSequence> lines) throws ParseException {
+        public Builder parseInterface(final Iterable<? extends CharSequence> lines)
+                throws BadConfigException {
             return setInterface(Interface.parse(lines));
         }
 
-        public Builder parsePeer(final Iterable<? extends CharSequence> lines) throws ParseException {
+        public Builder parsePeer(final Iterable<? extends CharSequence> lines)
+                throws BadConfigException {
             return addPeer(Peer.parse(lines));
         }
 

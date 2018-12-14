@@ -14,9 +14,10 @@ import android.os.Parcelable;
 
 import com.wireguard.android.BR;
 import com.wireguard.config.Attribute;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Interface;
-import com.wireguard.config.ParseException;
 import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.crypto.KeyPair;
 
 import java.net.InetAddress;
@@ -116,7 +117,7 @@ public class InterfaceProxy extends BaseObservable implements Parcelable {
         return publicKey;
     }
 
-    public Interface resolve() throws ParseException {
+    public Interface resolve() throws BadConfigException {
         final Interface.Builder builder = new Interface.Builder();
         if (!addresses.isEmpty())
             builder.parseAddresses(addresses);
@@ -157,7 +158,7 @@ public class InterfaceProxy extends BaseObservable implements Parcelable {
         this.privateKey = privateKey;
         try {
             publicKey = new KeyPair(Key.fromBase64(privateKey)).getPublicKey().toBase64();
-        } catch (final Key.KeyFormatException ignored) {
+        } catch (final KeyFormatException ignored) {
             publicKey = "";
         }
         notifyPropertyChanged(BR.privateKey);

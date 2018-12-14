@@ -7,19 +7,20 @@ package com.wireguard.config;
 
 import android.support.annotation.Nullable;
 
+import com.wireguard.config.BadConfigException.Location;
+import com.wireguard.config.BadConfigException.Reason;
+import com.wireguard.config.BadConfigException.Section;
 import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyFormatException;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
 import java9.util.Optional;
-import java9.util.stream.Collectors;
-import java9.util.stream.Stream;
 
 /**
  * Represents the configuration for a WireGuard peer (a [Peer] block). Peers must have a public key,
@@ -50,11 +51,13 @@ public final class Peer {
      * @param lines an iterable sequence of lines, containing at least a public key attribute
      * @return a {@code Peer} with all of its attributes set from {@code lines}
      */
-    public static Peer parse(final Iterable<? extends CharSequence> lines) throws ParseException {
+    public static Peer parse(final Iterable<? extends CharSequence> lines)
+            throws BadConfigException {
         final Builder builder = new Builder();
         for (final CharSequence line : lines) {
-            final Attribute attribute = Attribute.parse(line)
-                    .orElseThrow(() -> new ParseException("[Peer]", line, "Syntax error"));
+            final Attribute attribute = Attribute.parse(line).orElseThrow(() ->
+                    new BadConfigException(Section.PEER, Location.TOP_LEVEL,
+                            Reason.SYNTAX_ERROR, line));
             switch (attribute.getKey().toLowerCase(Locale.ENGLISH)) {
                 case "allowedips":
                     builder.parseAllowedIPs(attribute.getValue());
@@ -72,7 +75,8 @@ public final class Peer {
                     builder.parsePublicKey(attribute.getValue());
                     break;
                 default:
-                    throw new ParseException("[Peer]", line, "Unknown attribute");
+                    throw new BadConfigException(Section.PEER, Location.TOP_LEVEL,
+                            Reason.UNKNOWN_ATTRIBUTE, attribute.getKey());
             }
         }
         return builder.build();
@@ -223,52 +227,54 @@ public final class Peer {
             return this;
         }
 
-        public Peer build() {
+        public Peer build() throws BadConfigException {
             if (publicKey == null)
-                throw new IllegalArgumentException("Peers must have a public key");
+                throw new BadConfigException(Section.PEER, Location.PUBLIC_KEY,
+                        Reason.MISSING_ATTRIBUTE, null);
             return new Peer(this);
         }
 
-        public Builder parseAllowedIPs(final CharSequence allowedIps) throws ParseException {
+        public Builder parseAllowedIPs(final CharSequence allowedIps) throws BadConfigException {
             try {
-                final List<InetNetwork> parsed = Stream.of(Attribute.split(allowedIps))
-                        .map(InetNetwork::parse)
-                        .collect(Collectors.toUnmodifiableList());
-                return addAllowedIps(parsed);
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("AllowedIPs", allowedIps, e);
+                for (final String allowedIp : Attribute.split(allowedIps))
+                    addAllowedIp(InetNetwork.parse(allowedIp));
+                return this;
+            } catch (final ParseException e) {
+                throw new BadConfigException(Section.PEER, Location.ALLOWED_IPS, e);
             }
         }
 
-        public Builder parseEndpoint(final String endpoint) throws ParseException {
+        public Builder parseEndpoint(final String endpoint) throws BadConfigException {
             try {
                 return setEndpoint(InetEndpoint.parse(endpoint));
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("Endpoint", endpoint, e);
+            } catch (final ParseException e) {
+                throw new BadConfigException(Section.PEER, Location.ENDPOINT, e);
             }
         }
 
-        public Builder parsePersistentKeepalive(final String persistentKeepalive) throws ParseException {
+        public Builder parsePersistentKeepalive(final String persistentKeepalive)
+                throws BadConfigException {
             try {
                 return setPersistentKeepalive(Integer.parseInt(persistentKeepalive));
-            } catch (final IllegalArgumentException e) {
-                throw new ParseException("PersistentKeepalive", persistentKeepalive, e);
+            } catch (final NumberFormatException e) {
+                throw new BadConfigException(Section.PEER, Location.PERSISTENT_KEEPALIVE,
+                        persistentKeepalive, e);
             }
         }
 
-        public Builder parsePreSharedKey(final String preSharedKey) throws ParseException {
+        public Builder parsePreSharedKey(final String preSharedKey) throws BadConfigException {
             try {
                 return setPreSharedKey(Key.fromBase64(preSharedKey));
-            } catch (final Key.KeyFormatException e) {
-                throw new ParseException("PresharedKey", preSharedKey, e);
+            } catch (final KeyFormatException e) {
+                throw new BadConfigException(Section.PEER, Location.PRE_SHARED_KEY, e);
             }
         }
 
-        public Builder parsePublicKey(final String publicKey) throws ParseException {
+        public Builder parsePublicKey(final String publicKey) throws BadConfigException {
             try {
                 return setPublicKey(Key.fromBase64(publicKey));
-            } catch (final Key.KeyFormatException e) {
-                throw new ParseException("PublicKey", publicKey, e);
+            } catch (final KeyFormatException e) {
+                throw new BadConfigException(Section.PEER, Location.PUBLIC_KEY, e);
             }
         }
 
@@ -277,9 +283,11 @@ public final class Peer {
             return this;
         }
 
-        public Builder setPersistentKeepalive(final int persistentKeepalive) {
+        public Builder setPersistentKeepalive(final int persistentKeepalive)
+                throws BadConfigException {
             if (persistentKeepalive < 0 || persistentKeepalive > MAX_PERSISTENT_KEEPALIVE)
-                throw new IllegalArgumentException("Invalid value for PersistentKeepalive");
+                throw new BadConfigException(Section.PEER, Location.PERSISTENT_KEEPALIVE,
+                        Reason.INVALID_VALUE, String.valueOf(persistentKeepalive));
             this.persistentKeepalive = persistentKeepalive == 0 ?
                     Optional.empty() : Optional.of(persistentKeepalive);
             return this;

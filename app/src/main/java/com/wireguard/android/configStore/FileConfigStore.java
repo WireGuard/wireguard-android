@@ -9,8 +9,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.wireguard.android.R;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
-import com.wireguard.config.ParseException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,7 +69,7 @@ public final class FileConfigStore implements ConfigStore {
     }
 
     @Override
-    public Config load(final String name) throws IOException, ParseException {
+    public Config load(final String name) throws BadConfigException, IOException {
         try (final FileInputStream stream = new FileInputStream(fileFor(name))) {
             return Config.parse(stream);
         }

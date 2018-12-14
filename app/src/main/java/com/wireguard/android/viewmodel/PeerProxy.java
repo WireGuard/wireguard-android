@@ -15,8 +15,8 @@ import android.support.annotation.Nullable;
 
 import com.wireguard.android.BR;
 import com.wireguard.config.Attribute;
+import com.wireguard.config.BadConfigException;
 import com.wireguard.config.InetEndpoint;
-import com.wireguard.config.ParseException;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 
@@ -164,7 +164,7 @@ public class PeerProxy extends BaseObservable implements Parcelable {
         return allowedIpsState == AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS;
     }
 
-    public Peer resolve() throws ParseException {
+    public Peer resolve() throws BadConfigException {
         final Peer.Builder builder = new Peer.Builder();
         if (!allowedIps.isEmpty())
             builder.parseAllowedIPs(allowedIps);
