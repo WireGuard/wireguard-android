@@ -18,7 +18,7 @@ import android.util.Log;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
 import com.wireguard.config.Config;
 
@@ -86,7 +86,7 @@ public class ZipExporterPreference extends Preference {
 
     private void exportZipComplete(@Nullable final String filePath, @Nullable final Throwable throwable) {
         if (throwable != null) {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             final String message = getContext().getString(R.string.zip_export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
@@ -108,7 +108,7 @@ public class ZipExporterPreference extends Preference {
 
     @Override
     public CharSequence getTitle() {
-        return getContext().getString(R.string.zip_exporter_title);
+        return getContext().getString(R.string.zip_export_title);
     }
 
     @Override

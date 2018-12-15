@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{fragment::onRequestScanQRCode}"
                 app:fabSize="mini"
-                app:fab_title="@string/create_from_qrcode"
+                app:fab_title="@string/create_from_qr_code"
                 app:srcCompat="@drawable/ic_action_scan_qr_code_white" />
 
             <com.wireguard.android.widget.fab.LabeledFloatingActionButton

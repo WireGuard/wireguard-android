@@ -28,7 +28,7 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.viewmodel.ConfigProxy;
 import com.wireguard.config.Config;
 
@@ -63,7 +63,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             message = getString(R.string.config_save_error, savedTunnel.getName(), error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
@@ -140,7 +140,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
                 try {
                     newConfig = binding.getConfig().resolve();
                 } catch (final Exception e) {
-                    final String error = ExceptionLoggers.unwrapMessage(e);
+                    final String error = ErrorMessages.get(e);
                     final String tunnelName = tunnel == null ? binding.getName() : tunnel.getName();
                     final String message = getString(R.string.config_save_error, tunnelName, error);
                     Log.e(TAG, message, e);
@@ -208,7 +208,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             message = getString(R.string.tunnel_create_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {
@@ -227,7 +227,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel.getName());
             renamedTunnel.setConfig(newConfig).whenComplete((a, b) -> onConfigSaved(renamedTunnel, b));
         } else {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             message = getString(R.string.tunnel_rename_error, error);
             Log.e(TAG, message, throwable);
             if (binding != null) {

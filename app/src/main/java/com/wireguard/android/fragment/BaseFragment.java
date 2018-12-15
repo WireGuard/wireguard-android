@@ -25,7 +25,7 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -111,7 +111,7 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
         tunnel.setState(State.of(checked)).whenComplete((state, throwable) -> {
             if (throwable == null)
                 return;
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             final int messageResId = checked ? R.string.error_up : R.string.error_down;
             final String message = getContext().getString(messageResId, error);
             final View view = getView();

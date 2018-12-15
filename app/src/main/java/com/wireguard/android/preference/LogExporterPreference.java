@@ -17,7 +17,7 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
 
 import java.io.BufferedReader;
@@ -76,7 +76,7 @@ public class LogExporterPreference extends Preference {
 
     private void exportLogComplete(final String filePath, @Nullable final Throwable throwable) {
         if (throwable != null) {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             final String message = getContext().getString(R.string.log_export_error, error);
             Log.e(TAG, message, throwable);
             Snackbar.make(
@@ -98,7 +98,7 @@ public class LogExporterPreference extends Preference {
 
     @Override
     public CharSequence getTitle() {
-        return getContext().getString(R.string.log_exporter_title);
+        return getContext().getString(R.string.log_export_title);
     }
 
     @Override

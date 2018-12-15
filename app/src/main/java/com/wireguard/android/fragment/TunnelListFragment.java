@@ -37,7 +37,7 @@ import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.BadConfigException;
@@ -270,7 +270,7 @@ public class TunnelListFragment extends BaseFragment {
         final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
         intentIntegrator.setOrientationLocked(false);
         intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setPrompt(getString(R.string.qrcode_hint));
+        intentIntegrator.setPrompt(getString(R.string.qr_code_hint));
         intentIntegrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE));
 
         if (binding != null)
@@ -301,7 +301,7 @@ public class TunnelListFragment extends BaseFragment {
         if (throwable == null) {
             message = getResources().getQuantityString(R.plurals.delete_success, count, count);
         } else {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             message = getResources().getQuantityString(R.plurals.delete_error, count, count, error);
             Log.e(TAG, message, throwable);
         }
@@ -314,7 +314,7 @@ public class TunnelListFragment extends BaseFragment {
         String message = null;
 
         for (final Throwable throwable : throwables) {
-            final String error = ExceptionLoggers.unwrapMessage(throwable);
+            final String error = ErrorMessages.get(throwable);
             message = getString(R.string.import_error, error);
             Log.e(TAG, message, throwable);
         }

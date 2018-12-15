@@ -123,9 +123,9 @@ public class RootShell {
                 }
             }
             if (markersSeen != 4)
-                throw new IOException(context.getString(R.string.marker_count_error, markersSeen));
+                throw new IOException(context.getString(R.string.shell_marker_count_error, markersSeen));
             if (errnoStdout != errnoStderr)
-                throw new IOException(context.getString(R.string.exit_status_read_error));
+                throw new IOException(context.getString(R.string.shell_exit_status_read_error));
             Log.v(TAG, "exit: " + errnoStdout);
             return errnoStdout;
         }
