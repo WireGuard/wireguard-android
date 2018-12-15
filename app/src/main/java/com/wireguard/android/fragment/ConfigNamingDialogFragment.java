@@ -27,8 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class ConfigNamingDialogFragment extends DialogFragment {
-
     private static final String KEY_CONFIG_TEXT = "config_text";
+
     @Nullable private ConfigNamingDialogFragmentBinding binding;
     @Nullable private Config config;
     @Nullable private InputMethodManager imm;
@@ -65,23 +65,26 @@ public class ConfigNamingDialogFragment extends DialogFragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Bundle arguments = getArguments();
+        final String configText = arguments.getString(KEY_CONFIG_TEXT);
+        final byte[] configBytes = configText.getBytes(StandardCharsets.UTF_8);
         try {
-            config = Config.parse(new ByteArrayInputStream(getArguments().getString(KEY_CONFIG_TEXT).getBytes(StandardCharsets.UTF_8)));
+            config = Config.parse(new ByteArrayInputStream(configBytes));
         } catch (final BadConfigException | IOException e) {
-            throw new RuntimeException(getResources().getString(R.string.invalid_config_error, getClass().getSimpleName()), e);
+            throw new IllegalArgumentException("Invalid config passed to " + getClass().getSimpleName(), e);
         }
     }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Activity activity = getActivity();
+        final Activity activity = Objects.requireNonNull(getActivity());
 
-        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-        alertDialogBuilder.setTitle(R.string.import_from_qrcode);
+        alertDialogBuilder.setTitle(R.string.import_from_qr_code);
 
-        binding = ConfigNamingDialogFragmentBinding.inflate(getActivity().getLayoutInflater(), null, false);
+        binding = ConfigNamingDialogFragmentBinding.inflate(activity.getLayoutInflater(), null, false);
         binding.executePendingBindings();
         alertDialogBuilder.setView(binding.getRoot());
 

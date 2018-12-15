@@ -126,7 +126,7 @@ public final class GoBackend implements Backend {
             Objects.requireNonNull(config, context.getString(R.string.no_config_error));
 
             if (VpnService.prepare(context) != null)
-                throw new Exception(context.getString(R.string.vpn_not_authed_error));
+                throw new Exception(context.getString(R.string.vpn_not_authorized_error));
 
             final VpnService service;
             if (!vpnService.isDone())

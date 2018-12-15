@@ -22,7 +22,7 @@ import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.AppListDialogFragmentBinding;
 import com.wireguard.android.model.ApplicationData;
-import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.ObservableKeyedArrayList;
 import com.wireguard.android.util.ObservableKeyedList;
 
@@ -73,7 +73,7 @@ public class AppListDialogFragment extends DialogFragment {
                 appData.clear();
                 appData.addAll(data);
             } else {
-                final String error = throwable != null ? ExceptionLoggers.unwrapMessage(throwable) : "Unknown";
+                final String error = ErrorMessages.get(throwable);
                 final String message = activity.getString(R.string.error_fetching_apps, error);
                 Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                 dismissAllowingStateLoss();
