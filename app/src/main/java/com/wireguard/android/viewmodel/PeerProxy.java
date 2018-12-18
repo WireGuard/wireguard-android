@@ -5,13 +5,13 @@
 
 package com.wireguard.android.viewmodel;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.databinding.Observable;
-import android.databinding.ObservableList;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.wireguard.android.BR;
 import com.wireguard.config.Attribute;

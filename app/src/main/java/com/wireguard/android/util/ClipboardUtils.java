@@ -8,7 +8,7 @@ package com.wireguard.android.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 

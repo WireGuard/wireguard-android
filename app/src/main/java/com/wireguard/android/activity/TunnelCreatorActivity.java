@@ -6,7 +6,7 @@
 package com.wireguard.android.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;

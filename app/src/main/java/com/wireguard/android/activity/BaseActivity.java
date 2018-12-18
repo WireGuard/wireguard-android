@@ -5,10 +5,10 @@
 
 package com.wireguard.android.activity;
 
-import android.databinding.CallbackRegistry;
-import android.databinding.CallbackRegistry.NotifierCallback;
+import androidx.databinding.CallbackRegistry;
+import androidx.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.model.Tunnel;

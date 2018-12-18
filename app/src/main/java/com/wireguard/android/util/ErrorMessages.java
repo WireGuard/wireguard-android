@@ -6,7 +6,7 @@
 package com.wireguard.android.util;
 
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;

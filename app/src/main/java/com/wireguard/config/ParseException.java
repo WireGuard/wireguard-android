@@ -5,7 +5,7 @@
 
 package com.wireguard.config;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  */

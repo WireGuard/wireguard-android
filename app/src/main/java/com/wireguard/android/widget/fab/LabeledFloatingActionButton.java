@@ -8,8 +8,8 @@ package com.wireguard.android.widget.fab;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
