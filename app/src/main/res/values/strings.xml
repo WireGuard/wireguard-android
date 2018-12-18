@@ -28,9 +28,9 @@
     <string name="addresses">Addresses</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
-    <string name="bad_config_context">%s\'s %s</string>
+    <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
-    <string name="bad_config_error">%s in %s</string>
+    <string name="bad_config_error">%1$s in %2$s</string>
     <string name="bad_config_explanation_pka">: Must be positive and no more than 65535</string>
     <string name="bad_config_explanation_positive_number">: Must be positive</string>
     <string name="bad_config_explanation_udp_port">: Must be a valid UDP port number</string>
