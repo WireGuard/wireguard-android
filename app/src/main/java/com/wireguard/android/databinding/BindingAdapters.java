@@ -5,14 +5,14 @@
 
 package com.wireguard.android.databinding;
 
-import android.databinding.BindingAdapter;
-import android.databinding.DataBindingUtil;
-import android.databinding.ObservableList;
-import android.databinding.ViewDataBinding;
-import android.databinding.adapters.ListenerUtil;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableList;
+import androidx.databinding.ViewDataBinding;
+import androidx.databinding.adapters.ListenerUtil;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
