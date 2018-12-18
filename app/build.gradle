@@ -74,7 +74,7 @@ ext {
     materialComponentsVersion = '1.0.0'
     jsr305Version = '3.0.2'
     preferenceVersion = '1.0.0'
-    streamsupportVersion = '1.6.0'
+    streamsupportVersion = '1.7.0'
     threetenabpVersion = '1.1.1'
     zxingEmbeddedVersion = '3.6.0'
 }
