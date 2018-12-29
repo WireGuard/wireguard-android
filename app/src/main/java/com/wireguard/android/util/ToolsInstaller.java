@@ -123,7 +123,7 @@ public final class ToolsInstaller {
         script.append("touch /sbin/.core/img/wireguard/auto_mount; ");
         for (final String[] names : EXECUTABLES) {
             final File destination = new File("/sbin/.core/img/wireguard" + INSTALL_DIR, names[1]);
-            script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
+            script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
         script.append("trap - INT TERM EXIT;");
