@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright © 2017-2018 WireGuard LLC. All Rights Reserved.
+# Copyright © 2017-2019 WireGuard LLC. All Rights Reserved.
 
 UPSTREAM_FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)) ../wireguard-go/go.mod ../wireguard-go/go.sum
 DOWNSTREAM_FILES := $(wildcard src/*.go) $(wildcard src/*.c) $(wildcard src/*/*.go)
