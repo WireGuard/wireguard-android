@@ -226,6 +226,7 @@ public class PeerProxy extends BaseObservable implements Parcelable {
 
     private void setInterfaceDns(final CharSequence dnsServers) {
         final List<String> newDnsRoutes = Stream.of(Attribute.split(dnsServers))
+                .filter(server -> !server.contains(":"))
                 .map(server -> server + "/32")
                 .collect(Collectors.toUnmodifiableList());
         if (allowedIpsState == AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS) {
