@@ -13,7 +13,6 @@ import (
 	"bufio"
 	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
-	"io/ioutil"
 	"log"
 	"math"
 	"net"
@@ -83,8 +82,7 @@ func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 
 	logger.Debug.Println("Interface has MTU", device.tun.mtu)
 
-	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
-	setError := ipcSetOperation(device, bufferedSettings)
+	setError := ipcSetOperation(device, bufio.NewReader(strings.NewReader(settings)))
 	if setError != nil {
 		unix.Close(int(tunFd))
 		logger.Error.Println(setError)
