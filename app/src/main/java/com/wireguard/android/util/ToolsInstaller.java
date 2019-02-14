@@ -117,12 +117,12 @@ public final class ToolsInstaller {
     private int installMagisk() throws NoRootException {
         final StringBuilder script = new StringBuilder("set -ex; ");
 
-        script.append("trap 'rm -rf /sbin/.core/img/wireguard' INT TERM EXIT; ");
-        script.append(String.format("rm -rf /sbin/.core/img/wireguard/; mkdir -p /sbin/.core/img/wireguard%s; ", INSTALL_DIR));
-        script.append(String.format("printf 'name=WireGuard Command Line Tools\nversion=%s\nversionCode=%s\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.core/img/wireguard/module.prop; ", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
-        script.append("touch /sbin/.core/img/wireguard/auto_mount; ");
+        script.append("trap 'rm -rf /sbin/ecore/img/wireguard' INT TERM EXIT; ");
+        script.append(String.format("rm -rf /sbin/.magisk/img/wireguard/; mkdir -p /sbin/.magisk/img/wireguard%s; ", INSTALL_DIR));
+        script.append(String.format("printf 'name=WireGuard Command Line Tools\nversion=%s\nversionCode=%s\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.magisk/img/wireguard/module.prop; ", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        script.append("touch /sbin/.magisk/img/wireguard/auto_mount; ");
         for (final String[] names : EXECUTABLES) {
-            final File destination = new File("/sbin/.core/img/wireguard" + INSTALL_DIR, names[1]);
+            final File destination = new File("/sbin/.magisk/img/wireguard" + INSTALL_DIR, names[1]);
             script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
                     new File(nativeLibraryDir, names[0]), destination, destination, destination));
         }
@@ -179,7 +179,7 @@ public final class ToolsInstaller {
         synchronized (lock) {
             if (installAsMagiskModule == null) {
                 try {
-                    installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.core/mirror -a -d /sbin/.core/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
+                    installAsMagiskModule = Application.getRootShell().run(null, "[ -d /sbin/.magisk/mirror -a -d /sbin/.magisk/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
                 } catch (final Exception ignored) {
                     installAsMagiskModule = false;
                 }
