@@ -6,7 +6,7 @@
 package tun
 
 import (
-	"git.zx2c4.com/wireguard-go/rwcancel"
+	"golang.zx2c4.com/wireguard/rwcancel"
 	"os"
 )
 
@@ -20,7 +20,7 @@ func CreateTUNFromFD(tunFd int) (TUNDevice, string, error) {
 		nopi:    true,
 	}
 	var err error
-	tun.fdCancel, err = rwcancel.NewRWCancel(tunFd)
+	tun.fdCancel, err = rwcancel.NewRWCancel(int(tun.fd))
 	if err != nil {
 		return nil, "", err
 	}

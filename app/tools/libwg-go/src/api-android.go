@@ -11,8 +11,8 @@ import "C"
 
 import (
 	"bufio"
-	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
+	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"math"
 	"net"
@@ -52,7 +52,7 @@ func init() {
 			case <-signals:
 				n := runtime.Stack(buf, true)
 				buf[n] = 0
-				C.__android_log_write(C.ANDROID_LOG_ERROR, C.CString("WireGuard/GoBackend/Stacktrace"), (*_Ctype_char)(unsafe.Pointer(&buf[0])))
+				C.__android_log_write(C.ANDROID_LOG_ERROR, C.CString("WireGuard/GoBackend/Stacktrace"), (*C.char)(unsafe.Pointer(&buf[0])))
 			}
 		}
 	}()
@@ -89,7 +89,7 @@ func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 		return -1
 	}
 
-	var uapi net.Listener;
+	var uapi net.Listener
 
 	uapiFile, err := UAPIOpen(name)
 	if err != nil {

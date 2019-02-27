@@ -27,7 +27,7 @@ default: $(DESTDIR)/libwg-go.so
 
 GOBUILDARCH := $(NDK_GO_ARCH_MAP_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOBUILDVERSION := 1.11.4
+GOBUILDVERSION := 1.12
 GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
 GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
 export GOROOT := $(BUILDDIR)/goroot
@@ -41,7 +41,7 @@ $(GOROOT)/bin/go:
 	rm -rf "$(GOROOT)"
 	mkdir -p "$(GOROOT)"
 	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
-	cat goruntime-*.diff | patch -p1 -f -N -r- -d "$(GOROOT)" || { rm -rf "$(GOROOT)"; exit 1; }
+	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
 
 $(shell test "$$(cat .gobuildversion 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.so")
 
