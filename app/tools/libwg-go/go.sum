@@ -1,11 +1,9 @@
 github.com/Microsoft/go-winio v0.4.11/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcyvVC4A4RozmA=
-golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25 h1:jsG6UpNLt9iAsb0S2AGW28DveNzzgmbXR+ENoPjUeIU=
+github.com/Microsoft/go-winio v0.4.12/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcyvVC4A4RozmA=
 golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
-golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95 h1:fY7Dsw114eJN4boqzVSbpVHO6rTdhq6/GnXeu+PKnzU=
 golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
-golang.org/x/sys v0.0.0-20190302025703-b6889370fb10 h1:xQJI9OEiErEQ++DoXOHqEpzsGMrAv2Q2jyCpi7DmfpQ=
 golang.org/x/sys v0.0.0-20190302025703-b6889370fb10/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
-golang.zx2c4.com/wireguard v0.0.0-20190303042013-27104279d88d/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
-golang.zx2c4.com/wireguard v0.0.0-20190303043202-244a98e380fa h1:t/IV/5G9uPXXDoaOrk+Lx2VsFhbqWGYFE+GEl160Yzc=
-golang.zx2c4.com/wireguard v0.0.0-20190303043202-244a98e380fa/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
+golang.org/x/sys v0.0.0-20190306220723-b294cbcfc56d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.zx2c4.com/wireguard v0.0.0-20190307010348-26af6c4651db h1:c70TeBHaSSIBRXe2n1UapxymWO/QJ5Yw5SLW4CmXflY=
+golang.zx2c4.com/wireguard v0.0.0-20190307010348-26af6c4651db/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
