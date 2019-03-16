@@ -128,6 +128,6 @@ public final class WgQuickBackend implements Backend {
         // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
         if (result != 0)
-            throw new Exception(context.getString(R.string.tunnel_config_error));
+            throw new Exception(context.getString(R.string.tunnel_config_error, result));
     }
 }
