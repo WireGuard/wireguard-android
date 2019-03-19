@@ -5,7 +5,7 @@ golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95 h1:fY7Dsw114eJN4boqzVSbpVHO6
 golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190302025703-b6889370fb10/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
-golang.org/x/sys v0.0.0-20190307162637-572b51eaf722 h1:LSRNeQHux7ghsicM4qcfeKMS/jqCsp0fqd4Y2UJL6eA=
-golang.org/x/sys v0.0.0-20190307162637-572b51eaf722/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.zx2c4.com/wireguard v0.0.0-20190308004054-5c7cc256e39a h1:RvrH0NQcXaN9h2JoBDAI3BWcTTJL3vH9L1gHQY0T76w=
-golang.zx2c4.com/wireguard v0.0.0-20190308004054-5c7cc256e39a/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
+golang.org/x/sys v0.0.0-20190318195719-6c81ef8f67ca h1:o2TLx1bGN3W+Ei0EMU5fShLupLmTOU95KvJJmfYhAzM=
+golang.org/x/sys v0.0.0-20190318195719-6c81ef8f67ca/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.zx2c4.com/wireguard v0.0.0-20190319063404-2c51d6af48b8 h1:wp9bMuYaRtmbF5VhDpWWYldLb7z+QVQbO2z+NSvZyJo=
+golang.zx2c4.com/wireguard v0.0.0-20190319063404-2c51d6af48b8/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
