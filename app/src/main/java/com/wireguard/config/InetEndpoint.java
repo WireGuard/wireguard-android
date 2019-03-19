@@ -26,7 +26,7 @@ import java9.util.Optional;
  * Instances of this class are externally immutable.
  */
 public final class InetEndpoint {
-    private static final Pattern BARE_IPV6 = Pattern.compile("^[^\\[]*:");
+    private static final Pattern BARE_IPV6 = Pattern.compile("^[^\\[\\]]*:[^\\[\\]]*");
     private static final Pattern FORBIDDEN_CHARACTERS = Pattern.compile("[/?#]");
 
     private final String host;
