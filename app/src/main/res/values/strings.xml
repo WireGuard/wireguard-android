@@ -123,8 +123,8 @@
     <string name="set_exclusions">Set Exclusions</string>
     <string name="settings">Settings</string>
     <string name="shell_exit_status_read_error">Shell cannot read exit status</string>
-    <string name="shell_marker_count_error">Shell expected 4 markers, received %i</string>
-    <string name="shell_start_error">Shell failed to start: %i</string>
+    <string name="shell_marker_count_error">Shell expected 4 markers, received %d</string>
+    <string name="shell_start_error">Shell failed to start: %d</string>
     <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
     <string name="tools_installer_failure">Unable to install command-line tools (no root?)</string>
@@ -137,14 +137,14 @@
     <string name="tools_installer_working">Installing wg and wg-quick</string>
     <string name="tools_unavailable_error">Required tools unavailable</string>
     <string name="tun_create_error">Unable to create tun device</string>
-    <string name="tunnel_config_error">Unable to configure tunnel (wg-quick returned %i)</string>
+    <string name="tunnel_config_error">Unable to configure tunnel (wg-quick returned %d)</string>
     <string name="tunnel_create_error">Unable to create tunnel: %s</string>
     <string name="tunnel_create_success">Successfully created tunnel “%s”</string>
     <string name="tunnel_error_already_exists">Tunnel “%s” already exists</string>
     <string name="tunnel_error_invalid_name">Invalid name</string>
     <string name="tunnel_list_placeholder">Add a tunnel using the blue button</string>
     <string name="tunnel_name">Tunnel Name</string>
-    <string name="tunnel_on_error">Unable to turn tunnel on (wgTurnOn returned %i)</string>
+    <string name="tunnel_on_error">Unable to turn tunnel on (wgTurnOn returned %d)</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
     <string name="type_name_go_userspace">Go userspace</string>
