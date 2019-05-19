@@ -26,10 +26,13 @@
     </data>
 
     <com.wireguard.android.widget.MultiselectableRelativeLayout
+        android:id="@+id/tunnel_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background"
-        android:descendantFocusability="blocksDescendants"
+        android:descendantFocusability="beforeDescendants"
+        android:focusable="true"
+        android:nextFocusRight="@+id/tunnel_switch"
         android:padding="16dp">
 
         <TextView
@@ -49,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tunnel_name"
             android:layout_alignParentEnd="true"
+            android:nextFocusLeft="@+id/tunnel_list_item"
             app:checked="@{item.state == State.UP}"
             app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
     </com.wireguard.android.widget.MultiselectableRelativeLayout>
