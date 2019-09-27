@@ -67,16 +67,19 @@ android {
 }
 
 ext {
-    annotationsVersion = '1.0.1'
-    appcompatVersion = '1.0.2'
+    annotationsVersion = '1.1.0'
+    appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
-    databindingVersion = '3.3.1'
+    databindingVersion = '3.5.0'
     leakCanaryVersion = "2.0-beta-3"
     materialComponentsVersion = '1.0.0'
     jsr305Version = '3.0.2'
-    preferenceVersion = '1.0.0'
-    streamsupportVersion = '1.7.0'
-    threetenabpVersion = '1.1.1'
+    preferenceVersion = '1.1.0'
+    streamsupportVersion = '1.7.1'
+    threetenabpVersion = '1.2.1'
+    // ZXING switched minSdk to 24 so we cannot upgrade to 4.0.2 without following suit.
+    // If you choose to upgrade to minSDK 24 then you should also disable Jetifier from
+    // gradle.properties.
     zxingEmbeddedVersion = '3.6.0'
 }
 
