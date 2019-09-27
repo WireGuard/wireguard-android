@@ -18,8 +18,8 @@ public final class FragmentUtils {
     public static SettingsActivity getPrefActivity(final Preference preference) {
         final Context context = preference.getContext();
         if (context instanceof ContextThemeWrapper) {
-            if (((ContextThemeWrapper) context).getBaseContext() instanceof SettingsActivity) {
-                return ((SettingsActivity) ((ContextThemeWrapper) context).getBaseContext());
+            if (context instanceof SettingsActivity) {
+                return ((SettingsActivity) context);
             }
         }
         return null;
