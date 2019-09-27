@@ -53,7 +53,16 @@ public class MainActivity extends BaseActivity
             setSelectedTunnel(null);
             return;
         }
-        super.onBackPressed();
+        if (isTaskRoot()) {
+            // @{link TunnelDetailFragment} is in foreground
+            if (backStackEntries == 2) {
+                getSupportFragmentManager().popBackStack();
+            } else if (backStackEntries == 0) {
+                finishAfterTransition();
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override public void onBackStackChanged() {
