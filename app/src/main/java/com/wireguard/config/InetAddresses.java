@@ -49,6 +49,8 @@ public final class InetAddresses {
             if (cause instanceof IllegalArgumentException)
                 throw new ParseException(InetAddress.class, address, cause);
             throw new RuntimeException(e);
+        } catch (final IllegalArgumentException e) {
+                throw new ParseException(InetAddress.class, address, e);
         }
     }
 }
