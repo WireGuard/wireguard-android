@@ -5,6 +5,7 @@
 
 package com.wireguard.config;
 
+import android.os.Build;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
@@ -15,9 +16,12 @@ import java.net.InetAddress;
  * Utility methods for creating instances of {@link InetAddress}.
  */
 public final class InetAddresses {
-    private static final Method PARSER_METHOD;
+    private static Method PARSER_METHOD;
 
-    static {
+
+    private static Method getParserMethod() {
+        if (PARSER_METHOD != null)
+                return PARSER_METHOD;
         try {
             // This method is only present on Android.
             // noinspection JavaReflectionMemberAccess
@@ -25,6 +29,7 @@ public final class InetAddresses {
         } catch (final NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+        return PARSER_METHOD;
     }
 
     private InetAddresses() {
@@ -41,7 +46,10 @@ public final class InetAddresses {
         if (address.isEmpty())
             throw new ParseException(InetAddress.class, address, "Empty address");
         try {
-            return (InetAddress) PARSER_METHOD.invoke(null, address);
+            if (Build.VERSION.SDK_INT < 29)
+                return (InetAddress) getParserMethod().invoke(null, address);
+            else
+                return android.net.InetAddresses.parseNumericAddress(address);
         } catch (final IllegalAccessException | InvocationTargetException e) {
             final Throwable cause = e.getCause();
             // Re-throw parsing exceptions with the original type, as callers might try to catch

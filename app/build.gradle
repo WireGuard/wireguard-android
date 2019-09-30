@@ -6,17 +6,17 @@ apply from: 'nonnull.gradle'
 final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     dataBinding.enabled true
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 451
         versionName '0.0.20190708'
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
