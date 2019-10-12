@@ -66,6 +66,8 @@
     <string name="dark_theme_title">Use dark theme</string>
     <string name="delete">Delete</string>
     <string name="deselect_all">Deselect All</string>
+    <string name="donate_title">♥ Donate to the WireGuard Project</string>
+    <string name="donate_summary">Every contribution helps.</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
