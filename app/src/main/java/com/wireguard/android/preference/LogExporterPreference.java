@@ -8,22 +8,21 @@ package com.wireguard.android.preference;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.preference.Preference;
+
 import android.util.AttributeSet;
 import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.util.DownloadsFileSaver;
+import com.wireguard.android.util.DownloadsFileSaver.DownloadsFile;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -41,36 +40,33 @@ public class LogExporterPreference extends Preference {
 
     private void exportLog() {
         Application.getAsyncWorker().supplyAsync(() -> {
-            final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            final File file = new File(path, "wireguard-log.txt");
-            if (!path.isDirectory() && !path.mkdirs())
-                throw new IOException(
-                        getContext().getString(R.string.create_output_dir_error));
-
-            /* We would like to simply run `builder.redirectOutput(file);`, but this is API 26.
-             * Instead we have to do this dance, since logcat appends.
-             */
-            new FileOutputStream(file).close();
-
+            DownloadsFile outputFile = DownloadsFileSaver.save(getContext(), "wireguard-log.txt", "text/plain", true);
             try {
                 final Process process = Runtime.getRuntime().exec(new String[]{
-                        "logcat", "-b", "all", "-d", "-v", "threadtime", "-f", file.getAbsolutePath(), "*:V"});
-                if (process.waitFor() != 0) {
-                    try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                        "logcat", "-b", "all", "-d", "-v", "threadtime", "*:V"});
+                try (final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                     final BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream())))
+                {
+                    String line;
+                    while ((line = stdout.readLine()) != null) {
+                        outputFile.getOutputStream().write(line.getBytes());
+                        outputFile.getOutputStream().write('\n');
+                    }
+                    outputFile.getOutputStream().close();
+                    stdout.close();
+                    if (process.waitFor() != 0) {
                         final StringBuilder errors = new StringBuilder();
-                        errors.append("Unable to run logcat: ");
-                        String line;
-                        while ((line = reader.readLine()) != null)
+                        errors.append(R.string.logcat_error);
+                        while ((line = stderr.readLine()) != null)
                             errors.append(line);
                         throw new Exception(errors.toString());
                     }
                 }
             } catch (final Exception e) {
-                // noinspection ResultOfMethodCallIgnored
-                file.delete();
+                outputFile.delete();
                 throw e;
             }
-            return file.getAbsolutePath();
+            return outputFile.getFileName();
         }).whenComplete(this::exportLogComplete);
     }
 

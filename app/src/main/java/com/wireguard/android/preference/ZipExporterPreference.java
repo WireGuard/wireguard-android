@@ -8,7 +8,6 @@ package com.wireguard.android.preference;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.preference.Preference;
@@ -18,13 +17,12 @@ import android.util.Log;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.util.DownloadsFileSaver;
+import com.wireguard.android.util.DownloadsFileSaver.DownloadsFile;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
 import com.wireguard.config.Config;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +61,8 @@ public class ZipExporterPreference extends Preference {
                 .whenComplete((ignored1, exception) -> Application.getAsyncWorker().supplyAsync(() -> {
                     if (exception != null)
                         throw exception;
-                    final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    final File file = new File(path, "wireguard-export.zip");
-                    if (!path.isDirectory() && !path.mkdirs())
-                        throw new IOException(
-                                getContext().getString(R.string.create_output_dir_error));
-                    try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
+                    DownloadsFile outputFile = DownloadsFileSaver.save(getContext(), "wireguard-export.zip", "application/zip", true);
+                    try (ZipOutputStream zip = new ZipOutputStream(outputFile.getOutputStream())) {
                         for (int i = 0; i < futureConfigs.size(); ++i) {
                             zip.putNextEntry(new ZipEntry(tunnels.get(i).getName() + ".conf"));
                             zip.write(futureConfigs.get(i).getNow(null).
@@ -76,11 +70,10 @@ public class ZipExporterPreference extends Preference {
                         }
                         zip.closeEntry();
                     } catch (final Exception e) {
-                        // noinspection ResultOfMethodCallIgnored
-                        file.delete();
+                        outputFile.delete();
                         throw e;
                     }
-                    return file.getAbsolutePath();
+                    return outputFile.getFileName();
                 }).whenComplete(this::exportZipComplete));
     }
 

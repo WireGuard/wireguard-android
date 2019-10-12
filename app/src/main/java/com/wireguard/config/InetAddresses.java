@@ -46,7 +46,7 @@ public final class InetAddresses {
         if (address.isEmpty())
             throw new ParseException(InetAddress.class, address, "Empty address");
         try {
-            if (Build.VERSION.SDK_INT < 29)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
                 return (InetAddress) getParserMethod().invoke(null, address);
             else
                 return android.net.InetAddresses.parseNumericAddress(address);

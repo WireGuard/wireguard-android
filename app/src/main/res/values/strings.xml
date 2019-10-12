@@ -59,6 +59,7 @@
     <string name="create_from_file">Create from file or archive</string>
     <string name="create_from_qr_code">Create from QR code</string>
     <string name="create_output_dir_error">Cannot create output directory</string>
+    <string name="create_downloads_file_error">Cannot create file in downloads directory</string>
     <string name="create_temp_dir_error">Cannot create local temporary directory</string>
     <string name="create_tunnel">Create Tunnel</string>
     <string name="dark_theme_summary_off">Currently using light (day) theme</string>
@@ -96,6 +97,7 @@
     <string name="log_export_success">Saved to “%s”</string>
     <string name="log_export_summary">Log file will be saved to downloads folder</string>
     <string name="log_export_title">Export log file</string>
+    <string name="logcat_error">Unable to run logcat: </string>
     <string name="module_version_error">Unable to determine kernel module version</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_error">Only one userspace tunnel can run at a time</string>
