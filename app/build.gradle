@@ -71,7 +71,6 @@ ext {
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
     databindingVersion = '3.5.0'
-    leakCanaryVersion = "2.0-beta-3"
     materialComponentsVersion = '1.0.0'
     jsr305Version = '3.0.2'
     preferenceVersion = '1.1.0'
@@ -95,7 +94,6 @@ dependencies {
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
 
 tasks.withType(JavaCompile) {
