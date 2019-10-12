@@ -6,6 +6,7 @@
 package com.wireguard.android.activity;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -91,13 +92,16 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
         @Override
         public void onCreatePreferences(final Bundle savedInstanceState, final String key) {
             addPreferencesFromResource(R.xml.preferences);
+            final PreferenceScreen screen = getPreferenceScreen();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                screen.removePreference(getPreferenceManager().findPreference("dark_theme"));
+
             final Preference wgQuickOnlyPrefs[] = {
                     getPreferenceManager().findPreference("tools_installer"),
                     getPreferenceManager().findPreference("restore_on_boot")
             };
             for (final Preference pref : wgQuickOnlyPrefs)
                 pref.setVisible(false);
-            final PreferenceScreen screen = getPreferenceScreen();
             Application.getBackendAsync().thenAccept(backend -> {
                 for (final Preference pref : wgQuickOnlyPrefs) {
                     if (backend instanceof WgQuickBackend)
