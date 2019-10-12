@@ -115,9 +115,13 @@ public class Application extends android.app.Application {
         toolsInstaller = new ToolsInstaller(getApplicationContext());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        AppCompatDelegate.setDefaultNightMode(
-                sharedPreferences.getBoolean("dark_theme", false) ?
-                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            AppCompatDelegate.setDefaultNightMode(
+                    sharedPreferences.getBoolean("dark_theme", false) ?
+                            AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
 
         tunnelManager = new TunnelManager(new FileConfigStore(getApplicationContext()));
         tunnelManager.onCreate();

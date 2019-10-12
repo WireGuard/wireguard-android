@@ -7,6 +7,7 @@ package com.wireguard.android.activity;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,12 +56,14 @@ public abstract class ThemeChangeAwareActivity extends AppCompatActivity impleme
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Application.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            Application.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onDestroy() {
-        Application.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            Application.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
 
