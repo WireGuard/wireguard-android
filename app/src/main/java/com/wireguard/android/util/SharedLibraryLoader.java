@@ -41,17 +41,17 @@ public final class SharedLibraryLoader {
         if (context.getApplicationInfo().splitSourceDirs != null)
             apks.addAll(Arrays.asList(context.getApplicationInfo().splitSourceDirs));
 
-        for (final String apk : apks) {
-            final ZipFile zipFile;
-            try {
-                zipFile = new ZipFile(new File(apk), ZipFile.OPEN_READ);
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
+        for (final String abi : Build.SUPPORTED_ABIS) {
+            for (final String apk : apks) {
+                final ZipFile zipFile;
+                try {
+                    zipFile = new ZipFile(new File(apk), ZipFile.OPEN_READ);
+                } catch (final IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-            final String mappedLibName = System.mapLibraryName(libName);
-            final byte[] buffer = new byte[1024 * 32];
-            for (final String abi : Build.SUPPORTED_ABIS) {
+                final String mappedLibName = System.mapLibraryName(libName);
+                final byte[] buffer = new byte[1024 * 32];
                 final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
                 final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
                 if (zipEntry == null)
