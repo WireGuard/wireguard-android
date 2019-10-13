@@ -110,6 +110,19 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
                         screen.removePreference(pref);
                 }
             });
+
+            final Preference moduleInstaller = getPreferenceManager().findPreference("module_downloader");
+            moduleInstaller.setVisible(false);
+            if (Application.getModuleLoader().isModuleLoaded()) {
+                screen.removePreference(moduleInstaller);
+            } else {
+                Application.getAsyncWorker().runAsync(Application.getRootShell()::start).whenComplete((v, e) -> {
+                    if (e == null)
+                        moduleInstaller.setVisible(true);
+                    else
+                        screen.removePreference(moduleInstaller);
+                });
+            }
         }
     }
 }
