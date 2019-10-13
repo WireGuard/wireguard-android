@@ -99,6 +99,12 @@
     <string name="log_export_title">Export log file</string>
     <string name="logcat_error">Unable to run logcat: </string>
     <string name="module_version_error">Unable to determine kernel module version</string>
+    <string name="module_installer_not_found">No modules are available for your device</string>
+    <string name="module_installer_initial">The experimental kernel module can improve performance</string>
+    <string name="module_installer_success">Success. The application will restart in 5 seconds</string>
+    <string name="module_installer_title">Download and install kernel module</string>
+    <string name="module_installer_working">Downloading and installing…</string>
+    <string name="module_installer_error">Something went wrong. Please try again</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_error">Only one userspace tunnel can run at a time</string>
     <string name="name">Name</string>

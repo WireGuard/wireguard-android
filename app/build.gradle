@@ -80,6 +80,7 @@ ext {
     // If you choose to upgrade to minSDK 24 then you should also disable Jetifier from
     // gradle.properties.
     zxingEmbeddedVersion = '3.6.0'
+    eddsaVersion = '0.3.0'
 }
 
 dependencies {
@@ -94,6 +95,7 @@ dependencies {
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    implementation "net.i2p.crypto:eddsa:$eddsaVersion"
 }
 
 tasks.withType(JavaCompile) {

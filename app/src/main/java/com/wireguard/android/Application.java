@@ -22,6 +22,7 @@ import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.configStore.FileConfigStore;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.AsyncWorker;
+import com.wireguard.android.util.ModuleLoader;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
@@ -38,6 +39,7 @@ public class Application extends android.app.Application {
     @SuppressWarnings("NullableProblems") private RootShell rootShell;
     @SuppressWarnings("NullableProblems") private SharedPreferences sharedPreferences;
     @SuppressWarnings("NullableProblems") private ToolsInstaller toolsInstaller;
+    @SuppressWarnings("NullableProblems") private ModuleLoader moduleLoader;
     @SuppressWarnings("NullableProblems") private TunnelManager tunnelManager;
 
     public Application() {
@@ -57,9 +59,19 @@ public class Application extends android.app.Application {
         synchronized (app.futureBackend) {
             if (app.backend == null) {
                 Backend backend = null;
-                if (new File("/sys/module/wireguard").exists()) {
+                boolean didStartRootShell = false;
+                if (!app.moduleLoader.isModuleLoaded() && app.moduleLoader.moduleMightExist()) {
                     try {
                         app.rootShell.start();
+                        didStartRootShell = true;
+                        app.moduleLoader.loadModule();
+                    } catch (final Exception ignored) {
+                    }
+                }
+                if (app.moduleLoader.isModuleLoaded()) {
+                    try {
+                        if (!didStartRootShell)
+                            app.rootShell.start();
                         backend = new WgQuickBackend(app.getApplicationContext());
                     } catch (final Exception ignored) {
                     }
@@ -87,6 +99,9 @@ public class Application extends android.app.Application {
     public static ToolsInstaller getToolsInstaller() {
         return get().toolsInstaller;
     }
+    public static ModuleLoader getModuleLoader() {
+        return get().moduleLoader;
+    }
 
     public static TunnelManager getTunnelManager() {
         return get().tunnelManager;
@@ -113,6 +128,7 @@ public class Application extends android.app.Application {
         asyncWorker = new AsyncWorker(AsyncTask.SERIAL_EXECUTOR, new Handler(Looper.getMainLooper()));
         rootShell = new RootShell(getApplicationContext());
         toolsInstaller = new ToolsInstaller(getApplicationContext());
+        moduleLoader = new ModuleLoader(getApplicationContext());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
