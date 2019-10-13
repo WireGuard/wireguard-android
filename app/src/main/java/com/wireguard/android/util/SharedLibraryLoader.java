@@ -25,16 +25,7 @@ public final class SharedLibraryLoader {
     private SharedLibraryLoader() {
     }
 
-    public static void loadSharedLibrary(final Context context, final String libName) {
-        Throwable noAbiException;
-        try {
-            System.loadLibrary(libName);
-            return;
-        } catch (final UnsatisfiedLinkError e) {
-            Log.d(TAG, "Failed to load library normally, so attempting to extract from apk", e);
-            noAbiException = e;
-        }
-
+    public static boolean extractLibrary(final Context context, final String libName, final File destination) throws IOException {
         final Collection<String> apks = new HashSet<>();
         if (context.getApplicationInfo().sourceDir != null)
             apks.add(context.getApplicationInfo().sourceDir);
@@ -56,28 +47,43 @@ public final class SharedLibraryLoader {
                 final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
                 if (zipEntry == null)
                     continue;
-                File f = null;
-                try {
-                    f = File.createTempFile("lib", ".so", context.getCacheDir());
-                    Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + f.getAbsolutePath() + " and loading");
-                    try (final FileOutputStream out = new FileOutputStream(f);
-                         final InputStream in = zipFile.getInputStream(zipEntry)) {
-                        int len;
-                        while ((len = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, len);
-                        }
+                Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + destination.getAbsolutePath());
+                try (final FileOutputStream out = new FileOutputStream(destination);
+                     final InputStream in = zipFile.getInputStream(zipEntry)) {
+                    int len;
+                    while ((len = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
                     }
-                    System.load(f.getAbsolutePath());
-                    return;
-                } catch (final Exception e) {
-                    Log.d(TAG, "Failed to load library apk:/" + libZipPath, e);
-                    noAbiException = e;
-                } finally {
-                    if (f != null)
-                        // noinspection ResultOfMethodCallIgnored
-                        f.delete();
                 }
+                return true;
             }
+        }
+        return false;
+    }
+
+    public static void loadSharedLibrary(final Context context, final String libName) {
+        Throwable noAbiException;
+        try {
+            System.loadLibrary(libName);
+            return;
+        } catch (final UnsatisfiedLinkError e) {
+            Log.d(TAG, "Failed to load library normally, so attempting to extract from apk", e);
+            noAbiException = e;
+        }
+        File f = null;
+        try {
+            f = File.createTempFile("lib", ".so", context.getCodeCacheDir());
+            if (extractLibrary(context, libName, f)) {
+                System.load(f.getAbsolutePath());
+                return;
+            }
+        } catch (final Exception e) {
+            Log.d(TAG, "Failed to load library apk:/" + libName, e);
+            noAbiException = e;
+        } finally {
+            if (f != null)
+                // noinspection ResultOfMethodCallIgnored
+                f.delete();
         }
         if (noAbiException instanceof RuntimeException)
             throw (RuntimeException) noAbiException;
