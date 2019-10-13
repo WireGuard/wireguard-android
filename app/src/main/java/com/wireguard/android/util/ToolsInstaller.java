@@ -31,10 +31,7 @@ public final class ToolsInstaller {
     public static final int NO = 0x2;
     public static final int SYSTEM = 0x8;
     public static final int YES = 0x1;
-    private static final String[][] EXECUTABLES = {
-            {"libwg.so", "wg"},
-            {"libwg-quick.so", "wg-quick"},
-    };
+    private static final String[] EXECUTABLES = {"wg", "wg-quick"};
     private static final File[] INSTALL_DIRS = {
             new File("/system/xbin"),
             new File("/system/bin"),
@@ -45,13 +42,11 @@ public final class ToolsInstaller {
     private final Context context;
     private final File localBinaryDir;
     private final Object lock = new Object();
-    private final File nativeLibraryDir;
     @Nullable private Boolean areToolsAvailable;
     @Nullable private Boolean installAsMagiskModule;
 
     public ToolsInstaller(final Context context) {
-        localBinaryDir = new File(context.getCacheDir(), "bin");
-        nativeLibraryDir = new File(context.getApplicationInfo().nativeLibraryDir);
+        localBinaryDir = new File(context.getCodeCacheDir(), "bin");
         this.context = context;
     }
 
@@ -72,10 +67,10 @@ public final class ToolsInstaller {
         if (INSTALL_DIR == null)
             return ERROR;
         final StringBuilder script = new StringBuilder();
-        for (final String[] names : EXECUTABLES) {
+        for (final String name : EXECUTABLES) {
             script.append(String.format("cmp -s '%s' '%s' && ",
-                    new File(nativeLibraryDir, names[0]),
-                    new File(INSTALL_DIR, names[1])));
+                    new File(localBinaryDir, name).getAbsolutePath(),
+                    new File(INSTALL_DIR, name).getAbsolutePath()));
         }
         script.append("exit ").append(OsConstants.EALREADY).append(';');
         try {
@@ -89,18 +84,15 @@ public final class ToolsInstaller {
         }
     }
 
-    public void ensureToolsAvailable() throws FileNotFoundException, NoRootException {
+    public void ensureToolsAvailable() throws FileNotFoundException {
         synchronized (lock) {
             if (areToolsAvailable == null) {
-                final int ret = symlink();
-                if (ret == OsConstants.EALREADY) {
-                    Log.d(TAG, "Tools were already symlinked into our private binary dir");
+                try {
+                    Log.d(TAG, extract() ? "Tools are now extracted into our private binary dir" :
+                            "Tools were already extracted into our private binary dir");
                     areToolsAvailable = true;
-                } else if (ret == OsConstants.EXIT_SUCCESS) {
-                    Log.d(TAG, "Tools are now symlinked into our private binary dir");
-                    areToolsAvailable = true;
-                } else {
-                    Log.e(TAG, "For some reason, wg and wg-quick are not available at all");
+                } catch (final IOException e) {
+                    Log.e(TAG, "The wg and wg-quick tools are not available", e);
                     areToolsAvailable = false;
                 }
             }
@@ -110,21 +102,22 @@ public final class ToolsInstaller {
         }
     }
 
-    public int install() throws NoRootException {
+    public int install() throws NoRootException, IOException {
         return willInstallAsMagiskModule() ? installMagisk() : installSystem();
     }
 
-    private int installMagisk() throws NoRootException {
+    private int installMagisk() throws NoRootException, IOException {
+        extract();
         final StringBuilder script = new StringBuilder("set -ex; ");
 
         script.append("trap 'rm -rf /sbin/.magisk/img/wireguard' INT TERM EXIT; ");
         script.append(String.format("rm -rf /sbin/.magisk/img/wireguard/; mkdir -p /sbin/.magisk/img/wireguard%s; ", INSTALL_DIR));
         script.append(String.format("printf 'name=WireGuard Command Line Tools\nversion=%s\nversionCode=%s\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.magisk/img/wireguard/module.prop; ", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         script.append("touch /sbin/.magisk/img/wireguard/auto_mount; ");
-        for (final String[] names : EXECUTABLES) {
-            final File destination = new File("/sbin/.magisk/img/wireguard" + INSTALL_DIR, names[1]);
+        for (final String name : EXECUTABLES) {
+            final File destination = new File("/sbin/.magisk/img/wireguard" + INSTALL_DIR, name);
             script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
-                    new File(nativeLibraryDir, names[0]), destination, destination, destination));
+                    new File(localBinaryDir, name), destination, destination, destination));
         }
         script.append("trap - INT TERM EXIT;");
 
@@ -135,15 +128,16 @@ public final class ToolsInstaller {
         }
     }
 
-    private int installSystem() throws NoRootException {
+    private int installSystem() throws NoRootException, IOException {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
+        extract();
         final StringBuilder script = new StringBuilder("set -ex; ");
         script.append("trap 'mount -o ro,remount /system' EXIT; mount -o rw,remount /system; ");
-        for (final String[] names : EXECUTABLES) {
-            final File destination = new File(INSTALL_DIR, names[1]);
+        for (final String name : EXECUTABLES) {
+            final File destination = new File(INSTALL_DIR, name);
             script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; restorecon '%s' || true; ",
-                    new File(nativeLibraryDir, names[0]), destination, destination, destination));
+                    new File(localBinaryDir, name), destination, destination, destination));
         }
         try {
             return Application.getRootShell().run(null, script.toString()) == 0 ? YES | SYSTEM : ERROR;
@@ -152,27 +146,23 @@ public final class ToolsInstaller {
         }
     }
 
-    public int symlink() throws NoRootException {
-        final StringBuilder script = new StringBuilder("set -x; ");
-        for (final String[] names : EXECUTABLES) {
-            script.append(String.format("test '%s' -ef '%s' && ",
-                    new File(nativeLibraryDir, names[0]),
-                    new File(localBinaryDir, names[1])));
+    public boolean extract() throws IOException {
+        localBinaryDir.mkdirs();
+        final File files[] = new File[EXECUTABLES.length];
+        boolean allExist = true;
+        for (int i = 0; i < files.length; ++i) {
+            files[i] = new File(localBinaryDir, EXECUTABLES[i]);
+            allExist &= files[i].exists();
         }
-        script.append("exit ").append(OsConstants.EALREADY).append("; set -e; ");
-
-        for (final String[] names : EXECUTABLES) {
-            script.append(String.format("ln -fns '%s' '%s'; ",
-                    new File(nativeLibraryDir, names[0]),
-                    new File(localBinaryDir, names[1])));
+        if (allExist)
+            return false;
+        for (int i = 0; i < files.length; ++i) {
+            if (!SharedLibraryLoader.extractLibrary(context, EXECUTABLES[i], files[i]))
+                throw new FileNotFoundException("Unable to find " + EXECUTABLES[i]);
+            if (!files[i].setExecutable(true, false))
+                throw new IOException("Unable to mark " + files[i].getAbsolutePath() + " as executable");
         }
-        script.append("exit ").append(OsConstants.EXIT_SUCCESS).append(';');
-
-        try {
-            return Application.getRootShell().run(null, script.toString());
-        } catch (final IOException ignored) {
-            return OsConstants.EXIT_FAILURE;
-        }
+        return true;
     }
 
     private boolean willInstallAsMagiskModule() {

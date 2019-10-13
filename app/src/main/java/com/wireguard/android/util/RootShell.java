@@ -43,9 +43,8 @@ public class RootShell {
 
     public RootShell(final Context context) {
         deviceNotRootedMessage = context.getString(R.string.error_root);
-        final File cacheDir = context.getCacheDir();
-        localBinaryDir = new File(cacheDir, "bin");
-        localTemporaryDir = new File(cacheDir, "tmp");
+        localBinaryDir = new File(context.getCodeCacheDir(), "bin");
+        localTemporaryDir = new File(context.getCacheDir(), "tmp");
         preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
                 BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir);
         this.context = context;
