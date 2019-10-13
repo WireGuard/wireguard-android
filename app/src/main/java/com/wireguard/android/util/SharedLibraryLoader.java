@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,40 +35,48 @@ public final class SharedLibraryLoader {
             noAbiException = e;
         }
 
-        final ZipFile zipFile;
-        try {
-            zipFile = new ZipFile(new File(context.getApplicationInfo().sourceDir), ZipFile.OPEN_READ);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        final Collection<String> apks = new HashSet<>();
+        if (context.getApplicationInfo().sourceDir != null)
+            apks.add(context.getApplicationInfo().sourceDir);
+        if (context.getApplicationInfo().splitSourceDirs != null)
+            apks.addAll(Arrays.asList(context.getApplicationInfo().splitSourceDirs));
 
-        final String mappedLibName = System.mapLibraryName(libName);
-        final byte[] buffer = new byte[1024 * 32];
-        for (final String abi : Build.SUPPORTED_ABIS) {
-            final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
-            final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
-            if (zipEntry == null)
-                continue;
-            File f = null;
+        for (final String apk : apks) {
+            final ZipFile zipFile;
             try {
-                f = File.createTempFile("lib", ".so", context.getCacheDir());
-                Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + f.getAbsolutePath() + " and loading");
-                try (final FileOutputStream out = new FileOutputStream(f);
-                     final InputStream in = zipFile.getInputStream(zipEntry)) {
-                    int len;
-                    while ((len = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, len);
+                zipFile = new ZipFile(new File(apk), ZipFile.OPEN_READ);
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            final String mappedLibName = System.mapLibraryName(libName);
+            final byte[] buffer = new byte[1024 * 32];
+            for (final String abi : Build.SUPPORTED_ABIS) {
+                final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
+                final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
+                if (zipEntry == null)
+                    continue;
+                File f = null;
+                try {
+                    f = File.createTempFile("lib", ".so", context.getCacheDir());
+                    Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + f.getAbsolutePath() + " and loading");
+                    try (final FileOutputStream out = new FileOutputStream(f);
+                         final InputStream in = zipFile.getInputStream(zipEntry)) {
+                        int len;
+                        while ((len = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, len);
+                        }
                     }
+                    System.load(f.getAbsolutePath());
+                    return;
+                } catch (final Exception e) {
+                    Log.d(TAG, "Failed to load library apk:/" + libZipPath, e);
+                    noAbiException = e;
+                } finally {
+                    if (f != null)
+                        // noinspection ResultOfMethodCallIgnored
+                        f.delete();
                 }
-                System.load(f.getAbsolutePath());
-                return;
-            } catch (final Exception e) {
-                Log.d(TAG, "Failed to load library apk:/" + libZipPath, e);
-                noAbiException = e;
-            } finally {
-                if (f != null)
-                    // noinspection ResultOfMethodCallIgnored
-                    f.delete();
             }
         }
         if (noAbiException instanceof RuntimeException)
