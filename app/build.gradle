@@ -17,7 +17,7 @@ android {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 456
+        versionCode 457
         versionName '0.0.20191016'
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
