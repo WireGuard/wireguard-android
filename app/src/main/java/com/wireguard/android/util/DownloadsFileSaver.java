@@ -62,6 +62,7 @@ public class DownloadsFileSaver {
             final OutputStream contentStream = contentResolver.openOutputStream(contentUri);
             if (contentStream == null)
                 throw new IOException(context.getString(R.string.create_downloads_file_error));
+            @SuppressWarnings("deprecation")
             Cursor cursor = contentResolver.query(contentUri, new String[]{MediaColumns.DATA}, null, null, null);
             String path = null;
             if (cursor != null) {
@@ -86,6 +87,7 @@ public class DownloadsFileSaver {
             }
             return new DownloadsFile(context, contentStream, path, contentUri);
         } else {
+            @SuppressWarnings("deprecation")
             final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             final File file = new File(path, name);
             if (!path.isDirectory() && !path.mkdirs())
