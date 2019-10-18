@@ -124,6 +124,7 @@ public class SlashDrawable extends Drawable {
         return mDrawable.getIntrinsicWidth();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public int getOpacity() {
         return PixelFormat.OPAQUE;
