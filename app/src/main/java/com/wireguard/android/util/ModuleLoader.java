@@ -10,7 +10,6 @@ import android.system.OsConstants;
 import android.util.Base64;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.BuildConfig;
 import com.wireguard.android.util.RootShell.NoRootException;
 
 import net.i2p.crypto.eddsa.EdDSAEngine;
@@ -130,10 +129,8 @@ public class ModuleLoader {
         if (output.size() != 1 || output.get(0).length() != 64)
             throw new InvalidParameterException("Invalid sha256 of /proc/version");
         final String moduleName = String.format(MODULE_NAME, output.get(0));
-        final String userAgent = String.format("WireGuard/%s (Android)", BuildConfig.VERSION_NAME); //TODO: expand a bit
-
         HttpURLConnection connection = (HttpURLConnection)new URL(MODULE_LIST_URL).openConnection();
-        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("User-Agent", Application.USER_AGENT);
         connection.connect();
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
             throw new IOException("Hash list could not be found");
@@ -150,7 +147,7 @@ public class ModuleLoader {
         if (!modules.containsKey(moduleName))
             return OsConstants.ENOENT;
         connection = (HttpURLConnection)new URL(String.format(MODULE_URL, moduleName)).openConnection();
-        connection.setRequestProperty("User-Agent", userAgent);
+        connection.setRequestProperty("User-Agent", Application.USER_AGENT);
         connection.connect();
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
             throw new IOException("Module file could not be found, despite being on hash list");

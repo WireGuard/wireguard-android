@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+
 import androidx.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -26,12 +28,22 @@ import com.wireguard.android.util.ModuleLoader;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 import java9.util.concurrent.CompletableFuture;
 
 public class Application extends android.app.Application {
+    private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
+    public static final String USER_AGENT;
+
+    static {
+        String preferredAbi = "unknown ABI";
+        if (Build.SUPPORTED_ABIS.length > 0)
+            preferredAbi = Build.SUPPORTED_ABIS[0];
+        USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, preferredAbi, Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT);
+    }
+
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
     private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
     @SuppressWarnings("NullableProblems") private AsyncWorker asyncWorker;
@@ -123,6 +135,7 @@ public class Application extends android.app.Application {
 
     @Override
     public void onCreate() {
+        Log.i(TAG, USER_AGENT);
         super.onCreate();
 
         asyncWorker = new AsyncWorker(AsyncTask.SERIAL_EXECUTOR, new Handler(Looper.getMainLooper()));
