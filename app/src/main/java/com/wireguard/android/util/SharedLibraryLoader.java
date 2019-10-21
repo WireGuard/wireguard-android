@@ -54,6 +54,7 @@ public final class SharedLibraryLoader {
                     while ((len = in.read(buffer)) != -1) {
                         out.write(buffer, 0, len);
                     }
+                    out.getFD().sync();
                 }
                 return true;
             }

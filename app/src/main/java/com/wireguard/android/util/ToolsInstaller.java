@@ -149,18 +149,22 @@ public final class ToolsInstaller {
     public boolean extract() throws IOException {
         localBinaryDir.mkdirs();
         final File files[] = new File[EXECUTABLES.length];
+        final File tempFiles[] = new File[EXECUTABLES.length];
         boolean allExist = true;
         for (int i = 0; i < files.length; ++i) {
             files[i] = new File(localBinaryDir, EXECUTABLES[i]);
+            tempFiles[i] = new File(localBinaryDir, EXECUTABLES[i] + ".tmp");
             allExist &= files[i].exists();
         }
         if (allExist)
             return false;
         for (int i = 0; i < files.length; ++i) {
-            if (!SharedLibraryLoader.extractLibrary(context, EXECUTABLES[i], files[i]))
+            if (!SharedLibraryLoader.extractLibrary(context, EXECUTABLES[i], tempFiles[i]))
                 throw new FileNotFoundException("Unable to find " + EXECUTABLES[i]);
-            if (!files[i].setExecutable(true, false))
-                throw new IOException("Unable to mark " + files[i].getAbsolutePath() + " as executable");
+            if (!tempFiles[i].setExecutable(true, false))
+                throw new IOException("Unable to mark " + tempFiles[i].getAbsolutePath() + " as executable");
+            if (!tempFiles[i].renameTo(files[i]))
+                throw new IOException("Unable to rename " + tempFiles[i].getAbsolutePath() + " to " + files[i].getAbsolutePath());
         }
         return true;
     }
