@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -159,7 +158,7 @@ public class ModuleLoader {
             tempFile = File.createTempFile("UNVERIFIED-", null, tmpDir);
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             try (final InputStream inputStream = connection.getInputStream();
-                 final OutputStream outputStream = new FileOutputStream(tempFile)) {
+                 final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
                 int total = 0;
                 while ((len = inputStream.read(input)) > 0) {
                     total += len;
@@ -168,6 +167,7 @@ public class ModuleLoader {
                     outputStream.write(input, 0, len);
                     digest.update(input, 0, len);
                 }
+                outputStream.getFD().sync();
             }
             if (!Arrays.equals(digest.digest(), modules.get(moduleName).bytes))
                 throw new IOException("Incorrect file hash");
