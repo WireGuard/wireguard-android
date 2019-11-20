@@ -17,8 +17,8 @@ android {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 458
-        versionName '0.0.20191018'
+        versionCode 459
+        versionName '0.0.20191120'
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
     // If the keystore file exists
