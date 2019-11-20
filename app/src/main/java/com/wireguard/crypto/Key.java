@@ -7,6 +7,7 @@ package com.wireguard.crypto;
 
 import com.wireguard.crypto.KeyFormatException.Type;
 
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -245,6 +246,24 @@ public final class Key {
                     + ((((key[i] & 0xf) - 10) >> 8) & ~38));
         }
         return new String(output);
+    }
+
+    @Override
+    public int hashCode() {
+        int ret = 0;
+        for (int i = 0; i < key.length / 4; ++i)
+            ret ^= (key[i * 4 + 0] >> 0) + (key[i * 4 + 1] >> 8) + (key[i * 4 + 2] >> 16) + (key[i * 4 + 3] >> 24);
+        return ret;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != getClass())
+            return false;
+        final Key other = (Key) obj;
+        return MessageDigest.isEqual(key, other.key);
     }
 
     /**

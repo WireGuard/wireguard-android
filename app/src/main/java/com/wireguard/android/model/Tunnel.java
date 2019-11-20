@@ -5,6 +5,9 @@
 
 package com.wireguard.android.model;
 
+import android.os.SystemClock;
+import android.util.Pair;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.annotation.Nullable;
@@ -12,8 +15,11 @@ import androidx.annotation.Nullable;
 import com.wireguard.android.BR;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
+import com.wireguard.crypto.Key;
 import com.wireguard.util.Keyed;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import java9.util.concurrent.CompletableFuture;
@@ -85,15 +91,13 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     @Bindable
     @Nullable
     public Statistics getStatistics() {
-        // FIXME: Check age of statistics.
-        if (statistics == null)
+        if (statistics == null || statistics.isStale())
             TunnelManager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E);
         return statistics;
     }
 
     public CompletionStage<Statistics> getStatisticsAsync() {
-        // FIXME: Check age of statistics.
-        if (statistics == null)
+        if (statistics == null || statistics.isStale())
             return TunnelManager.getTunnelStatistics(this);
         return CompletableFuture.completedFuture(statistics);
     }
@@ -154,5 +158,48 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
     }
 
     public static class Statistics extends BaseObservable {
+        private long lastTouched = SystemClock.elapsedRealtime();
+        private final Map<Key, Pair<Long, Long>> peerBytes = new HashMap<>();
+
+        public void add(final Key key, final long rx, final long tx) {
+            peerBytes.put(key, Pair.create(rx, tx));
+            lastTouched = SystemClock.elapsedRealtime();
+        }
+
+        private boolean isStale() {
+            return SystemClock.elapsedRealtime() - lastTouched > 900;
+        }
+
+        public Key[] peers() {
+            return peerBytes.keySet().toArray(new Key[0]);
+        }
+
+        public long peerRx(final Key peer) {
+            if (!peerBytes.containsKey(peer))
+                return 0;
+            return peerBytes.get(peer).first;
+        }
+
+        public long peerTx(final Key peer) {
+            if (!peerBytes.containsKey(peer))
+                return 0;
+            return peerBytes.get(peer).second;
+        }
+
+        public long totalRx() {
+            long rx = 0;
+            for (final Pair<Long, Long> val : peerBytes.values()) {
+                rx += val.first;
+            }
+            return rx;
+        }
+
+        public long totalTx() {
+            long tx = 0;
+            for (final Pair<Long, Long> val : peerBytes.values()) {
+                tx += val.second;
+            }
+            return tx;
+        }
     }
 }

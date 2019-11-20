@@ -15,11 +15,13 @@ import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
 import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.config.Config;
+import com.wireguard.crypto.Key;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -83,7 +85,24 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
-        return new Statistics();
+        final Statistics stats = new Statistics();
+        final Collection<String> output = new ArrayList<>();
+        try {
+            if (Application.getRootShell().run(output, String.format("wg show '%s' transfer", tunnel.getName())) != 0)
+                return stats;
+        } catch (final Exception ignored) {
+            return stats;
+        }
+        for (final String line : output) {
+            final String[] parts = line.split("\\t");
+            if (parts.length != 3)
+                continue;
+            try {
+                stats.add(Key.fromBase64(parts[0]), Long.parseLong(parts[1]), Long.parseLong(parts[2]));
+            } catch (final Exception ignored) {
+            }
+        }
+        return stats;
     }
 
     @Override

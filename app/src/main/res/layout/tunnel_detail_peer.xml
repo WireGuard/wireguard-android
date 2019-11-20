@@ -89,6 +89,24 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/endpoint_label"
                 android:text="@{item.endpoint}" />
+
+            <TextView
+                android:id="@+id/transfer_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/endpoint_text"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/transfer_text"
+                android:text="@string/transfer"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/transfer_text"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/transfer_label"
+                android:visibility="gone" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

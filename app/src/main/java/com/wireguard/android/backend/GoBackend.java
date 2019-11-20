@@ -24,6 +24,8 @@ import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
 import com.wireguard.config.InetNetwork;
 import com.wireguard.config.Peer;
+import com.wireguard.crypto.Key;
+import com.wireguard.crypto.KeyFormatException;
 
 import java.net.InetAddress;
 import java.util.Collections;
@@ -46,6 +48,8 @@ public final class GoBackend implements Backend {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
     }
+
+    private static native String wgGetConfig(int handle);
 
     private static native int wgGetSocketV4(int handle);
 
@@ -90,7 +94,45 @@ public final class GoBackend implements Backend {
 
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
-        return new Statistics();
+        final Statistics stats = new Statistics();
+        if (tunnel != currentTunnel) {
+            return stats;
+        }
+        final String config = wgGetConfig(currentTunnelHandle);
+        Key key = null;
+        long rx = 0, tx = 0;
+        for (final String line : config.split("\\n")) {
+            if (line.startsWith("public_key=")) {
+                if (key != null)
+                    stats.add(key, rx, tx);
+                rx = 0;
+                tx = 0;
+                try {
+                    key = Key.fromHex(line.substring(11));
+                } catch (final KeyFormatException ignored) {
+                    key = null;
+                }
+            } else if (line.startsWith("rx_bytes=")) {
+                if (key == null)
+                    continue;
+                try {
+                    rx = Long.parseLong(line.substring(9));
+                } catch (final NumberFormatException ignored) {
+                    rx = 0;
+                }
+            } else if (line.startsWith("tx_bytes=")) {
+                if (key == null)
+                    continue;
+                try {
+                    tx = Long.parseLong(line.substring(9));
+                } catch (final NumberFormatException ignored) {
+                    tx = 0;
+                }
+            }
+        }
+        if (key != null)
+            stats.add(key, rx, tx);
+        return stats;
     }
 
     @Override
