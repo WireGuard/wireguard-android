@@ -15,6 +15,7 @@ import (
 	"golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/ipc"
 	"golang.zx2c4.com/wireguard/tun"
+	"bytes"
 	"log"
 	"math"
 	"net"
@@ -166,6 +167,22 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 		return -1
 	}
 	return int32(fd)
+}
+
+//export wgGetConfig
+func wgGetConfig(tunnelHandle int32) *C.char {
+	handle, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return nil
+	}
+	settings := new(bytes.Buffer)
+	writer := bufio.NewWriter(settings)
+	err := handle.device.IpcGetOperation(writer)
+	if err != nil {
+		return nil
+	}
+	writer.Flush()
+	return C.CString(settings.String())
 }
 
 //export wgVersion
