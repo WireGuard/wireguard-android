@@ -5,6 +5,19 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
+    <style name="NoBackgroundTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
     <style name="fab_label" parent="TextAppearance.AppCompat.Inverse">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/fab_label_text_color</item>
