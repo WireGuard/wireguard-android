@@ -18,12 +18,11 @@ import android.service.quicksettings.TileService;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.wireguard.android.activity.MainActivity;
+import com.wireguard.android.activity.TunnelToggleActivity;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.SlashDrawable;
 
 import java.util.Objects;
@@ -66,7 +65,15 @@ public class QuickTileService extends TileService {
                     tile.setIcon(tile.getIcon() == iconOn ? iconOff : iconOn);
                     tile.updateTile();
                 }
-                tunnel.setState(State.TOGGLE).whenComplete(this::onToggleFinished);
+                tunnel.setState(State.TOGGLE).whenComplete((v, t) -> {
+                    if (t == null) {
+                        updateTile();
+                    } else {
+                        final Intent toggleIntent = new Intent(this, TunnelToggleActivity.class);
+                        toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(toggleIntent);
+                    }
+                });
             });
         } else {
             final Intent intent = new Intent(this, MainActivity.class);
@@ -110,16 +117,6 @@ public class QuickTileService extends TileService {
         if (tunnel != null)
             tunnel.removeOnPropertyChangedCallback(onStateChangedCallback);
         Application.getTunnelManager().removeOnPropertyChangedCallback(onTunnelChangedCallback);
-    }
-
-    private void onToggleFinished(@SuppressWarnings("unused") final State state,
-                                  @Nullable final Throwable throwable) {
-        if (throwable == null)
-            return;
-        final String error = ErrorMessages.get(throwable);
-        final String message = getString(R.string.toggle_error, error);
-        Log.e(TAG, message, throwable);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private void updateTile() {
