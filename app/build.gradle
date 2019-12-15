@@ -70,7 +70,7 @@ ext {
     annotationsVersion = '1.1.0'
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
-    databindingVersion = '3.5.0'
+    databindingVersion = '3.5.3'
     materialComponentsVersion = '1.0.0'
     jsr305Version = '3.0.2'
     preferenceVersion = '1.1.0'
