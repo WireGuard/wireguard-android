@@ -5,7 +5,6 @@
 
 package com.wireguard.android;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import androidx.databinding.Observable;
 import androidx.databinding.Observable.OnPropertyChangedCallback;
@@ -17,6 +16,7 @@ import android.os.IBinder;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +34,7 @@ import java.util.Objects;
  * forward click events to the application.
  */
 
-@TargetApi(Build.VERSION_CODES.N)
+@RequiresApi(Build.VERSION_CODES.N)
 public class QuickTileService extends TileService {
     private static final String TAG = "WireGuard/" + QuickTileService.class.getSimpleName();
 
