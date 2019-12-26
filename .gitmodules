@@ -1,6 +1,6 @@
 [submodule "app/tools/libmnl"]
 	path = app/tools/libmnl
 	url = https://git.netfilter.org/libmnl/
-[submodule "app/tools/wireguard"]
-	path = app/tools/wireguard
-	url = https://git.zx2c4.com/WireGuard
+[submodule "app/tools/wireguard-tools"]
+	path = app/tools/wireguard-tools
+	url = https://git.zx2c4.com/wireguard-tools
