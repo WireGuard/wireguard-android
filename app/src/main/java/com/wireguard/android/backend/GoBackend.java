@@ -224,6 +224,7 @@ public final class GoBackend implements Backend {
 
             currentTunnel = tunnel;
 
+            service.setUnderlyingNetworks(null);
             service.protect(wgGetSocketV4(currentTunnelHandle));
             service.protect(wgGetSocketV6(currentTunnelHandle));
         } else {
