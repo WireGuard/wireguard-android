@@ -34,18 +34,6 @@ public class TunnelDetailFragment extends BaseFragment {
     @Nullable private Timer timer;
     @Nullable private State lastState = State.TOGGLE;
 
-    private static class StatsTimerTask extends TimerTask {
-        final TunnelDetailFragment tdf;
-        private StatsTimerTask(final TunnelDetailFragment tdf) {
-            this.tdf = tdf;
-        }
-
-        @Override
-        public void run() {
-            tdf.updateStats();
-        }
-    }
-
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +58,12 @@ public class TunnelDetailFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new StatsTimerTask(this), 0, 1000);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateStats();
+            }
+        }, 0, 1000);
     }
 
     @Override
@@ -127,11 +120,14 @@ public class TunnelDetailFragment extends BaseFragment {
     private void updateStats() {
         if (binding == null || !isResumed())
             return;
-        final State state = binding.getTunnel().getState();
+        final Tunnel tunnel = binding.getTunnel();
+        if (tunnel == null)
+            return;
+        final State state = tunnel.getState();
         if (state != State.UP && lastState == state)
             return;
         lastState = state;
-        binding.getTunnel().getStatisticsAsync().whenComplete((statistics, throwable) -> {
+        tunnel.getStatisticsAsync().whenComplete((statistics, throwable) -> {
             if (throwable != null) {
                 for (int i = 0; i < binding.peersLayout.getChildCount(); ++i) {
                     final TunnelDetailPeerBinding peer = DataBindingUtil.getBinding(binding.peersLayout.getChildAt(i));
