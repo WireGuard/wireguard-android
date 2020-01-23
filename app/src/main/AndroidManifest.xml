@@ -9,14 +9,14 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+
     <permission
         android:name="${applicationId}.permission.CONTROL_TUNNELS"
         android:description="@string/permission_description"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/permission_label"
         android:protectionLevel="dangerous" />
-
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
 
     <application
         android:name=".Application"
