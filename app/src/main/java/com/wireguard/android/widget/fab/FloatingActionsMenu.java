@@ -45,7 +45,7 @@ public class FloatingActionsMenu extends ViewGroup {
     public static final int LABELS_ON_RIGHT_SIDE = 1;
     private static final TimeInterpolator ALPHA_EXPAND_INTERPOLATOR = new DecelerateInterpolator();
     private static final int ANIMATION_DURATION = 300;
-    private static final boolean BROKEN_LABEL_STYLE = Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 && Build.BRAND.equals("ASUS");
+    private static final boolean BROKEN_LABEL_STYLE = Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 && Build.BRAND.equalsIgnoreCase("ASUS");
     private static final float COLLAPSED_PLUS_ROTATION = 0f;
     private static final TimeInterpolator COLLAPSE_INTERPOLATOR = new DecelerateInterpolator(3f);
     private static final float EXPANDED_PLUS_ROTATION = 90f + 45f;
