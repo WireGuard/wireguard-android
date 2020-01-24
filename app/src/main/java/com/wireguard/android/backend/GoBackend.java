@@ -8,6 +8,7 @@ package com.wireguard.android.backend;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
@@ -211,6 +212,10 @@ public final class GoBackend implements Backend {
             }
 
             builder.setMtu(config.getInterface().getMtu().orElse(1280));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                builder.setMetered(false);
+            }
 
             builder.setBlocking(true);
             try (final ParcelFileDescriptor tun = builder.establish()) {
