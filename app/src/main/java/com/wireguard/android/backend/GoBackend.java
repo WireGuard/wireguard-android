@@ -213,9 +213,10 @@ public final class GoBackend implements Backend {
 
             builder.setMtu(config.getInterface().getMtu().orElse(1280));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 builder.setMetered(false);
-            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+	        service.setUnderlyingNetworks(null);
 
             builder.setBlocking(true);
             try (final ParcelFileDescriptor tun = builder.establish()) {
@@ -229,7 +230,6 @@ public final class GoBackend implements Backend {
 
             currentTunnel = tunnel;
 
-            service.setUnderlyingNetworks(null);
             service.protect(wgGetSocketV4(currentTunnelHandle));
             service.protect(wgGetSocketV6(currentTunnelHandle));
         } else {
