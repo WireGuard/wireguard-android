@@ -12,10 +12,10 @@ add_executable(libwg-quick.so wireguard-tools/src/wg-quick/android.c ndk-compat/
 target_compile_options(libwg-quick.so PUBLIC -O3 -std=gnu11 -Wall -include ${CMAKE_CURRENT_SOURCE_DIR}/ndk-compat/compat.h -DWG_PACKAGE_NAME=\"${ANDROID_PACKAGE_NAME}\")
 target_link_libraries(libwg-quick.so -ldl)
 
-file(GLOB WG_SOURCES wireguard-tools/src/*.c libmnl/src/*.c ndk-compat/compat.c)
+file(GLOB WG_SOURCES wireguard-tools/src/*.c ndk-compat/compat.c)
 add_executable(libwg.so ${WG_SOURCES})
 target_include_directories(libwg.so PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/wireguard-tools/src/uapi/" "${CMAKE_CURRENT_SOURCE_DIR}/wireguard-tools/src/")
-target_compile_options(libwg.so PUBLIC -O3 -std=gnu11 -D_GNU_SOURCE -idirafter "${CMAKE_CURRENT_SOURCE_DIR}/libmnl/include/" -include ${CMAKE_CURRENT_SOURCE_DIR}/ndk-compat/compat.h -DHAVE_VISIBILITY_HIDDEN -DRUNSTATEDIR=\"/data/data/${ANDROID_PACKAGE_NAME}/cache\" -Wno-pointer-arith -Wno-unused-parameter)
+target_compile_options(libwg.so PUBLIC -O3 -std=gnu11 -D_GNU_SOURCE -include ${CMAKE_CURRENT_SOURCE_DIR}/ndk-compat/compat.h -DHAVE_VISIBILITY_HIDDEN -DRUNSTATEDIR=\"/data/data/${ANDROID_PACKAGE_NAME}/cache\")
 
 add_custom_target(libwg-go.so WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/libwg-go" COMMENT "Building wireguard-go" VERBATIM COMMAND make
     ANDROID_ARCH_NAME=${ANDROID_ARCH_NAME}
