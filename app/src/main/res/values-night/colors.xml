@@ -11,8 +11,8 @@
     <color name="secondary_color">#ff8ab4f8</color>
     <color name="secondary_light_color">#ff8ab4f8</color>
     <color name="secondary_dark_color">#ff8ab4f8</color>
-    <color name="primary_text_color">#000000</color>
-    <color name="secondary_text_color">#FFFF</color>
+    <color name="primary_text_color">#FFFFFFFF</color>
+    <color name="secondary_text_color">#FFFFFFFF</color>
 
     <!-- Theme variables -->
     <color name="list_multiselect_background">#1AEEEEEE</color>
