@@ -66,17 +66,13 @@
                 android:textSize="20sp" />
         </LinearLayout>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:id="@+id/create_fab"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:clipChildren="false"
-            android:textColor="?attr/colorOnSecondary"
-            app:backgroundTint="?attr/colorSecondary"
-            app:icon="@drawable/ic_action_add_white"
-            app:iconTint="?attr/colorOnSecondary" />
+            app:icon="@drawable/ic_action_add_white" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
