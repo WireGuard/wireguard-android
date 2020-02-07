@@ -4,5 +4,18 @@
     <color name="fab_label_text_color">#000000</color>
     <color name="fab_label_background_color">#bbbbbb</color>
 
-    <color name="accent">#5e97f6</color>
+    <!-- Base palette -->
+    <color name="primary_color">#ff242424</color>
+    <color name="primary_light_color">#ff2d2d2d</color>
+    <color name="primary_dark_color">#ff242424</color>
+    <color name="secondary_color">#ff8ab4f8</color>
+    <color name="secondary_light_color">#ff8ab4f8</color>
+    <color name="secondary_dark_color">#ff8ab4f8</color>
+    <color name="primary_text_color">#000000</color>
+    <color name="secondary_text_color">#FFFF</color>
+
+    <!-- Theme variables -->
+    <color name="list_multiselect_background">#1AEEEEEE</color>
+    <color name="status_bar_color">#21242424</color>
+    <color name="navigation_bar_color">#AA242424</color>
 </resources>

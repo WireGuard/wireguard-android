@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- TODO(msf): remove these 2 hard-coded colors and replace with theme colors -->
     <color name="fab_label_text_color">#ffffff</color>
     <color name="fab_label_background_color">#444444</color>
 
-    <color name="accent">#2196F3</color>
+    <!-- Base palette -->
+    <color name="primary_color">#FFFFFF</color>
+    <color name="primary_light_color">#FFFFFF</color>
+    <color name="primary_dark_color">#CCCCCC</color>
+    <color name="secondary_color">#ff1a73e8</color>
+    <color name="secondary_light_color">#ff1a73e8</color>
+    <color name="secondary_dark_color">#ff1a73e8</color>
+    <color name="primary_text_color">#000000</color>
+    <color name="secondary_text_color">#FFFF</color>
+
+    <!-- Theme variables -->
+    <color name="color_control_normal">@color/primary_text_color</color>
+    <color name="status_bar_color">@color/primary_color</color>
+    <color name="navigation_bar_color">#AAFFFFFF</color>
+    <color name="list_multiselect_background">#EEEEEE</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/secondary_color</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>

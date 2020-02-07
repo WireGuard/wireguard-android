@@ -12,36 +12,13 @@
         <item name="colorOnSurface">@color/color_control_normal</item>
         <item name="colorBackground">@color/primary_color</item>
         <item name="colorMultiselectActiveBackground">@color/list_multiselect_background</item>
+        <item name="android:colorBackgroundFloating">@color/primary_color</item>
         <item name="colorControlNormal">@color/color_control_normal</item>
         <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
         <item name="android:windowBackground">@color/primary_color</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
     </style>
-
-    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorPrimary">@color/secondary_color</item>
-        <item name="colorSecondary">@color/secondary_color</item>
-        <item name="android:windowBackground">?attr/colorBackground</item>
-    </style>
-
-    <style name="NoBackgroundTheme" parent="AppTheme">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    </style>
-
-    <style name="fab_label" parent="TextAppearance.AppCompat.Inverse">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/fab_label_text_color</item>
-    </style>
-
 </resources>
