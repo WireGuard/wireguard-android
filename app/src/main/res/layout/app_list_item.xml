@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -31,7 +32,8 @@
             android:id="@+id/app_icon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@{item.icon}" />
+            android:src="@{item.icon}"
+            tools:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/app_name"
@@ -43,13 +45,15 @@
             android:maxLines="1"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
-            android:text="@{key}" />
+            android:text="@{key}"
+            tools:text="@string/app_name" />
 
         <CheckBox
             android:id="@+id/excluded_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@={item.excludedFromTunnel}" />
+            android:checked="@={item.excludedFromTunnel}"
+            tools:checked="true" />
 
     </LinearLayout>
 </layout>
