@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -64,7 +65,8 @@ import java9.util.stream.StreamSupport;
  */
 
 public class TunnelListFragment extends BaseFragment {
-    private static final int REQUEST_IMPORT = 1;
+    public static final int REQUEST_IMPORT = 1;
+    private static final int REQUEST_TARGET_FRAGMENT = 2;
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
 
     private final ActionModeListener actionModeListener = new ActionModeListener();
@@ -209,13 +211,18 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
+
+        binding.createFab.setOnClickListener(v -> {
+            final AddTunnelsSheet bottomSheet = new AddTunnelsSheet();
+            bottomSheet.setTargetFragment(this, REQUEST_TARGET_FRAGMENT);
+            bottomSheet.show(requireFragmentManager(), "BOTTOM_SHEET");
+        });
 
         binding.executePendingBindings();
         return binding.getRoot();
@@ -234,21 +241,6 @@ public class TunnelListFragment extends BaseFragment {
 
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
-    }
-
-    public void onRequestImportConfig(@SuppressWarnings("unused") final View view) {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, REQUEST_IMPORT);
-    }
-
-    public void onRequestScanQRCode(@SuppressWarnings("unused") final View view) {
-        final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
-        intentIntegrator.setOrientationLocked(false);
-        intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setPrompt(getString(R.string.qr_code_hint));
-        intentIntegrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE));
     }
 
     @Override

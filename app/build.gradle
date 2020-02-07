@@ -71,6 +71,7 @@ ext {
     annotationsVersion = '1.1.0'
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
+    coordinatorLayoutVersion = '1.1.3'
     databindingVersion = '3.5.3'
     materialComponentsVersion = '1.1.0'
     jsr305Version = '3.0.2'
@@ -99,6 +100,7 @@ dependencies {
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$coordinatorLayoutVersion"
 }
 
 tasks.withType(JavaCompile) {
