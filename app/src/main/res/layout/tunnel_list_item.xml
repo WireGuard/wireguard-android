@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -44,7 +45,8 @@
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{key}" />
+            android:text="@{key}"
+            tools:text="wg0"/>
 
         <com.wireguard.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"
@@ -54,6 +56,7 @@
             android:layout_alignParentEnd="true"
             android:nextFocusLeft="@+id/tunnel_list_item"
             app:checked="@{item.state == State.UP}"
-            app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
+            app:onBeforeCheckedChanged="@{fragment::setTunnelState}"
+            tools:checked="true"/>
     </com.wireguard.android.widget.MultiselectableRelativeLayout>
 </layout>
