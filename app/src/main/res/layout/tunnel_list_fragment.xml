@@ -65,8 +65,8 @@
                 android:text="@string/tunnel_list_placeholder"
                 android:textSize="20sp" />
         </LinearLayout>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/Widget.MaterialComponents.FloatingActionButton"
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
             android:id="@+id/create_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
