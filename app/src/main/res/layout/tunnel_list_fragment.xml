@@ -39,7 +39,7 @@
             app:items="@{tunnels}"
             app:layout="@{@layout/tunnel_list_item}"
             tools:listitem="@layout/tunnel_list_item"
-            tools:itemCount="10" />
+            tools:itemCount="12" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,0 +1,34 @@
+{
+  "comment": "Interface names",
+  "names": [
+    {
+      "names": [
+        { "name": "wg0" },
+        { "name": "wg1" },
+        { "name": "wg2" },
+        { "name": "wg3" },
+        { "name": "wg4" },
+        { "name": "wg5" },
+        { "name": "wg6" },
+        { "name": "wg7" },
+        { "name": "wg8" },
+        { "name": "wg9" },
+        { "name": "wg10" },
+        { "name": "wg11" }
+      ],
+      "checked": [
+        { "checked":  true },
+        { "checked":  false },
+        { "checked":  true },
+        { "checked":  false },
+        { "checked":  true },
+        { "checked":  false },
+        { "checked":  true },
+        { "checked":  false },
+        { "checked":  true },
+        { "checked":  false },
+        { "checked":  true }
+      ]
+    }
+  ]
+}
