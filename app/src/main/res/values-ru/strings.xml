@@ -24,8 +24,8 @@
         <item quantity="one">%d Исключенное приложение</item>
         <item quantity="other">%d Исключенных приложений</item>
     </plurals>
-    <string name="add_peer">Добавить узел</string>
-    <string name="addresses">Адреса</string>
+    <string name="add_peer">Добавить пира</string>
+    <string name="addresses">IP-адреса</string>
     <string name="allowed_ips">Разрешенные IP-адреса</string>
     <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s из %2$s</string>
@@ -52,7 +52,7 @@
     <string name="config_not_found_error">Файл конфигурации “%s” не найден</string>
     <string name="config_rename_error">Не удалось переименовать файл конфигурации “%s”</string>
     <string name="config_save_error">Не удается сохранить конфигурацию для “%1$s”: %2$s</string>
-    <string name="config_save_success">Конфигурация успешно сохранения для “%s”</string>
+    <string name="config_save_success">Конфигурация для “%s” успешно сохранена</string>
     <string name="create_activity_title">Создать WireGuard туннель</string>
     <string name="create_bin_dir_error">Не удалось создать локальный двоичный каталог</string>
     <string name="create_empty">Создать вручную</string>
@@ -89,7 +89,7 @@
     <string name="interface_title">Интерфейс</string>
     <string name="key_length_explanation_base64">: Ключи WireGuard base64 должны содержать 44 символа (32 байта)</string>
     <string name="key_length_explanation_binary">: Ключи WireGuard должны быть 32 байта</string>
-    <string name="key_length_explanation_hex">: Hex ключи WireGuard должны содержать 64 символа (32 байта)</string>
+    <string name="key_length_explanation_hex">: HEX ключи WireGuard должны содержать 64 символа (32 байта)</string>
     <string name="listen_port">Порт</string>
     <string name="log_export_error">Не удалось экспортировать логи: %s</string>
     <string name="log_export_success">Сохранено в “%s”</string>
@@ -115,14 +115,14 @@
     <string name="parse_error_inet_network">IP-сеть</string>
     <string name="parse_error_integer">число</string>
     <string name="parse_error_reason">Не могу разобрать %1$s “%2$s”</string>
-    <string name="peer">Узел</string>
+    <string name="peer">Пир</string>
     <string name="permission_description">Приложение сможет управлять туннелями WireGuard. Приложения с таким разрешением могут по желанию включать и отключать туннели WireGuard, что может привести к неправильному перенаправлению интернет-трафика.</string>
     <string name="permission_label">управлять туннелями WireGuard</string>
     <string name="persistent_keepalive">Постоянное соединение</string>
-    <string name="pre_shared_key">Предварительный общий ключ</string>
-    <string name="private_key">Закрытый ключ</string>
-    <string name="public_key">Открытый ключ</string>
-    <string name="public_key_description">Открытый ключ</string>
+    <string name="pre_shared_key">Общий ключ</string>
+    <string name="private_key">Приватный ключ</string>
+    <string name="public_key">Публичный ключ</string>
+    <string name="public_key_description">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary">Поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_title">Восстанавливать при загрузке</string>
@@ -162,19 +162,19 @@
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
     <string name="tunnel_rename_error">Не удалось переименовать туннель: %s</string>
     <string name="tunnel_rename_success">Туннель успешно переименован в “%s”</string>
-    <string name="type_name_go_userspace">Перейти в пространство пользователя</string>
-    <string name="type_name_kernel_module">Версия модуля ядра</string>
+    <string name="type_name_go_userspace">Пользовательское пространство</string>
+    <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
-    <string name="version_summary">%1$s бэкенд v%2$s</string>
-    <string name="version_summary_checking">Проверка %s бэкенд версии</string>
-    <string name="version_summary_unknown">Неизвестная версия %s версия</string>
+    <string name="version_summary">%1$s v%2$s</string>
+    <string name="version_summary_checking">Проверка версии %s</string>
+    <string name="version_summary_unknown">Неизвестная версия %s</string>
     <string name="version_title">WireGuard для Android v%s</string>
     <string name="vpn_not_authorized_error">VPN-сервис не авторизован пользователем</string>
     <string name="vpn_start_error">Не удалось запустить службу Android VPN</string>
     <string name="zip_export_error">Не удалось экспортировать туннели: %s</string>
     <string name="zip_export_success">Сохранено в “%s”</string>
     <string name="zip_export_summary">Zip-архив будет сохранен в папке загрузок</string>
-    <string name="zip_export_title">Экспорт туннелей в Zip-архив</string>
+    <string name="zip_export_title">Экспорт туннелей в zip-архив</string>
     <string name="key_length_error">Неверная длина ключа</string>
     <string name="key_contents_error">Плохие символы в ключе</string>
 </resources>
