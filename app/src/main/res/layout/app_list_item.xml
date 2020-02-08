@@ -33,7 +33,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@{item.icon}"
-            tools:src="@mipmap/ic_launcher_round" />
+            tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/app_name"
@@ -46,7 +46,7 @@
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:text="@{key}"
-            tools:text="@string/app_name" />
+            tools:text="@tools:sample/full_names" />
 
         <CheckBox
             android:id="@+id/excluded_checkbox"
