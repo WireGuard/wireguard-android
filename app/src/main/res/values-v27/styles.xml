@@ -13,8 +13,9 @@
         <item name="colorBackground">@color/primary_color</item>
         <item name="colorControlNormal">@color/color_control_normal</item>
         <item name="colorMultiselectActiveBackground">@color/list_multiselect_background</item>
+        <item name="elevationOverlayColor">@color/primary_light_color</item>
+        <item name="elevationOverlayEnabled">true</item>
         <item name="android:colorBackground">@color/primary_color</item>
-        <item name="android:colorBackgroundFloating">@color/primary_color</item>
         <item name="android:navigationBarColor">@color/navigation_bar_color</item>
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="android:windowLightNavigationBar">@bool/light_navigation_bar</item>

@@ -6,16 +6,16 @@
 
     <!-- Base palette -->
     <color name="primary_color">#ff242424</color>
-    <color name="primary_light_color">#ff2d2d2d</color>
-    <color name="primary_dark_color">#ff242424</color>
+    <color name="primary_light_color">#ff4c4c4c</color>
+    <color name="primary_dark_color">#ff000000</color>
     <color name="secondary_color">#ff8ab4f8</color>
-    <color name="secondary_light_color">#ff8ab4f8</color>
-    <color name="secondary_dark_color">#ff8ab4f8</color>
-    <color name="primary_text_color">#FFFFFFFF</color>
-    <color name="secondary_text_color">#FFFFFFFF</color>
+    <color name="secondary_light_color">#ffbde6ff</color>
+    <color name="secondary_dark_color">#ff5785c5</color>
+    <color name="primary_text_color">#ffffffff</color>
+    <color name="secondary_text_color">#ff000000</color>
 
     <!-- Theme variables -->
-    <color name="list_multiselect_background">#1AEEEEEE</color>
+    <color name="list_multiselect_background">#1aeeeeee</color>
     <color name="status_bar_color">#21242424</color>
-    <color name="navigation_bar_color">#AA242424</color>
+    <color name="navigation_bar_color">#aa242424</color>
 </resources>
