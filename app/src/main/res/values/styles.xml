@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/primary_color</item>
         <item name="colorPrimaryVariant">@color/primary_light_color</item>
         <item name="colorSecondary">@color/secondary_color</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSecondary">@color/secondary_text_color</item>
         <item name="colorSurface">@color/primary_color</item>
         <item name="colorOnSurface">@color/color_control_normal</item>
         <item name="colorBackground">@color/primary_color</item>

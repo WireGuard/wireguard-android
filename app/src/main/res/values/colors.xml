@@ -5,21 +5,21 @@
     <color name="fab_label_background_color">#444444</color>
 
     <!-- Base palette -->
-    <color name="primary_color">#FFFFFF</color>
-    <color name="primary_light_color">#FFFFFF</color>
-    <color name="primary_dark_color">#CCCCCC</color>
+    <color name="primary_color">#ffffffff</color>
+    <color name="primary_light_color">#ffffffff</color>
+    <color name="primary_dark_color">#ffcccccc</color>
     <color name="secondary_color">#ff1a73e8</color>
     <color name="secondary_light_color">#ff1a73e8</color>
     <color name="secondary_dark_color">#ff1a73e8</color>
-    <color name="primary_text_color">#000000</color>
-    <color name="secondary_text_color">#FFFF</color>
+    <color name="primary_text_color">#ff000000</color>
+    <color name="secondary_text_color">#ffffffff</color>
 
     <!-- Theme variables -->
     <color name="color_control_normal">@color/primary_text_color</color>
     <color name="status_bar_color">@color/primary_color</color>
-    <color name="navigation_bar_color">#AAFFFFFF</color>
-    <color name="list_multiselect_background">#EEEEEE</color>
+    <color name="navigation_bar_color">#aaffffff</color>
+    <color name="list_multiselect_background">#ffeeeeee</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/secondary_color</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffffff</color>
 
 </resources>

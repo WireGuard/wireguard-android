@@ -5,14 +5,14 @@
     <color name="fab_label_background_color">#bbbbbb</color>
 
     <!-- Base palette -->
-    <color name="primary_color">#ff242424</color>
-    <color name="primary_light_color">#ff4c4c4c</color>
+    <color name="primary_color">#ff212121</color>
+    <color name="primary_light_color">#ff484848</color>
     <color name="primary_dark_color">#ff000000</color>
-    <color name="secondary_color">#ff8ab4f8</color>
-    <color name="secondary_light_color">#ffbde6ff</color>
-    <color name="secondary_dark_color">#ff5785c5</color>
+    <color name="secondary_color">#ff4285f4</color>
+    <color name="secondary_light_color">#ff80b4ff</color>
+    <color name="secondary_dark_color">#ff0059c1</color>
     <color name="primary_text_color">#ffffffff</color>
-    <color name="secondary_text_color">#ff000000</color>
+    <color name="secondary_text_color">#ffffffff</color>
 
     <!-- Theme variables -->
     <color name="list_multiselect_background">#1aeeeeee</color>
