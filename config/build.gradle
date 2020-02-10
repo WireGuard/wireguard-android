@@ -6,6 +6,10 @@
 apply plugin: 'com.android.library'
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     compileSdkVersion 29
 
     defaultConfig {
@@ -14,4 +18,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
+}
+
+dependencies {
+    api "com.google.code.findbugs:jsr305:$jsr305Version"
+    api "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
+    api "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 }

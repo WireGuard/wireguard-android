@@ -67,25 +67,6 @@ android {
     }
 }
 
-ext {
-    annotationsVersion = '1.1.0'
-    appcompatVersion = '1.1.0'
-    cardviewVersion = '1.0.0'
-    coordinatorLayoutVersion = '1.1.3'
-    databindingVersion = '3.5.3'
-    materialComponentsVersion = '1.1.0'
-    jsr305Version = '3.0.2'
-    kotlinVersion = '1.3.61'
-    preferenceVersion = '1.1.0'
-    streamsupportVersion = '1.7.1'
-    threetenabpVersion = '1.2.2'
-    // ZXING switched minSdk to 24 so we cannot upgrade to 4.0.2 without following suit.
-    // If you choose to upgrade to minSDK 24 then you should also disable Jetifier from
-    // gradle.properties.
-    zxingEmbeddedVersion = '3.6.0'
-    eddsaVersion = '0.3.0'
-}
-
 dependencies {
     implementation project(":config")
     implementation "androidx.annotation:annotation:$annotationsVersion"
@@ -94,11 +75,7 @@ dependencies {
     implementation "androidx.databinding:databinding-runtime:$databindingVersion"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "com.google.android.material:material:$materialComponentsVersion"
-    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
-    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
-    implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
-    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "androidx.constraintlayout:constraintlayout:$coordinatorLayoutVersion"
