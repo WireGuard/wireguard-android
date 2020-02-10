@@ -5,8 +5,7 @@
 
 package com.wireguard.config;
 
-import android.text.TextUtils;
-
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,17 @@ public final class Attribute {
     }
 
     public static String join(final Iterable<?> values) {
-        return TextUtils.join(", ", values);
+        final Iterator<?> it = values.iterator();
+        if (!it.hasNext()) {
+            return "";
+        }
+        final StringBuilder sb = new StringBuilder();
+        sb.append(it.next());
+        while (it.hasNext()) {
+            sb.append(", ");
+            sb.append(it.next());
+        }
+        return sb.toString();
     }
 
     public static Optional<Attribute> parse(final CharSequence line) {
