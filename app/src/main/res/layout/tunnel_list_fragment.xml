@@ -55,7 +55,6 @@
                 android:layout_height="140dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="-70dp"
                 android:alpha="0.3333333"
                 android:src="@mipmap/ic_launcher" />
 
