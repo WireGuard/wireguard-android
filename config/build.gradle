@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    api "com.google.code.findbugs:jsr305:$jsr305Version"
     api "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     api "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 }
