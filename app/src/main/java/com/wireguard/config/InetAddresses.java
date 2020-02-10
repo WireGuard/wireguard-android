@@ -5,7 +5,6 @@
 
 package com.wireguard.config;
 
-import android.os.Build;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -25,7 +24,7 @@ public final class InetAddresses {
     static {
         Method m = null;
         try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q)
                 // noinspection JavaReflectionMemberAccess
                 m = InetAddress.class.getMethod("parseNumericAddress", String.class);
         } catch (final Exception ignored) {
@@ -45,7 +44,7 @@ public final class InetAddresses {
         if (address.isEmpty())
             throw new ParseException(InetAddress.class, address, "Empty address");
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
                 return android.net.InetAddresses.parseNumericAddress(address);
             else if (PARSER_METHOD != null)
                 return (InetAddress) PARSER_METHOD.invoke(null, address);
