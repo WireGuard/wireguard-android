@@ -5,9 +5,9 @@
 
 package com.wireguard.config;
 
-import androidx.annotation.Nullable;
-
 import com.wireguard.crypto.KeyFormatException;
+
+import javax.annotation.Nullable;
 
 public class BadConfigException extends Exception {
     private final Location location;

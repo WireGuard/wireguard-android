@@ -87,6 +87,7 @@ ext {
 }
 
 dependencies {
+    implementation project(":config")
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"

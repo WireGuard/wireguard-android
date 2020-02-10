@@ -5,8 +5,6 @@
 
 package com.wireguard.config;
 
-import androidx.annotation.Nullable;
-
 import com.wireguard.config.BadConfigException.Location;
 import com.wireguard.config.BadConfigException.Reason;
 import com.wireguard.config.BadConfigException.Section;
@@ -22,6 +20,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents the contents of a wg-quick configuration file, made up of one or more "Interface"

@@ -5,8 +5,6 @@
 
 package com.wireguard.config;
 
-import androidx.annotation.Nullable;
-
 import com.wireguard.config.BadConfigException.Location;
 import com.wireguard.config.BadConfigException.Reason;
 import com.wireguard.config.BadConfigException.Section;
@@ -22,6 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import java9.util.Lists;
 import java9.util.Optional;
