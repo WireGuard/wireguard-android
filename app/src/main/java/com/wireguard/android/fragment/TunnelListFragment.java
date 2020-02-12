@@ -261,10 +261,12 @@ public class TunnelListFragment extends BaseFragment {
         });
     }
 
-    private void showSnackbar(final String message) {
-        final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
-        snackbar.setAnchorView(binding.createFab);
-        snackbar.show();
+    private void showSnackbar(final CharSequence message) {
+        if (binding != null) {
+            final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
+            snackbar.setAnchorView(binding.createFab);
+            snackbar.show();
+        }
     }
 
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
@@ -276,9 +278,7 @@ public class TunnelListFragment extends BaseFragment {
             message = getResources().getQuantityString(R.plurals.delete_error, count, count, error);
             Log.e(TAG, message, throwable);
         }
-        if (binding != null) {
-            showSnackbar(message);
-        }
+        showSnackbar(message);
     }
 
     private void onTunnelImportFinished(final List<Tunnel> tunnels, final Collection<Throwable> throwables) {
@@ -302,8 +302,7 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size() + throwables.size(),
                     tunnels.size(), tunnels.size() + throwables.size());
 
-        if (binding != null)
-            showSnackbar(message);
+        showSnackbar(message);
     }
 
     @Override
