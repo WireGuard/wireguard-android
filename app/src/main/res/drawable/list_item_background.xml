@@ -3,15 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item>
         <selector>
-            <item
-                android:state_activated="true"
-                app:state_multiselected="true">
-                <color android:color="?attr/colorControlActivated" />
-            </item>
-            <item
-                android:state_activated="true"
-                app:state_multiselected="false">
-                <color android:color="?attr/colorControlHighlight" />
+            <item app:state_multiselected="true" android:state_activated="true">
+                <color android:color="?attr/colorMultiselectActiveBackground" />
             </item>
         </selector>
     </item>

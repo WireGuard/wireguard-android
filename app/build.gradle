@@ -71,11 +71,11 @@ ext {
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
     databindingVersion = '3.5.3'
-    materialComponentsVersion = '1.0.0'
+    materialComponentsVersion = '1.1.0'
     jsr305Version = '3.0.2'
     preferenceVersion = '1.1.0'
     streamsupportVersion = '1.7.1'
-    threetenabpVersion = '1.2.1'
+    threetenabpVersion = '1.2.2'
     // ZXING switched minSdk to 24 so we cannot upgrade to 4.0.2 without following suit.
     // If you choose to upgrade to minSDK 24 then you should also disable Jetifier from
     // gradle.properties.
