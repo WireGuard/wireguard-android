@@ -2,5 +2,10 @@
 <resources>
     <declare-styleable name="Multiselected">
         <attr name="state_multiselected" format="boolean" />
+        <attr name="colorMultiselectActiveBackground" format="reference|color"/>
+    </declare-styleable>
+
+    <declare-styleable name="custom_color">
+        <attr name="colorBackground" format="reference|color"/>
     </declare-styleable>
 </resources>

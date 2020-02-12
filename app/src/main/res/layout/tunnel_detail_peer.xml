@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:background="?android:attr/colorBackground"
+        android:background="?attr/colorBackground"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
         app:contentPadding="8dp">
