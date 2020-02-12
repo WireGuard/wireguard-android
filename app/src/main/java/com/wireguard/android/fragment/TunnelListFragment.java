@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -262,6 +261,12 @@ public class TunnelListFragment extends BaseFragment {
         });
     }
 
+    private void showSnackbar(final String message) {
+        final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
+        snackbar.setAnchorView(binding.createFab);
+        snackbar.show();
+    }
+
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
@@ -272,7 +277,7 @@ public class TunnelListFragment extends BaseFragment {
             Log.e(TAG, message, throwable);
         }
         if (binding != null) {
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+            showSnackbar(message);
         }
     }
 
@@ -298,7 +303,7 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size(), tunnels.size() + throwables.size());
 
         if (binding != null)
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+            showSnackbar(message);
     }
 
     @Override
