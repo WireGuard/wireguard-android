@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import com.google.android.material.R as materialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -22,7 +21,6 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.R
 import com.wireguard.android.activity.TunnelCreatorActivity
 import com.wireguard.android.util.resolveAttribute
-import java.util.*
 
 class AddTunnelsSheet : BottomSheetDialogFragment() {
 
@@ -49,14 +47,11 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
+        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val dialog = dialog as BottomSheetDialog? ?: return
-                val bottomSheet: FrameLayout = dialog.findViewById(materialR.id.design_bottom_sheet)
-                        ?: return
-                behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior = dialog.behavior
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.peekHeight = 0
                 behavior.addBottomSheetCallback(bottomSheetCallback)
@@ -110,6 +105,6 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
             setBeepEnabled(false)
             setPrompt(getString(R.string.qr_code_hint))
         }
-        integrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE))
+        integrator.initiateScan(listOf(IntentIntegrator.QR_CODE))
     }
 }
