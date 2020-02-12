@@ -93,10 +93,7 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
         }
-        requireTargetFragment().startActivityForResult(
-                Intent.createChooser(intent, "Choose ZIP or conf"),
-                TunnelListFragment.REQUEST_IMPORT
-        )
+        requireTargetFragment().startActivityForResult(intent, TunnelListFragment.REQUEST_IMPORT)
     }
 
     private fun onRequestScanQRCode() {
