@@ -216,13 +216,11 @@ public class TunnelListFragment extends BaseFragment {
                              @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
-
         binding.createFab.setOnClickListener(v -> {
             final AddTunnelsSheet bottomSheet = new AddTunnelsSheet();
             bottomSheet.setTargetFragment(this, REQUEST_TARGET_FRAGMENT);
             bottomSheet.show(requireFragmentManager(), "BOTTOM_SHEET");
         });
-
         binding.executePendingBindings();
         return binding.getRoot();
     }

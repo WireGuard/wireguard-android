@@ -28,9 +28,9 @@
         <item name="android:windowBackground">?attr/colorBackground</item>
     </style>
 
-    <style name="BaseBottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-        <!--<item name="android:navigationBarColor">?attr/colorBackground</item>-->
+        <item name="android:navigationBarColor">?attr/colorBackground</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowIsTranslucent">false</item>
@@ -39,9 +39,6 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:colorBackground">@android:color/transparent</item>
     </style>
-
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
-
 
     <style name="NoBackgroundTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>

@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.button.MaterialButton
 import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.R
 import com.wireguard.android.activity.TunnelCreatorActivity
@@ -55,15 +54,15 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.peekHeight = 0
                 behavior.addBottomSheetCallback(bottomSheetCallback)
-                dialog.findViewById<MaterialButton>(R.id.create_empty)?.setOnClickListener {
+                dialog.findViewById<View>(R.id.create_empty)?.setOnClickListener {
                     dismiss()
                     onRequestCreateConfig()
                 }
-                dialog.findViewById<MaterialButton>(R.id.create_from_file)?.setOnClickListener {
+                dialog.findViewById<View>(R.id.create_from_file)?.setOnClickListener {
                     dismiss()
                     onRequestImportConfig()
                 }
-                dialog.findViewById<MaterialButton>(R.id.create_from_qrcode)?.setOnClickListener {
+                dialog.findViewById<View>(R.id.create_from_qrcode)?.setOnClickListener {
                     dismiss()
                     onRequestScanQRCode()
                 }
