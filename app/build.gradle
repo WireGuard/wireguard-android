@@ -72,7 +72,7 @@ dependencies {
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
-    implementation "androidx.databinding:databinding-runtime:$databindingVersion"
+    implementation "androidx.databinding:databinding-runtime:$agpVersion"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "com.google.android.material:material:$materialComponentsVersion"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
