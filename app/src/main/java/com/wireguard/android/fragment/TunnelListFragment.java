@@ -39,7 +39,6 @@ import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
-import com.wireguard.android.widget.fab.FloatingActionsMenuRecyclerViewScrollListener;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
 
@@ -65,20 +64,13 @@ import java9.util.stream.StreamSupport;
  */
 
 public class TunnelListFragment extends BaseFragment {
-    private static final int REQUEST_IMPORT = 1;
+    public static final int REQUEST_IMPORT = 1;
+    private static final int REQUEST_TARGET_FRAGMENT = 2;
     private static final String TAG = "WireGuard/" + TunnelListFragment.class.getSimpleName();
 
     private final ActionModeListener actionModeListener = new ActionModeListener();
     @Nullable private ActionMode actionMode;
     @Nullable private TunnelListFragmentBinding binding;
-
-    public boolean collapseActionMenu() {
-        if (binding != null && binding.createMenu.isExpanded()) {
-            binding.createMenu.collapse();
-            return true;
-        }
-        return false;
-    }
 
     private void importTunnel(@NonNull final String configText) {
         try {
@@ -218,21 +210,17 @@ public class TunnelListFragment extends BaseFragment {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelListFragmentBinding.inflate(inflater, container, false);
-
-        binding.tunnelList.setOnTouchListener((view, motionEvent) -> {
-            if (binding != null) {
-                binding.createMenu.collapse();
-            }
-            return false;
+        binding.createFab.setOnClickListener(v -> {
+            final AddTunnelsSheet bottomSheet = new AddTunnelsSheet();
+            bottomSheet.setTargetFragment(this, REQUEST_TARGET_FRAGMENT);
+            bottomSheet.show(requireFragmentManager(), "BOTTOM_SHEET");
         });
-        binding.tunnelList.setOnScrollListener(new FloatingActionsMenuRecyclerViewScrollListener(binding.createMenu));
         binding.executePendingBindings();
         return binding.getRoot();
     }
@@ -245,36 +233,11 @@ public class TunnelListFragment extends BaseFragment {
 
     @Override
     public void onPause() {
-        if (binding != null) {
-            binding.createMenu.collapse();
-        }
         super.onPause();
     }
 
     public void onRequestCreateConfig(@SuppressWarnings("unused") final View view) {
         startActivity(new Intent(getActivity(), TunnelCreatorActivity.class));
-        if (binding != null)
-            binding.createMenu.collapse();
-    }
-
-    public void onRequestImportConfig(@SuppressWarnings("unused") final View view) {
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, REQUEST_IMPORT);
-        if (binding != null)
-            binding.createMenu.collapse();
-    }
-
-    public void onRequestScanQRCode(@SuppressWarnings("unused") final View view) {
-        final IntentIntegrator intentIntegrator = IntentIntegrator.forSupportFragment(this);
-        intentIntegrator.setOrientationLocked(false);
-        intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setPrompt(getString(R.string.qr_code_hint));
-        intentIntegrator.initiateScan(Collections.singletonList(IntentIntegrator.QR_CODE));
-
-        if (binding != null)
-            binding.createMenu.collapse();
     }
 
     @Override
@@ -296,6 +259,14 @@ public class TunnelListFragment extends BaseFragment {
         });
     }
 
+    private void showSnackbar(final CharSequence message) {
+        if (binding != null) {
+            final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
+            snackbar.setAnchorView(binding.createFab);
+            snackbar.show();
+        }
+    }
+
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
@@ -305,9 +276,7 @@ public class TunnelListFragment extends BaseFragment {
             message = getResources().getQuantityString(R.plurals.delete_error, count, count, error);
             Log.e(TAG, message, throwable);
         }
-        if (binding != null) {
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
-        }
+        showSnackbar(message);
     }
 
     private void onTunnelImportFinished(final List<Tunnel> tunnels, final Collection<Throwable> throwables) {
@@ -331,8 +300,7 @@ public class TunnelListFragment extends BaseFragment {
                     tunnels.size() + throwables.size(),
                     tunnels.size(), tunnels.size() + throwables.size());
 
-        if (binding != null)
-            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show();
+        showSnackbar(message);
     }
 
     @Override
