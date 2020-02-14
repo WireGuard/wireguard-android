@@ -14,13 +14,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wireguard.android.R;
 import com.wireguard.android.fragment.TunnelDetailFragment;
 import com.wireguard.android.fragment.TunnelEditorFragment;
-import com.wireguard.android.fragment.TunnelListFragment;
 import com.wireguard.android.model.Tunnel;
 
 /**
@@ -33,16 +31,10 @@ public class MainActivity extends BaseActivity
         implements FragmentManager.OnBackStackChangedListener {
     @Nullable private ActionBar actionBar;
     private boolean isTwoPaneLayout;
-    @Nullable private TunnelListFragment listFragment;
 
     @Override
     public void onBackPressed() {
         final int backStackEntries = getSupportFragmentManager().getBackStackEntryCount();
-        // If the action menu is visible and expanded, collapse it instead of navigating back.
-        if (isTwoPaneLayout || backStackEntries == 0) {
-            if (listFragment != null && listFragment.collapseActionMenu())
-                return;
-        }
         // If the two-pane layout does not have an editor open, going back should exit the app.
         if (isTwoPaneLayout && backStackEntries <= 1) {
             finish();
@@ -74,12 +66,8 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.main_activity);
         actionBar = getSupportActionBar();
         isTwoPaneLayout = findViewById(R.id.master_detail_wrapper) instanceof LinearLayout;
-        listFragment = (TunnelListFragment) getSupportFragmentManager().findFragmentByTag("LIST");
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         onBackStackChanged();
-        final View actionBarView = findViewById(R.id.action_bar);
-        if (actionBarView != null)
-            actionBarView.setOnTouchListener((v, e) -> listFragment != null && listFragment.collapseActionMenu());
     }
 
     @Override

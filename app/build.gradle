@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply from: 'nonnull.gradle'
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
@@ -70,9 +71,11 @@ ext {
     annotationsVersion = '1.1.0'
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
+    coordinatorLayoutVersion = '1.1.3'
     databindingVersion = '3.5.3'
     materialComponentsVersion = '1.1.0'
     jsr305Version = '3.0.2'
+    kotlinVersion = '1.3.61'
     preferenceVersion = '1.1.0'
     streamsupportVersion = '1.7.1'
     threetenabpVersion = '1.2.2'
@@ -96,6 +99,8 @@ dependencies {
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$coordinatorLayoutVersion"
 }
 
 tasks.withType(JavaCompile) {
