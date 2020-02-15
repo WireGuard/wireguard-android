@@ -56,6 +56,7 @@ public final class SharedLibraryLoader {
                     }
                     out.getFD().sync();
                 }
+                zipFile.close();
                 return true;
             }
         }
