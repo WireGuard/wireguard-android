@@ -4,6 +4,7 @@
  */
 
 apply plugin: 'com.android.library'
+apply from: rootProject.file('nonnull.gradle')
 
 android {
     compileOptions {

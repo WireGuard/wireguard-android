@@ -34,10 +34,6 @@ buildscript {
     }
 }
 
-subprojects {
-    apply from: rootProject.file('nonnull.gradle')
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
