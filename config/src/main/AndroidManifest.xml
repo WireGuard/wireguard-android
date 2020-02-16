@@ -3,8 +3,4 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wireguard.config">
-
-    /
-</manifest>
+<manifest package="com.wireguard.config" />
