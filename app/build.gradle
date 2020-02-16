@@ -60,15 +60,11 @@ android {
             }
         }
     }
-    externalNativeBuild {
-        cmake {
-            path 'tools/CMakeLists.txt'
-        }
-    }
 }
 
 dependencies {
     implementation project(":config")
+    implementation project(":tunnel")
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
