@@ -66,7 +66,7 @@
     <string name="dark_theme_summary_on">Currently using dark (night) theme</string>
     <string name="dark_theme_title">Use dark theme</string>
     <string name="delete">Delete</string>
-    <string name="deselect_all">Deselect All</string>
+    <string name="toggle_all">Toggle All</string>
     <string name="dns_servers">DNS servers</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>

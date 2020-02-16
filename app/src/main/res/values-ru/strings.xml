@@ -66,7 +66,7 @@
     <string name="dark_theme_summary_on">В данный момент используется темная (ночная) тема</string>
     <string name="dark_theme_title">Использовать темную тему</string>
     <string name="delete">Удалить</string>
-    <string name="deselect_all">Снять выделенное</string>
+    <string name="toggle_all">Инвертировать все</string>
     <string name="dns_servers">DNS-серверы</string>
     <string name="edit">Редактировать</string>
     <string name="endpoint">Конечная точка</string>
