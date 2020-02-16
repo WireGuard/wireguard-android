@@ -98,7 +98,7 @@ public class AppListDialogFragment extends DialogFragment {
 
         alertDialogBuilder.setPositiveButton(R.string.set_exclusions, (dialog, which) -> setExclusionsAndDismiss());
         alertDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
-        alertDialogBuilder.setNeutralButton(R.string.deselect_all, (dialog, which) -> {
+        alertDialogBuilder.setNeutralButton(R.string.toggle_all, (dialog, which) -> {
         });
 
         binding.setFragment(this);
@@ -109,7 +109,7 @@ public class AppListDialogFragment extends DialogFragment {
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(view -> {
             for (final ApplicationData app : appData)
-                app.setExcludedFromTunnel(false);
+                app.setExcludedFromTunnel(!app.isExcludedFromTunnel());
         }));
         return dialog;
     }
