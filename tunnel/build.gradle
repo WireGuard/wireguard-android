@@ -11,7 +11,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path project(':app').projectDir.path + '/tools/CMakeLists.txt'
+            path 'tools/CMakeLists.txt'
         }
     }
 }
