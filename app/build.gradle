@@ -79,6 +79,7 @@ ext {
     coreKtxVersion = '1.2.0'
     coordinatorLayoutVersion = '1.1.3'
     databindingVersion = '3.6.0'
+    fragmentVersion = '1.2.2'
     materialComponentsVersion = '1.1.0'
     jsr305Version = '3.0.2'
     kotlinVersion = '1.3.61'
@@ -98,6 +99,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardviewVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.databinding:databinding-runtime:$databindingVersion"
+    implementation "androidx.fragment:fragment:$fragmentVersion"
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "com.google.android.material:material:$materialComponentsVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
