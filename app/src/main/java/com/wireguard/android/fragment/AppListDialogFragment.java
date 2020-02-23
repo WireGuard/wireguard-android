@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 import java9.util.Comparators;
+import java9.util.stream.Collectors;
+import java9.util.stream.StreamSupport;
 
 public class AppListDialogFragment extends DialogFragment {
 
@@ -109,8 +111,12 @@ public class AppListDialogFragment extends DialogFragment {
 
         final AlertDialog dialog = alertDialogBuilder.create();
         dialog.setOnShowListener(d -> dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(view -> {
+            final List<ApplicationData> selectedItems = StreamSupport.stream(appData)
+                    .filter(ApplicationData::isExcludedFromTunnel)
+                    .collect(Collectors.toList());
+            final boolean excludeAll = selectedItems.isEmpty();
             for (final ApplicationData app : appData)
-                app.setExcludedFromTunnel(!app.isExcludedFromTunnel());
+                app.setExcludedFromTunnel(excludeAll);
         }));
         return dialog;
     }
