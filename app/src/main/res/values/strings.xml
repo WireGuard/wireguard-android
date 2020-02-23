@@ -145,7 +145,7 @@
     <string name="tools_installer_working">Installing wg and wg-quick</string>
     <string name="tools_unavailable_error">Required tools unavailable</string>
     <string name="transfer">Transfer</string>
-    <string name="transfer_rx_tx">rx: %s, tx: %s</string>
+    <string name="transfer_rx_tx">rx: %1$s, tx: %2$s</string>
     <string name="transfer_bytes">%d B</string>
     <string name="transfer_kibibytes">%.2f KiB</string>
     <string name="transfer_mibibytes">%.2f MiB</string>
