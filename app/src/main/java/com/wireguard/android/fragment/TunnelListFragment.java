@@ -79,9 +79,7 @@ public class TunnelListFragment extends BaseFragment {
             Config.parse(new ByteArrayInputStream(configText.getBytes(StandardCharsets.UTF_8)));
 
             // Config text is valid, now create the tunnel…
-            final FragmentManager fragmentManager = getFragmentManager();
-            if (fragmentManager != null)
-                ConfigNamingDialogFragment.newInstance(configText).show(fragmentManager, null);
+            ConfigNamingDialogFragment.newInstance(configText).show(getParentFragmentManager(), null);
         } catch (final BadConfigException | IOException e) {
             onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(e));
         }
@@ -220,7 +218,7 @@ public class TunnelListFragment extends BaseFragment {
         binding.createFab.setOnClickListener(v -> {
             final AddTunnelsSheet bottomSheet = new AddTunnelsSheet();
             bottomSheet.setTargetFragment(this, REQUEST_TARGET_FRAGMENT);
-            bottomSheet.show(requireFragmentManager(), "BOTTOM_SHEET");
+            bottomSheet.show(getParentFragmentManager(), "BOTTOM_SHEET");
         });
         binding.executePendingBindings();
         EdgeToEdge.setUpRoot((ViewGroup) binding.getRoot());
