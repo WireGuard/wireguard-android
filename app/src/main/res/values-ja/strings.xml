@@ -145,7 +145,7 @@
     <string name="tools_installer_working">wg および wg-quick のインストール</string>
     <string name="tools_unavailable_error">リクエストされたツールは利用できません</string>
     <string name="transfer">転送</string>
-    <string name="transfer_rx_tx">受信: %s, 送信: %s</string>
+    <string name="transfer_rx_tx">受信: %1$s, 送信: %2$s</string>
     <string name="transfer_bytes">%d B</string>
     <string name="transfer_kibibytes">%.2f KiB</string>
     <string name="transfer_mibibytes">%.2f MiB</string>
