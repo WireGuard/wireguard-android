@@ -28,6 +28,7 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.TunnelManager;
+import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.viewmodel.ConfigProxy;
 import com.wireguard.config.Config;
@@ -89,6 +90,8 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false);
         binding.executePendingBindings();
+        EdgeToEdge.setUpRoot((ViewGroup) binding.getRoot());
+        EdgeToEdge.setUpScrollingContent(binding.mainContainer, null);
         return binding.getRoot();
     }
 
