@@ -28,7 +28,6 @@ import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -79,11 +78,11 @@ public class MainActivity extends BaseActivity
         onBackStackChanged();
         // Dispatch insets on back stack change
         // This is required to ensure replaced fragments are also able to consume insets
-        ((ViewGroup) findViewById(android.R.id.content)).setOnApplyWindowInsetsListener((OnApplyWindowInsetsListener) (v, insets) -> {
+        findViewById(R.id.master_detail_wrapper).setOnApplyWindowInsetsListener((OnApplyWindowInsetsListener) (v, insets) -> {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.addOnBackStackChangedListener(() -> {
                 final List<Fragment> fragments = fragmentManager.getFragments();
-                Objects.requireNonNull(fragments.get(fragments.size() - 1).getView()).dispatchApplyWindowInsets(insets);
+                fragments.get(fragments.size() - 1).requireView().dispatchApplyWindowInsets(insets);
             });
             return insets;
         });
