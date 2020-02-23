@@ -9,17 +9,26 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnApplyWindowInsetsListener;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.LinearLayout;
 
 import com.wireguard.android.R;
 import com.wireguard.android.fragment.TunnelDetailFragment;
 import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.Tunnel;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -68,6 +77,16 @@ public class MainActivity extends BaseActivity
         isTwoPaneLayout = findViewById(R.id.master_detail_wrapper) instanceof LinearLayout;
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         onBackStackChanged();
+        // Dispatch insets on back stack change
+        // This is required to ensure replaced fragments are also able to consume insets
+        ((ViewGroup) findViewById(android.R.id.content)).setOnApplyWindowInsetsListener((OnApplyWindowInsetsListener) (v, insets) -> {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.addOnBackStackChangedListener(() -> {
+                final List<Fragment> fragments = fragmentManager.getFragments();
+                Objects.requireNonNull(fragments.get(fragments.size() - 1).getView()).dispatchApplyWindowInsets(insets);
+            });
+            return insets;
+        });
     }
 
     @Override
