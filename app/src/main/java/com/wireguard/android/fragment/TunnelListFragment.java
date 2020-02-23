@@ -37,6 +37,7 @@ import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.config.BadConfigException;
@@ -222,6 +223,9 @@ public class TunnelListFragment extends BaseFragment {
             bottomSheet.show(requireFragmentManager(), "BOTTOM_SHEET");
         });
         binding.executePendingBindings();
+        EdgeToEdge.setUpRoot((ViewGroup) binding.getRoot());
+        EdgeToEdge.setUpFAB(binding.createFab);
+        EdgeToEdge.setUpScrollingContent(binding.tunnelList, binding.createFab);
         return binding.getRoot();
     }
 

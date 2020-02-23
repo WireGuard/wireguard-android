@@ -20,6 +20,7 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelDetailPeerBinding;
 import com.wireguard.android.model.Tunnel;
 import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.crypto.Key;
 
 import java.util.Timer;
@@ -72,6 +73,8 @@ public class TunnelDetailFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         binding = TunnelDetailFragmentBinding.inflate(inflater, container, false);
         binding.executePendingBindings();
+        EdgeToEdge.setUpRoot((ViewGroup) binding.getRoot());
+        EdgeToEdge.setUpScrollingContent((ViewGroup) binding.getRoot(), null);
         return binding.getRoot();
     }
 
