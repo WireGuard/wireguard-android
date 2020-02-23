@@ -66,7 +66,7 @@
     <string name="dark_theme_summary_on">ダーク（夜間）テーマを使用中</string>
     <string name="dark_theme_title">ダークテーマを使用する</string>
     <string name="delete">削除</string>
-    <string name="deselect_all">すべての選択を解除</string>
+    <string name="toggle_all">すべての状態を切り替え</string>
     <string name="dns_servers">DNS サーバ</string>
     <string name="edit">編集</string>
     <string name="endpoint">エンドポイント</string>
