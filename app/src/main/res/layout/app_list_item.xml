@@ -26,12 +26,14 @@
         android:gravity="center_vertical"
         android:onClick="@{(view) -> item.setExcludedFromTunnel(!item.excludedFromTunnel)}"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/app_icon"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_marginStart="16dp"
             android:src="@{item.icon}"
             tools:src="@tools:sample/avatars" />
 
@@ -43,8 +45,8 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:text="@{key}"
             tools:text="@tools:sample/full_names" />
 
