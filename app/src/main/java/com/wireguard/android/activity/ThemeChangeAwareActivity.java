@@ -20,38 +20,6 @@ import java.lang.reflect.Field;
 
 public abstract class ThemeChangeAwareActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + ThemeChangeAwareActivity.class.getSimpleName();
-    private static boolean lastDarkMode;
-    @Nullable private static Resources lastResources;
-
-    private static synchronized void invalidateDrawableCache(final Resources resources, final boolean darkMode) {
-        if (resources == lastResources && darkMode == lastDarkMode)
-            return;
-
-        try {
-            Field f;
-            Object o = resources;
-            try {
-                f = o.getClass().getDeclaredField("mResourcesImpl");
-                f.setAccessible(true);
-                o = f.get(o);
-            } catch (final Exception ignored) {
-            }
-            f = o.getClass().getDeclaredField("mDrawableCache");
-            f.setAccessible(true);
-            o = f.get(o);
-            try {
-                o.getClass().getMethod("onConfigurationChange", int.class).invoke(o, -1);
-            } catch (final Exception ignored) {
-                o.getClass().getMethod("clear").invoke(o);
-            }
-        } catch (final Exception e) {
-            Log.e(TAG, "Failed to flush drawable cache", e);
-        }
-
-        lastResources = resources;
-        lastDarkMode = darkMode;
-    }
-
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -75,8 +43,6 @@ public abstract class ThemeChangeAwareActivity extends AppCompatActivity impleme
                     sharedPreferences.getBoolean(key, false) ?
                             AppCompatDelegate.MODE_NIGHT_YES :
                             AppCompatDelegate.MODE_NIGHT_NO);
-            invalidateDrawableCache(getResources(), darkMode);
-            recreate();
         }
     }
 }
