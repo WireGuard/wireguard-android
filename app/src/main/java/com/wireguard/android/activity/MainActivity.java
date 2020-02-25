@@ -50,6 +50,7 @@ public class MainActivity extends BaseActivity
         }
         // Deselect the current tunnel on navigating back from the detail pane to the one-pane list.
         if (!isTwoPaneLayout && backStackEntries == 1) {
+            getSupportFragmentManager().popBackStack();
             setSelectedTunnel(null);
             return;
         }
