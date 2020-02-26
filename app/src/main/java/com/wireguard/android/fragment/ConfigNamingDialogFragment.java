@@ -77,7 +77,7 @@ public class ConfigNamingDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Activity activity = Objects.requireNonNull(getActivity());
+        final Activity activity = requireActivity();
 
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
