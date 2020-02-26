@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="delete_error">
-        <item quantity="one">%d トンネルを削除できません: %s</item>
         <item quantity="other">%d トンネルを削除できません: %s</item>
     </plurals>
     <plurals name="delete_success">
-        <item quantity="one">%d トンネルを削除しました</item>
         <item quantity="other">%d トンネルを削除しました</item>
     </plurals>
     <plurals name="delete_title">
-        <item quantity="one">%d トンネルを選択</item>
         <item quantity="other">%d トンネルを選択</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="one">%d 個（全 %d 個）のトンネル設定をインポート</item>
         <item quantity="other">%d 個（全 %d 個）のトンネル設定をインポート</item>
     </plurals>
     <plurals name="import_total_success">
-        <item quantity="one">%d 個のトンネル設定をインポート済</item>
         <item quantity="other">%d 個のトンネル設定をインポート済</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="one">除外アプリ %d 個</item>
         <item quantity="other">除外アプリ %d 個</item>
     </plurals>
     <string name="add_peer">ピアを追加する</string>
