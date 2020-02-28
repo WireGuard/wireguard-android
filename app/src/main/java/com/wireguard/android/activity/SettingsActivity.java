@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.WgQuickBackend;
+import com.wireguard.android.util.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +114,7 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
 
             final Preference moduleInstaller = getPreferenceManager().findPreference("module_downloader");
             moduleInstaller.setVisible(false);
-            if (Application.getModuleLoader().isModuleLoaded()) {
+            if (ModuleLoader.isModuleLoaded()) {
                 screen.removePreference(moduleInstaller);
             } else {
                 Application.getAsyncWorker().runAsync(Application.getRootShell()::start).whenComplete((v, e) -> {
