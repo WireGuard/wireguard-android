@@ -11,15 +11,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.View.OnApplyWindowInsetsListener;
-import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.widget.LinearLayout;
 
 import com.wireguard.android.R;
