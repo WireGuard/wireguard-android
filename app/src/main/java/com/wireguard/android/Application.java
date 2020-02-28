@@ -73,7 +73,7 @@ public class Application extends android.app.Application {
             if (app.backend == null) {
                 Backend backend = null;
                 boolean didStartRootShell = false;
-                if (!app.moduleLoader.isModuleLoaded() && app.moduleLoader.moduleMightExist()) {
+                if (!ModuleLoader.isModuleLoaded() && app.moduleLoader.moduleMightExist()) {
                     try {
                         app.rootShell.start();
                         didStartRootShell = true;
@@ -81,7 +81,7 @@ public class Application extends android.app.Application {
                     } catch (final Exception ignored) {
                     }
                 }
-                if (app.moduleLoader.isModuleLoaded()) {
+                if (ModuleLoader.isModuleLoaded()) {
                     try {
                         if (!didStartRootShell)
                             app.rootShell.start();

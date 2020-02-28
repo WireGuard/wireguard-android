@@ -59,7 +59,7 @@ public class ModuleLoader {
         Application.getRootShell().run(null, String.format("insmod \"%s/wireguard-$(sha256sum /proc/version|cut -d ' ' -f 1).ko\"", moduleDir.getAbsolutePath()));
     }
 
-    public boolean isModuleLoaded() {
+    public static boolean isModuleLoaded() {
         return new File("/sys/module/wireguard").exists();
     }
 
