@@ -82,7 +82,7 @@ ext {
     fragmentVersion = '1.2.2'
     materialComponentsVersion = '1.1.0'
     jsr305Version = '3.0.2'
-    kotlinVersion = '1.3.61'
+    kotlinVersion = '1.3.70'
     preferenceVersion = '1.1.0'
     streamsupportVersion = '1.7.1'
     threetenabpVersion = '1.2.2'
