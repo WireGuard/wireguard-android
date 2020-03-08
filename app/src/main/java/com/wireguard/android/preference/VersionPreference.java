@@ -16,21 +16,32 @@ import android.util.AttributeSet;
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.Backend;
+import com.wireguard.android.backend.GoBackend;
+import com.wireguard.android.backend.WgQuickBackend;
 
 import java.util.Locale;
 
 public class VersionPreference extends Preference {
     @Nullable private String versionSummary;
 
+    private String getBackendPrettyName(final Context context, final Backend backend) {
+        if (backend instanceof GoBackend)
+            return context.getString(R.string.type_name_kernel_module);
+        if (backend instanceof WgQuickBackend)
+            return context.getString(R.string.type_name_go_userspace);
+        return "";
+    }
+
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
         Application.getBackendAsync().thenAccept(backend -> {
-            versionSummary = getContext().getString(R.string.version_summary_checking, backend.getTypePrettyName().toLowerCase(Locale.ENGLISH));
+            versionSummary = getContext().getString(R.string.version_summary_checking, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH));
             Application.getAsyncWorker().supplyAsync(backend::getVersion).whenComplete((version, exception) -> {
                 versionSummary = exception == null
-                        ? getContext().getString(R.string.version_summary, backend.getTypePrettyName(), version)
-                        : getContext().getString(R.string.version_summary_unknown, backend.getTypePrettyName().toLowerCase(Locale.ENGLISH));
+                        ? getContext().getString(R.string.version_summary, getBackendPrettyName(context, backend), version)
+                        : getContext().getString(R.string.version_summary_unknown, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH));
                 notifyChanged();
             });
         });

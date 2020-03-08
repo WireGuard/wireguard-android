@@ -12,9 +12,9 @@ import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.BackendException;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.BadConfigException.Location;
-import com.wireguard.config.BadConfigException.Reason;
 import com.wireguard.config.InetEndpoint;
 import com.wireguard.config.InetNetwork;
 import com.wireguard.config.ParseException;
@@ -29,16 +29,25 @@ import java.util.Map;
 import java9.util.Maps;
 
 public final class ErrorMessages {
-    private static final Map<Reason, Integer> BCE_REASON_MAP = new EnumMap<>(Maps.of(
-            Reason.INVALID_KEY, R.string.bad_config_reason_invalid_key,
-            Reason.INVALID_NUMBER, R.string.bad_config_reason_invalid_number,
-            Reason.INVALID_VALUE, R.string.bad_config_reason_invalid_value,
-            Reason.MISSING_ATTRIBUTE, R.string.bad_config_reason_missing_attribute,
-            Reason.MISSING_SECTION, R.string.bad_config_reason_missing_section,
-            Reason.MISSING_VALUE, R.string.bad_config_reason_missing_value,
-            Reason.SYNTAX_ERROR, R.string.bad_config_reason_syntax_error,
-            Reason.UNKNOWN_ATTRIBUTE, R.string.bad_config_reason_unknown_attribute,
-            Reason.UNKNOWN_SECTION, R.string.bad_config_reason_unknown_section
+    private static final Map<BadConfigException.Reason, Integer> BCE_REASON_MAP = new EnumMap<>(Maps.of(
+            BadConfigException.Reason.INVALID_KEY, R.string.bad_config_reason_invalid_key,
+            BadConfigException.Reason.INVALID_NUMBER, R.string.bad_config_reason_invalid_number,
+            BadConfigException.Reason.INVALID_VALUE, R.string.bad_config_reason_invalid_value,
+            BadConfigException.Reason.MISSING_ATTRIBUTE, R.string.bad_config_reason_missing_attribute,
+            BadConfigException.Reason.MISSING_SECTION, R.string.bad_config_reason_missing_section,
+            BadConfigException.Reason.MISSING_VALUE, R.string.bad_config_reason_missing_value,
+            BadConfigException.Reason.SYNTAX_ERROR, R.string.bad_config_reason_syntax_error,
+            BadConfigException.Reason.UNKNOWN_ATTRIBUTE, R.string.bad_config_reason_unknown_attribute,
+            BadConfigException.Reason.UNKNOWN_SECTION, R.string.bad_config_reason_unknown_section
+    ));
+    private static final Map<BackendException.Reason, Integer> BE_REASON_MAP = new EnumMap<>(Maps.of(
+            BackendException.Reason.UNKNOWN_KERNEL_MODULE_NAME, R.string.module_version_error,
+            BackendException.Reason.WG_QUICK_CONFIG_ERROR_CODE, R.string.tunnel_config_error,
+            BackendException.Reason.TUNNEL_MISSING_CONFIG, R.string.no_config_error,
+            BackendException.Reason.VPN_NOT_AUTHORIZED, R.string.vpn_not_authorized_error,
+            BackendException.Reason.UNABLE_TO_START_VPN, R.string.vpn_start_error,
+            BackendException.Reason.TUN_CREATION_ERROR, R.string.tun_create_error,
+            BackendException.Reason.GO_ACTIVATION_ERROR_CODE, R.string.tunnel_on_error
     ));
     private static final Map<Format, Integer> KFE_FORMAT_MAP = new EnumMap<>(Maps.of(
             Format.BASE64, R.string.key_length_explanation_base64,
@@ -77,6 +86,9 @@ public final class ErrorMessages {
                             bce.getLocation().getName());
             final String explanation = getBadConfigExceptionExplanation(resources, bce);
             message = resources.getString(R.string.bad_config_error, reason, context) + explanation;
+        } else if (rootCause instanceof BackendException) {
+            final BackendException be = (BackendException) rootCause;
+            message = resources.getString(BE_REASON_MAP.get(be.getReason()), be.getFormat());
         } else if (rootCause.getMessage() != null) {
             message = rootCause.getMessage();
         } else {
@@ -123,7 +135,7 @@ public final class ErrorMessages {
     private static Throwable rootCause(final Throwable throwable) {
         Throwable cause = throwable;
         while (cause.getCause() != null) {
-            if (cause instanceof BadConfigException)
+            if (cause instanceof BadConfigException || cause instanceof BackendException)
                 break;
             final Throwable nextCause = cause.getCause();
             if (nextCause instanceof RemoteException)

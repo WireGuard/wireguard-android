@@ -5,12 +5,13 @@
 
 package com.wireguard.android.backend;
 
-import android.content.Context;
 import androidx.annotation.Nullable;
+
+import android.content.Context;
 import android.util.Log;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.R;
+import com.wireguard.android.backend.BackendException.Reason;
 import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.config.Config;
 import com.wireguard.crypto.Key;
@@ -40,13 +41,11 @@ public final class WgQuickBackend implements Backend {
     private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
 
     private final File localTemporaryDir;
-    private final Context context;
     private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
     private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
 
     public WgQuickBackend(final Context context) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
-        this.context = context;
     }
 
     @Override
@@ -93,16 +92,11 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public String getTypePrettyName() {
-        return context.getString(R.string.type_name_kernel_module);
-    }
-
-    @Override
     public String getVersion() throws Exception {
         final List<String> output = new ArrayList<>();
         if (Application.getRootShell()
                 .run(output, "cat /sys/module/wireguard/version") != 0 || output.isEmpty())
-            throw new Exception(context.getString(R.string.module_version_error));
+            throw new BackendException(Reason.UNKNOWN_KERNEL_MODULE_NAME);
         return output.get(0);
     }
 
@@ -150,7 +144,7 @@ public final class WgQuickBackend implements Backend {
         // noinspection ResultOfMethodCallIgnored
         tempFile.delete();
         if (result != 0)
-            throw new Exception(context.getString(R.string.tunnel_config_error, result));
+            throw new BackendException(Reason.WG_QUICK_CONFIG_ERROR_CODE, result);
 
         if (state == State.UP)
             runningConfigs.put(tunnel, config);
