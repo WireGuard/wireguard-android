@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.ModuleLoader;
 import com.wireguard.android.util.ToolsInstaller;
 
@@ -45,7 +46,7 @@ public class ModuleDownloaderPreference extends Preference {
     private void onDownloadResult(final Integer result, @Nullable final Throwable throwable) {
         if (throwable != null) {
             setState(State.FAILURE);
-            Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), ErrorMessages.get(throwable), Toast.LENGTH_LONG).show();
         } else if (result == OsConstants.ENOENT)
             setState(State.NOTFOUND);
         else if (result == OsConstants.EXIT_SUCCESS) {
