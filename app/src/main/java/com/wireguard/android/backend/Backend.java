@@ -42,13 +42,6 @@ public interface Backend {
     Statistics getStatistics(Tunnel tunnel) throws Exception;
 
     /**
-     * Determine type name of underlying backend.
-     *
-     * @return Type name
-     */
-    String getTypePrettyName();
-
-    /**
      * Determine version of underlying backend.
      *
      * @return The version of the backend.
