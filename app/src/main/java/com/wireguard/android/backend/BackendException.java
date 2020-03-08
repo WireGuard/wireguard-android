@@ -14,7 +14,6 @@ public final class BackendException extends Exception {
         UNABLE_TO_START_VPN,
         TUN_CREATION_ERROR,
         GO_ACTIVATION_ERROR_CODE
-
     }
     private final Reason reason;
     private final Object[] format;
