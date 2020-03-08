@@ -113,12 +113,12 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
                 return;
             final String error = ErrorMessages.get(throwable);
             final int messageResId = checked ? R.string.error_up : R.string.error_down;
-            final String message = getContext().getString(messageResId, error);
+            final String message = requireContext().getString(messageResId, error);
             final View view = getView();
             if (view != null)
                 Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
             else
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
             Log.e(TAG, message, throwable);
         });
     }

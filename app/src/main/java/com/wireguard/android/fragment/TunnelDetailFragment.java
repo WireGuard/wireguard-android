@@ -110,14 +110,14 @@ public class TunnelDetailFragment extends BaseFragment {
 
     private String formatBytes(final long bytes) {
         if (bytes < 1024)
-            return getContext().getString(R.string.transfer_bytes, bytes);
+            return requireContext().getString(R.string.transfer_bytes, bytes);
         else if (bytes < 1024*1024)
-            return getContext().getString(R.string.transfer_kibibytes, bytes/1024.0);
+            return requireContext().getString(R.string.transfer_kibibytes, bytes/1024.0);
         else if (bytes < 1024*1024*1024)
-            return getContext().getString(R.string.transfer_mibibytes, bytes/(1024.0*1024.0));
+            return requireContext().getString(R.string.transfer_mibibytes, bytes/(1024.0*1024.0));
         else if (bytes < 1024*1024*1024*1024)
-            return getContext().getString(R.string.transfer_gibibytes, bytes/(1024.0*1024.0*1024.0));
-        return getContext().getString(R.string.transfer_tibibytes, bytes/(1024.0*1024.0*1024.0)/1024.0);
+            return requireContext().getString(R.string.transfer_gibibytes, bytes/(1024.0*1024.0*1024.0));
+        return requireContext().getString(R.string.transfer_tibibytes, bytes/(1024.0*1024.0*1024.0)/1024.0);
     }
 
     private void updateStats() {
@@ -153,7 +153,7 @@ public class TunnelDetailFragment extends BaseFragment {
                     peer.transferText.setVisibility(View.GONE);
                     continue;
                 }
-                peer.transferText.setText(getContext().getString(R.string.transfer_rx_tx, formatBytes(rx), formatBytes(tx)));
+                peer.transferText.setText(requireContext().getString(R.string.transfer_rx_tx, formatBytes(rx), formatBytes(tx)));
                 peer.transferLabel.setVisibility(View.VISIBLE);
                 peer.transferText.setVisibility(View.VISIBLE);
             }
