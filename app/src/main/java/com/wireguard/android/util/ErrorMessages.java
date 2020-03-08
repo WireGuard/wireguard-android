@@ -6,6 +6,8 @@
 package com.wireguard.android.util;
 
 import android.content.res.Resources;
+import android.os.RemoteException;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
@@ -123,7 +125,10 @@ public final class ErrorMessages {
         while (cause.getCause() != null) {
             if (cause instanceof BadConfigException)
                 break;
-            cause = cause.getCause();
+            final Throwable nextCause = cause.getCause();
+            if (nextCause instanceof RemoteException)
+                break;
+            cause = nextCause;
         }
         return cause;
     }
