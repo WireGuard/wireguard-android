@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.wireguard.android.Application;
 import com.wireguard.android.QuickTileService;
 import com.wireguard.android.R;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.model.ObservableTunnel;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.ErrorMessages;
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -30,7 +30,7 @@ public class TunnelToggleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Tunnel tunnel = Application.getTunnelManager().getLastUsedTunnel();
+        final ObservableTunnel tunnel = Application.getTunnelManager().getLastUsedTunnel();
         if (tunnel == null)
             return;
         tunnel.setState(State.TOGGLE).whenComplete((v, t) -> {

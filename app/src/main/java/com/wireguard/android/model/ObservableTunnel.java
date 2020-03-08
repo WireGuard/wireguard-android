@@ -5,22 +5,16 @@
 
 package com.wireguard.android.model;
 
-import android.os.SystemClock;
-import android.util.Pair;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.annotation.Nullable;
 
 import com.wireguard.android.BR;
+import com.wireguard.android.backend.Statistics;
+import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.config.Config;
-import com.wireguard.crypto.Key;
 import com.wireguard.util.Keyed;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;
@@ -29,26 +23,19 @@ import java9.util.concurrent.CompletionStage;
  * Encapsulates the volatile and nonvolatile state of a WireGuard tunnel.
  */
 
-public class Tunnel extends BaseObservable implements Keyed<String> {
-    public static final int NAME_MAX_LENGTH = 15;
-    private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,15}");
-
+public class ObservableTunnel extends BaseObservable implements Keyed<String>, Tunnel {
     private final TunnelManager manager;
     @Nullable private Config config;
-    private String name;
     private State state;
+    private String name;
     @Nullable private Statistics statistics;
 
-    Tunnel(final TunnelManager manager, final String name,
+    ObservableTunnel(final TunnelManager manager, final String name,
            @Nullable final Config config, final State state) {
-        this.manager = manager;
         this.name = name;
+        this.manager = manager;
         this.config = config;
         this.state = state;
-    }
-
-    public static boolean isNameInvalid(final CharSequence name) {
-        return !NAME_PATTERN.matcher(name).matches();
     }
 
     public CompletionStage<Void> delete() {
@@ -74,6 +61,7 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         return name;
     }
 
+    @Override
     @Bindable
     public String getName() {
         return name;
@@ -145,61 +133,5 @@ public class Tunnel extends BaseObservable implements Keyed<String> {
         if (state != this.state)
             return manager.setTunnelState(this, state);
         return CompletableFuture.completedFuture(this.state);
-    }
-
-    public enum State {
-        DOWN,
-        TOGGLE,
-        UP;
-
-        public static State of(final boolean running) {
-            return running ? UP : DOWN;
-        }
-    }
-
-    public static class Statistics extends BaseObservable {
-        private long lastTouched = SystemClock.elapsedRealtime();
-        private final Map<Key, Pair<Long, Long>> peerBytes = new HashMap<>();
-
-        public void add(final Key key, final long rx, final long tx) {
-            peerBytes.put(key, Pair.create(rx, tx));
-            lastTouched = SystemClock.elapsedRealtime();
-        }
-
-        private boolean isStale() {
-            return SystemClock.elapsedRealtime() - lastTouched > 900;
-        }
-
-        public Key[] peers() {
-            return peerBytes.keySet().toArray(new Key[0]);
-        }
-
-        public long peerRx(final Key peer) {
-            if (!peerBytes.containsKey(peer))
-                return 0;
-            return peerBytes.get(peer).first;
-        }
-
-        public long peerTx(final Key peer) {
-            if (!peerBytes.containsKey(peer))
-                return 0;
-            return peerBytes.get(peer).second;
-        }
-
-        public long totalRx() {
-            long rx = 0;
-            for (final Pair<Long, Long> val : peerBytes.values()) {
-                rx += val.first;
-            }
-            return rx;
-        }
-
-        public long totalTx() {
-            long tx = 0;
-            for (final Pair<Long, Long> val : peerBytes.values()) {
-                tx += val.second;
-            }
-            return tx;
-        }
     }
 }

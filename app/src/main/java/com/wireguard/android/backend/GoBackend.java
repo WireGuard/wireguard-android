@@ -16,10 +16,7 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.activity.MainActivity;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
@@ -30,6 +27,7 @@ import com.wireguard.crypto.KeyFormatException;
 
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -40,14 +38,26 @@ import java9.util.concurrent.CompletableFuture;
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
     private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
+    public interface AlwaysOnCallback {
+        void alwaysOnTriggered();
+    }
+    @Nullable private static AlwaysOnCallback alwaysOnCallback;
+    public static void setAlwaysOnCallback(AlwaysOnCallback cb) {
+        alwaysOnCallback = cb;
+    }
 
     private final Context context;
+    private final PendingIntent configurationIntent;
     @Nullable private Tunnel currentTunnel;
+    @Nullable private Config currentConfig;
     private int currentTunnelHandle = -1;
 
-    public GoBackend(final Context context) {
+    private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
+
+    public GoBackend(final Context context, final PendingIntent configurationIntent) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
+        this.configurationIntent = configurationIntent;
     }
 
     private static native String wgGetConfig(int handle);
@@ -63,23 +73,7 @@ public final class GoBackend implements Backend {
     private static native String wgVersion();
 
     @Override
-    public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
-        if (tunnel.getState() == State.UP) {
-            // Restart the tunnel to apply the new config.
-            setStateInternal(tunnel, tunnel.getConfig(), State.DOWN);
-            try {
-                setStateInternal(tunnel, config, State.UP);
-            } catch (final Exception e) {
-                // The new configuration didn't work, so try to go back to the old one.
-                setStateInternal(tunnel, tunnel.getConfig(), State.UP);
-                throw e;
-            }
-        }
-        return config;
-    }
-
-    @Override
-    public Set<String> enumerate() {
+    public Set<String> getRunningTunnelNames() {
         if (currentTunnel != null) {
             final Set<String> runningTunnels = new ArraySet<>();
             runningTunnels.add(currentTunnel.getName());
@@ -147,25 +141,36 @@ public final class GoBackend implements Backend {
     }
 
     @Override
-    public State setState(final Tunnel tunnel, State state) throws Exception {
+    public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
         final State originalState = getState(tunnel);
+
         if (state == State.TOGGLE)
             state = originalState == State.UP ? State.DOWN : State.UP;
-        if (state == originalState)
+        if (state == originalState && tunnel == currentTunnel && config == currentConfig)
             return originalState;
-        if (state == State.UP && currentTunnel != null)
-            throw new IllegalStateException(context.getString(R.string.multiple_tunnels_error));
-        Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
-        setStateInternal(tunnel, tunnel.getConfig(), state);
+        if (state == State.UP) {
+            final Config originalConfig = currentConfig;
+            final Tunnel originalTunnel = currentTunnel;
+            if (currentTunnel != null)
+                setStateInternal(currentTunnel, null, State.DOWN);
+            try {
+                setStateInternal(tunnel, config, state);
+            } catch(final Exception e) {
+                if (originalTunnel != null)
+                    setStateInternal(originalTunnel, originalConfig, State.UP);
+                throw e;
+            }
+        } else if (state == State.DOWN && tunnel == currentTunnel) {
+            setStateInternal(tunnel, null, State.DOWN);
+        }
         return getState(tunnel);
     }
 
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
             throws Exception {
+        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + " " + state);
 
         if (state == State.UP) {
-            Log.i(TAG, "Bringing tunnel up");
-
             Objects.requireNonNull(config, context.getString(R.string.no_config_error));
 
             if (VpnService.prepare(context) != null)
@@ -180,6 +185,7 @@ public final class GoBackend implements Backend {
             } catch (final TimeoutException e) {
                 throw new Exception(context.getString(R.string.vpn_start_error), e);
             }
+            service.setOwner(this);
 
             if (currentTunnelHandle != -1) {
                 Log.w(TAG, "Tunnel already up");
@@ -193,9 +199,7 @@ public final class GoBackend implements Backend {
             final VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
-            final Intent configureIntent = new Intent(context, MainActivity.class);
-            configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            builder.setConfigureIntent(PendingIntent.getActivity(context, 0, configureIntent, 0));
+            builder.setConfigureIntent(configurationIntent);
 
             for (final String excludedApplication : config.getInterface().getExcludedApplications())
                 builder.addDisallowedApplication(excludedApplication);
@@ -229,12 +233,11 @@ public final class GoBackend implements Backend {
                 throw new Exception(context.getString(R.string.tunnel_on_error, currentTunnelHandle));
 
             currentTunnel = tunnel;
+            currentConfig = config;
 
             service.protect(wgGetSocketV4(currentTunnelHandle));
             service.protect(wgGetSocketV6(currentTunnelHandle));
         } else {
-            Log.i(TAG, "Bringing tunnel down");
-
             if (currentTunnelHandle == -1) {
                 Log.w(TAG, "Tunnel already down");
                 return;
@@ -243,7 +246,11 @@ public final class GoBackend implements Backend {
             wgTurnOff(currentTunnelHandle);
             currentTunnel = null;
             currentTunnelHandle = -1;
+            currentConfig = null;
         }
+
+        for (final TunnelStateChangeNotificationReceiver notifier : notifiers)
+            notifier.tunnelStateChange(tunnel, state);
     }
 
     private void startVpnService() {
@@ -251,7 +258,23 @@ public final class GoBackend implements Backend {
         context.startService(new Intent(context, VpnService.class));
     }
 
+    @Override
+    public void registerStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
+        notifiers.add(receiver);
+    }
+
+    @Override
+    public void unregisterStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
+        notifiers.remove(receiver);
+    }
+
     public static class VpnService extends android.net.VpnService {
+        @Nullable private GoBackend owner;
+
+        public void setOwner(final GoBackend owner) {
+            this.owner = owner;
+        }
+
         public Builder getBuilder() {
             return new Builder();
         }
@@ -264,13 +287,18 @@ public final class GoBackend implements Backend {
 
         @Override
         public void onDestroy() {
-            Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
-                for (final Tunnel tunnel : tunnels) {
-                    if (tunnel != null && tunnel.getState() != State.DOWN)
-                        tunnel.setState(State.DOWN);
+            if (owner != null) {
+                final Tunnel tunnel = owner.currentTunnel;
+                if (tunnel != null) {
+                    if (owner.currentTunnelHandle != -1)
+                        wgTurnOff(owner.currentTunnelHandle);
+                    owner.currentTunnel = null;
+                    owner.currentTunnelHandle = -1;
+                    owner.currentConfig = null;
+                    for (final TunnelStateChangeNotificationReceiver notifier : owner.notifiers)
+                        notifier.tunnelStateChange(tunnel, State.DOWN);
                 }
-            });
-
+            }
             vpnService = vpnService.newIncompleteFuture();
             super.onDestroy();
         }
@@ -280,10 +308,10 @@ public final class GoBackend implements Backend {
             vpnService.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");
-                Application.getTunnelManager().restoreState(true).whenComplete(ExceptionLoggers.D);
+                if (alwaysOnCallback != null)
+                    alwaysOnCallback.alwaysOnTriggered();
             }
             return super.onStartCommand(intent, flags, startId);
         }
-
     }
 }

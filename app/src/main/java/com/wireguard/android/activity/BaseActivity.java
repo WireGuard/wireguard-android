@@ -11,7 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 
 import java.util.Objects;
 
@@ -23,14 +23,14 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 
     private final SelectionChangeRegistry selectionChangeRegistry = new SelectionChangeRegistry();
-    @Nullable private Tunnel selectedTunnel;
+    @Nullable private ObservableTunnel selectedTunnel;
 
     public void addOnSelectedTunnelChangedListener(final OnSelectedTunnelChangedListener listener) {
         selectionChangeRegistry.add(listener);
     }
 
     @Nullable
-    public Tunnel getSelectedTunnel() {
+    public ObservableTunnel getSelectedTunnel() {
         return selectedTunnel;
     }
 
@@ -60,15 +60,15 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
         super.onSaveInstanceState(outState);
     }
 
-    protected abstract void onSelectedTunnelChanged(@Nullable Tunnel oldTunnel, @Nullable Tunnel newTunnel);
+    protected abstract void onSelectedTunnelChanged(@Nullable ObservableTunnel oldTunnel, @Nullable ObservableTunnel newTunnel);
 
     public void removeOnSelectedTunnelChangedListener(
             final OnSelectedTunnelChangedListener listener) {
         selectionChangeRegistry.remove(listener);
     }
 
-    public void setSelectedTunnel(@Nullable final Tunnel tunnel) {
-        final Tunnel oldTunnel = selectedTunnel;
+    public void setSelectedTunnel(@Nullable final ObservableTunnel tunnel) {
+        final ObservableTunnel oldTunnel = selectedTunnel;
         if (Objects.equals(oldTunnel, tunnel))
             return;
         selectedTunnel = tunnel;
@@ -77,21 +77,21 @@ public abstract class BaseActivity extends ThemeChangeAwareActivity {
     }
 
     public interface OnSelectedTunnelChangedListener {
-        void onSelectedTunnelChanged(@Nullable Tunnel oldTunnel, @Nullable Tunnel newTunnel);
+        void onSelectedTunnelChanged(@Nullable ObservableTunnel oldTunnel, @Nullable ObservableTunnel newTunnel);
     }
 
     private static final class SelectionChangeNotifier
-            extends NotifierCallback<OnSelectedTunnelChangedListener, Tunnel, Tunnel> {
+            extends NotifierCallback<OnSelectedTunnelChangedListener, ObservableTunnel, ObservableTunnel> {
         @Override
         public void onNotifyCallback(final OnSelectedTunnelChangedListener listener,
-                                     final Tunnel oldTunnel, final int ignored,
-                                     final Tunnel newTunnel) {
+                                     final ObservableTunnel oldTunnel, final int ignored,
+                                     final ObservableTunnel newTunnel) {
             listener.onSelectedTunnelChanged(oldTunnel, newTunnel);
         }
     }
 
     private static final class SelectionChangeRegistry
-            extends CallbackRegistry<OnSelectedTunnelChangedListener, Tunnel, Tunnel> {
+            extends CallbackRegistry<OnSelectedTunnelChangedListener, ObservableTunnel, ObservableTunnel> {
         private SelectionChangeRegistry() {
             super(new SelectionChangeNotifier());
         }

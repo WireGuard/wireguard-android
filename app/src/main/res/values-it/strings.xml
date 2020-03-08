@@ -104,7 +104,6 @@
     <string name="module_installer_working">Scaricamento e installazione…</string>
     <string name="module_installer_error">Qualcosa è andato storto. Riprova</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">Può essere attivo solo un tunnel su spazio utente alla volta</string>
     <string name="name">Nome</string>
     <string name="no_config_error">Tentativo di attivare un tunnel senza configurazione</string>
     <string name="no_configs_error">Nessuna configurazione trovata</string>

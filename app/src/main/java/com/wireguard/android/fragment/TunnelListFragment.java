@@ -17,7 +17,7 @@ import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.FragmentManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +36,7 @@ import com.wireguard.android.activity.TunnelCreatorActivity;
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter;
 import com.wireguard.android.databinding.TunnelListFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
@@ -91,7 +91,7 @@ public class TunnelListFragment extends BaseFragment {
             return;
         final ContentResolver contentResolver = activity.getContentResolver();
 
-        final Collection<CompletableFuture<Tunnel>> futureTunnels = new ArrayList<>();
+        final Collection<CompletableFuture<ObservableTunnel>> futureTunnels = new ArrayList<>();
         final List<Throwable> throwables = new ArrayList<>();
         Application.getAsyncWorker().supplyAsync(() -> {
             final String[] columns = {OpenableColumns.DISPLAY_NAME};
@@ -161,9 +161,9 @@ public class TunnelListFragment extends BaseFragment {
                 onTunnelImportFinished(Collections.emptyList(), Collections.singletonList(exception));
             } else {
                 future.whenComplete((ignored1, ignored2) -> {
-                    final List<Tunnel> tunnels = new ArrayList<>(futureTunnels.size());
-                    for (final CompletableFuture<Tunnel> futureTunnel : futureTunnels) {
-                        Tunnel tunnel = null;
+                    final List<ObservableTunnel> tunnels = new ArrayList<>(futureTunnels.size());
+                    for (final CompletableFuture<ObservableTunnel> futureTunnel : futureTunnels) {
+                        ObservableTunnel tunnel = null;
                         try {
                             tunnel = futureTunnel.getNow(null);
                         } catch (final Exception e) {
@@ -250,7 +250,7 @@ public class TunnelListFragment extends BaseFragment {
     }
 
     @Override
-    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel, @Nullable final ObservableTunnel newTunnel) {
         if (binding == null)
             return;
         Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
@@ -281,7 +281,7 @@ public class TunnelListFragment extends BaseFragment {
         showSnackbar(message);
     }
 
-    private void onTunnelImportFinished(final List<Tunnel> tunnels, final Collection<Throwable> throwables) {
+    private void onTunnelImportFinished(final List<ObservableTunnel> tunnels, final Collection<Throwable> throwables) {
         String message = null;
 
         for (final Throwable throwable : throwables) {
@@ -315,7 +315,7 @@ public class TunnelListFragment extends BaseFragment {
 
         binding.setFragment(this);
         Application.getTunnelManager().getTunnels().thenAccept(binding::setTunnels);
-        binding.setRowConfigurationHandler((ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, Tunnel>) (binding, tunnel, position) -> {
+        binding.setRowConfigurationHandler((ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel>) (binding, tunnel, position) -> {
             binding.setFragment(this);
             binding.getRoot().setOnClickListener(clicked -> {
                 if (actionMode == null) {
@@ -336,7 +336,7 @@ public class TunnelListFragment extends BaseFragment {
         });
     }
 
-    private MultiselectableRelativeLayout viewForTunnel(final Tunnel tunnel, final List tunnels) {
+    private MultiselectableRelativeLayout viewForTunnel(final ObservableTunnel tunnel, final List tunnels) {
         return (MultiselectableRelativeLayout) binding.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel)).itemView;
     }
 
@@ -355,12 +355,12 @@ public class TunnelListFragment extends BaseFragment {
                 case R.id.menu_action_delete:
                     final Iterable<Integer> copyCheckedItems = new HashSet<>(checkedItems);
                     Application.getTunnelManager().getTunnels().thenAccept(tunnels -> {
-                        final Collection<Tunnel> tunnelsToDelete = new ArrayList<>();
+                        final Collection<ObservableTunnel> tunnelsToDelete = new ArrayList<>();
                         for (final Integer position : copyCheckedItems)
                             tunnelsToDelete.add(tunnels.get(position));
 
                         final CompletableFuture[] futures = StreamSupport.stream(tunnelsToDelete)
-                                .map(Tunnel::delete)
+                                .map(ObservableTunnel::delete)
                                 .toArray(CompletableFuture[]::new);
                         CompletableFuture.allOf(futures)
                                 .thenApply(x -> futures.length)

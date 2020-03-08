@@ -5,6 +5,7 @@
 
 package com.wireguard.android;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,12 +20,14 @@ import androidx.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.configStore.FileConfigStore;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.AsyncWorker;
+import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ModuleLoader;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
@@ -89,8 +92,16 @@ public class Application extends android.app.Application {
                     } catch (final Exception ignored) {
                     }
                 }
-                if (backend == null)
-                    backend = new GoBackend(app.getApplicationContext());
+                if (backend == null) {
+                    final Context context = app.getApplicationContext();
+                    final Intent configureIntent = new Intent(context, MainActivity.class);
+                    configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    final PendingIntent pendingConfigureIntent = PendingIntent.getActivity(context, 0, configureIntent, 0);
+                    backend = new GoBackend(context, pendingConfigureIntent);
+                    GoBackend.setAlwaysOnCallback(() -> {
+                        get().tunnelManager.restoreState(true).whenComplete(ExceptionLoggers.D);
+                    });
+                }
                 app.backend = backend;
             }
             return app.backend;

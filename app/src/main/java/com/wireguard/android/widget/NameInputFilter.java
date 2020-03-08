@@ -10,7 +10,7 @@ import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.backend.Tunnel;
 
 /**
  * InputFilter for entering WireGuard configuration names (Linux interface names).

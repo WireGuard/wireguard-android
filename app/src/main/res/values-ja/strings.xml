@@ -98,7 +98,6 @@
     <string name="module_installer_working">ダウンロードしてインストールしています…</string>
     <string name="module_installer_error">失敗しました. 再度実行してみてください</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">同時に実行できるユーザースペーストンネルは1つだけです</string>
     <string name="name">名前</string>
     <string name="no_config_error">未設定のままトンネルを起動しようとしています</string>
     <string name="no_configs_error">設定が見つかりません</string>

@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.wireguard.android.model.Tunnel" />
+        <import type="com.wireguard.android.model.ObservableTunnel" />
 
-        <import type="com.wireguard.android.model.Tunnel.State" />
+        <import type="com.wireguard.android.backend.Tunnel.State" />
 
         <variable
             name="collection"
-            type="com.wireguard.android.util.ObservableKeyedList&lt;String, Tunnel&gt;" />
+            type="com.wireguard.android.util.ObservableKeyedList&lt;String, ObservableTunnel&gt;" />
 
         <variable
             name="key"
@@ -19,7 +19,7 @@
 
         <variable
             name="item"
-            type="com.wireguard.android.model.Tunnel" />
+            type="com.wireguard.android.model.ObservableTunnel" />
 
         <variable
             name="fragment"

@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.Backend.TunnelStateChangeNotificationReceiver;
 import com.wireguard.android.configStore.ConfigStore;
-import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.backend.Tunnel;
+import com.wireguard.android.backend.Tunnel.State;
+import com.wireguard.android.backend.Statistics;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.android.util.ObservableSortedKeyedList;
@@ -38,42 +40,49 @@ import java9.util.stream.StreamSupport;
  * Maintains and mediates changes to the set of available WireGuard tunnels,
  */
 
-public final class TunnelManager extends BaseObservable {
+public final class TunnelManager extends BaseObservable implements TunnelStateChangeNotificationReceiver {
     private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());
     private static final String KEY_LAST_USED_TUNNEL = "last_used_tunnel";
     private static final String KEY_RESTORE_ON_BOOT = "restore_on_boot";
     private static final String KEY_RUNNING_TUNNELS = "enabled_configs";
 
-    private final CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> completableTunnels = new CompletableFuture<>();
+    private final CompletableFuture<ObservableSortedKeyedList<String, ObservableTunnel>> completableTunnels = new CompletableFuture<>();
     private final ConfigStore configStore;
     private final Context context = Application.get();
     private final ArrayList<CompletableFuture<Void>> delayedLoadRestoreTunnels = new ArrayList<>();
-    private final ObservableSortedKeyedList<String, Tunnel> tunnels = new ObservableSortedKeyedArrayList<>(COMPARATOR);
+    private final ObservableSortedKeyedList<String, ObservableTunnel> tunnels = new ObservableSortedKeyedArrayList<>(COMPARATOR);
     private boolean haveLoaded;
-    @Nullable private Tunnel lastUsedTunnel;
+    @Nullable private ObservableTunnel lastUsedTunnel;
 
     public TunnelManager(final ConfigStore configStore) {
         this.configStore = configStore;
+        Application.getBackendAsync().thenAccept(backend -> backend.registerStateChangeNotification(this));
     }
 
-    static CompletionStage<State> getTunnelState(final Tunnel tunnel) {
+    @Override
+    protected void finalize() throws Throwable {
+        Application.getBackendAsync().thenAccept(backend -> backend.unregisterStateChangeNotification(this));
+        super.finalize();
+    }
+
+    static CompletionStage<State> getTunnelState(final ObservableTunnel tunnel) {
         return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getState(tunnel))
                 .thenApply(tunnel::onStateChanged);
     }
 
-    static CompletionStage<Statistics> getTunnelStatistics(final Tunnel tunnel) {
+    static CompletionStage<Statistics> getTunnelStatistics(final ObservableTunnel tunnel) {
         return Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getStatistics(tunnel))
                 .thenApply(tunnel::onStatisticsChanged);
     }
 
-    private Tunnel addToList(final String name, @Nullable final Config config, final State state) {
-        final Tunnel tunnel = new Tunnel(this, name, config, state);
+    private ObservableTunnel addToList(final String name, @Nullable final Config config, final State state) {
+        final ObservableTunnel tunnel = new ObservableTunnel(this, name, config, state);
         tunnels.add(tunnel);
         return tunnel;
     }
 
-    public CompletionStage<Tunnel> create(final String name, @Nullable final Config config) {
+    public CompletionStage<ObservableTunnel> create(final String name, @Nullable final Config config) {
         if (Tunnel.isNameInvalid(name))
             return CompletableFuture.failedFuture(new IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name)));
         if (tunnels.containsKey(name)) {
@@ -84,7 +93,7 @@ public final class TunnelManager extends BaseObservable {
                 .thenApply(savedConfig -> addToList(name, savedConfig, State.DOWN));
     }
 
-    CompletionStage<Void> delete(final Tunnel tunnel) {
+    CompletionStage<Void> delete(final ObservableTunnel tunnel) {
         final State originalState = tunnel.getState();
         final boolean wasLastUsed = tunnel == lastUsedTunnel;
         // Make sure nothing touches the tunnel.
@@ -93,12 +102,12 @@ public final class TunnelManager extends BaseObservable {
         tunnels.remove(tunnel);
         return Application.getAsyncWorker().runAsync(() -> {
             if (originalState == State.UP)
-                Application.getBackend().setState(tunnel, State.DOWN);
+                Application.getBackend().setState(tunnel, State.DOWN, null);
             try {
                 configStore.delete(tunnel.getName());
             } catch (final Exception e) {
                 if (originalState == State.UP)
-                    Application.getBackend().setState(tunnel, State.UP);
+                    Application.getBackend().setState(tunnel, State.UP, tunnel.getConfig());
                 // Re-throw the exception to fail the completion.
                 throw e;
             }
@@ -114,22 +123,22 @@ public final class TunnelManager extends BaseObservable {
 
     @Bindable
     @Nullable
-    public Tunnel getLastUsedTunnel() {
+    public ObservableTunnel getLastUsedTunnel() {
         return lastUsedTunnel;
     }
 
-    CompletionStage<Config> getTunnelConfig(final Tunnel tunnel) {
+    CompletionStage<Config> getTunnelConfig(final ObservableTunnel tunnel) {
         return Application.getAsyncWorker().supplyAsync(() -> configStore.load(tunnel.getName()))
                 .thenApply(tunnel::onConfigChanged);
     }
 
-    public CompletableFuture<ObservableSortedKeyedList<String, Tunnel>> getTunnels() {
+    public CompletableFuture<ObservableSortedKeyedList<String, ObservableTunnel>> getTunnels() {
         return completableTunnels;
     }
 
     public void onCreate() {
         Application.getAsyncWorker().supplyAsync(configStore::enumerate)
-                .thenAcceptBoth(Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().enumerate()), this::onTunnelsLoaded)
+                .thenAcceptBoth(Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getRunningTunnelNames()), this::onTunnelsLoaded)
                 .whenComplete(ExceptionLoggers.E);
     }
 
@@ -159,9 +168,9 @@ public final class TunnelManager extends BaseObservable {
     }
 
     public void refreshTunnelStates() {
-        Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().enumerate())
+        Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getRunningTunnelNames())
                 .thenAccept(running -> {
-                    for (final Tunnel tunnel : tunnels)
+                    for (final ObservableTunnel tunnel : tunnels)
                         tunnel.onStateChanged(running.contains(tunnel.getName()) ? State.UP : State.DOWN);
                 })
                 .whenComplete(ExceptionLoggers.E);
@@ -189,12 +198,12 @@ public final class TunnelManager extends BaseObservable {
     public void saveState() {
         final Set<String> runningTunnels = StreamSupport.stream(tunnels)
                 .filter(tunnel -> tunnel.getState() == State.UP)
-                .map(Tunnel::getName)
+                .map(ObservableTunnel::getName)
                 .collect(Collectors.toUnmodifiableSet());
         Application.getSharedPreferences().edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).apply();
     }
 
-    private void setLastUsedTunnel(@Nullable final Tunnel tunnel) {
+    private void setLastUsedTunnel(@Nullable final ObservableTunnel tunnel) {
         if (tunnel == lastUsedTunnel)
             return;
         lastUsedTunnel = tunnel;
@@ -205,14 +214,14 @@ public final class TunnelManager extends BaseObservable {
             Application.getSharedPreferences().edit().remove(KEY_LAST_USED_TUNNEL).apply();
     }
 
-    CompletionStage<Config> setTunnelConfig(final Tunnel tunnel, final Config config) {
+    CompletionStage<Config> setTunnelConfig(final ObservableTunnel tunnel, final Config config) {
         return Application.getAsyncWorker().supplyAsync(() -> {
-            final Config appliedConfig = Application.getBackend().applyConfig(tunnel, config);
-            return configStore.save(tunnel.getName(), appliedConfig);
+            Application.getBackend().setState(tunnel, tunnel.getState(), config);
+            return configStore.save(tunnel.getName(), config);
         }).thenApply(tunnel::onConfigChanged);
     }
 
-    CompletionStage<String> setTunnelName(final Tunnel tunnel, final String name) {
+    CompletionStage<String> setTunnelName(final ObservableTunnel tunnel, final String name) {
         if (Tunnel.isNameInvalid(name))
             return CompletableFuture.failedFuture(new IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name)));
         if (tunnels.containsKey(name)) {
@@ -227,11 +236,11 @@ public final class TunnelManager extends BaseObservable {
         tunnels.remove(tunnel);
         return Application.getAsyncWorker().supplyAsync(() -> {
             if (originalState == State.UP)
-                Application.getBackend().setState(tunnel, State.DOWN);
+                Application.getBackend().setState(tunnel, State.DOWN, null);
             configStore.rename(tunnel.getName(), name);
             final String newName = tunnel.onNameChanged(name);
             if (originalState == State.UP)
-                Application.getBackend().setState(tunnel, State.UP);
+                Application.getBackend().setState(tunnel, State.UP, tunnel.getConfig());
             return newName;
         }).whenComplete((newName, e) -> {
             // On failure, we don't know what state the tunnel might be in. Fix that.
@@ -244,10 +253,10 @@ public final class TunnelManager extends BaseObservable {
         });
     }
 
-    CompletionStage<State> setTunnelState(final Tunnel tunnel, final State state) {
+    CompletionStage<State> setTunnelState(final ObservableTunnel tunnel, final State state) {
         // Ensure the configuration is loaded before trying to use it.
-        return tunnel.getConfigAsync().thenCompose(x ->
-                Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().setState(tunnel, state))
+        return tunnel.getConfigAsync().thenCompose(config ->
+                Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().setState(tunnel, state, config))
         ).whenComplete((newState, e) -> {
             // Ensure onStateChanged is always called (failure or not), and with the correct state.
             tunnel.onStateChanged(e == null ? newState : tunnel.getState());
@@ -255,6 +264,11 @@ public final class TunnelManager extends BaseObservable {
                 setLastUsedTunnel(tunnel);
             saveState();
         });
+    }
+
+    @Override
+    public void tunnelStateChange(final Tunnel tunnel, final State state) {
+        ((ObservableTunnel)tunnel).onStateChanged(state);
     }
 
     public static final class IntentReceiver extends BroadcastReceiver {
@@ -290,7 +304,7 @@ public final class TunnelManager extends BaseObservable {
             if (tunnelName == null)
                 return;
             manager.getTunnels().thenAccept(tunnels -> {
-                final Tunnel tunnel = tunnels.get(tunnelName);
+                final ObservableTunnel tunnel = tunnels.get(tunnelName);
                 if (tunnel == null)
                     return;
                 manager.setTunnelState(tunnel, state);

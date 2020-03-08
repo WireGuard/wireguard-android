@@ -21,8 +21,8 @@ import android.util.Log;
 
 import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.activity.TunnelToggleActivity;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.backend.Tunnel.State;
+import com.wireguard.android.model.ObservableTunnel;
 import com.wireguard.android.widget.SlashDrawable;
 
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class QuickTileService extends TileService {
     private final OnTunnelChangedCallback onTunnelChangedCallback = new OnTunnelChangedCallback();
     @Nullable private Icon iconOff;
     @Nullable private Icon iconOn;
-    @Nullable private Tunnel tunnel;
+    @Nullable private ObservableTunnel tunnel;
 
     /* This works around an annoying unsolved frameworks bug some people are hitting. */
     @Override
@@ -121,7 +121,7 @@ public class QuickTileService extends TileService {
 
     private void updateTile() {
         // Update the tunnel.
-        final Tunnel newTunnel = Application.getTunnelManager().getLastUsedTunnel();
+        final ObservableTunnel newTunnel = Application.getTunnelManager().getLastUsedTunnel();
         if (newTunnel != tunnel) {
             if (tunnel != null)
                 tunnel.removeOnPropertyChangedCallback(onStateChangedCallback);
@@ -135,7 +135,7 @@ public class QuickTileService extends TileService {
         final Tile tile = getQsTile();
         if (tunnel != null) {
             label = tunnel.getName();
-            state = tunnel.getState() == Tunnel.State.UP ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
+            state = tunnel.getState() == State.UP ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
         } else {
             label = getString(R.string.app_name);
             state = Tile.STATE_INACTIVE;

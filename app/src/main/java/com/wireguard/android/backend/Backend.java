@@ -5,12 +5,12 @@
 
 package com.wireguard.android.backend;
 
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.Tunnel.Statistics;
 import com.wireguard.config.Config;
 
+import java.util.Collection;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 /**
  * Interface for implementations of the WireGuard secure network tunnel.
@@ -18,30 +18,19 @@ import java.util.Set;
 
 public interface Backend {
     /**
-     * Update the volatile configuration of a running tunnel and return the resulting configuration.
-     * If the tunnel is not up, return the configuration that would result (if known), or else
-     * simply return the given configuration.
-     *
-     * @param tunnel The tunnel to apply the configuration to.
-     * @param config The new configuration for this tunnel.
-     * @return The updated configuration of the tunnel.
-     */
-    Config applyConfig(Tunnel tunnel, Config config) throws Exception;
-
-    /**
-     * Enumerate the names of currently-running tunnels.
+     * Enumerate names of currently-running tunnels.
      *
      * @return The set of running tunnel names.
      */
-    Set<String> enumerate();
+    Set<String> getRunningTunnelNames();
 
     /**
-     * Get the actual state of a tunnel.
+     * Get the state of a tunnel.
      *
      * @param tunnel The tunnel to examine the state of.
      * @return The state of the tunnel.
      */
-    State getState(Tunnel tunnel) throws Exception;
+    Tunnel.State getState(Tunnel tunnel) throws Exception;
 
     /**
      * Get statistics about traffic and errors on this tunnel. If the tunnel is not running, the
@@ -68,12 +57,32 @@ public interface Backend {
     String getVersion() throws Exception;
 
     /**
-     * Set the state of a tunnel.
+     * Set the state of a tunnel, updating it's configuration. If the tunnel is already up, config
+     * may update the running configuration; config may be null when setting the tunnel down.
      *
      * @param tunnel The tunnel to control the state of.
      * @param state  The new state for this tunnel. Must be {@code UP}, {@code DOWN}, or
      *               {@code TOGGLE}.
+     * @param config The configuration for this tunnel, may be null if state is {@code DOWN}.
      * @return The updated state of the tunnel.
      */
-    State setState(Tunnel tunnel, State state) throws Exception;
+    Tunnel.State setState(Tunnel tunnel, Tunnel.State state, @Nullable Config config) throws Exception;
+
+    interface TunnelStateChangeNotificationReceiver {
+        void tunnelStateChange(Tunnel tunnel, Tunnel.State state);
+    }
+
+    /**
+     * Register a state change notification callback.
+     *
+     * @param receiver The receiver object to receive the notification.
+     */
+    void registerStateChangeNotification(TunnelStateChangeNotificationReceiver receiver);
+
+    /**
+     * Unregister a state change notification callback.
+     *
+     * @param receiver The receiver object to no longer receive the notification.
+     */
+    void unregisterStateChangeNotification(TunnelStateChangeNotificationReceiver receiver);
 }
