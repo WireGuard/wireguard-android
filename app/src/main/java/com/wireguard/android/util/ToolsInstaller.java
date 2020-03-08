@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
-import com.wireguard.android.R;
 import com.wireguard.android.util.RootShell.RootShellException;
 
 import java.io.File;
@@ -101,8 +100,7 @@ public final class ToolsInstaller {
                 }
             }
             if (!areToolsAvailable)
-                throw new FileNotFoundException(
-                        context.getString(R.string.tools_unavailable_error));
+                throw new FileNotFoundException("Required tools unavailable");
         }
     }
 
