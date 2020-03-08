@@ -10,11 +10,10 @@ import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.wireguard.android.BuildConfig;
-import com.wireguard.android.R;
+import com.wireguard.android.util.RootShell.RootShellException.Reason;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -30,8 +29,6 @@ public class RootShell {
     private static final String SU = "su";
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
 
-    private final Context context;
-    private final String deviceNotRootedMessage;
     private final File localBinaryDir;
     private final File localTemporaryDir;
     private final Object lock = new Object();
@@ -42,12 +39,10 @@ public class RootShell {
     @Nullable private BufferedReader stdout;
 
     public RootShell(final Context context) {
-        deviceNotRootedMessage = context.getString(R.string.error_root);
         localBinaryDir = new File(context.getCodeCacheDir(), "bin");
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
         preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
                 BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir);
-        this.context = context;
     }
 
     private static boolean isExecutableInPath(final String name) {
@@ -83,7 +78,7 @@ public class RootShell {
      * @return The exit value of the command.
      */
     public int run(@Nullable final Collection<String> output, final String command)
-            throws IOException, NoRootException {
+            throws IOException, RootShellException {
         synchronized (lock) {
             /* Start inside synchronized block to prevent a concurrent call to stop(). */
             start();
@@ -122,24 +117,24 @@ public class RootShell {
                 }
             }
             if (markersSeen != 4)
-                throw new IOException(context.getString(R.string.shell_marker_count_error, markersSeen));
+                throw new RootShellException(Reason.SHELL_MARKER_COUNT_ERROR, markersSeen);
             if (errnoStdout != errnoStderr)
-                throw new IOException(context.getString(R.string.shell_exit_status_read_error));
+                throw new RootShellException(Reason.SHELL_EXIT_STATUS_READ_ERROR);
             Log.v(TAG, "exit: " + errnoStdout);
             return errnoStdout;
         }
     }
 
-    public void start() throws IOException, NoRootException {
+    public void start() throws IOException, RootShellException {
         if (!isExecutableInPath(SU))
-            throw new NoRootException(deviceNotRootedMessage);
+            throw new RootShellException(Reason.NO_ROOT_ACCESS);
         synchronized (lock) {
             if (isRunning())
                 return;
             if (!localBinaryDir.isDirectory() && !localBinaryDir.mkdirs())
-                throw new FileNotFoundException(context.getString(R.string.create_bin_dir_error));
+                throw new RootShellException(Reason.CREATE_BIN_DIR_ERROR);
             if (!localTemporaryDir.isDirectory() && !localTemporaryDir.mkdirs())
-                throw new FileNotFoundException(context.getString(R.string.create_temp_dir_error));
+                throw new RootShellException(Reason.CREATE_TEMP_DIR_ERROR);
             try {
                 final ProcessBuilder builder = new ProcessBuilder().command(SU);
                 builder.environment().put("LC_ALL", "C");
@@ -147,7 +142,9 @@ public class RootShell {
                     process = builder.start();
                 } catch (final IOException e) {
                     // A failure at this stage means the device isn't rooted.
-                    throw new NoRootException(deviceNotRootedMessage, e);
+                    final RootShellException rse = new RootShellException(Reason.NO_ROOT_ACCESS);
+                    rse.initCause(e);
+                    throw rse;
                 }
                 stdin = new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8);
                 stdout = new BufferedReader(new InputStreamReader(process.getInputStream(),
@@ -160,18 +157,18 @@ public class RootShell {
                 final String uid = stdout.readLine();
                 if (!"0".equals(uid)) {
                     Log.w(TAG, "Root check did not return correct UID: " + uid);
-                    throw new NoRootException(deviceNotRootedMessage);
+                    throw new RootShellException(Reason.NO_ROOT_ACCESS);
                 }
                 if (!isRunning()) {
                     String line;
                     while ((line = stderr.readLine()) != null) {
                         Log.w(TAG, "Root check returned an error: " + line);
                         if (line.contains("Permission denied"))
-                            throw new NoRootException(deviceNotRootedMessage);
+                            throw new RootShellException(Reason.NO_ROOT_ACCESS);
                     }
-                    throw new IOException(context.getString(R.string.shell_start_error, process.exitValue()));
+                    throw new RootShellException(Reason.SHELL_START_ERROR, process.exitValue());
                 }
-            } catch (final IOException | NoRootException e) {
+            } catch (final IOException | RootShellException e) {
                 stop();
                 throw e;
             }
@@ -187,13 +184,29 @@ public class RootShell {
         }
     }
 
-    public static class NoRootException extends Exception {
-        public NoRootException(final String message, final Throwable cause) {
-            super(message, cause);
+    public static class RootShellException extends Exception {
+        public enum Reason {
+            NO_ROOT_ACCESS,
+            SHELL_MARKER_COUNT_ERROR,
+            SHELL_EXIT_STATUS_READ_ERROR,
+            SHELL_START_ERROR,
+            CREATE_BIN_DIR_ERROR,
+            CREATE_TEMP_DIR_ERROR
         }
-
-        public NoRootException(final String message) {
-            super(message);
+        private final Reason reason;
+        private final Object[] format;
+        public RootShellException(final Reason reason, final Object ...format) {
+            this.reason = reason;
+            this.format = format;
+        }
+        public boolean isIORelated() {
+            return reason != Reason.NO_ROOT_ACCESS;
+        }
+        public Reason getReason() {
+            return reason;
+        }
+        public Object[] getFormat() {
+            return format;
         }
     }
 }
