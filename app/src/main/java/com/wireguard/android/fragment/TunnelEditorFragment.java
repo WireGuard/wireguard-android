@@ -61,7 +61,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         if (throwable == null) {
             message = getString(R.string.config_save_success, savedTunnel.getName());
             Log.d(TAG, message);
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
             final String error = ErrorMessages.get(throwable);
@@ -207,7 +207,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
             tunnel = newTunnel;
             message = getString(R.string.tunnel_create_success, tunnel.getName());
             Log.d(TAG, message);
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
             onFinished();
         } else {
             final String error = ErrorMessages.get(throwable);
