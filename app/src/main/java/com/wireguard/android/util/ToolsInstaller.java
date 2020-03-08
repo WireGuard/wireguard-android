@@ -13,7 +13,7 @@ import android.util.Log;
 import com.wireguard.android.Application;
 import com.wireguard.android.BuildConfig;
 import com.wireguard.android.R;
-import com.wireguard.android.util.RootShell.NoRootException;
+import com.wireguard.android.util.RootShell.RootShellException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,7 +63,7 @@ public final class ToolsInstaller {
         return null;
     }
 
-    public int areInstalled() throws NoRootException {
+    public int areInstalled() throws RootShellException {
         if (INSTALL_DIR == null)
             return ERROR;
         final StringBuilder script = new StringBuilder();
@@ -81,6 +81,10 @@ public final class ToolsInstaller {
                 return willInstallAsMagiskModule() ? NO | MAGISK : NO | SYSTEM;
         } catch (final IOException ignored) {
             return ERROR;
+        } catch (final RootShellException e) {
+            if (e.isIORelated())
+                return ERROR;
+            throw e;
         }
     }
 
@@ -102,11 +106,11 @@ public final class ToolsInstaller {
         }
     }
 
-    public int install() throws NoRootException, IOException {
+    public int install() throws RootShellException, IOException {
         return willInstallAsMagiskModule() ? installMagisk() : installSystem();
     }
 
-    private int installMagisk() throws NoRootException, IOException {
+    private int installMagisk() throws RootShellException, IOException {
         extract();
         final StringBuilder script = new StringBuilder("set -ex; ");
 
@@ -125,10 +129,14 @@ public final class ToolsInstaller {
             return Application.getRootShell().run(null, script.toString()) == 0 ? YES | MAGISK : ERROR;
         } catch (final IOException ignored) {
             return ERROR;
+        } catch (final RootShellException e) {
+            if (e.isIORelated())
+                return ERROR;
+            throw e;
         }
     }
 
-    private int installSystem() throws NoRootException, IOException {
+    private int installSystem() throws RootShellException, IOException {
         if (INSTALL_DIR == null)
             return OsConstants.ENOENT;
         extract();
@@ -143,6 +151,10 @@ public final class ToolsInstaller {
             return Application.getRootShell().run(null, script.toString()) == 0 ? YES | SYSTEM : ERROR;
         } catch (final IOException ignored) {
             return ERROR;
+        } catch (final RootShellException e) {
+            if (e.isIORelated())
+                return ERROR;
+            throw e;
         }
     }
 

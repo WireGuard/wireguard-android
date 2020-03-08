@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.BackendException;
+import com.wireguard.android.util.RootShell.RootShellException;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.BadConfigException.Location;
 import com.wireguard.config.InetEndpoint;
@@ -48,6 +49,14 @@ public final class ErrorMessages {
             BackendException.Reason.UNABLE_TO_START_VPN, R.string.vpn_start_error,
             BackendException.Reason.TUN_CREATION_ERROR, R.string.tun_create_error,
             BackendException.Reason.GO_ACTIVATION_ERROR_CODE, R.string.tunnel_on_error
+    ));
+    private static final Map<RootShellException.Reason, Integer> RSE_REASON_MAP = new EnumMap<>(Maps.of(
+            RootShellException.Reason.NO_ROOT_ACCESS, R.string.error_root,
+            RootShellException.Reason.SHELL_MARKER_COUNT_ERROR, R.string.shell_marker_count_error,
+            RootShellException.Reason.SHELL_EXIT_STATUS_READ_ERROR, R.string.shell_exit_status_read_error,
+            RootShellException.Reason.SHELL_START_ERROR, R.string.shell_start_error,
+            RootShellException.Reason.CREATE_BIN_DIR_ERROR, R.string.create_bin_dir_error,
+            RootShellException.Reason.CREATE_TEMP_DIR_ERROR, R.string.create_temp_dir_error
     ));
     private static final Map<Format, Integer> KFE_FORMAT_MAP = new EnumMap<>(Maps.of(
             Format.BASE64, R.string.key_length_explanation_base64,
@@ -89,6 +98,9 @@ public final class ErrorMessages {
         } else if (rootCause instanceof BackendException) {
             final BackendException be = (BackendException) rootCause;
             message = resources.getString(BE_REASON_MAP.get(be.getReason()), be.getFormat());
+        } else if (rootCause instanceof RootShellException) {
+            final RootShellException rse = (RootShellException) rootCause;
+            message = resources.getString(RSE_REASON_MAP.get(rse.getReason()), rse.getFormat());
         } else if (rootCause.getMessage() != null) {
             message = rootCause.getMessage();
         } else {
@@ -135,7 +147,8 @@ public final class ErrorMessages {
     private static Throwable rootCause(final Throwable throwable) {
         Throwable cause = throwable;
         while (cause.getCause() != null) {
-            if (cause instanceof BadConfigException || cause instanceof BackendException)
+            if (cause instanceof BadConfigException || cause instanceof BackendException ||
+                    cause instanceof RootShellException)
                 break;
             final Throwable nextCause = cause.getCause();
             if (nextCause instanceof RemoteException)

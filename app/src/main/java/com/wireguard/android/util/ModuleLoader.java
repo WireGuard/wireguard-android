@@ -10,7 +10,7 @@ import android.system.OsConstants;
 import android.util.Base64;
 
 import com.wireguard.android.Application;
-import com.wireguard.android.util.RootShell.NoRootException;
+import com.wireguard.android.util.RootShell.RootShellException;
 
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -55,7 +55,7 @@ public class ModuleLoader {
         return moduleDir.exists() && moduleDir.isDirectory();
     }
 
-    public void loadModule() throws IOException, NoRootException {
+    public void loadModule() throws IOException, RootShellException {
         Application.getRootShell().run(null, String.format("insmod \"%s/wireguard-$(sha256sum /proc/version|cut -d ' ' -f 1).ko\"", moduleDir.getAbsolutePath()));
     }
 
@@ -122,7 +122,7 @@ public class ModuleLoader {
         return hashes;
     }
 
-    public Integer download() throws IOException, NoRootException, NoSuchAlgorithmException {
+    public Integer download() throws IOException, RootShellException, NoSuchAlgorithmException {
         final List<String> output = new ArrayList<>();
         Application.getRootShell().run(output, "sha256sum /proc/version|cut -d ' ' -f 1");
         if (output.size() != 1 || output.get(0).length() != 64)
