@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelDetailPeerBinding;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.model.ObservableTunnel;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.crypto.Key;
 
@@ -85,7 +85,7 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel, @Nullable final ObservableTunnel newTunnel) {
         if (binding == null)
             return;
         binding.setTunnel(newTunnel);
@@ -123,7 +123,7 @@ public class TunnelDetailFragment extends BaseFragment {
     private void updateStats() {
         if (binding == null || !isResumed())
             return;
-        final Tunnel tunnel = binding.getTunnel();
+        final ObservableTunnel tunnel = binding.getTunnel();
         if (tunnel == null)
             return;
         final State state = tunnel.getState();

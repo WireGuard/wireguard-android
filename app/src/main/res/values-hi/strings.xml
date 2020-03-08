@@ -104,7 +104,6 @@
     <string name="module_installer_working">डाउनलोड कर रहा है और स्थापित कर रहा है…</string>
     <string name="module_installer_error">कुछ गलत हो गया। कृपया पुन: प्रयास करें</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">एक समय में केवल एक यूजरस्पेस टनल ही चल सकता है</string>
     <string name="name">नाम</string>
     <string name="no_config_error">बिना किसी कॉन्फ़िगरेशन के एक टनल को लाने की कोशिश करना</string>
     <string name="no_configs_error">कोई कॉन्फ़िगरेशन नहीं मिला</string>

@@ -23,8 +23,8 @@ import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListen
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
+import com.wireguard.android.model.ObservableTunnel;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.ErrorMessages;
 
 /**
@@ -36,11 +36,11 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
     private static final int REQUEST_CODE_VPN_PERMISSION = 23491;
     private static final String TAG = "WireGuard/" + BaseFragment.class.getSimpleName();
     @Nullable private BaseActivity activity;
-    @Nullable private Tunnel pendingTunnel;
+    @Nullable private ObservableTunnel pendingTunnel;
     @Nullable private Boolean pendingTunnelUp;
 
     @Nullable
-    protected Tunnel getSelectedTunnel() {
+    protected ObservableTunnel getSelectedTunnel() {
         return activity != null ? activity.getSelectedTunnel() : null;
     }
 
@@ -75,14 +75,14 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
         super.onDetach();
     }
 
-    protected void setSelectedTunnel(@Nullable final Tunnel tunnel) {
+    protected void setSelectedTunnel(@Nullable final ObservableTunnel tunnel) {
         if (activity != null)
             activity.setSelectedTunnel(tunnel);
     }
 
     public void setTunnelState(final View view, final boolean checked) {
         final ViewDataBinding binding = DataBindingUtil.findBinding(view);
-        final Tunnel tunnel;
+        final ObservableTunnel tunnel;
         if (binding instanceof TunnelDetailFragmentBinding)
             tunnel = ((TunnelDetailFragmentBinding) binding).getTunnel();
         else if (binding instanceof TunnelListItemBinding)
@@ -107,7 +107,7 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
         });
     }
 
-    private void setTunnelStateWithPermissionsResult(final Tunnel tunnel, final boolean checked) {
+    private void setTunnelStateWithPermissionsResult(final ObservableTunnel tunnel, final boolean checked) {
         tunnel.setState(State.of(checked)).whenComplete((state, throwable) -> {
             if (throwable == null)
                 return;

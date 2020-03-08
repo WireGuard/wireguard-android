@@ -11,7 +11,7 @@ import androidx.databinding.ObservableList;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.FragmentManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +26,7 @@ import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.android.util.ErrorMessages;
@@ -47,7 +47,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     private static final String TAG = "WireGuard/" + TunnelEditorFragment.class.getSimpleName();
 
     @Nullable private TunnelEditorFragmentBinding binding;
-    @Nullable private Tunnel tunnel;
+    @Nullable private ObservableTunnel tunnel;
 
     private void onConfigLoaded(final Config config) {
         if (binding != null) {
@@ -55,7 +55,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         }
     }
 
-    private void onConfigSaved(final Tunnel savedTunnel,
+    private void onConfigSaved(final ObservableTunnel savedTunnel,
                                @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
@@ -126,7 +126,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         getActivity().runOnUiThread(() -> {
             // TODO(smaeul): Remove this hack when fixing the Config ViewModel
             // The selected tunnel has to actually change, but we have to remember this one.
-            final Tunnel savedTunnel = tunnel;
+            final ObservableTunnel savedTunnel = tunnel;
             if (savedTunnel == getSelectedTunnel())
                 setSelectedTunnel(null);
             setSelectedTunnel(savedTunnel);
@@ -187,8 +187,8 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
     }
 
     @Override
-    public void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel,
-                                        @Nullable final Tunnel newTunnel) {
+    public void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel,
+                                        @Nullable final ObservableTunnel newTunnel) {
         tunnel = newTunnel;
         if (binding == null)
             return;
@@ -201,7 +201,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         }
     }
 
-    private void onTunnelCreated(final Tunnel newTunnel, @Nullable final Throwable throwable) {
+    private void onTunnelCreated(final ObservableTunnel newTunnel, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
             tunnel = newTunnel;
@@ -219,7 +219,7 @@ public class TunnelEditorFragment extends BaseFragment implements AppExclusionLi
         }
     }
 
-    private void onTunnelRenamed(final Tunnel renamedTunnel, final Config newConfig,
+    private void onTunnelRenamed(final ObservableTunnel renamedTunnel, final Config newConfig,
                                  @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {

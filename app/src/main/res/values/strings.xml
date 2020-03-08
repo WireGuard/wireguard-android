@@ -104,7 +104,6 @@
     <string name="module_installer_working">Downloading and installing…</string>
     <string name="module_installer_error">Something went wrong. Please try again</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">Only one userspace tunnel can run at a time</string>
     <string name="name">Name</string>
     <string name="no_config_error">Trying to bring up a tunnel with no config</string>
     <string name="no_configs_error">No configurations found</string>

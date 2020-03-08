@@ -104,7 +104,6 @@
     <string name="module_installer_working">Скачивание и установка…</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">Только один пользовательский туннель может работать одновременно</string>
     <string name="name">Имя</string>
     <string name="no_config_error">Попытка поднять туннель без конфигурации</string>
     <string name="no_configs_error">Конфигурации не найдены</string>

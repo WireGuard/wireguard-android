@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.wireguard.android.fragment.TunnelEditorFragment;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 
 /**
  * Standalone activity for creating tunnels.
@@ -28,7 +28,7 @@ public class TunnelCreatorActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel, @Nullable final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel, @Nullable final ObservableTunnel newTunnel) {
         finish();
     }
 }

@@ -98,7 +98,6 @@
     <string name="module_installer_working">正在下载安装...</string>
     <string name="module_installer_error">发生错误，请重试</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_error">用户空间内一次只能建立一个连接</string>
     <string name="name">名称</string>
     <string name="no_config_error">尝试在无配置情况下建立连接</string>
     <string name="no_configs_error">未找到配置</string>

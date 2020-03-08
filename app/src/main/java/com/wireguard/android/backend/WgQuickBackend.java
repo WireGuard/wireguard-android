@@ -11,9 +11,7 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.model.Tunnel;
-import com.wireguard.android.model.Tunnel.State;
-import com.wireguard.android.model.Tunnel.Statistics;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.config.Config;
 import com.wireguard.crypto.Key;
 
@@ -23,10 +21,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.HashMap;
 
 import java9.util.stream.Collectors;
 import java9.util.stream.Stream;
@@ -40,6 +41,8 @@ public final class WgQuickBackend implements Backend {
 
     private final File localTemporaryDir;
     private final Context context;
+    private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
+    private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
 
     public WgQuickBackend(final Context context) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
@@ -47,23 +50,7 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public Config applyConfig(final Tunnel tunnel, final Config config) throws Exception {
-        if (tunnel.getState() == State.UP) {
-            // Restart the tunnel to apply the new config.
-            setStateInternal(tunnel, tunnel.getConfig(), State.DOWN);
-            try {
-                setStateInternal(tunnel, config, State.UP);
-            } catch (final Exception e) {
-                // The new configuration didn't work, so try to go back to the old one.
-                setStateInternal(tunnel, tunnel.getConfig(), State.UP);
-                throw e;
-            }
-        }
-        return config;
-    }
-
-    @Override
-    public Set<String> enumerate() {
+    public Set<String> getRunningTunnelNames() {
         final List<String> output = new ArrayList<>();
         // Don't throw an exception here or nothing will show up in the UI.
         try {
@@ -80,7 +67,7 @@ public final class WgQuickBackend implements Backend {
 
     @Override
     public State getState(final Tunnel tunnel) {
-        return enumerate().contains(tunnel.getName()) ? State.UP : State.DOWN;
+        return getRunningTunnelNames().contains(tunnel.getName()) ? State.UP : State.DOWN;
     }
 
     @Override
@@ -120,20 +107,36 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public State setState(final Tunnel tunnel, State state) throws Exception {
+    public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
         final State originalState = getState(tunnel);
+        final Config originalConfig = runningConfigs.get(tunnel);
+
         if (state == State.TOGGLE)
             state = originalState == State.UP ? State.DOWN : State.UP;
-        if (state == originalState)
+        if ((state == State.UP && originalState == State.UP && originalConfig != null && originalConfig == config) ||
+                (state == State.DOWN && originalState == State.DOWN))
             return originalState;
-        Log.d(TAG, "Changing tunnel " + tunnel.getName() + " to state " + state);
-        Application.getToolsInstaller().ensureToolsAvailable();
-        setStateInternal(tunnel, tunnel.getConfig(), state);
-        return getState(tunnel);
+        if (state == State.UP) {
+            Application.getToolsInstaller().ensureToolsAvailable();
+            if (originalState == State.UP)
+                setStateInternal(tunnel, originalConfig == null ? config : originalConfig, State.DOWN);
+            try {
+                setStateInternal(tunnel, config, State.UP);
+            } catch(final Exception e) {
+                if (originalState == State.UP && originalConfig != null)
+                    setStateInternal(tunnel, originalConfig, State.UP);
+                throw e;
+            }
+        } else if (state == State.DOWN) {
+            setStateInternal(tunnel, originalConfig == null ? config : originalConfig, State.DOWN);
+        }
+        return state;
     }
 
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state) throws Exception {
-        Objects.requireNonNull(config, "Trying to set state with a null config");
+        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + " " + state);
+
+        Objects.requireNonNull(config, "Trying to set state up with a null config");
 
         final File tempFile = new File(localTemporaryDir, tunnel.getName() + ".conf");
         try (final FileOutputStream stream = new FileOutputStream(tempFile, false)) {
@@ -148,5 +151,23 @@ public final class WgQuickBackend implements Backend {
         tempFile.delete();
         if (result != 0)
             throw new Exception(context.getString(R.string.tunnel_config_error, result));
+
+        if (state == State.UP)
+            runningConfigs.put(tunnel, config);
+        else
+            runningConfigs.remove(tunnel);
+
+        for (final TunnelStateChangeNotificationReceiver notifier : notifiers)
+            notifier.tunnelStateChange(tunnel, state);
+    }
+
+    @Override
+    public void registerStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
+        notifiers.add(receiver);
+    }
+
+    @Override
+    public void unregisterStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
+        notifiers.remove(receiver);
     }
 }

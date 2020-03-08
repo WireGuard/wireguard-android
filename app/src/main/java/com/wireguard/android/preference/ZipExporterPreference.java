@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 import com.wireguard.android.util.DownloadsFileSaver;
 import com.wireguard.android.util.DownloadsFileSaver.DownloadsFile;
 import com.wireguard.android.util.ErrorMessages;
@@ -48,9 +48,9 @@ public class ZipExporterPreference extends Preference {
         Application.getTunnelManager().getTunnels().thenAccept(this::exportZip);
     }
 
-    private void exportZip(final List<Tunnel> tunnels) {
+    private void exportZip(final List<ObservableTunnel> tunnels) {
         final List<CompletableFuture<Config>> futureConfigs = new ArrayList<>(tunnels.size());
-        for (final Tunnel tunnel : tunnels)
+        for (final ObservableTunnel tunnel : tunnels)
             futureConfigs.add(tunnel.getConfigAsync().toCompletableFuture());
         if (futureConfigs.isEmpty()) {
             exportZipComplete(null, new IllegalArgumentException(

@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import com.wireguard.android.R;
 import com.wireguard.android.fragment.TunnelDetailFragment;
 import com.wireguard.android.fragment.TunnelEditorFragment;
-import com.wireguard.android.model.Tunnel;
+import com.wireguard.android.model.ObservableTunnel;
 
 import java.util.List;
 
@@ -117,8 +117,8 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected void onSelectedTunnelChanged(@Nullable final Tunnel oldTunnel,
-                                           @Nullable final Tunnel newTunnel) {
+    protected void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel,
+                                           @Nullable final ObservableTunnel newTunnel) {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final int backStackEntries = fragmentManager.getBackStackEntryCount();
         if (newTunnel == null) {
