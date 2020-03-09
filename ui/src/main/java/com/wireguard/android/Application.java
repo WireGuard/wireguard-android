@@ -37,14 +37,7 @@ import java9.util.concurrent.CompletableFuture;
 
 public class Application extends android.app.Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
-    public static final String USER_AGENT;
-
-    static {
-        String preferredAbi = "unknown ABI";
-        if (Build.SUPPORTED_ABIS.length > 0)
-            preferredAbi = Build.SUPPORTED_ABIS[0];
-        USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, preferredAbi, Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT);
-    }
+    public static final String USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, Build.SUPPORTED_ABIS.length > 0 ? Build.SUPPORTED_ABIS[0] : "unknown ABI", Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT);
 
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
     private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
