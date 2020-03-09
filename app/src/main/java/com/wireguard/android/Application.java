@@ -93,11 +93,7 @@ public class Application extends android.app.Application {
                     }
                 }
                 if (backend == null) {
-                    final Context context = app.getApplicationContext();
-                    final Intent configureIntent = new Intent(context, MainActivity.class);
-                    configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    final PendingIntent pendingConfigureIntent = PendingIntent.getActivity(context, 0, configureIntent, 0);
-                    backend = new GoBackend(context, pendingConfigureIntent);
+                    backend = new GoBackend(app.getApplicationContext());
                     GoBackend.setAlwaysOnCallback(() -> {
                         get().tunnelManager.restoreState(true).whenComplete(ExceptionLoggers.D);
                     });
