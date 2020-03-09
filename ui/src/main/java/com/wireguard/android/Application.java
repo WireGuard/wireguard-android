@@ -75,7 +75,7 @@ public class Application extends android.app.Application implements SharedPrefer
                     } catch (final Exception ignored) {
                     }
                 }
-                if (ModuleLoader.isModuleLoaded()) {
+                if (!app.sharedPreferences.getBoolean("disable_kernel_module", false) && ModuleLoader.isModuleLoaded()) {
                     try {
                         if (!didStartRootShell)
                             app.rootShell.start();
