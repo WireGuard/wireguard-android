@@ -247,7 +247,7 @@ public final class TunnelManager extends BaseObservable {
         });
     }
 
-    CompletionStage<State> setTunnelState(final ObservableTunnel tunnel, final State state) {
+    public CompletionStage<State> setTunnelState(final ObservableTunnel tunnel, final State state) {
         // Ensure the configuration is loaded before trying to use it.
         return tunnel.getConfigAsync().thenCompose(config ->
                 Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().setState(tunnel, state, config))

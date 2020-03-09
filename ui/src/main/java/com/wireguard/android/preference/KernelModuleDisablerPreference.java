@@ -7,14 +7,22 @@ package com.wireguard.android.preference;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.util.NonNullForAll;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import androidx.preference.Preference;
+import java9.util.concurrent.CompletableFuture;
+import java9.util.stream.Collectors;
+import java9.util.stream.StreamSupport;
 
 @NonNullForAll
 public class KernelModuleDisablerPreference extends Preference {
@@ -44,16 +52,23 @@ public class KernelModuleDisablerPreference extends Preference {
             setState(State.DISABLING);
             Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).apply();
         }
-        Application.getAsyncWorker().runAsync(() -> {
-            Thread.sleep(1000 * 5);
-            Intent i = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
-            if (i == null)
-                return;
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Application.get().startActivity(i);
-            System.exit(0);
-        });
+        final long start = SystemClock.elapsedRealtime();
+        Application.getAsyncWorker().runAsync(() -> Application.getTunnelManager().getTunnels().thenApply(observableTunnels -> {
+            final Collection<CompletableFuture<Tunnel.State>> c = StreamSupport.stream(observableTunnels.values()).map(t -> t.setState(Tunnel.State.DOWN).toCompletableFuture()).collect(Collectors.toCollection(ArrayList::new));
+            return CompletableFuture.allOf(c.toArray(new CompletableFuture[0])).thenRun(() -> {
+                try {
+                    Thread.sleep(Math.max(0, 1000 * 5 - (SystemClock.elapsedRealtime() - start)));
+                } catch (final Exception ignored) {
+                }
+                final Intent i = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
+                if (i == null)
+                    return;
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Application.get().startActivity(i);
+                System.exit(0);
+            });
+        }).join());
     }
 
     private void setState(final State state) {
