@@ -5,6 +5,8 @@
 
 package com.wireguard.android.configStore;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -27,6 +29,7 @@ import java9.util.stream.Stream;
  * Configuration store that uses a {@code wg-quick}-style file for each configured tunnel.
  */
 
+@NonNullForAll
 public final class FileConfigStore implements ConfigStore {
     private static final String TAG = "WireGuard/" + FileConfigStore.class.getSimpleName();
 

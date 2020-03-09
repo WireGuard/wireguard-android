@@ -5,12 +5,15 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
 import java.util.regex.Pattern;
 
 /**
  * Represents a WireGuard tunnel.
  */
 
+@NonNullForAll
 public interface Tunnel {
     enum State {
         DOWN,

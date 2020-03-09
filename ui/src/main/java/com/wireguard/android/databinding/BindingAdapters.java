@@ -5,6 +5,8 @@
 
 package com.wireguard.android.databinding;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableList;
@@ -35,6 +37,7 @@ import java9.util.Optional;
  */
 
 @SuppressWarnings("unused")
+@NonNullForAll
 public final class BindingAdapters {
     private BindingAdapters() {
         // Prevent instantiation.

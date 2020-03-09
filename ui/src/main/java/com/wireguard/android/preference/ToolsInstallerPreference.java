@@ -5,6 +5,8 @@
 
 package com.wireguard.android.preference;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
@@ -19,6 +21,7 @@ import com.wireguard.android.util.ToolsInstaller;
  * result as the preference summary.
  */
 
+@NonNullForAll
 public class ToolsInstallerPreference extends Preference {
     private State state = State.INITIAL;
 

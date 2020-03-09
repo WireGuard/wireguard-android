@@ -5,6 +5,8 @@
 
 package com.wireguard.android.preference;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import com.wireguard.android.backend.WgQuickBackend;
 
 import java.util.Locale;
 
+@NonNullForAll
 public class VersionPreference extends Preference {
     @Nullable private String versionSummary;
 

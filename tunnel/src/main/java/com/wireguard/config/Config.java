@@ -5,6 +5,8 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.config.BadConfigException.Location;
@@ -29,6 +31,7 @@ import java.util.Set;
  * <p>
  * Instances of this class are immutable.
  */
+@NonNullForAll
 public final class Config {
     private final Interface interfaze;
     private final List<Peer> peers;

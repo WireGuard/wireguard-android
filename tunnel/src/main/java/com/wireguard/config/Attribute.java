@@ -5,12 +5,15 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java9.util.Optional;
 
+@NonNullForAll
 public final class Attribute {
     private static final Pattern LINE_PATTERN = Pattern.compile("(\\w+)\\s*=\\s*([^\\s#][^#]*)");
     private static final Pattern LIST_SEPARATOR = Pattern.compile("\\s*,\\s*");

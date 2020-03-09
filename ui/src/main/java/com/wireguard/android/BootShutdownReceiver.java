@@ -5,6 +5,8 @@
 
 package com.wireguard.android;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
 
+@NonNullForAll
 public class BootShutdownReceiver extends BroadcastReceiver {
     private static final String TAG = "WireGuard/" + BootShutdownReceiver.class.getSimpleName();
 

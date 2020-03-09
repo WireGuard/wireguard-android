@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
@@ -15,6 +17,7 @@ import com.wireguard.android.model.ObservableTunnel;
  * Standalone activity for creating tunnels.
  */
 
+@NonNullForAll
 public class TunnelCreatorActivity extends BaseActivity {
     @Override
     @SuppressWarnings("UnnecessaryFullyQualifiedName")

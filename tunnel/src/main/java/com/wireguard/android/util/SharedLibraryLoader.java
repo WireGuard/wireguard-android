@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -19,6 +21,7 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@NonNullForAll
 public final class SharedLibraryLoader {
     private static final String TAG = "WireGuard/" + SharedLibraryLoader.class.getSimpleName();
 

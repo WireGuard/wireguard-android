@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+@NonNullForAll
 public class ConfigNamingDialogFragment extends DialogFragment {
     private static final String KEY_CONFIG_TEXT = "config_text";
 

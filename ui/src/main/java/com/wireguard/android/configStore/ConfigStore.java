@@ -5,6 +5,8 @@
 
 package com.wireguard.android.configStore;
 
+import com.wireguard.util.NonNullForAll;
+
 import com.wireguard.config.Config;
 
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.Set;
  * Interface for persistent storage providers for WireGuard configurations.
  */
 
+@NonNullForAll
 public interface ConfigStore {
     /**
      * Create a persistent tunnel, which must have a unique name within the persistent storage

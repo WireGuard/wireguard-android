@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import androidx.annotation.Nullable;
 import android.system.OsConstants;
@@ -22,6 +24,7 @@ import java.util.List;
  * Helper to install WireGuard tools to the system partition.
  */
 
+@NonNullForAll
 public final class ToolsInstaller {
     public static final int ERROR = 0x0;
     public static final int MAGISK = 0x4;

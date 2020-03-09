@@ -15,4 +15,3 @@ build/
 *.iml
 *.jks
 keystore.properties
-package-info.java

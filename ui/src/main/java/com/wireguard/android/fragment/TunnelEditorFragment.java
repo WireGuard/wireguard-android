@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.app.Activity;
 import android.content.Context;
 import androidx.databinding.ObservableList;
@@ -41,6 +43,7 @@ import java.util.Objects;
  * Fragment for editing a WireGuard configuration.
  */
 
+@NonNullForAll
 public class TunnelEditorFragment extends BaseFragment implements AppExclusionListener {
     private static final String KEY_LOCAL_CONFIG = "local_config";
     private static final String KEY_ORIGINAL_NAME = "original_name";

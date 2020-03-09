@@ -5,12 +5,15 @@
 
 package com.wireguard.android.widget;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.wireguard.android.R;
 
+@NonNullForAll
 public class MultiselectableRelativeLayout extends RelativeLayout {
     private static final int[] STATE_MULTISELECTED = {R.attr.state_multiselected};
     private boolean multiselected;

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.preference;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -29,6 +31,7 @@ import java.io.InputStreamReader;
  * Preference implementing a button that asynchronously exports logs.
  */
 
+@NonNullForAll
 public class LogExporterPreference extends Preference {
     private static final String TAG = "WireGuard/" + LogExporterPreference.class.getSimpleName();
 

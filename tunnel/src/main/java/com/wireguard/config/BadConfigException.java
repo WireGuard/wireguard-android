@@ -5,10 +5,13 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.crypto.KeyFormatException;
 
+@NonNullForAll
 public class BadConfigException extends Exception {
     private final Location location;
     private final Reason reason;

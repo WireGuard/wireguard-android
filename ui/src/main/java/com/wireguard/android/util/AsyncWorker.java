@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.os.Handler;
 
 import java.util.concurrent.Executor;
@@ -16,6 +18,7 @@ import java9.util.concurrent.CompletionStage;
  * Helper class for running asynchronous tasks and ensuring they are completed on the main thread.
  */
 
+@NonNullForAll
 public class AsyncWorker {
     private final Executor executor;
     private final Handler handler;

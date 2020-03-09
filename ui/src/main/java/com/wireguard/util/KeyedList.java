@@ -5,6 +5,8 @@
 
 package com.wireguard.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import java.util.Collection;
@@ -15,6 +17,7 @@ import java.util.List;
  * {@code null} elements.
  */
 
+@NonNullForAll
 public interface KeyedList<K, E extends Keyed<? extends K>> extends List<E> {
     boolean containsAllKeys(Collection<K> keys);
 

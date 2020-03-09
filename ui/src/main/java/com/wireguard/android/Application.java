@@ -5,6 +5,8 @@
 
 package com.wireguard.android;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +37,7 @@ import java.util.Locale;
 
 import java9.util.concurrent.CompletableFuture;
 
+@NonNullForAll
 public class Application extends android.app.Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
     public static final String USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, Build.SUPPORTED_ABIS.length > 0 ? Build.SUPPORTED_ABIS[0] : "unknown ABI", Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT);

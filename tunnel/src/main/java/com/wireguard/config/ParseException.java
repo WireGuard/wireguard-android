@@ -5,10 +5,13 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 /**
  */
+@NonNullForAll
 public class ParseException extends Exception {
     private final Class<?> parsingClass;
     private final CharSequence text;

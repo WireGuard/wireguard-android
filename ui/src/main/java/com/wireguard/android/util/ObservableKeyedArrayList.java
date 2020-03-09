@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.ObservableArrayList;
 import androidx.annotation.Nullable;
 
@@ -21,6 +23,7 @@ import java.util.Objects;
  * operations, require O(n) time.
  */
 
+@NonNullForAll
 public class ObservableKeyedArrayList<K, E extends Keyed<? extends K>>
         extends ObservableArrayList<E> implements ObservableKeyedList<K, E> {
     @Override

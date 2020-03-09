@@ -5,6 +5,8 @@
 
 package com.wireguard.android.preference;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.content.Intent;
 import android.system.OsConstants;
@@ -18,6 +20,7 @@ import com.wireguard.android.util.ErrorMessages;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
+@NonNullForAll
 public class ModuleDownloaderPreference extends Preference {
     private State state = State.INITIAL;
 

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -30,6 +32,7 @@ import java.util.TimerTask;
  * Fragment that shows details about a specific tunnel.
  */
 
+@NonNullForAll
 public class TunnelDetailFragment extends BaseFragment {
     @Nullable private TunnelDetailFragmentBinding binding;
     @Nullable private Timer timer;

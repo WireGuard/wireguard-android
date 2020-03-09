@@ -5,6 +5,8 @@
 
 package com.wireguard.android;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Intent;
 import androidx.databinding.Observable;
 import androidx.databinding.Observable.OnPropertyChangedCallback;
@@ -34,6 +36,7 @@ import java.util.Objects;
  */
 
 @RequiresApi(Build.VERSION_CODES.N)
+@NonNullForAll
 public class QuickTileService extends TileService {
     private static final String TAG = "WireGuard/" + QuickTileService.class.getSimpleName();
 

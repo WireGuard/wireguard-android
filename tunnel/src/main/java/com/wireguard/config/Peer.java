@@ -5,6 +5,8 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.config.BadConfigException.Location;
@@ -28,6 +30,7 @@ import java9.util.Optional;
  * <p>
  * Instances of this class are immutable.
  */
+@NonNullForAll
 public final class Peer {
     private final Set<InetNetwork> allowedIps;
     private final Optional<InetEndpoint> endpoint;

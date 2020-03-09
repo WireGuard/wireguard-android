@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -16,6 +18,7 @@ import android.widget.TextView;
  * Standalone utilities for interacting with the system clipboard.
  */
 
+@NonNullForAll
 public final class ClipboardUtils {
     private ClipboardUtils() {
         // Prevent instantiation
