@@ -105,6 +105,8 @@ public final class ToolsInstaller {
     }
 
     public int install() throws RootShellException, IOException {
+        if (!context.getPackageName().startsWith("com.wireguard."))
+            throw new SecurityException("The tools may only be installed system-wide from the main WireGuard app.");
         return willInstallAsMagiskModule() ? installMagisk() : installSystem();
     }
 
