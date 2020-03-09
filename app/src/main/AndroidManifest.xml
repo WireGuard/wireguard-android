@@ -74,14 +74,6 @@
         </receiver>
 
         <service
-            android:name=".backend.GoBackend$VpnService"
-            android:permission="android.permission.BIND_VPN_SERVICE">
-            <intent-filter>
-                <action android:name="android.net.VpnService" />
-            </intent-filter>
-        </service>
-
-        <service
             android:name=".QuickTileService"
             android:icon="@drawable/ic_tile"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
