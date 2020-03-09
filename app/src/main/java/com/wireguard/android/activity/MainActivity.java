@@ -79,7 +79,9 @@ public class MainActivity extends BaseActivity
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.addOnBackStackChangedListener(() -> {
                 final List<Fragment> fragments = fragmentManager.getFragments();
-                fragments.get(fragments.size() - 1).requireView().dispatchApplyWindowInsets(insets);
+                for (int i = 0; i < fragments.size(); i++) {
+                    fragments.get(i).requireView().dispatchApplyWindowInsets(insets);
+                }
             });
             return insets;
         });
