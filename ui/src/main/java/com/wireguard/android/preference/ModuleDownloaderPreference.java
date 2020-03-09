@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.util.ErrorMessages;
-import com.wireguard.android.util.ModuleLoader;
-import com.wireguard.android.util.ToolsInstaller;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;

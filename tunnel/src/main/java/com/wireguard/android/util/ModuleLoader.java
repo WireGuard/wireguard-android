@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2019-2020 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
