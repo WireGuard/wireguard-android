@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+
+android {
+    buildToolsVersion '29.0.3'
+    compileSdkVersion 29
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName '1.0'
+    }
+    externalNativeBuild {
+        cmake {
+            path 'tools/CMakeLists.txt'
+        }
+    }
+}
+
+dependencies {
+    api "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
+    api "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
+    api "com.google.code.findbugs:jsr305:$jsr305Version"
+    implementation "androidx.annotation:annotation:$annotationsVersion"
+    implementation "androidx.collection:collection:$collectionVersion"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
+}
