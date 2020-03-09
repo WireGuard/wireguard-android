@@ -44,7 +44,7 @@ public class TunnelDetailFragment extends BaseFragment {
             return requireContext().getString(R.string.transfer_kibibytes, bytes / 1024.0);
         else if (bytes < 1024 * 1024 * 1024)
             return requireContext().getString(R.string.transfer_mibibytes, bytes / (1024.0 * 1024.0));
-        else if (bytes < 1024 * 1024 * 1024 * 1024)
+        else if (bytes < 1024 * 1024 * 1024 * 1024L)
             return requireContext().getString(R.string.transfer_gibibytes, bytes / (1024.0 * 1024.0 * 1024.0));
         return requireContext().getString(R.string.transfer_tibibytes, bytes / (1024.0 * 1024.0 * 1024.0) / 1024.0);
     }
