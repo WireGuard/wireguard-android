@@ -24,8 +24,8 @@ android {
 dependencies {
     api "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
     api "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
-    api "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.collection:collection:$collectionVersion"
+    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
 }

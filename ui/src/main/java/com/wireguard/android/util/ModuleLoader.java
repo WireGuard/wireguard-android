@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class ModuleLoader {
     private static final String MODULE_PUBLIC_KEY_BASE64 = "RWRmHuT9PSqtwfsLtEx+QS06BJtLgFYteL9WCNjH7yuyu5Y1DieSN7If";
