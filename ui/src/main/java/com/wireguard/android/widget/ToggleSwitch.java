@@ -6,13 +6,14 @@
 
 package com.wireguard.android.widget;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.Switch;
+
+import com.wireguard.util.NonNullForAll;
+
+import androidx.annotation.Nullable;
 
 @NonNullForAll
 public class ToggleSwitch extends Switch {

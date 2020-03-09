@@ -5,16 +5,9 @@
 
 package com.wireguard.android.activity;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View.OnApplyWindowInsetsListener;
@@ -24,8 +17,15 @@ import com.wireguard.android.R;
 import com.wireguard.android.fragment.TunnelDetailFragment;
 import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.ObservableTunnel;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the

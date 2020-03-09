@@ -5,14 +5,14 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.wireguard.util.NonNullForAll;
 
 /**
  * Standalone utilities for interacting with the system clipboard.

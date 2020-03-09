@@ -5,8 +5,6 @@
 
 package com.wireguard.android.fragment;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -16,13 +14,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.wireguard.android.Application;
@@ -44,6 +36,7 @@ import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.widget.MultiselectableRelativeLayout;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -59,6 +52,11 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.recyclerview.widget.RecyclerView;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.stream.StreamSupport;
 

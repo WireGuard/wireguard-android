@@ -5,10 +5,6 @@
 
 package com.wireguard.android.backend;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.annotation.Nullable;
-
 import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
@@ -19,6 +15,7 @@ import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
 import com.wireguard.config.Config;
 import com.wireguard.crypto.Key;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,14 +23,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.HashMap;
 
+import androidx.annotation.Nullable;
 import java9.util.stream.Collectors;
 import java9.util.stream.Stream;
 

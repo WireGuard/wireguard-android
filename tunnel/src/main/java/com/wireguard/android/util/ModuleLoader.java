@@ -5,13 +5,12 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.system.OsConstants;
 import android.util.Base64;
 
 import com.wireguard.android.util.RootShell.RootShellException;
+import com.wireguard.util.NonNullForAll;
 
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;

@@ -5,20 +5,20 @@
 
 package com.wireguard.android.databinding;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableList;
-import androidx.databinding.ViewDataBinding;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wireguard.android.BR;
+import com.wireguard.util.NonNullForAll;
 
 import java.lang.ref.WeakReference;
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableList;
+import androidx.databinding.ViewDataBinding;
 
 /**
  * Helper class for binding an ObservableList to the children of a ViewGroup.

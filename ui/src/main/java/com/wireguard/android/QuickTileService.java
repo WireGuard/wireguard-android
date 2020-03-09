@@ -5,11 +5,7 @@
 
 package com.wireguard.android;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Intent;
-import androidx.databinding.Observable;
-import androidx.databinding.Observable.OnPropertyChangedCallback;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Icon;
@@ -17,8 +13,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.wireguard.android.activity.MainActivity;
@@ -26,8 +20,14 @@ import com.wireguard.android.activity.TunnelToggleActivity;
 import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.model.ObservableTunnel;
 import com.wireguard.android.widget.SlashDrawable;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.databinding.Observable;
+import androidx.databinding.Observable.OnPropertyChangedCallback;
 
 /**
  * Service that maintains the application's custom Quick Settings tile. This service is bound by the

@@ -5,27 +5,26 @@
 
 package com.wireguard.android.preference;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.preference.Preference;
-
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.util.DownloadsFileSaver;
 import com.wireguard.android.util.DownloadsFileSaver.DownloadsFile;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 /**
  * Preference implementing a button that asynchronously exports logs.

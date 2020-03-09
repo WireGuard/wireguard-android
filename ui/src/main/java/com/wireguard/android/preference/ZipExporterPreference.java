@@ -5,17 +5,13 @@
 
 package com.wireguard.android.preference;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.model.ObservableTunnel;
@@ -24,6 +20,7 @@ import com.wireguard.android.util.DownloadsFileSaver.DownloadsFile;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.FragmentUtils;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -31,6 +28,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 import java9.util.concurrent.CompletableFuture;
 
 /**

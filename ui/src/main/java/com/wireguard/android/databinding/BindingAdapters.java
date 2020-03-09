@@ -5,16 +5,6 @@
 
 package com.wireguard.android.databinding;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.BindingAdapter;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableList;
-import androidx.databinding.ViewDataBinding;
-import androidx.databinding.adapters.ListenerUtil;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -29,7 +19,16 @@ import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener;
 import com.wireguard.config.Attribute;
 import com.wireguard.config.InetNetwork;
 import com.wireguard.util.Keyed;
+import com.wireguard.util.NonNullForAll;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableList;
+import androidx.databinding.ViewDataBinding;
+import androidx.databinding.adapters.ListenerUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import java9.util.Optional;
 
 /**

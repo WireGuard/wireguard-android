@@ -5,9 +5,8 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import com.wireguard.util.Keyed;
+import com.wireguard.util.NonNullForAll;
 import com.wireguard.util.SortedKeyedList;
 
 /**

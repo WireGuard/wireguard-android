@@ -4,13 +4,13 @@
  */
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
-import androidx.preference.Preference;
 import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.activity.SettingsActivity;
+import com.wireguard.util.NonNullForAll;
+
+import androidx.preference.Preference;
 
 @NonNullForAll
 public final class FragmentUtils {

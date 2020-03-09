@@ -5,17 +5,9 @@
 
 package com.wireguard.android.activity;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
 import android.util.SparseArray;
 import android.view.MenuItem;
 
@@ -23,10 +15,18 @@ import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.util.ModuleLoader;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 
 /**
  * Interface for changing application-global persistent settings.

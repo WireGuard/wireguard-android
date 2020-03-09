@@ -5,19 +5,19 @@
 
 package com.wireguard.android.viewmodel;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
 import com.wireguard.config.Peer;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableList;
 
 @NonNullForAll
 public class ConfigProxy implements Parcelable {

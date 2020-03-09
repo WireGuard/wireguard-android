@@ -5,8 +5,6 @@
 
 package com.wireguard.android.fragment;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,10 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
 
 import com.wireguard.android.Application;
@@ -27,11 +21,16 @@ import com.wireguard.android.model.ApplicationData;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.util.ObservableKeyedArrayList;
 import com.wireguard.android.util.ObservableKeyedList;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import java9.util.Comparators;
 import java9.util.stream.Collectors;
 import java9.util.stream.StreamSupport;

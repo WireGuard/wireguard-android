@@ -5,20 +5,20 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.util.RootShell.RootShellException;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Helper to install WireGuard tools to the system partition.

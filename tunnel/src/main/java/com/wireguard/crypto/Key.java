@@ -5,9 +5,8 @@
 
 package com.wireguard.crypto;
 
-import com.wireguard.util.NonNullForAll;
-
 import com.wireguard.crypto.KeyFormatException.Type;
+import com.wireguard.util.NonNullForAll;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;

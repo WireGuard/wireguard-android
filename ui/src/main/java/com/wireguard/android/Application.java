@@ -5,8 +5,6 @@
 
 package com.wireguard.android;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +14,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
-
-import androidx.preference.PreferenceManager;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
@@ -31,10 +25,14 @@ import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ModuleLoader;
 import com.wireguard.android.util.RootShell;
 import com.wireguard.android.util.ToolsInstaller;
+import com.wireguard.util.NonNullForAll;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 import java9.util.concurrent.CompletableFuture;
 
 @NonNullForAll

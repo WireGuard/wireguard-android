@@ -5,8 +5,6 @@
 
 package com.wireguard.android.preference;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.content.Intent;
 import android.system.OsConstants;
@@ -16,6 +14,7 @@ import android.widget.Toast;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.util.ErrorMessages;
+import com.wireguard.util.NonNullForAll;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
