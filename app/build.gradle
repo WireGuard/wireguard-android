@@ -77,7 +77,8 @@ ext {
     appcompatVersion = '1.1.0'
     cardviewVersion = '1.0.0'
     coreKtxVersion = '1.2.0'
-    coordinatorLayoutVersion = '1.1.3'
+    constraintLayoutVersion = '1.1.3'
+    coordinatorLayoutVersion = '1.1.0'
     databindingVersion = '3.6.0'
     fragmentVersion = '1.2.2'
     materialComponentsVersion = '1.1.0'
@@ -97,6 +98,8 @@ dependencies {
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.databinding:databinding-runtime:$databindingVersion"
     implementation "androidx.fragment:fragment:$fragmentVersion"
@@ -109,7 +112,6 @@ dependencies {
     implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$coordinatorLayoutVersion"
 }
 
 tasks.withType(JavaCompile) {
