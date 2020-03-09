@@ -117,10 +117,12 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
             });
 
             final Preference moduleInstaller = getPreferenceManager().findPreference("module_downloader");
+            final Preference kernelModuleDisabler = getPreferenceManager().findPreference("kernel_module_disabler");
             moduleInstaller.setVisible(false);
             if (ModuleLoader.isModuleLoaded()) {
                 screen.removePreference(moduleInstaller);
             } else {
+                screen.removePreference(kernelModuleDisabler);
                 Application.getAsyncWorker().runAsync(Application.getRootShell()::start).whenComplete((v, e) -> {
                     if (e == null)
                         moduleInstaller.setVisible(true);
