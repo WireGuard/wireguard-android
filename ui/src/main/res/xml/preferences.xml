@@ -4,7 +4,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="restore_on_boot"
-        android:summary="@string/restore_on_boot_summary"
+        android:summaryOn="@string/restore_on_boot_summary_on"
+        android:summaryOff="@string/restore_on_boot_summary_off"
         android:title="@string/restore_on_boot_title" />
     <CheckBoxPreference
         android:defaultValue="false"

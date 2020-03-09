@@ -126,7 +126,8 @@
     <string name="public_key">Public key</string>
     <string name="public_key_description">Public key</string>
     <string name="qr_code_hint">Tip: generate with `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
-    <string name="restore_on_boot_summary">Bring up previously-enabled tunnels on boot</string>
+    <string name="restore_on_boot_summary_on">Will bring up enabled tunnels at boot</string>
+    <string name="restore_on_boot_summary_off">Will not bring up enabled tunnels at boot</string>
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
     <string name="select_all">Select all</string>
