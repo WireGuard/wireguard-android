@@ -204,6 +204,16 @@ public final class Key {
         return new Key(publicKey);
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != getClass())
+            return false;
+        final Key other = (Key) obj;
+        return MessageDigest.isEqual(key, other.key);
+    }
+
     /**
      * Returns the key as an array of bytes.
      *
@@ -212,6 +222,14 @@ public final class Key {
     public byte[] getBytes() {
         // Defensively copy to ensure immutability.
         return Arrays.copyOf(key, key.length);
+    }
+
+    @Override
+    public int hashCode() {
+        int ret = 0;
+        for (int i = 0; i < key.length / 4; ++i)
+            ret ^= (key[i * 4 + 0] >> 0) + (key[i * 4 + 1] >> 8) + (key[i * 4 + 2] >> 16) + (key[i * 4 + 3] >> 24);
+        return ret;
     }
 
     /**
@@ -248,24 +266,6 @@ public final class Key {
                     + ((((key[i] & 0xf) - 10) >> 8) & ~38));
         }
         return new String(output);
-    }
-
-    @Override
-    public int hashCode() {
-        int ret = 0;
-        for (int i = 0; i < key.length / 4; ++i)
-            ret ^= (key[i * 4 + 0] >> 0) + (key[i * 4 + 1] >> 8) + (key[i * 4 + 2] >> 16) + (key[i * 4 + 3] >> 24);
-        return ret;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == this)
-            return true;
-        if (obj == null || obj.getClass() != getClass())
-            return false;
-        final Key other = (Key) obj;
-        return MessageDigest.isEqual(key, other.key);
     }
 
     /**

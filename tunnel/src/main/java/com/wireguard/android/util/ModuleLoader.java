@@ -39,15 +39,14 @@ import androidx.annotation.Nullable;
 
 @NonNullForAll
 public class ModuleLoader {
-    private static final String MODULE_PUBLIC_KEY_BASE64 = "RWRmHuT9PSqtwfsLtEx+QS06BJtLgFYteL9WCNjH7yuyu5Y1DieSN7If";
     private static final String MODULE_LIST_URL = "https://download.wireguard.com/android-module/modules.txt.sig";
-    private static final String MODULE_URL = "https://download.wireguard.com/android-module/%s";
     private static final String MODULE_NAME = "wireguard-%s.ko";
-
-    private final RootShell rootShell;
-    private final String userAgent;
+    private static final String MODULE_PUBLIC_KEY_BASE64 = "RWRmHuT9PSqtwfsLtEx+QS06BJtLgFYteL9WCNjH7yuyu5Y1DieSN7If";
+    private static final String MODULE_URL = "https://download.wireguard.com/android-module/%s";
     private final File moduleDir;
+    private final RootShell rootShell;
     private final File tmpDir;
+    private final String userAgent;
 
     public ModuleLoader(final Context context, final RootShell rootShell, final String userAgent) {
         moduleDir = new File(context.getCacheDir(), "kmod");
@@ -56,27 +55,75 @@ public class ModuleLoader {
         this.userAgent = userAgent;
     }
 
-    public boolean moduleMightExist() {
-        return moduleDir.exists() && moduleDir.isDirectory();
+    public static boolean isModuleLoaded() {
+        return new File("/sys/module/wireguard").exists();
+    }
+
+    public Integer download() throws IOException, RootShellException, NoSuchAlgorithmException {
+        final List<String> output = new ArrayList<>();
+        rootShell.run(output, "sha256sum /proc/version|cut -d ' ' -f 1");
+        if (output.size() != 1 || output.get(0).length() != 64)
+            throw new InvalidParameterException("Invalid sha256 of /proc/version");
+        final String moduleName = String.format(MODULE_NAME, output.get(0));
+        HttpURLConnection connection = (HttpURLConnection) new URL(MODULE_LIST_URL).openConnection();
+        connection.setRequestProperty("User-Agent", userAgent);
+        connection.connect();
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
+            throw new IOException("Hash list could not be found");
+        byte[] input = new byte[1024 * 1024 * 3 /* 3MiB */];
+        int len;
+        try (final InputStream inputStream = connection.getInputStream()) {
+            len = inputStream.read(input);
+        }
+        if (len <= 0)
+            throw new IOException("Hash list was empty");
+        final Map<String, Sha256Digest> modules = verifySignedHashes(new String(input, 0, len, StandardCharsets.UTF_8));
+        if (modules == null)
+            throw new InvalidParameterException("The signature did not verify or invalid hash list format");
+        if (!modules.containsKey(moduleName))
+            return OsConstants.ENOENT;
+        connection = (HttpURLConnection) new URL(String.format(MODULE_URL, moduleName)).openConnection();
+        connection.setRequestProperty("User-Agent", userAgent);
+        connection.connect();
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
+            throw new IOException("Module file could not be found, despite being on hash list");
+
+        tmpDir.mkdirs();
+        moduleDir.mkdir();
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("UNVERIFIED-", null, tmpDir);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (final InputStream inputStream = connection.getInputStream();
+                 final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+                int total = 0;
+                while ((len = inputStream.read(input)) > 0) {
+                    total += len;
+                    if (total > 1024 * 1024 * 15 /* 15 MiB */)
+                        throw new IOException("File too big");
+                    outputStream.write(input, 0, len);
+                    digest.update(input, 0, len);
+                }
+                outputStream.getFD().sync();
+            }
+            if (!Arrays.equals(digest.digest(), modules.get(moduleName).bytes))
+                throw new IOException("Incorrect file hash");
+
+            if (!tempFile.renameTo(new File(moduleDir, moduleName)))
+                throw new IOException("Unable to rename to final destination");
+        } finally {
+            if (tempFile != null)
+                tempFile.delete();
+        }
+        return OsConstants.EXIT_SUCCESS;
     }
 
     public void loadModule() throws IOException, RootShellException {
         rootShell.run(null, String.format("insmod \"%s/wireguard-$(sha256sum /proc/version|cut -d ' ' -f 1).ko\"", moduleDir.getAbsolutePath()));
     }
 
-    public static boolean isModuleLoaded() {
-        return new File("/sys/module/wireguard").exists();
-    }
-
-    private static final class Sha256Digest {
-        private byte[] bytes;
-        private Sha256Digest(final String hex) {
-            if (hex.length() != 64)
-                throw new InvalidParameterException("SHA256 hashes must be 32 bytes long");
-            bytes = new byte[32];
-            for (int i = 0; i < 32; ++i)
-                bytes[i] = (byte)Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
-        }
+    public boolean moduleMightExist() {
+        return moduleDir.exists() && moduleDir.isDirectory();
     }
 
     @Nullable
@@ -127,62 +174,15 @@ public class ModuleLoader {
         return hashes;
     }
 
-    public Integer download() throws IOException, RootShellException, NoSuchAlgorithmException {
-        final List<String> output = new ArrayList<>();
-        rootShell.run(output, "sha256sum /proc/version|cut -d ' ' -f 1");
-        if (output.size() != 1 || output.get(0).length() != 64)
-            throw new InvalidParameterException("Invalid sha256 of /proc/version");
-        final String moduleName = String.format(MODULE_NAME, output.get(0));
-        HttpURLConnection connection = (HttpURLConnection)new URL(MODULE_LIST_URL).openConnection();
-        connection.setRequestProperty("User-Agent", userAgent);
-        connection.connect();
-        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
-            throw new IOException("Hash list could not be found");
-        byte[] input = new byte[1024 * 1024 * 3 /* 3MiB */];
-        int len;
-        try (final InputStream inputStream = connection.getInputStream()) {
-            len = inputStream.read(input);
-        }
-        if (len <= 0)
-            throw new IOException("Hash list was empty");
-        final Map<String, Sha256Digest> modules = verifySignedHashes(new String(input, 0, len, StandardCharsets.UTF_8));
-        if (modules == null)
-            throw new InvalidParameterException("The signature did not verify or invalid hash list format");
-        if (!modules.containsKey(moduleName))
-            return OsConstants.ENOENT;
-        connection = (HttpURLConnection)new URL(String.format(MODULE_URL, moduleName)).openConnection();
-        connection.setRequestProperty("User-Agent", userAgent);
-        connection.connect();
-        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
-            throw new IOException("Module file could not be found, despite being on hash list");
+    private static final class Sha256Digest {
+        private byte[] bytes;
 
-        tmpDir.mkdirs();
-        moduleDir.mkdir();
-        File tempFile = null;
-        try {
-            tempFile = File.createTempFile("UNVERIFIED-", null, tmpDir);
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            try (final InputStream inputStream = connection.getInputStream();
-                 final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
-                int total = 0;
-                while ((len = inputStream.read(input)) > 0) {
-                    total += len;
-                    if (total > 1024 * 1024 * 15 /* 15 MiB */)
-                        throw new IOException("File too big");
-                    outputStream.write(input, 0, len);
-                    digest.update(input, 0, len);
-                }
-                outputStream.getFD().sync();
-            }
-            if (!Arrays.equals(digest.digest(), modules.get(moduleName).bytes))
-                throw new IOException("Incorrect file hash");
-
-            if (!tempFile.renameTo(new File(moduleDir, moduleName)))
-                throw new IOException("Unable to rename to final destination");
-        } finally {
-            if (tempFile != null)
-                tempFile.delete();
+        private Sha256Digest(final String hex) {
+            if (hex.length() != 64)
+                throw new InvalidParameterException("SHA256 hashes must be 32 bytes long");
+            bytes = new byte[32];
+            for (int i = 0; i < 32; ++i)
+                bytes[i] = (byte) Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
         }
-        return OsConstants.EXIT_SUCCESS;
     }
 }

@@ -10,6 +10,7 @@ import com.wireguard.util.NonNullForAll;
 import androidx.annotation.Nullable;
 
 /**
+ *
  */
 @NonNullForAll
 public class ParseException extends Exception {

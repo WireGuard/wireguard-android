@@ -40,9 +40,9 @@ public final class ToolsInstaller {
     private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
 
     private final Context context;
-    private final RootShell rootShell;
     private final File localBinaryDir;
     private final Object lock = new Object();
+    private final RootShell rootShell;
     @Nullable private Boolean areToolsAvailable;
     @Nullable private Boolean installAsMagiskModule;
 
@@ -107,6 +107,29 @@ public final class ToolsInstaller {
         }
     }
 
+    public boolean extract() throws IOException {
+        localBinaryDir.mkdirs();
+        final File files[] = new File[EXECUTABLES.length];
+        final File tempFiles[] = new File[EXECUTABLES.length];
+        boolean allExist = true;
+        for (int i = 0; i < files.length; ++i) {
+            files[i] = new File(localBinaryDir, EXECUTABLES[i]);
+            tempFiles[i] = new File(localBinaryDir, EXECUTABLES[i] + ".tmp");
+            allExist &= files[i].exists();
+        }
+        if (allExist)
+            return false;
+        for (int i = 0; i < files.length; ++i) {
+            if (!SharedLibraryLoader.extractLibrary(context, EXECUTABLES[i], tempFiles[i]))
+                throw new FileNotFoundException("Unable to find " + EXECUTABLES[i]);
+            if (!tempFiles[i].setExecutable(true, false))
+                throw new IOException("Unable to mark " + tempFiles[i].getAbsolutePath() + " as executable");
+            if (!tempFiles[i].renameTo(files[i]))
+                throw new IOException("Unable to rename " + tempFiles[i].getAbsolutePath() + " to " + files[i].getAbsolutePath());
+        }
+        return true;
+    }
+
     public int install() throws RootShellException, IOException {
         if (!context.getPackageName().startsWith("com.wireguard."))
             throw new SecurityException("The tools may only be installed system-wide from the main WireGuard app.");
@@ -159,29 +182,6 @@ public final class ToolsInstaller {
                 return ERROR;
             throw e;
         }
-    }
-
-    public boolean extract() throws IOException {
-        localBinaryDir.mkdirs();
-        final File files[] = new File[EXECUTABLES.length];
-        final File tempFiles[] = new File[EXECUTABLES.length];
-        boolean allExist = true;
-        for (int i = 0; i < files.length; ++i) {
-            files[i] = new File(localBinaryDir, EXECUTABLES[i]);
-            tempFiles[i] = new File(localBinaryDir, EXECUTABLES[i] + ".tmp");
-            allExist &= files[i].exists();
-        }
-        if (allExist)
-            return false;
-        for (int i = 0; i < files.length; ++i) {
-            if (!SharedLibraryLoader.extractLibrary(context, EXECUTABLES[i], tempFiles[i]))
-                throw new FileNotFoundException("Unable to find " + EXECUTABLES[i]);
-            if (!tempFiles[i].setExecutable(true, false))
-                throw new IOException("Unable to mark " + tempFiles[i].getAbsolutePath() + " as executable");
-            if (!tempFiles[i].renameTo(files[i]))
-                throw new IOException("Unable to rename " + tempFiles[i].getAbsolutePath() + " to " + files[i].getAbsolutePath());
-        }
-        return true;
     }
 
     private boolean willInstallAsMagiskModule() {

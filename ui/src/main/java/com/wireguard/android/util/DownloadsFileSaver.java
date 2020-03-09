@@ -26,30 +26,6 @@ import java.io.OutputStream;
 @NonNullForAll
 public class DownloadsFileSaver {
 
-    public static class DownloadsFile {
-        private Context context;
-        private OutputStream outputStream;
-        private String fileName;
-        private Uri uri;
-
-        private DownloadsFile(final Context context, final OutputStream outputStream, final String fileName, final Uri uri) {
-            this.context = context;
-            this.outputStream = outputStream;
-            this.fileName = fileName;
-            this.uri = uri;
-        }
-
-        public OutputStream getOutputStream() { return outputStream; }
-        public String getFileName() { return fileName; }
-
-        public void delete() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                context.getContentResolver().delete(uri, null, null);
-            else
-                new File(fileName).delete();
-        }
-    }
-
     public static DownloadsFile save(final Context context, final String name, final String mimeType, final boolean overwriteExisting) throws Exception {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             final ContentResolver contentResolver = context.getContentResolver();
@@ -89,12 +65,40 @@ public class DownloadsFileSaver {
             }
             return new DownloadsFile(context, contentStream, path, contentUri);
         } else {
-            @SuppressWarnings("deprecation")
-            final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            @SuppressWarnings("deprecation") final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             final File file = new File(path, name);
             if (!path.isDirectory() && !path.mkdirs())
                 throw new IOException(context.getString(R.string.create_output_dir_error));
             return new DownloadsFile(context, new FileOutputStream(file), file.getAbsolutePath(), null);
+        }
+    }
+
+    public static class DownloadsFile {
+        private Context context;
+        private String fileName;
+        private OutputStream outputStream;
+        private Uri uri;
+
+        private DownloadsFile(final Context context, final OutputStream outputStream, final String fileName, final Uri uri) {
+            this.context = context;
+            this.outputStream = outputStream;
+            this.fileName = fileName;
+            this.uri = uri;
+        }
+
+        public void delete() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                context.getContentResolver().delete(uri, null, null);
+            else
+                new File(fileName).delete();
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public OutputStream getOutputStream() {
+            return outputStream;
         }
     }
 }

@@ -34,23 +34,19 @@ import java9.util.concurrent.CompletableFuture;
 @NonNullForAll
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
-    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
-    public interface AlwaysOnCallback {
-        void alwaysOnTriggered();
-    }
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
-    public static void setAlwaysOnCallback(AlwaysOnCallback cb) {
-        alwaysOnCallback = cb;
-    }
-
+    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
     private final Context context;
-    @Nullable private Tunnel currentTunnel;
     @Nullable private Config currentConfig;
+    @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
-
     public GoBackend(final Context context) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
+    }
+
+    public static void setAlwaysOnCallback(AlwaysOnCallback cb) {
+        alwaysOnCallback = cb;
     }
 
     private static native String wgGetConfig(int handle);
@@ -143,7 +139,7 @@ public final class GoBackend implements Backend {
                 setStateInternal(currentTunnel, null, State.DOWN);
             try {
                 setStateInternal(tunnel, config, state);
-            } catch(final Exception e) {
+            } catch (final Exception e) {
                 if (originalTunnel != null)
                     setStateInternal(originalTunnel, originalConfig, State.UP);
                 throw e;
@@ -209,7 +205,7 @@ public final class GoBackend implements Backend {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 builder.setMetered(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-	        service.setUnderlyingNetworks(null);
+                service.setUnderlyingNetworks(null);
 
             builder.setBlocking(true);
             try (final ParcelFileDescriptor tun = builder.establish()) {
@@ -246,12 +242,12 @@ public final class GoBackend implements Backend {
         context.startService(new Intent(context, VpnService.class));
     }
 
+    public interface AlwaysOnCallback {
+        void alwaysOnTriggered();
+    }
+
     public static class VpnService extends android.net.VpnService {
         @Nullable private GoBackend owner;
-
-        public void setOwner(final GoBackend owner) {
-            this.owner = owner;
-        }
 
         public Builder getBuilder() {
             return new Builder();
@@ -289,6 +285,10 @@ public final class GoBackend implements Backend {
                     alwaysOnCallback.alwaysOnTriggered();
             }
             return super.onStartCommand(intent, flags, startId);
+        }
+
+        public void setOwner(final GoBackend owner) {
+            this.owner = owner;
         }
     }
 }

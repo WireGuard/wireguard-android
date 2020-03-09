@@ -42,21 +42,16 @@ import java9.util.stream.Stream;
 @NonNullForAll
 public final class WgQuickBackend implements Backend {
     private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
-
-    private final RootShell rootShell;
-    private final ToolsInstaller toolsInstaller;
     private final File localTemporaryDir;
+    private final RootShell rootShell;
     private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
+    private final ToolsInstaller toolsInstaller;
     private boolean multipleTunnels;
 
     public WgQuickBackend(final Context context, final RootShell rootShell, final ToolsInstaller toolsInstaller) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
         this.rootShell = rootShell;
         this.toolsInstaller = toolsInstaller;
-    }
-
-    public void setMultipleTunnels(boolean on) {
-        multipleTunnels = on;
     }
 
     @Override
@@ -110,6 +105,10 @@ public final class WgQuickBackend implements Backend {
         return output.get(0);
     }
 
+    public void setMultipleTunnels(boolean on) {
+        multipleTunnels = on;
+    }
+
     @Override
     public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
         final State originalState = getState(tunnel);
@@ -135,7 +134,8 @@ public final class WgQuickBackend implements Backend {
                         for (final Pair<Tunnel, Config> entry : rewind) {
                             setStateInternal(entry.first, entry.second, State.UP);
                         }
-                    } catch (final Exception ignored) { }
+                    } catch (final Exception ignored) {
+                    }
                     throw e;
                 }
             }
@@ -153,7 +153,8 @@ public final class WgQuickBackend implements Backend {
                             setStateInternal(entry.getKey(), entry.getValue(), State.UP);
                         }
                     }
-                } catch (final Exception ignored) { }
+                } catch (final Exception ignored) {
+                }
                 throw e;
             }
         } else if (state == State.DOWN) {

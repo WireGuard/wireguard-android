@@ -187,6 +187,25 @@ public class RootShell {
     }
 
     public static class RootShellException extends Exception {
+        private final Object[] format;
+        private final Reason reason;
+        public RootShellException(final Reason reason, final Object... format) {
+            this.reason = reason;
+            this.format = format;
+        }
+
+        public Object[] getFormat() {
+            return format;
+        }
+
+        public Reason getReason() {
+            return reason;
+        }
+
+        public boolean isIORelated() {
+            return reason != Reason.NO_ROOT_ACCESS;
+        }
+
         public enum Reason {
             NO_ROOT_ACCESS,
             SHELL_MARKER_COUNT_ERROR,
@@ -194,21 +213,6 @@ public class RootShell {
             SHELL_START_ERROR,
             CREATE_BIN_DIR_ERROR,
             CREATE_TEMP_DIR_ERROR
-        }
-        private final Reason reason;
-        private final Object[] format;
-        public RootShellException(final Reason reason, final Object ...format) {
-            this.reason = reason;
-            this.format = format;
-        }
-        public boolean isIORelated() {
-            return reason != Reason.NO_ROOT_ACCESS;
-        }
-        public Reason getReason() {
-            return reason;
-        }
-        public Object[] getFormat() {
-            return format;
         }
     }
 }
