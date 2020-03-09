@@ -5,7 +5,6 @@
 
 package com.wireguard.android;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +19,6 @@ import androidx.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.wireguard.android.activity.MainActivity;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
@@ -88,7 +86,7 @@ public class Application extends android.app.Application {
                     try {
                         if (!didStartRootShell)
                             app.rootShell.start();
-                        backend = new WgQuickBackend(app.getApplicationContext());
+                        backend = new WgQuickBackend(app.getApplicationContext(), app.rootShell, app.toolsInstaller);
                     } catch (final Exception ignored) {
                     }
                 }
@@ -119,6 +117,7 @@ public class Application extends android.app.Application {
     public static ToolsInstaller getToolsInstaller() {
         return get().toolsInstaller;
     }
+
     public static ModuleLoader getModuleLoader() {
         return get().moduleLoader;
     }
@@ -152,8 +151,8 @@ public class Application extends android.app.Application {
 
         asyncWorker = new AsyncWorker(AsyncTask.SERIAL_EXECUTOR, new Handler(Looper.getMainLooper()));
         rootShell = new RootShell(getApplicationContext());
-        toolsInstaller = new ToolsInstaller(getApplicationContext());
-        moduleLoader = new ModuleLoader(getApplicationContext());
+        toolsInstaller = new ToolsInstaller(getApplicationContext(), rootShell);
+        moduleLoader = new ModuleLoader(getApplicationContext(), rootShell, USER_AGENT);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
