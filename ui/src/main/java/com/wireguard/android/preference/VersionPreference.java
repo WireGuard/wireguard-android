@@ -43,9 +43,9 @@ public class VersionPreference extends Preference {
     }
 
     private String getBackendPrettyName(final Context context, final Backend backend) {
-        if (backend instanceof GoBackend)
-            return context.getString(R.string.type_name_kernel_module);
         if (backend instanceof WgQuickBackend)
+            return context.getString(R.string.type_name_kernel_module);
+        if (backend instanceof GoBackend)
             return context.getString(R.string.type_name_go_userspace);
         return "";
     }
