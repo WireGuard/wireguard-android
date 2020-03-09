@@ -80,7 +80,6 @@ dependencies {
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "com.google.android.material:material:$materialComponentsVersion"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
-    implementation "net.i2p.crypto:eddsa:$eddsaVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 }
 

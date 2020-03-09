@@ -28,4 +28,5 @@ dependencies {
     implementation "androidx.collection:collection:$collectionVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
+    implementation "net.i2p.crypto:eddsa:$eddsaVersion"
 }
