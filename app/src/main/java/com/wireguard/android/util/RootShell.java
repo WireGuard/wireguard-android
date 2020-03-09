@@ -9,7 +9,6 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import android.util.Log;
 
-import com.wireguard.android.BuildConfig;
 import com.wireguard.android.util.RootShell.RootShellException.Reason;
 
 import java.io.BufferedReader;
@@ -42,7 +41,7 @@ public class RootShell {
         localBinaryDir = new File(context.getCodeCacheDir(), "bin");
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
         preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
-                BuildConfig.APPLICATION_ID, localBinaryDir, localTemporaryDir);
+                context.getPackageName(), localBinaryDir, localTemporaryDir);
     }
 
     private static boolean isExecutableInPath(final String name) {
