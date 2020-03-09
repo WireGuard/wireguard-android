@@ -5,6 +5,8 @@
 
 package com.wireguard.crypto;
 
+import com.wireguard.util.NonNullForAll;
+
 import com.wireguard.crypto.KeyFormatException.Type;
 
 import java.security.MessageDigest;
@@ -18,6 +20,7 @@ import java.util.Arrays;
  * Instances of this class are immutable.
  */
 @SuppressWarnings("MagicNumber")
+@NonNullForAll
 public final class Key {
     private final byte[] key;
 

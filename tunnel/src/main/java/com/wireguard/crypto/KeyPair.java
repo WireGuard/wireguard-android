@@ -5,11 +5,14 @@
 
 package com.wireguard.crypto;
 
+import com.wireguard.util.NonNullForAll;
+
 /**
  * Represents a Curve25519 key pair as used by WireGuard.
  * <p>
  * Instances of this class are immutable.
  */
+@NonNullForAll
 public class KeyPair {
     private final Key privateKey;
     private final Key publicKey;

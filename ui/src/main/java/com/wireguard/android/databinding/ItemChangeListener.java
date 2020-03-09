@@ -5,6 +5,8 @@
 
 package com.wireguard.android.databinding;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableList;
 import androidx.databinding.ViewDataBinding;
@@ -22,6 +24,7 @@ import java.util.Objects;
  * Helper class for binding an ObservableList to the children of a ViewGroup.
  */
 
+@NonNullForAll
 class ItemChangeListener<T> {
     private final OnListChangedCallback<T> callback = new OnListChangedCallback<>(this);
     private final ViewGroup container;

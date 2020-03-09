@@ -6,6 +6,8 @@
 
 package com.wireguard.android.widget;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
@@ -29,6 +31,7 @@ import androidx.annotation.RequiresApi;
 import android.util.FloatProperty;
 
 @RequiresApi(Build.VERSION_CODES.N)
+@NonNullForAll
 public class SlashDrawable extends Drawable {
 
     private static final float CENTER_X = 10.65f;

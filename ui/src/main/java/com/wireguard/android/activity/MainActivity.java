@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import java.util.List;
  * editing the configuration and interface state of WireGuard tunnels.
  */
 
+@NonNullForAll
 public class MainActivity extends BaseActivity
         implements FragmentManager.OnBackStackChangedListener {
     @Nullable private ActionBar actionBar;

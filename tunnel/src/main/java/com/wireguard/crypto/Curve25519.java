@@ -6,6 +6,8 @@
 
 package com.wireguard.crypto;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import java.util.Arrays;
@@ -25,6 +27,7 @@ import java.util.Arrays;
  * References: http://cr.yp.to/ecdh.html, RFC 7748
  */
 @SuppressWarnings({"MagicNumber", "NonConstantFieldWithUpperCaseName", "SuspiciousNameCombination"})
+@NonNullForAll
 public final class Curve25519 {
     // Numbers modulo 2^255 - 19 are broken up into ten 26-bit words.
     private static final int NUM_LIMBS_255BIT = 10;

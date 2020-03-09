@@ -5,6 +5,8 @@
 
 package com.wireguard.android.widget;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -16,6 +18,7 @@ import com.wireguard.android.backend.Tunnel;
  * InputFilter for entering WireGuard configuration names (Linux interface names).
  */
 
+@NonNullForAll
 public class NameInputFilter implements InputFilter {
     private static boolean isAllowed(final char c) {
         return Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) >= 0;

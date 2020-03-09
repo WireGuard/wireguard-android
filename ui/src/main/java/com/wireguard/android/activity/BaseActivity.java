@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.CallbackRegistry;
 import androidx.databinding.CallbackRegistry.NotifierCallback;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import java.util.Objects;
  * Base class for activities that need to remember the currently-selected tunnel.
  */
 
+@NonNullForAll
 public abstract class BaseActivity extends ThemeChangeAwareActivity {
     private static final String KEY_SELECTED_TUNNEL = "selected_tunnel";
 

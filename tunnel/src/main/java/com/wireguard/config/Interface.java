@@ -5,6 +5,8 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.config.BadConfigException.Location;
@@ -35,6 +37,7 @@ import java9.util.stream.StreamSupport;
  * <p>
  * Instances of this class are immutable.
  */
+@NonNullForAll
 public final class Interface {
     private static final int MAX_UDP_PORT = 65535;
     private static final int MIN_UDP_PORT = 0;

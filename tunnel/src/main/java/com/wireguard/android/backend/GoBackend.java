@@ -5,6 +5,8 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -30,6 +32,7 @@ import java.util.concurrent.TimeoutException;
 
 import java9.util.concurrent.CompletableFuture;
 
+@NonNullForAll
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
     private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();

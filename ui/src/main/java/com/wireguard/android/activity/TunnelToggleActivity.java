@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.ErrorMessages;
 
 @RequiresApi(Build.VERSION_CODES.N)
+@NonNullForAll
 public class TunnelToggleActivity extends AppCompatActivity {
     private static final String TAG = "WireGuard/" + TunnelToggleActivity.class.getSimpleName();
 

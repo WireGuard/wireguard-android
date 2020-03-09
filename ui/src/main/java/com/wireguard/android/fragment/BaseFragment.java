@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
@@ -32,6 +34,7 @@ import com.wireguard.android.util.ErrorMessages;
  * attached to a {@code BaseActivity}.
  */
 
+@NonNullForAll
 public abstract class BaseFragment extends Fragment implements OnSelectedTunnelChangedListener {
     private static final int REQUEST_CODE_VPN_PERMISSION = 23491;
     private static final String TAG = "WireGuard/" + BaseFragment.class.getSimpleName();

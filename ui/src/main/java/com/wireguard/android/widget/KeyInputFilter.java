@@ -5,6 +5,8 @@
 
 package com.wireguard.android.widget;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -16,6 +18,7 @@ import com.wireguard.crypto.Key;
  * InputFilter for entering WireGuard private/public keys encoded with base64.
  */
 
+@NonNullForAll
 public class KeyInputFilter implements InputFilter {
     private static boolean isAllowed(final char c) {
         return Character.isLetterOrDigit(c) || c == '+' || c == '/';

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import com.wireguard.util.Keyed;
@@ -26,6 +28,7 @@ import java.util.Spliterator;
  * key still require O(n) time.
  */
 
+@NonNullForAll
 public class ObservableSortedKeyedArrayList<K, E extends Keyed<? extends K>>
         extends ObservableKeyedArrayList<K, E> implements ObservableSortedKeyedList<K, E> {
     @Nullable private final Comparator<? super K> comparator;

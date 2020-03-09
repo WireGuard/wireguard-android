@@ -5,6 +5,8 @@
 
 package com.wireguard.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import java.util.Collection;
@@ -16,6 +18,7 @@ import java.util.Set;
  * applied to their keys.
  */
 
+@NonNullForAll
 public interface SortedKeyedList<K, E extends Keyed<? extends K>> extends KeyedList<K, E> {
     Comparator<? super K> comparator();
 

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.res.Resources;
 import android.os.RemoteException;
 
@@ -29,6 +31,7 @@ import java.util.Map;
 
 import java9.util.Maps;
 
+@NonNullForAll
 public final class ErrorMessages {
     private static final Map<BadConfigException.Reason, Integer> BCE_REASON_MAP = new EnumMap<>(Maps.of(
             BadConfigException.Reason.INVALID_KEY, R.string.bad_config_reason_invalid_key,

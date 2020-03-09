@@ -5,6 +5,8 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.os.SystemClock;
 import android.util.Pair;
 
@@ -13,6 +15,7 @@ import com.wireguard.crypto.Key;
 import java.util.HashMap;
 import java.util.Map;
 
+@NonNullForAll
 public class Statistics {
     private long lastTouched = SystemClock.elapsedRealtime();
     private final Map<Key, Pair<Long, Long>> peerBytes = new HashMap<>();

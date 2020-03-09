@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
@@ -18,6 +20,7 @@ import com.wireguard.android.Application;
 
 import java.lang.reflect.Field;
 
+@NonNullForAll
 public abstract class ThemeChangeAwareActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + ThemeChangeAwareActivity.class.getSimpleName();
 

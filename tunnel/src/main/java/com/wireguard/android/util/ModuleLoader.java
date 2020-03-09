@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import android.system.OsConstants;
 import android.util.Base64;
@@ -36,6 +38,7 @@ import java.util.Map;
 
 import androidx.annotation.Nullable;
 
+@NonNullForAll
 public class ModuleLoader {
     private static final String MODULE_PUBLIC_KEY_BASE64 = "RWRmHuT9PSqtwfsLtEx+QS06BJtLgFYteL9WCNjH7yuyu5Y1DieSN7If";
     private static final String MODULE_LIST_URL = "https://download.wireguard.com/android-module/modules.txt.sig";

@@ -4,12 +4,15 @@
  */
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import androidx.preference.Preference;
 import android.view.ContextThemeWrapper;
 
 import com.wireguard.android.activity.SettingsActivity;
 
+@NonNullForAll
 public final class FragmentUtils {
     private FragmentUtils() {
         // Prevent instantiation

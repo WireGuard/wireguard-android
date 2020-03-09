@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -64,6 +66,7 @@ import java9.util.stream.StreamSupport;
  * Fragment containing a list of known WireGuard tunnels. It allows creating and deleting tunnels.
  */
 
+@NonNullForAll
 public class TunnelListFragment extends BaseFragment {
     public static final int REQUEST_IMPORT = 1;
     private static final int REQUEST_TARGET_FRAGMENT = 2;

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.activity;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import java.util.List;
  * Interface for changing application-global persistent settings.
  */
 
+@NonNullForAll
 public class SettingsActivity extends ThemeChangeAwareActivity {
     private final SparseArray<PermissionRequestCallback> permissionRequestCallbacks = new SparseArray<>();
     private int permissionRequestCounter;

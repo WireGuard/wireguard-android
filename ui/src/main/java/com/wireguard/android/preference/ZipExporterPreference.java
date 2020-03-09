@@ -5,6 +5,8 @@
 
 package com.wireguard.android.preference;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -35,6 +37,7 @@ import java9.util.concurrent.CompletableFuture;
  * Preference implementing a button that asynchronously exports config zips.
  */
 
+@NonNullForAll
 public class ZipExporterPreference extends Preference {
     private static final String TAG = "WireGuard/" + ZipExporterPreference.class.getSimpleName();
 

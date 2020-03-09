@@ -5,6 +5,8 @@
 
 package com.wireguard.android.viewmodel;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 import java9.util.stream.Collectors;
 import java9.util.stream.StreamSupport;
 
+@NonNullForAll
 public class InterfaceProxy extends BaseObservable implements Parcelable {
     public static final Parcelable.Creator<InterfaceProxy> CREATOR = new InterfaceProxyCreator();
 

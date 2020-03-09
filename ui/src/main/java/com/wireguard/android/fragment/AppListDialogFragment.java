@@ -5,6 +5,8 @@
 
 package com.wireguard.android.fragment;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -34,6 +36,7 @@ import java9.util.Comparators;
 import java9.util.stream.Collectors;
 import java9.util.stream.StreamSupport;
 
+@NonNullForAll
 public class AppListDialogFragment extends DialogFragment {
 
     private static final String KEY_EXCLUDED_APPS = "excludedApps";

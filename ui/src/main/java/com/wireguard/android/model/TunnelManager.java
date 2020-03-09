@@ -5,6 +5,8 @@
 
 package com.wireguard.android.model;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +41,7 @@ import java9.util.stream.StreamSupport;
  * Maintains and mediates changes to the set of available WireGuard tunnels,
  */
 
+@NonNullForAll
 public final class TunnelManager extends BaseObservable {
     private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());

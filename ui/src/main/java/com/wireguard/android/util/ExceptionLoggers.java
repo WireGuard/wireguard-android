@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 import android.util.Log;
 

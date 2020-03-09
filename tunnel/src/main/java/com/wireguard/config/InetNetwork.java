@@ -5,6 +5,8 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
@@ -13,6 +15,7 @@ import java.net.InetAddress;
  * <p>
  * Instances of this class are immutable.
  */
+@NonNullForAll
 public final class InetNetwork {
     private final InetAddress address;
     private final int mask;

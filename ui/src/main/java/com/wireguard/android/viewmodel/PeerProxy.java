@@ -5,6 +5,8 @@
 
 package com.wireguard.android.viewmodel;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.Observable;
@@ -32,6 +34,7 @@ import java9.util.Sets;
 import java9.util.stream.Collectors;
 import java9.util.stream.Stream;
 
+@NonNullForAll
 public class PeerProxy extends BaseObservable implements Parcelable {
     public static final Parcelable.Creator<PeerProxy> CREATOR = new PeerProxyCreator();
     private static final Set<String> IPV4_PUBLIC_NETWORKS = new LinkedHashSet<>(Lists.of(

@@ -5,6 +5,8 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -24,6 +26,7 @@ import java.util.UUID;
  * Helper class for running commands as root.
  */
 
+@NonNullForAll
 public class RootShell {
     private static final String SU = "su";
     private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();

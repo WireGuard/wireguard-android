@@ -5,6 +5,8 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import android.content.Context;
@@ -39,6 +41,7 @@ import java9.util.stream.Stream;
  * WireGuard backend that uses {@code wg-quick} to implement tunnel configuration.
  */
 
+@NonNullForAll
 public final class WgQuickBackend implements Backend {
     private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
 

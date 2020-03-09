@@ -5,6 +5,8 @@
 
 package com.wireguard.android.databinding;
 
+import com.wireguard.util.NonNullForAll;
+
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableList;
@@ -25,6 +27,7 @@ import java.lang.ref.WeakReference;
  * A generic {@code RecyclerView.Adapter} backed by a {@code ObservableKeyedList}.
  */
 
+@NonNullForAll
 public class ObservableKeyedRecyclerViewAdapter<K, E extends Keyed<? extends K>> extends Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder> {
 
     private final OnListChangedCallback<E> callback = new OnListChangedCallback<>(this);

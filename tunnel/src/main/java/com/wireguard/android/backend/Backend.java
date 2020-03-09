@@ -5,6 +5,8 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
 import com.wireguard.config.Config;
 
 import java.util.Collection;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
  * Interface for implementations of the WireGuard secure network tunnel.
  */
 
+@NonNullForAll
 public interface Backend {
     /**
      * Enumerate names of currently-running tunnels.

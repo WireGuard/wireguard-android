@@ -5,6 +5,9 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.util.NonNullForAll;
+
+@NonNullForAll
 public final class BackendException extends Exception {
     public enum Reason {
         UNKNOWN_KERNEL_MODULE_NAME,

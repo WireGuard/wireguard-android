@@ -5,6 +5,8 @@
 
 package com.wireguard.android.model;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import java9.util.concurrent.CompletionStage;
  * Encapsulates the volatile and nonvolatile state of a WireGuard tunnel.
  */
 
+@NonNullForAll
 public class ObservableTunnel extends BaseObservable implements Keyed<String>, Tunnel {
     private final TunnelManager manager;
     @Nullable private Config config;

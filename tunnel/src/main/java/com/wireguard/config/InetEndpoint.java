@@ -5,6 +5,8 @@
 
 package com.wireguard.config;
 
+import com.wireguard.util.NonNullForAll;
+
 import androidx.annotation.Nullable;
 
 import org.threeten.bp.Duration;
@@ -25,6 +27,7 @@ import java9.util.Optional;
  * <p>
  * Instances of this class are externally immutable.
  */
+@NonNullForAll
 public final class InetEndpoint {
     private static final Pattern BARE_IPV6 = Pattern.compile("^[^\\[\\]]*:[^\\[\\]]*");
     private static final Pattern FORBIDDEN_CHARACTERS = Pattern.compile("[/?#]");
