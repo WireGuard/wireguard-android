@@ -16,10 +16,11 @@ import java.util.Map;
 
 @NonNullForAll
 public class Statistics {
-    private long lastTouched = SystemClock.elapsedRealtime();
     private final Map<Key, Pair<Long, Long>> peerBytes = new HashMap<>();
+    private long lastTouched = SystemClock.elapsedRealtime();
 
-    Statistics() { }
+    Statistics() {
+    }
 
     void add(final Key key, final long rx, final long tx) {
         peerBytes.put(key, Pair.create(rx, tx));
@@ -28,10 +29,6 @@ public class Statistics {
 
     public boolean isStale() {
         return SystemClock.elapsedRealtime() - lastTouched > 900;
-    }
-
-    public Key[] peers() {
-        return peerBytes.keySet().toArray(new Key[0]);
     }
 
     public long peerRx(final Key peer) {
@@ -44,6 +41,10 @@ public class Statistics {
         if (!peerBytes.containsKey(peer))
             return 0;
         return peerBytes.get(peer).second;
+    }
+
+    public Key[] peers() {
+        return peerBytes.keySet().toArray(new Key[0]);
     }
 
     public long totalRx() {

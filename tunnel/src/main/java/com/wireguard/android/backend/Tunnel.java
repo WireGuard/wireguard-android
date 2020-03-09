@@ -15,16 +15,6 @@ import java.util.regex.Pattern;
 
 @NonNullForAll
 public interface Tunnel {
-    enum State {
-        DOWN,
-        TOGGLE,
-        UP;
-
-        public static State of(final boolean running) {
-            return running ? UP : DOWN;
-        }
-    }
-
     int NAME_MAX_LENGTH = 15;
     Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z0-9_=+.-]{1,15}");
 
@@ -46,4 +36,14 @@ public interface Tunnel {
      * @return The new state of the tunnel.
      */
     void onStateChange(State newState);
+
+    enum State {
+        DOWN,
+        TOGGLE,
+        UP;
+
+        public static State of(final boolean running) {
+            return running ? UP : DOWN;
+        }
+    }
 }

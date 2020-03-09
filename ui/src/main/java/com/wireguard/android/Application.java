@@ -37,17 +37,16 @@ import java9.util.concurrent.CompletableFuture;
 
 @NonNullForAll
 public class Application extends android.app.Application implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
     public static final String USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, Build.SUPPORTED_ABIS.length > 0 ? Build.SUPPORTED_ABIS[0] : "unknown ABI", Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT);
-
+    private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
     @SuppressWarnings("NullableProblems") private static WeakReference<Application> weakSelf;
     private final CompletableFuture<Backend> futureBackend = new CompletableFuture<>();
     @SuppressWarnings("NullableProblems") private AsyncWorker asyncWorker;
     @Nullable private Backend backend;
+    @SuppressWarnings("NullableProblems") private ModuleLoader moduleLoader;
     @SuppressWarnings("NullableProblems") private RootShell rootShell;
     @SuppressWarnings("NullableProblems") private SharedPreferences sharedPreferences;
     @SuppressWarnings("NullableProblems") private ToolsInstaller toolsInstaller;
-    @SuppressWarnings("NullableProblems") private ModuleLoader moduleLoader;
     @SuppressWarnings("NullableProblems") private TunnelManager tunnelManager;
 
     public Application() {
@@ -102,6 +101,10 @@ public class Application extends android.app.Application implements SharedPrefer
         return get().futureBackend;
     }
 
+    public static ModuleLoader getModuleLoader() {
+        return get().moduleLoader;
+    }
+
     public static RootShell getRootShell() {
         return get().rootShell;
     }
@@ -112,10 +115,6 @@ public class Application extends android.app.Application implements SharedPrefer
 
     public static ToolsInstaller getToolsInstaller() {
         return get().toolsInstaller;
-    }
-
-    public static ModuleLoader getModuleLoader() {
-        return get().moduleLoader;
     }
 
     public static TunnelManager getTunnelManager() {
@@ -168,14 +167,14 @@ public class Application extends android.app.Application implements SharedPrefer
     }
 
     @Override
-    public void onTerminate() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onTerminate();
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        if ("multiple_tunnels".equals(key) && backend != null && backend instanceof WgQuickBackend)
+            ((WgQuickBackend) backend).setMultipleTunnels(sharedPreferences.getBoolean(key, false));
     }
 
     @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        if ("multiple_tunnels".equals(key) && backend != null && backend instanceof WgQuickBackend)
-            ((WgQuickBackend)backend).setMultipleTunnels(sharedPreferences.getBoolean(key, false));
+    public void onTerminate() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onTerminate();
     }
 }

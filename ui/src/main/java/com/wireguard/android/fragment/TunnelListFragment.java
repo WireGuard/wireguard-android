@@ -262,14 +262,6 @@ public class TunnelListFragment extends BaseFragment {
         });
     }
 
-    private void showSnackbar(final CharSequence message) {
-        if (binding != null) {
-            final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
-            snackbar.setAnchorView(binding.createFab);
-            snackbar.show();
-        }
-    }
-
     private void onTunnelDeletionFinished(final Integer count, @Nullable final Throwable throwable) {
         final String message;
         if (throwable == null) {
@@ -335,6 +327,14 @@ public class TunnelListFragment extends BaseFragment {
             else
                 ((MultiselectableRelativeLayout) binding.getRoot()).setSingleSelected(getSelectedTunnel() == tunnel);
         });
+    }
+
+    private void showSnackbar(final CharSequence message) {
+        if (binding != null) {
+            final Snackbar snackbar = Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG);
+            snackbar.setAnchorView(binding.createFab);
+            snackbar.show();
+        }
     }
 
     private MultiselectableRelativeLayout viewForTunnel(final ObservableTunnel tunnel, final List tunnels) {

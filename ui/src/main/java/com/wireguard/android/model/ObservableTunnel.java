@@ -27,12 +27,12 @@ import java9.util.concurrent.CompletionStage;
 public class ObservableTunnel extends BaseObservable implements Keyed<String>, Tunnel {
     private final TunnelManager manager;
     @Nullable private Config config;
-    private State state;
     private String name;
+    private State state;
     @Nullable private Statistics statistics;
 
     ObservableTunnel(final TunnelManager manager, final String name,
-           @Nullable final Config config, final State state) {
+                     @Nullable final Config config, final State state) {
         this.name = name;
         this.manager = manager;
         this.config = config;
@@ -103,17 +103,17 @@ public class ObservableTunnel extends BaseObservable implements Keyed<String>, T
         return name;
     }
 
+    @Override
+    public void onStateChange(final State newState) {
+        onStateChanged(newState);
+    }
+
     State onStateChanged(final State state) {
         if (state != State.UP)
             onStatisticsChanged(null);
         this.state = state;
         notifyPropertyChanged(BR.state);
         return state;
-    }
-
-    @Override
-    public void onStateChange(final State newState) {
-        onStateChanged(newState);
     }
 
     @Nullable

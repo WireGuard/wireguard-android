@@ -35,7 +35,8 @@ public final class InetAddresses {
         PARSER_METHOD = m;
     }
 
-    private InetAddresses() { }
+    private InetAddresses() {
+    }
 
     /**
      * Parses a numeric IPv4 or IPv6 address without performing any DNS lookups.

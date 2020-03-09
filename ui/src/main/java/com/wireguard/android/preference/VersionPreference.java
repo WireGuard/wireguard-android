@@ -28,14 +28,6 @@ import androidx.preference.Preference;
 public class VersionPreference extends Preference {
     @Nullable private String versionSummary;
 
-    private String getBackendPrettyName(final Context context, final Backend backend) {
-        if (backend instanceof GoBackend)
-            return context.getString(R.string.type_name_kernel_module);
-        if (backend instanceof WgQuickBackend)
-            return context.getString(R.string.type_name_go_userspace);
-        return "";
-    }
-
     public VersionPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
@@ -48,6 +40,14 @@ public class VersionPreference extends Preference {
                 notifyChanged();
             });
         });
+    }
+
+    private String getBackendPrettyName(final Context context, final Backend backend) {
+        if (backend instanceof GoBackend)
+            return context.getString(R.string.type_name_kernel_module);
+        if (backend instanceof WgQuickBackend)
+            return context.getString(R.string.type_name_go_userspace);
+        return "";
     }
 
     @Nullable

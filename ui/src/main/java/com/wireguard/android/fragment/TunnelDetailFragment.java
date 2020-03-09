@@ -34,8 +34,20 @@ import androidx.databinding.DataBindingUtil;
 @NonNullForAll
 public class TunnelDetailFragment extends BaseFragment {
     @Nullable private TunnelDetailFragmentBinding binding;
-    @Nullable private Timer timer;
     @Nullable private State lastState = State.TOGGLE;
+    @Nullable private Timer timer;
+
+    private String formatBytes(final long bytes) {
+        if (bytes < 1024)
+            return requireContext().getString(R.string.transfer_bytes, bytes);
+        else if (bytes < 1024 * 1024)
+            return requireContext().getString(R.string.transfer_kibibytes, bytes / 1024.0);
+        else if (bytes < 1024 * 1024 * 1024)
+            return requireContext().getString(R.string.transfer_mibibytes, bytes / (1024.0 * 1024.0));
+        else if (bytes < 1024 * 1024 * 1024 * 1024)
+            return requireContext().getString(R.string.transfer_gibibytes, bytes / (1024.0 * 1024.0 * 1024.0));
+        return requireContext().getString(R.string.transfer_tibibytes, bytes / (1024.0 * 1024.0 * 1024.0) / 1024.0);
+    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -46,27 +58,6 @@ public class TunnelDetailFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.tunnel_detail, menu);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updateStats();
-            }
-        }, 0, 1000);
     }
 
     @Override
@@ -87,6 +78,18 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateStats();
+            }
+        }, 0, 1000);
+    }
+
+    @Override
     public void onSelectedTunnelChanged(@Nullable final ObservableTunnel oldTunnel, @Nullable final ObservableTunnel newTunnel) {
         if (binding == null)
             return;
@@ -100,6 +103,15 @@ public class TunnelDetailFragment extends BaseFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    @Override
     public void onViewStateRestored(@Nullable final Bundle savedInstanceState) {
         if (binding == null) {
             return;
@@ -108,18 +120,6 @@ public class TunnelDetailFragment extends BaseFragment {
         binding.setFragment(this);
         onSelectedTunnelChanged(null, getSelectedTunnel());
         super.onViewStateRestored(savedInstanceState);
-    }
-
-    private String formatBytes(final long bytes) {
-        if (bytes < 1024)
-            return requireContext().getString(R.string.transfer_bytes, bytes);
-        else if (bytes < 1024*1024)
-            return requireContext().getString(R.string.transfer_kibibytes, bytes/1024.0);
-        else if (bytes < 1024*1024*1024)
-            return requireContext().getString(R.string.transfer_mibibytes, bytes/(1024.0*1024.0));
-        else if (bytes < 1024*1024*1024*1024)
-            return requireContext().getString(R.string.transfer_gibibytes, bytes/(1024.0*1024.0*1024.0));
-        return requireContext().getString(R.string.transfer_tibibytes, bytes/(1024.0*1024.0*1024.0)/1024.0);
     }
 
     private void updateStats() {

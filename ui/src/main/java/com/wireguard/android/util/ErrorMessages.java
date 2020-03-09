@@ -51,14 +51,6 @@ public final class ErrorMessages {
             BackendException.Reason.TUN_CREATION_ERROR, R.string.tun_create_error,
             BackendException.Reason.GO_ACTIVATION_ERROR_CODE, R.string.tunnel_on_error
     ));
-    private static final Map<RootShellException.Reason, Integer> RSE_REASON_MAP = new EnumMap<>(Maps.of(
-            RootShellException.Reason.NO_ROOT_ACCESS, R.string.error_root,
-            RootShellException.Reason.SHELL_MARKER_COUNT_ERROR, R.string.shell_marker_count_error,
-            RootShellException.Reason.SHELL_EXIT_STATUS_READ_ERROR, R.string.shell_exit_status_read_error,
-            RootShellException.Reason.SHELL_START_ERROR, R.string.shell_start_error,
-            RootShellException.Reason.CREATE_BIN_DIR_ERROR, R.string.create_bin_dir_error,
-            RootShellException.Reason.CREATE_TEMP_DIR_ERROR, R.string.create_temp_dir_error
-    ));
     private static final Map<Format, Integer> KFE_FORMAT_MAP = new EnumMap<>(Maps.of(
             Format.BASE64, R.string.key_length_explanation_base64,
             Format.BINARY, R.string.key_length_explanation_binary,
@@ -74,6 +66,14 @@ public final class ErrorMessages {
             InetNetwork.class, R.string.parse_error_inet_network,
             Integer.class, R.string.parse_error_integer
     );
+    private static final Map<RootShellException.Reason, Integer> RSE_REASON_MAP = new EnumMap<>(Maps.of(
+            RootShellException.Reason.NO_ROOT_ACCESS, R.string.error_root,
+            RootShellException.Reason.SHELL_MARKER_COUNT_ERROR, R.string.shell_marker_count_error,
+            RootShellException.Reason.SHELL_EXIT_STATUS_READ_ERROR, R.string.shell_exit_status_read_error,
+            RootShellException.Reason.SHELL_START_ERROR, R.string.shell_start_error,
+            RootShellException.Reason.CREATE_BIN_DIR_ERROR, R.string.create_bin_dir_error,
+            RootShellException.Reason.CREATE_TEMP_DIR_ERROR, R.string.create_temp_dir_error
+    ));
 
     private ErrorMessages() {
         // Prevent instantiation

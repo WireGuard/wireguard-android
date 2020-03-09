@@ -47,8 +47,7 @@ public class LogExporterPreference extends Preference {
                 final Process process = Runtime.getRuntime().exec(new String[]{
                         "logcat", "-b", "all", "-d", "-v", "threadtime", "*:V"});
                 try (final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                     final BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream())))
-                {
+                     final BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
                     String line;
                     while ((line = stdout.readLine()) != null) {
                         outputFile.getOutputStream().write(line.getBytes());
