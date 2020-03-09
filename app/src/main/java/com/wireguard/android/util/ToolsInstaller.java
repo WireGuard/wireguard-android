@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import android.system.OsConstants;
 import android.util.Log;
 
-import com.wireguard.android.BuildConfig;
 import com.wireguard.android.util.RootShell.RootShellException;
 
 import java.io.File;
@@ -115,7 +114,7 @@ public final class ToolsInstaller {
 
         script.append("trap 'rm -rf /sbin/.magisk/img/wireguard' INT TERM EXIT; ");
         script.append(String.format("rm -rf /sbin/.magisk/img/wireguard/; mkdir -p /sbin/.magisk/img/wireguard%s; ", INSTALL_DIR));
-        script.append(String.format("printf 'name=WireGuard Command Line Tools\nversion=%s\nversionCode=%s\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.magisk/img/wireguard/module.prop; ", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        script.append("printf 'name=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.magisk/img/wireguard/module.prop; ");
         script.append("touch /sbin/.magisk/img/wireguard/auto_mount; ");
         for (final String name : EXECUTABLES) {
             final File destination = new File("/sbin/.magisk/img/wireguard" + INSTALL_DIR, name);
