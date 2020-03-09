@@ -12,7 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Utility methods for creating instances of {@link InetAddress}.
