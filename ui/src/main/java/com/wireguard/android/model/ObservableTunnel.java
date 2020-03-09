@@ -112,7 +112,7 @@ public class ObservableTunnel extends BaseObservable implements Keyed<String>, T
 
     @Override
     public void onStateChange(final State newState) {
-        onStateChanged(state);
+        onStateChanged(newState);
     }
 
     @Nullable
