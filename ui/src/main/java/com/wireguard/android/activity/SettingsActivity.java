@@ -99,7 +99,8 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
 
             final Preference wgQuickOnlyPrefs[] = {
                     getPreferenceManager().findPreference("tools_installer"),
-                    getPreferenceManager().findPreference("restore_on_boot")
+                    getPreferenceManager().findPreference("restore_on_boot"),
+                    getPreferenceManager().findPreference("multiple_tunnels")
             };
             for (final Preference pref : wgQuickOnlyPrefs)
                 pref.setVisible(false);
