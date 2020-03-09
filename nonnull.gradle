@@ -26,18 +26,18 @@ task generateNonNullJavaFiles(dependsOn: "assembleDebug", type: Copy) {
             "androidTest" + File.separatorChar + "java" + File.separatorChar +
             basePackage )
 
-    generateInfoFiles(sourceDir, mainSrcPhrase);
+    generateInfoFiles(sourceDir, mainSrcPhrase)
     sourceDir.eachDirRecurse { dir ->
         generateInfoFiles(dir, mainSrcPhrase)
     }
     if (file(testSourceDir).exists()) {
-        generateInfoFiles(testSourceDir, mainTestSrcPhrase);
+        generateInfoFiles(testSourceDir, mainTestSrcPhrase)
         testSourceDir.eachDirRecurse { dir ->
             generateInfoFiles(dir, mainTestSrcPhrase)
         }
     }
     if (file(androidTestSourceDir).exists()) {
-        generateInfoFiles(androidTestSourceDir, mainAndroidTestSrcPhrase);
+        generateInfoFiles(androidTestSourceDir, mainAndroidTestSrcPhrase)
         androidTestSourceDir.eachDirRecurse { dir ->
             generateInfoFiles(dir, mainAndroidTestSrcPhrase)
         }
@@ -46,20 +46,20 @@ task generateNonNullJavaFiles(dependsOn: "assembleDebug", type: Copy) {
 }
 
 private void generateInfoFiles(File dir, String mainSrcPhrase) {
-    def infoFileContentHeader = getFileContentHeader();
-    def infoFileContentFooter = getFileContentFooter();
+    def infoFileContentHeader = getFileContentHeader()
+    def infoFileContentFooter = getFileContentFooter()
     def infoFilePath = dir.getAbsolutePath() + File.separatorChar + "package-info.java"
 
     //file(infoFilePath).delete(); //do not use in production code
     if (!file(infoFilePath).exists()) {
-        def infoFileContentPackage = getFileContentPackage(dir.getAbsolutePath(), mainSrcPhrase);
+        def infoFileContentPackage = getFileContentPackage(dir.getAbsolutePath(), mainSrcPhrase)
         new File(infoFilePath).write(infoFileContentHeader +
                 infoFileContentPackage + infoFileContentFooter)
-        println "[dir] " + infoFilePath + "  created";
+        println "[dir] " + infoFilePath + "  created"
     }
 }
 
-def getFileContentPackage(String path, String mainSrcPhrase) {
+static def getFileContentPackage(String path, String mainSrcPhrase) {
     def mainSrcPhraseIndex = path.indexOf(mainSrcPhrase)
     def output = path.substring(mainSrcPhraseIndex)
 
@@ -73,15 +73,14 @@ def getFileContentPackage(String path, String mainSrcPhrase) {
                 "/", ".") + ";\n"
 }
 
-def getFileContentHeader() {
+static def getFileContentHeader() {
     return  "/**\n" +
             " * Make all method parameters @NonNull by default.\n" +
             " */\n" +
             "@NonNullForAll\n"
 }
 
-def getFileContentFooter() {
+static def getFileContentFooter() {
     return  "\n" +
             "import com.wireguard.util.NonNullForAll;\n"
 }
-
