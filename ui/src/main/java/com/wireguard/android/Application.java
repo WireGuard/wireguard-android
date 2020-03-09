@@ -35,7 +35,7 @@ import java.util.Locale;
 
 import java9.util.concurrent.CompletableFuture;
 
-public class Application extends android.app.Application {
+public class Application extends android.app.Application implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "WireGuard/" + Application.class.getSimpleName();
     public static final String USER_AGENT;
 
@@ -86,7 +86,9 @@ public class Application extends android.app.Application {
                     try {
                         if (!didStartRootShell)
                             app.rootShell.start();
-                        backend = new WgQuickBackend(app.getApplicationContext(), app.rootShell, app.toolsInstaller);
+                        WgQuickBackend wgQuickBackend = new WgQuickBackend(app.getApplicationContext(), app.rootShell, app.toolsInstaller);
+                        wgQuickBackend.setMultipleTunnels(app.sharedPreferences.getBoolean("multiple_tunnels", false));
+                        backend = wgQuickBackend;
                     } catch (final Exception ignored) {
                     }
                 }
@@ -167,5 +169,19 @@ public class Application extends android.app.Application {
         tunnelManager.onCreate();
 
         asyncWorker.supplyAsync(Application::getBackend).thenAccept(futureBackend::complete);
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onTerminate() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onTerminate();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        if ("multiple_tunnels".equals(key) && backend != null && backend instanceof WgQuickBackend)
+            ((WgQuickBackend)backend).setMultipleTunnels(sharedPreferences.getBoolean(key, false));
     }
 }

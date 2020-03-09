@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
 
 import com.wireguard.android.backend.BackendException.Reason;
 import com.wireguard.android.backend.Tunnel.State;
@@ -23,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -44,11 +46,16 @@ public final class WgQuickBackend implements Backend {
     private final ToolsInstaller toolsInstaller;
     private final File localTemporaryDir;
     private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
+    private boolean multipleTunnels;
 
     public WgQuickBackend(final Context context, final RootShell rootShell, final ToolsInstaller toolsInstaller) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
         this.rootShell = rootShell;
         this.toolsInstaller = toolsInstaller;
+    }
+
+    public void setMultipleTunnels(boolean on) {
+        multipleTunnels = on;
     }
 
     @Override
@@ -106,6 +113,7 @@ public final class WgQuickBackend implements Backend {
     public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
         final State originalState = getState(tunnel);
         final Config originalConfig = runningConfigs.get(tunnel);
+        final Map<Tunnel, Config> runningConfigsSnapshot = new HashMap<>(runningConfigs);
 
         if (state == State.TOGGLE)
             state = originalState == State.UP ? State.DOWN : State.UP;
@@ -114,13 +122,37 @@ public final class WgQuickBackend implements Backend {
             return originalState;
         if (state == State.UP) {
             toolsInstaller.ensureToolsAvailable();
+            if (!multipleTunnels && originalState == State.DOWN) {
+                final List<Pair<Tunnel, Config>> rewind = new LinkedList<>();
+                try {
+                    for (final Map.Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
+                        setStateInternal(entry.getKey(), entry.getValue(), State.DOWN);
+                        rewind.add(Pair.create(entry.getKey(), entry.getValue()));
+                    }
+                } catch (final Exception e) {
+                    try {
+                        for (final Pair<Tunnel, Config> entry : rewind) {
+                            setStateInternal(entry.first, entry.second, State.UP);
+                        }
+                    } catch (final Exception ignored) { }
+                    throw e;
+                }
+            }
             if (originalState == State.UP)
                 setStateInternal(tunnel, originalConfig == null ? config : originalConfig, State.DOWN);
             try {
                 setStateInternal(tunnel, config, State.UP);
-            } catch(final Exception e) {
-                if (originalState == State.UP && originalConfig != null)
-                    setStateInternal(tunnel, originalConfig, State.UP);
+            } catch (final Exception e) {
+                try {
+                    if (originalState == State.UP && originalConfig != null) {
+                        setStateInternal(tunnel, originalConfig, State.UP);
+                    }
+                    if (!multipleTunnels && originalState == State.DOWN) {
+                        for (final Map.Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
+                            setStateInternal(entry.getKey(), entry.getValue(), State.UP);
+                        }
+                    }
+                } catch (final Exception ignored) { }
                 throw e;
             }
         } else if (state == State.DOWN) {
