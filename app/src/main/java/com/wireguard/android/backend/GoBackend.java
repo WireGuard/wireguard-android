@@ -44,17 +44,15 @@ public final class GoBackend implements Backend {
     }
 
     private final Context context;
-    private final PendingIntent configurationIntent;
     @Nullable private Tunnel currentTunnel;
     @Nullable private Config currentConfig;
     private int currentTunnelHandle = -1;
 
     private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
 
-    public GoBackend(final Context context, final PendingIntent configurationIntent) {
+    public GoBackend(final Context context) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
-        this.configurationIntent = configurationIntent;
     }
 
     private static native String wgGetConfig(int handle);
@@ -193,8 +191,6 @@ public final class GoBackend implements Backend {
             // Create the vpn tunnel with android API
             final VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
-
-            builder.setConfigureIntent(configurationIntent);
 
             for (final String excludedApplication : config.getInterface().getExcludedApplications())
                 builder.addDisallowedApplication(excludedApplication);
