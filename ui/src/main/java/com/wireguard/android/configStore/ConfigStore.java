@@ -5,9 +5,8 @@
 
 package com.wireguard.android.configStore;
 
-import com.wireguard.util.NonNullForAll;
-
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.Set;
 

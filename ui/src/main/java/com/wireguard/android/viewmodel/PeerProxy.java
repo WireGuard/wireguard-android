@@ -5,15 +5,8 @@
 
 package com.wireguard.android.viewmodel;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
 
 import com.wireguard.android.BR;
 import com.wireguard.config.Attribute;
@@ -21,6 +14,7 @@ import com.wireguard.config.BadConfigException;
 import com.wireguard.config.InetEndpoint;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
+import com.wireguard.util.NonNullForAll;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,6 +23,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableList;
 import java9.util.Lists;
 import java9.util.Sets;
 import java9.util.stream.Collectors;

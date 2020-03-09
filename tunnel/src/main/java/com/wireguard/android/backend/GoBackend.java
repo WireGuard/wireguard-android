@@ -5,14 +5,10 @@
 
 package com.wireguard.android.backend;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.Nullable;
-import androidx.collection.ArraySet;
 import android.util.Log;
 
 import com.wireguard.android.backend.BackendException.Reason;
@@ -23,6 +19,7 @@ import com.wireguard.config.InetNetwork;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
+import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
 import java.util.Collections;
@@ -30,6 +27,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import androidx.annotation.Nullable;
+import androidx.collection.ArraySet;
 import java9.util.concurrent.CompletableFuture;
 
 @NonNullForAll

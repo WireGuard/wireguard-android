@@ -5,14 +5,14 @@
 
 package com.wireguard.android.model;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 
 import com.wireguard.android.BR;
 import com.wireguard.util.Keyed;
+import com.wireguard.util.NonNullForAll;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 
 @NonNullForAll
 public class ApplicationData extends BaseObservable implements Keyed<String> {

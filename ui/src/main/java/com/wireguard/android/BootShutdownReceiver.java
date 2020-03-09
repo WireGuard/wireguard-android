@@ -5,8 +5,6 @@
 
 package com.wireguard.android;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +13,7 @@ import android.util.Log;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.android.model.TunnelManager;
 import com.wireguard.android.util.ExceptionLoggers;
+import com.wireguard.util.NonNullForAll;
 
 @NonNullForAll
 public class BootShutdownReceiver extends BroadcastReceiver {

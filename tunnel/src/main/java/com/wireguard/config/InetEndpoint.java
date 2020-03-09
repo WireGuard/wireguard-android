@@ -7,8 +7,6 @@ package com.wireguard.config;
 
 import com.wireguard.util.NonNullForAll;
 
-import androidx.annotation.Nullable;
-
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 
@@ -19,6 +17,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
+import androidx.annotation.Nullable;
 import java9.util.Optional;
 
 

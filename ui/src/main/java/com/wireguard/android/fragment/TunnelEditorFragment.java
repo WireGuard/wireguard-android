@@ -5,15 +5,9 @@
 
 package com.wireguard.android.fragment;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.app.Activity;
 import android.content.Context;
-import androidx.databinding.ObservableList;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding;
@@ -34,10 +29,14 @@ import com.wireguard.android.ui.EdgeToEdge;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.android.viewmodel.ConfigProxy;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.ObservableList;
 
 /**
  * Fragment for editing a WireGuard configuration.

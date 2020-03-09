@@ -5,12 +5,11 @@
 
 package com.wireguard.android.util;
 
+import com.wireguard.util.Keyed;
+import com.wireguard.util.KeyedList;
 import com.wireguard.util.NonNullForAll;
 
 import androidx.databinding.ObservableList;
-
-import com.wireguard.util.Keyed;
-import com.wireguard.util.KeyedList;
 
 /**
  * A list that is both keyed and observable.

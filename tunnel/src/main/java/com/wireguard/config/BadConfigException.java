@@ -5,11 +5,10 @@
 
 package com.wireguard.config;
 
+import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import androidx.annotation.Nullable;
-
-import com.wireguard.crypto.KeyFormatException;
 
 @NonNullForAll
 public class BadConfigException extends Exception {

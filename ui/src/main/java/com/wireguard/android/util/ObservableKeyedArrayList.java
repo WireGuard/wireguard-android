@@ -5,16 +5,15 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.ObservableArrayList;
-import androidx.annotation.Nullable;
-
 import com.wireguard.util.Keyed;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.ObservableArrayList;
 
 /**
  * ArrayList that allows looking up elements by some key property. As the key property must always

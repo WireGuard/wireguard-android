@@ -5,32 +5,31 @@
 
 package com.wireguard.android.model;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
 import com.wireguard.android.R;
-import com.wireguard.android.configStore.ConfigStore;
+import com.wireguard.android.backend.Statistics;
 import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.backend.Tunnel.State;
-import com.wireguard.android.backend.Statistics;
+import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.util.ExceptionLoggers;
 import com.wireguard.android.util.ObservableSortedKeyedArrayList;
 import com.wireguard.android.util.ObservableSortedKeyedList;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 import java9.util.Comparators;
 import java9.util.concurrent.CompletableFuture;
 import java9.util.concurrent.CompletionStage;

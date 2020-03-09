@@ -5,13 +5,11 @@
 
 package com.wireguard.util;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 /**
  * A keyed list where all elements are sorted by the comparator returned by {@code comparator()}

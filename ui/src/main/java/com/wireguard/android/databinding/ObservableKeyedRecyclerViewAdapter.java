@@ -5,23 +5,23 @@
 
 package com.wireguard.android.databinding;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableList;
-import androidx.databinding.ViewDataBinding;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.wireguard.android.BR;
 import com.wireguard.android.util.ObservableKeyedList;
 import com.wireguard.util.Keyed;
+import com.wireguard.util.NonNullForAll;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableList;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 /**
  * A generic {@code RecyclerView.Adapter} backed by a {@code ObservableKeyedList}.

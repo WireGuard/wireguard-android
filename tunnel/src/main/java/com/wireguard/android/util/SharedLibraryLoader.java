@@ -5,11 +5,11 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+
+import com.wireguard.util.NonNullForAll;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -5,11 +5,9 @@
 
 package com.wireguard.android.backend;
 
+import com.wireguard.config.Config;
 import com.wireguard.util.NonNullForAll;
 
-import com.wireguard.config.Config;
-
-import java.util.Collection;
 import java.util.Set;
 
 import androidx.annotation.Nullable;

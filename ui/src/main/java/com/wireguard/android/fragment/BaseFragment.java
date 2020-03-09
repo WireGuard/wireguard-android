@@ -5,29 +5,29 @@
 
 package com.wireguard.android.fragment;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.activity.BaseActivity;
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener;
 import com.wireguard.android.backend.GoBackend;
+import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding;
 import com.wireguard.android.databinding.TunnelListItemBinding;
 import com.wireguard.android.model.ObservableTunnel;
-import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.ErrorMessages;
+import com.wireguard.util.NonNullForAll;
+
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.Fragment;
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when

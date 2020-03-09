@@ -5,12 +5,6 @@
 
 package com.wireguard.android.viewmodel;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -21,10 +15,15 @@ import com.wireguard.config.Interface;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.crypto.KeyPair;
+import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
 import java.util.List;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableList;
 import java9.util.stream.Collectors;
 import java9.util.stream.StreamSupport;
 

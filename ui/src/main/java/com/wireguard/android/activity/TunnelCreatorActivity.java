@@ -5,13 +5,13 @@
 
 package com.wireguard.android.activity;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 
 import com.wireguard.android.fragment.TunnelEditorFragment;
 import com.wireguard.android.model.ObservableTunnel;
+import com.wireguard.util.NonNullForAll;
+
+import androidx.annotation.Nullable;
 
 /**
  * Standalone activity for creating tunnels.

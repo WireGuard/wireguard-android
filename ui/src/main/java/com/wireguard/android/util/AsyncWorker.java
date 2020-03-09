@@ -5,9 +5,9 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.os.Handler;
+
+import com.wireguard.util.NonNullForAll;
 
 import java.util.concurrent.Executor;
 

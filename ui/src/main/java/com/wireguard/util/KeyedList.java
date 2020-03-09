@@ -5,12 +5,10 @@
 
 package com.wireguard.util;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * A list containing elements that can be looked up by key. A {@code KeyedList} cannot contain

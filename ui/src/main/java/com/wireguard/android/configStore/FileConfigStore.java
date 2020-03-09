@@ -5,14 +5,13 @@
 
 package com.wireguard.android.configStore;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.wireguard.android.R;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.File;
 import java.io.FileInputStream;

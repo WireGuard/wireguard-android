@@ -5,13 +5,11 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.wireguard.android.util.RootShell.RootShellException.Reason;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.UUID;
+
+import androidx.annotation.Nullable;
 
 /**
  * Helper class for running commands as root.

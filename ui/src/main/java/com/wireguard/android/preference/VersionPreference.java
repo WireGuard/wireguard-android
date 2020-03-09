@@ -5,14 +5,10 @@
 
 package com.wireguard.android.preference;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.annotation.Nullable;
-import androidx.preference.Preference;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
@@ -21,8 +17,12 @@ import com.wireguard.android.R;
 import com.wireguard.android.backend.Backend;
 import com.wireguard.android.backend.GoBackend;
 import com.wireguard.android.backend.WgQuickBackend;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.Locale;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 @NonNullForAll
 public class VersionPreference extends Preference {

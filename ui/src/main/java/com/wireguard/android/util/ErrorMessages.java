@@ -5,12 +5,8 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.res.Resources;
 import android.os.RemoteException;
-
-import androidx.annotation.Nullable;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
@@ -24,11 +20,13 @@ import com.wireguard.config.ParseException;
 import com.wireguard.crypto.Key.Format;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.crypto.KeyFormatException.Type;
+import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
 import java.util.EnumMap;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
 import java9.util.Maps;
 
 @NonNullForAll

@@ -5,16 +5,11 @@
 
 package com.wireguard.android.fragment;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.view.inputmethod.InputMethodManager;
 
 import com.wireguard.android.Application;
@@ -22,11 +17,16 @@ import com.wireguard.android.R;
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding;
 import com.wireguard.config.BadConfigException;
 import com.wireguard.config.Config;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 @NonNullForAll
 public class ConfigNamingDialogFragment extends DialogFragment {

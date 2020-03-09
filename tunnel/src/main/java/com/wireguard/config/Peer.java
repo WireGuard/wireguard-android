@@ -5,15 +5,12 @@
 
 package com.wireguard.config;
 
-import com.wireguard.util.NonNullForAll;
-
-import androidx.annotation.Nullable;
-
 import com.wireguard.config.BadConfigException.Location;
 import com.wireguard.config.BadConfigException.Reason;
 import com.wireguard.config.BadConfigException.Section;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
+import com.wireguard.util.NonNullForAll;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +19,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
 import java9.util.Optional;
 
 /**

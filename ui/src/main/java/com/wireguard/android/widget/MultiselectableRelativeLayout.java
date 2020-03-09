@@ -5,13 +5,12 @@
 
 package com.wireguard.android.widget;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.wireguard.android.R;
+import com.wireguard.util.NonNullForAll;
 
 @NonNullForAll
 public class MultiselectableRelativeLayout extends RelativeLayout {

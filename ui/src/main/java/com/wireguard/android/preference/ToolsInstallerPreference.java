@@ -5,16 +5,16 @@
 
 package com.wireguard.android.preference;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.preference.Preference;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
 import com.wireguard.android.util.ToolsInstaller;
+import com.wireguard.util.NonNullForAll;
+
+import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 /**
  * Preference implementing a button that asynchronously runs {@code ToolsInstaller} and displays the

@@ -5,8 +5,6 @@
 
 package com.wireguard.android.util;
 
-import com.wireguard.util.NonNullForAll;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,6 +16,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 
 import com.wireguard.android.R;
+import com.wireguard.util.NonNullForAll;
 
 import java.io.File;
 import java.io.FileOutputStream;
