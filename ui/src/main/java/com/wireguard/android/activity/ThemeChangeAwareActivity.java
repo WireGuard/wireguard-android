@@ -42,6 +42,7 @@ public abstract class ThemeChangeAwareActivity extends AppCompatActivity impleme
                     sharedPreferences.getBoolean(key, false) ?
                             AppCompatDelegate.MODE_NIGHT_YES :
                             AppCompatDelegate.MODE_NIGHT_NO);
+            recreate();
         }
     }
 }
