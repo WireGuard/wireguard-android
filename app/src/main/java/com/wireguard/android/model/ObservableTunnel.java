@@ -96,7 +96,7 @@ public class ObservableTunnel extends BaseObservable implements Keyed<String>, T
         return config;
     }
 
-    public String onNameChanged(final String name) {
+    String onNameChanged(final String name) {
         this.name = name;
         notifyPropertyChanged(BR.name);
         return name;
@@ -108,6 +108,11 @@ public class ObservableTunnel extends BaseObservable implements Keyed<String>, T
         this.state = state;
         notifyPropertyChanged(BR.state);
         return state;
+    }
+
+    @Override
+    public void onStateChange(final State newState) {
+        onStateChanged(state);
     }
 
     @Nullable
