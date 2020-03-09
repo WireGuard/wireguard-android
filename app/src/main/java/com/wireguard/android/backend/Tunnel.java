@@ -29,5 +29,18 @@ public interface Tunnel {
         return !NAME_PATTERN.matcher(name).matches();
     }
 
+    /**
+     * Get the name of the tunnel, which should always pass the !isNameInvalid test.
+     *
+     * @return The name of the tunnel.
+     */
     String getName();
+
+    /**
+     * React to a change in state of the tunnel. Should only be directly called by Backend.
+     *
+     * @param newState The new state of the tunnel.
+     * @return The new state of the tunnel.
+     */
+    void onStateChange(State newState);
 }

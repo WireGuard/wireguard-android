@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
 import com.wireguard.android.R;
-import com.wireguard.android.backend.Backend.TunnelStateChangeNotificationReceiver;
 import com.wireguard.android.configStore.ConfigStore;
 import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.backend.Tunnel.State;
@@ -40,7 +39,7 @@ import java9.util.stream.StreamSupport;
  * Maintains and mediates changes to the set of available WireGuard tunnels,
  */
 
-public final class TunnelManager extends BaseObservable implements TunnelStateChangeNotificationReceiver {
+public final class TunnelManager extends BaseObservable {
     private static final Comparator<String> COMPARATOR = Comparators.<String>thenComparing(
             String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder());
     private static final String KEY_LAST_USED_TUNNEL = "last_used_tunnel";
@@ -57,13 +56,6 @@ public final class TunnelManager extends BaseObservable implements TunnelStateCh
 
     public TunnelManager(final ConfigStore configStore) {
         this.configStore = configStore;
-        Application.getBackendAsync().thenAccept(backend -> backend.registerStateChangeNotification(this));
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        Application.getBackendAsync().thenAccept(backend -> backend.unregisterStateChangeNotification(this));
-        super.finalize();
     }
 
     static CompletionStage<State> getTunnelState(final ObservableTunnel tunnel) {
@@ -264,11 +256,6 @@ public final class TunnelManager extends BaseObservable implements TunnelStateCh
                 setLastUsedTunnel(tunnel);
             saveState();
         });
-    }
-
-    @Override
-    public void tunnelStateChange(final Tunnel tunnel, final State state) {
-        ((ObservableTunnel)tunnel).onStateChanged(state);
     }
 
     public static final class IntentReceiver extends BroadcastReceiver {

@@ -5,7 +5,6 @@
 
 package com.wireguard.android.backend;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -25,7 +24,6 @@ import com.wireguard.crypto.KeyFormatException;
 
 import java.net.InetAddress;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -47,8 +45,6 @@ public final class GoBackend implements Backend {
     @Nullable private Tunnel currentTunnel;
     @Nullable private Config currentConfig;
     private int currentTunnelHandle = -1;
-
-    private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
 
     public GoBackend(final Context context) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
@@ -240,23 +236,12 @@ public final class GoBackend implements Backend {
             currentConfig = null;
         }
 
-        for (final TunnelStateChangeNotificationReceiver notifier : notifiers)
-            notifier.tunnelStateChange(tunnel, state);
+        tunnel.onStateChange(state);
     }
 
     private void startVpnService() {
         Log.d(TAG, "Requesting to start VpnService");
         context.startService(new Intent(context, VpnService.class));
-    }
-
-    @Override
-    public void registerStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
-        notifiers.add(receiver);
-    }
-
-    @Override
-    public void unregisterStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
-        notifiers.remove(receiver);
     }
 
     public static class VpnService extends android.net.VpnService {
@@ -286,8 +271,7 @@ public final class GoBackend implements Backend {
                     owner.currentTunnel = null;
                     owner.currentTunnelHandle = -1;
                     owner.currentConfig = null;
-                    for (final TunnelStateChangeNotificationReceiver notifier : owner.notifiers)
-                        notifier.tunnelStateChange(tunnel, State.DOWN);
+                    tunnel.onStateChange(State.DOWN);
                 }
             }
             vpnService = vpnService.newIncompleteFuture();

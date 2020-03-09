@@ -60,22 +60,4 @@ public interface Backend {
      * @return The updated state of the tunnel.
      */
     Tunnel.State setState(Tunnel tunnel, Tunnel.State state, @Nullable Config config) throws Exception;
-
-    interface TunnelStateChangeNotificationReceiver {
-        void tunnelStateChange(Tunnel tunnel, Tunnel.State state);
-    }
-
-    /**
-     * Register a state change notification callback.
-     *
-     * @param receiver The receiver object to receive the notification.
-     */
-    void registerStateChangeNotification(TunnelStateChangeNotificationReceiver receiver);
-
-    /**
-     * Unregister a state change notification callback.
-     *
-     * @param receiver The receiver object to no longer receive the notification.
-     */
-    void unregisterStateChangeNotification(TunnelStateChangeNotificationReceiver receiver);
 }

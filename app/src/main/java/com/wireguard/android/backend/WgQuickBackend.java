@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,7 +44,6 @@ public final class WgQuickBackend implements Backend {
     private final ToolsInstaller toolsInstaller;
     private final File localTemporaryDir;
     private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
-    private final Set<TunnelStateChangeNotificationReceiver> notifiers = new HashSet<>();
 
     public WgQuickBackend(final Context context, final RootShell rootShell, final ToolsInstaller toolsInstaller) {
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
@@ -155,17 +153,6 @@ public final class WgQuickBackend implements Backend {
         else
             runningConfigs.remove(tunnel);
 
-        for (final TunnelStateChangeNotificationReceiver notifier : notifiers)
-            notifier.tunnelStateChange(tunnel, state);
-    }
-
-    @Override
-    public void registerStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
-        notifiers.add(receiver);
-    }
-
-    @Override
-    public void unregisterStateChangeNotification(final TunnelStateChangeNotificationReceiver receiver) {
-        notifiers.remove(receiver);
+        tunnel.onStateChange(state);
     }
 }
