@@ -128,7 +128,7 @@ public class ModuleLoader {
     }
 
     @Nullable
-    private static Map<String, Sha256Digest> verifySignedHashes(final String signifyDigest) {
+    private Map<String, Sha256Digest> verifySignedHashes(final String signifyDigest) {
         final byte[] publicKeyBytes = Base64.decode(MODULE_PUBLIC_KEY_BASE64, Base64.DEFAULT);
 
         if (publicKeyBytes == null || publicKeyBytes.length != 32 + 10 || publicKeyBytes[0] != 'E' || publicKeyBytes[1] != 'd')

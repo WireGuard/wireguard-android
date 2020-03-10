@@ -161,7 +161,7 @@ public final class TunnelManager extends BaseObservable {
         completableTunnels.complete(tunnels);
     }
 
-    private void refreshTunnelStates() {
+    public void refreshTunnelStates() {
         Application.getAsyncWorker().supplyAsync(() -> Application.getBackend().getRunningTunnelNames())
                 .thenAccept(running -> {
                     for (final ObservableTunnel tunnel : tunnels)
