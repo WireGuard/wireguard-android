@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Helper to install WireGuard tools to the system partition.
@@ -130,6 +132,7 @@ public final class ToolsInstaller {
         return true;
     }
 
+    @RestrictTo(Scope.LIBRARY_GROUP)
     public int install() throws RootShellException, IOException {
         if (!context.getPackageName().startsWith("com.wireguard."))
             throw new SecurityException("The tools may only be installed system-wide from the main WireGuard app.");
