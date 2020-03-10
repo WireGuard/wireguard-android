@@ -1,4 +1,4 @@
-From b19623e7673a4d6743745382d5d38751b64e011d Mon Sep 17 00:00:00 2001
+From e44f456f1d0e429e08afed64a161175ff493f3ac Mon Sep 17 00:00:00 2001
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 Date: Wed, 27 Feb 2019 05:05:44 +0100
 Subject: [PATCH] runtime: use CLOCK_BOOTTIME in nanotime on Linux
@@ -28,10 +28,10 @@ Change-Id: I7b2a6ca0c5bc5fce57ec0eeafe7b68270b429321
  8 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/src/runtime/sys_linux_386.s b/src/runtime/sys_linux_386.s
-index 72c43bd9da..daadfe32a9 100644
+index 1b28098ad9..46b7071ed8 100644
 --- a/src/runtime/sys_linux_386.s
 +++ b/src/runtime/sys_linux_386.s
-@@ -288,13 +288,13 @@ noswitch:
+@@ -317,13 +317,13 @@ noswitch:
  
  	LEAL	8(SP), BX	// &ts (struct timespec)
  	MOVL	BX, 4(SP)
@@ -48,10 +48,10 @@ index 72c43bd9da..daadfe32a9 100644
  	INVOKE_SYSCALL
  
 diff --git a/src/runtime/sys_linux_amd64.s b/src/runtime/sys_linux_amd64.s
-index 5c300f553d..e4a6f12ec6 100644
+index 58d3bc54b4..4bb9bde3d0 100644
 --- a/src/runtime/sys_linux_amd64.s
 +++ b/src/runtime/sys_linux_amd64.s
-@@ -261,7 +261,7 @@ noswitch:
+@@ -293,7 +293,7 @@ noswitch:
  	MOVQ	runtime·vdsoClockgettimeSym(SB), AX
  	CMPQ	AX, $0
  	JEQ	fallback
@@ -61,7 +61,7 @@ index 5c300f553d..e4a6f12ec6 100644
  	CALL	AX
  	MOVQ	0(SP), AX	// sec
 diff --git a/src/runtime/sys_linux_arm.s b/src/runtime/sys_linux_arm.s
-index 9c7398451c..61b6cd91f6 100644
+index e103da56dc..0b872b90a6 100644
 --- a/src/runtime/sys_linux_arm.s
 +++ b/src/runtime/sys_linux_arm.s
 @@ -11,7 +11,7 @@
@@ -73,17 +73,17 @@ index 9c7398451c..61b6cd91f6 100644
  
  // for EABI, as we don't support OABI
  #define SYS_BASE 0x0
-@@ -291,7 +291,7 @@ noswitch:
+@@ -345,7 +345,7 @@ noswitch:
  	SUB	$24, R13	// Space for results
  	BIC	$0x7, R13	// Align for C code
  
 -	MOVW	$CLOCK_MONOTONIC, R0
 +	MOVW	$CLOCK_BOOTTIME, R0
  	MOVW	$8(R13), R1	// timespec
- 	MOVW	runtime·vdsoClockgettimeSym(SB), R11
- 	CMP	$0, R11
+ 	MOVW	runtime·vdsoClockgettimeSym(SB), R2
+ 	CMP	$0, R2
 diff --git a/src/runtime/sys_linux_arm64.s b/src/runtime/sys_linux_arm64.s
-index 2835b6ca1c..346ca9cfce 100644
+index b9588cec30..e444d50df4 100644
 --- a/src/runtime/sys_linux_arm64.s
 +++ b/src/runtime/sys_linux_arm64.s
 @@ -13,7 +13,7 @@
@@ -95,7 +95,7 @@ index 2835b6ca1c..346ca9cfce 100644
  
  #define SYS_exit		93
  #define SYS_read		63
-@@ -247,7 +247,7 @@ noswitch:
+@@ -297,7 +297,7 @@ noswitch:
  	BIC	$15, R1
  	MOVD	R1, RSP
  
@@ -103,59 +103,59 @@ index 2835b6ca1c..346ca9cfce 100644
 +	MOVW	$CLOCK_BOOTTIME, R0
  	MOVD	runtime·vdsoClockgettimeSym(SB), R2
  	CBZ	R2, fallback
- 	BL	(R2)
+ 
 diff --git a/src/runtime/sys_linux_mips64x.s b/src/runtime/sys_linux_mips64x.s
-index 33ed1050c2..59a5be179c 100644
+index 723cfe43d9..edd7a195eb 100644
 --- a/src/runtime/sys_linux_mips64x.s
 +++ b/src/runtime/sys_linux_mips64x.s
-@@ -189,7 +189,7 @@ TEXT runtime·walltime(SB),NOSPLIT,$16
- 	RET
+@@ -278,7 +278,7 @@ noswitch:
+ 	AND	$~15, R1	// Align for C code
+ 	MOVV	R1, R29
  
- TEXT runtime·nanotime(SB),NOSPLIT,$16
 -	MOVW	$1, R4 // CLOCK_MONOTONIC
 +	MOVW	$7, R4 // CLOCK_BOOTTIME
  	MOVV	$0(R29), R5
- 	MOVV	$SYS_clock_gettime, R2
- 	SYSCALL
+ 
+ 	MOVV	runtime·vdsoClockgettimeSym(SB), R25
 diff --git a/src/runtime/sys_linux_mipsx.s b/src/runtime/sys_linux_mipsx.s
-index 6e539fbc6f..55b2bf7156 100644
+index 15893a7a28..f3edf9a83a 100644
 --- a/src/runtime/sys_linux_mipsx.s
 +++ b/src/runtime/sys_linux_mipsx.s
-@@ -194,7 +194,7 @@ TEXT runtime·walltime(SB),NOSPLIT,$8-12
+@@ -235,7 +235,7 @@ TEXT runtime·walltime1(SB),NOSPLIT,$8-12
  	RET
  
- TEXT runtime·nanotime(SB),NOSPLIT,$8-8
+ TEXT runtime·nanotime1(SB),NOSPLIT,$8-8
 -	MOVW	$1, R4	// CLOCK_MONOTONIC
 +	MOVW	$7, R4	// CLOCK_BOOTTIME
  	MOVW	$4(R29), R5
  	MOVW	$SYS_clock_gettime, R2
  	SYSCALL
 diff --git a/src/runtime/sys_linux_ppc64x.s b/src/runtime/sys_linux_ppc64x.s
-index 13d23156bd..f67e5062aa 100644
+index 8629fe3233..2402e2623a 100644
 --- a/src/runtime/sys_linux_ppc64x.s
 +++ b/src/runtime/sys_linux_ppc64x.s
-@@ -204,7 +204,7 @@ fallback:
+@@ -233,7 +233,7 @@ fallback:
  	JMP	finish
  
- TEXT runtime·nanotime(SB),NOSPLIT,$16
+ TEXT runtime·nanotime1(SB),NOSPLIT,$16
 -	MOVD	$1, R3		// CLOCK_MONOTONIC
 +	MOVD	$7, R3		// CLOCK_BOOTTIME
  
  	MOVD	R1, R15		// R15 is unchanged by C code
  	MOVD	g_m(g), R21	// R21 = m
 diff --git a/src/runtime/sys_linux_s390x.s b/src/runtime/sys_linux_s390x.s
-index 58b36dff0a..cb92e9a402 100644
+index c15a1d5364..f52c4d5098 100644
 --- a/src/runtime/sys_linux_s390x.s
 +++ b/src/runtime/sys_linux_s390x.s
-@@ -180,7 +180,7 @@ TEXT runtime·walltime(SB),NOSPLIT,$16
+@@ -207,7 +207,7 @@ TEXT runtime·walltime1(SB),NOSPLIT,$16
  	RET
  
- TEXT runtime·nanotime(SB),NOSPLIT,$16
+ TEXT runtime·nanotime1(SB),NOSPLIT,$16
 -	MOVW	$1, R2 // CLOCK_MONOTONIC
 +	MOVW	$7, R2 // CLOCK_BOOTTIME
  	MOVD	$tp-16(SP), R3
  	MOVW	$SYS_clock_gettime, R1
  	SYSCALL
 -- 
-2.23.0
+2.25.1
 
