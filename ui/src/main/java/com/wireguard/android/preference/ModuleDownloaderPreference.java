@@ -53,12 +53,12 @@ public class ModuleDownloaderPreference extends Preference {
             setState(State.SUCCESS);
             Application.getAsyncWorker().runAsync(() -> {
                 Thread.sleep(1000 * 5);
-                Intent i = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
-                if (i == null)
+                final Intent restartIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
+                if (restartIntent == null)
                     return;
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Application.get().startActivity(i);
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Application.get().startActivity(restartIntent);
                 System.exit(0);
             });
         } else

@@ -24,7 +24,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @NonNullForAll
-public class DownloadsFileSaver {
+public final class DownloadsFileSaver {
+
+    private DownloadsFileSaver() {
+        // Prevent instantiation
+    }
 
     public static DownloadsFile save(final Context context, final String name, final String mimeType, final boolean overwriteExisting) throws Exception {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -73,11 +77,11 @@ public class DownloadsFileSaver {
         }
     }
 
-    public static class DownloadsFile {
-        private Context context;
-        private String fileName;
-        private OutputStream outputStream;
-        private Uri uri;
+    public static final class DownloadsFile {
+        private final Context context;
+        private final String fileName;
+        private final OutputStream outputStream;
+        private final Uri uri;
 
         private DownloadsFile(final Context context, final OutputStream outputStream, final String fileName, final Uri uri) {
             this.context = context;
