@@ -117,7 +117,6 @@
     <string name="public_key">公開鍵</string>
     <string name="public_key_description">公開鍵</string>
     <string name="qr_code_hint">Tip: `qrencode -t ansiutf8 &lt; tunnel.conf` で生成できます</string>
-    <string name="restore_on_boot_summary">起動時に前回有効だったトンネルを起動する</string>
     <string name="restore_on_boot_title">起動時に復元</string>
     <string name="save">保存</string>
     <string name="select_all">すべて選択</string>
