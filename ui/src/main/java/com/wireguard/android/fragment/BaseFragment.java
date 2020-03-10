@@ -119,7 +119,7 @@ public abstract class BaseFragment extends Fragment implements OnSelectedTunnelC
             final String message = requireContext().getString(messageResId, error);
             final View view = getView();
             if (view != null)
-                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAnchorView(view.findViewById(R.id.create_fab)).show();
             else
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
             Log.e(TAG, message, throwable);
