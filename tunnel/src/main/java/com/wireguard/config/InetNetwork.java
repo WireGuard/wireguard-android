@@ -47,7 +47,7 @@ public final class InetNetwork {
         final int maxMask = (address instanceof Inet4Address) ? 32 : 128;
         if (rawMask > maxMask)
             throw new ParseException(InetNetwork.class, maskString, "Invalid network mask");
-        final int mask = rawMask >= 0 && rawMask <= maxMask ? rawMask : maxMask;
+        final int mask = rawMask >= 0 ? rawMask : maxMask;
         return new InetNetwork(address, mask);
     }
 
