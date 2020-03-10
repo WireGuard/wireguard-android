@@ -21,7 +21,11 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
+
 @NonNullForAll
+@RestrictTo(Scope.LIBRARY_GROUP)
 public final class SharedLibraryLoader {
     private static final String TAG = "WireGuard/" + SharedLibraryLoader.class.getSimpleName();
 
