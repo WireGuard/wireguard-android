@@ -79,7 +79,7 @@ public class Application extends android.app.Application implements SharedPrefer
                     try {
                         if (!didStartRootShell)
                             app.rootShell.start();
-                        WgQuickBackend wgQuickBackend = new WgQuickBackend(app.getApplicationContext(), app.rootShell, app.toolsInstaller);
+                        final WgQuickBackend wgQuickBackend = new WgQuickBackend(app.getApplicationContext(), app.rootShell, app.toolsInstaller);
                         wgQuickBackend.setMultipleTunnels(app.sharedPreferences.getBoolean("multiple_tunnels", false));
                         backend = wgQuickBackend;
                     } catch (final Exception ignored) {

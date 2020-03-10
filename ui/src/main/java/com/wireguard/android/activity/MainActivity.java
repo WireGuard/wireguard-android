@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View.OnApplyWindowInsetsListener;
 import android.widget.LinearLayout;
 
 import com.wireguard.android.R;
@@ -78,7 +77,7 @@ public class MainActivity extends BaseActivity
         onBackStackChanged();
         // Dispatch insets on back stack change
         // This is required to ensure replaced fragments are also able to consume insets
-        findViewById(R.id.master_detail_wrapper).setOnApplyWindowInsetsListener((OnApplyWindowInsetsListener) (v, insets) -> {
+        findViewById(R.id.master_detail_wrapper).setOnApplyWindowInsetsListener((v, insets) -> {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.addOnBackStackChangedListener(() -> {
                 final List<Fragment> fragments = fragmentManager.getFragments();
@@ -97,6 +96,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    @SuppressWarnings("UnnecessaryFullyQualifiedName")
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

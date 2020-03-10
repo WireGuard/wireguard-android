@@ -107,10 +107,10 @@ public final class ToolsInstaller {
         }
     }
 
-    public boolean extract() throws IOException {
+    private boolean extract() throws IOException {
         localBinaryDir.mkdirs();
-        final File files[] = new File[EXECUTABLES.length];
-        final File tempFiles[] = new File[EXECUTABLES.length];
+        final File[] files = new File[EXECUTABLES.length];
+        final File[] tempFiles = new File[EXECUTABLES.length];
         boolean allExist = true;
         for (int i = 0; i < files.length; ++i) {
             files[i] = new File(localBinaryDir, EXECUTABLES[i]);

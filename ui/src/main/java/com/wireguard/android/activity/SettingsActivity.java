@@ -67,14 +67,13 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
     }
 
     @Override
+    @SuppressWarnings("UnnecessaryFullyQualifiedName")
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,7 +99,7 @@ public class SettingsActivity extends ThemeChangeAwareActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 screen.removePreference(getPreferenceManager().findPreference("dark_theme"));
 
-            final Preference wgQuickOnlyPrefs[] = {
+            final Preference[] wgQuickOnlyPrefs = {
                     getPreferenceManager().findPreference("tools_installer"),
                     getPreferenceManager().findPreference("restore_on_boot"),
                     getPreferenceManager().findPreference("multiple_tunnels")

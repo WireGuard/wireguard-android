@@ -37,6 +37,7 @@ public class TunnelDetailFragment extends BaseFragment {
     @Nullable private State lastState = State.TOGGLE;
     @Nullable private Timer timer;
 
+    @SuppressWarnings("MagicNumber")
     private String formatBytes(final long bytes) {
         if (bytes < 1024)
             return requireContext().getString(R.string.transfer_bytes, bytes);
