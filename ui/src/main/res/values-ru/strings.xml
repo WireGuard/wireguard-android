@@ -103,7 +103,15 @@
     <string name="module_installer_title">Скачать и установить модуль ядра</string>
     <string name="module_installer_working">Скачивание и установка…</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
+    <string name="module_disabler_disabled_title">Включить модуль ядра</string>
+    <string name="module_disabler_disabled_summary">Экспериментальный модуль ядра приоритетнее и улучшает производительность</string>
+    <string name="module_disabler_enabled_title">Выключить модуль ядра</string>
+    <string name="module_disabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
+    <string name="module_disabler_working">Приложение перезапустится через 5 секунд</string>
     <string name="mtu">MTU</string>
+    <string name="multiple_tunnels_title">Разрешить несколько одновременных туннелей</string>
+    <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
+    <string name="multiple_tunnels_summary_off">Только один туннель, выключит другие</string>
     <string name="name">Имя</string>
     <string name="no_config_error">Попытка поднять туннель без конфигурации</string>
     <string name="no_configs_error">Конфигурации не найдены</string>
@@ -123,6 +131,8 @@
     <string name="public_key">Публичный ключ</string>
     <string name="public_key_description">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>
+    <string name="restore_on_boot_summary_off">Не поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_title">Восстанавливать при загрузке</string>
     <string name="save">Сохранить</string>
     <string name="select_all">Выбрать все</string>
