@@ -48,3 +48,5 @@ tasks {
         distributionType = Wrapper.DistributionType.ALL
     }
 }
+
+apply from: "version.gradle"
