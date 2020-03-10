@@ -60,12 +60,12 @@ public class KernelModuleDisablerPreference extends Preference {
                     Thread.sleep(Math.max(0, 1000 * 5 - (SystemClock.elapsedRealtime() - start)));
                 } catch (final Exception ignored) {
                 }
-                final Intent i = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
-                if (i == null)
+                final Intent restartIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
+                if (restartIntent == null)
                     return;
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Application.get().startActivity(i);
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Application.get().startActivity(restartIntent);
                 System.exit(0);
             });
         }).join());
