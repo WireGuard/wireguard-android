@@ -29,3 +29,5 @@ dependencies {
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
 }
+
+apply from: "publish.gradle"
