@@ -11,3 +11,20 @@ $ git clone --recurse-submodules https://git.zx2c4.com/wireguard-android
 $ cd wireguard-android
 $ ./gradlew assembleRelease
 ```
+
+## Embedding
+
+The tunnel library is [on JCenter](https://bintray.com/wireguard/wireguard-android/wireguard-android/_latestVersion):
+
+```
+implementation 'com.wireguard.android:tunnel:$wireguardTunnelVersion'
+```
+
+The library makes use of Java 8 features, so be sure to support those in your gradle configuration:
+
+```
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+}
+```
