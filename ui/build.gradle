@@ -83,6 +83,8 @@ dependencies {
     implementation "com.google.android.material:material:$materialComponentsVersion"
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
+    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
 }
 
 tasks.withType(JavaCompile) {
