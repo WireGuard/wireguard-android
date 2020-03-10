@@ -37,29 +37,23 @@ public final class SharedLibraryLoader {
 
         for (final String abi : Build.SUPPORTED_ABIS) {
             for (final String apk : apks) {
-                final ZipFile zipFile;
-                try {
-                    zipFile = new ZipFile(new File(apk), ZipFile.OPEN_READ);
-                } catch (final IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                final String mappedLibName = System.mapLibraryName(libName);
-                final byte[] buffer = new byte[1024 * 32];
-                final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
-                final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
-                if (zipEntry == null)
-                    continue;
-                Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + destination.getAbsolutePath());
-                try (final FileOutputStream out = new FileOutputStream(destination);
-                     final InputStream in = zipFile.getInputStream(zipEntry)) {
-                    int len;
-                    while ((len = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, len);
+                try (final ZipFile zipFile = new ZipFile(new File(apk), ZipFile.OPEN_READ)) {
+                    final String mappedLibName = System.mapLibraryName(libName);
+                    final String libZipPath = "lib" + File.separatorChar + abi + File.separatorChar + mappedLibName;
+                    final ZipEntry zipEntry = zipFile.getEntry(libZipPath);
+                    if (zipEntry == null)
+                        continue;
+                    Log.d(TAG, "Extracting apk:/" + libZipPath + " to " + destination.getAbsolutePath());
+                    try (final FileOutputStream out = new FileOutputStream(destination);
+                         final InputStream in = zipFile.getInputStream(zipEntry)) {
+                        int len;
+                        final byte[] buffer = new byte[1024 * 32];
+                        while ((len = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, len);
+                        }
+                        out.getFD().sync();
                     }
-                    out.getFD().sync();
                 }
-                zipFile.close();
                 return true;
             }
         }

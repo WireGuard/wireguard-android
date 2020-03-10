@@ -177,7 +177,7 @@ public class RootShell {
         }
     }
 
-    public void stop() {
+    private void stop() {
         synchronized (lock) {
             if (process != null) {
                 process.destroy();

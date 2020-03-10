@@ -45,7 +45,7 @@ public final class GoBackend implements Backend {
         this.context = context;
     }
 
-    public static void setAlwaysOnCallback(AlwaysOnCallback cb) {
+    public static void setAlwaysOnCallback(final AlwaysOnCallback cb) {
         alwaysOnCallback = cb;
     }
 
@@ -84,7 +84,8 @@ public final class GoBackend implements Backend {
         }
         final String config = wgGetConfig(currentTunnelHandle);
         Key key = null;
-        long rx = 0, tx = 0;
+        long rx = 0;
+        long tx = 0;
         for (final String line : config.split("\\n")) {
             if (line.startsWith("public_key=")) {
                 if (key != null)
@@ -152,7 +153,7 @@ public final class GoBackend implements Backend {
 
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
             throws Exception {
-        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + " " + state);
+        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
 
         if (state == State.UP) {
             if (config == null)

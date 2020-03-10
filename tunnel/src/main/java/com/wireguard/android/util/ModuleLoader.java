@@ -38,6 +38,7 @@ import java.util.Map;
 import androidx.annotation.Nullable;
 
 @NonNullForAll
+@SuppressWarnings("MagicNumber")
 public class ModuleLoader {
     private static final String MODULE_LIST_URL = "https://download.wireguard.com/android-module/modules.txt.sig";
     private static final String MODULE_NAME = "wireguard-%s.ko";
@@ -70,7 +71,7 @@ public class ModuleLoader {
         connection.connect();
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
             throw new IOException("Hash list could not be found");
-        byte[] input = new byte[1024 * 1024 * 3 /* 3MiB */];
+        final byte[] input = new byte[1024 * 1024 * 3 /* 3MiB */];
         int len;
         try (final InputStream inputStream = connection.getInputStream()) {
             len = inputStream.read(input);
@@ -93,7 +94,7 @@ public class ModuleLoader {
         File tempFile = null;
         try {
             tempFile = File.createTempFile("UNVERIFIED-", null, tmpDir);
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
             try (final InputStream inputStream = connection.getInputStream();
                  final FileOutputStream outputStream = new FileOutputStream(tempFile)) {
                 int total = 0;
@@ -127,7 +128,7 @@ public class ModuleLoader {
     }
 
     @Nullable
-    private Map<String, Sha256Digest> verifySignedHashes(final String signifyDigest) {
+    private static Map<String, Sha256Digest> verifySignedHashes(final String signifyDigest) {
         final byte[] publicKeyBytes = Base64.decode(MODULE_PUBLIC_KEY_BASE64, Base64.DEFAULT);
 
         if (publicKeyBytes == null || publicKeyBytes.length != 32 + 10 || publicKeyBytes[0] != 'E' || publicKeyBytes[1] != 'd')
@@ -148,9 +149,9 @@ public class ModuleLoader {
         }
 
         try {
-            EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-            Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
-            byte[] rawPublicKeyBytes = new byte[32];
+            final EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+            final Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
+            final byte[] rawPublicKeyBytes = new byte[32];
             System.arraycopy(publicKeyBytes, 10, rawPublicKeyBytes, 0, 32);
             signature.initVerify(new EdDSAPublicKey(new EdDSAPublicKeySpec(rawPublicKeyBytes, parameterSpec)));
             signature.update(lines[2].getBytes(StandardCharsets.UTF_8));
@@ -160,9 +161,9 @@ public class ModuleLoader {
             return null;
         }
 
-        Map<String, Sha256Digest> hashes = new HashMap<>();
+        final Map<String, Sha256Digest> hashes = new HashMap<>();
         for (final String line : lines[2].split("\n")) {
-            final String[] components = line.split("  ", 2);
+            final String[] components = line.split(" {2}", 2);
             if (components.length != 2)
                 return null;
             try {
@@ -175,7 +176,7 @@ public class ModuleLoader {
     }
 
     private static final class Sha256Digest {
-        private byte[] bytes;
+        private final byte[] bytes;
 
         private Sha256Digest(final String hex) {
             if (hex.length() != 64)

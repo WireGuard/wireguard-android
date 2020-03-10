@@ -105,7 +105,7 @@ public final class WgQuickBackend implements Backend {
         return output.get(0);
     }
 
-    public void setMultipleTunnels(boolean on) {
+    public void setMultipleTunnels(final boolean on) {
         multipleTunnels = on;
     }
 
@@ -164,7 +164,7 @@ public final class WgQuickBackend implements Backend {
     }
 
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state) throws Exception {
-        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + " " + state);
+        Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
 
         Objects.requireNonNull(config, "Trying to set state up with a null config");
 
