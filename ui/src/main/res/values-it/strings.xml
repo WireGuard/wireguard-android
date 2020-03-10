@@ -123,7 +123,6 @@
     <string name="public_key">Chiave pubblica</string>
     <string name="public_key_description">La chiave pubblica</string>
     <string name="qr_code_hint">Suggerimento: genera con `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
-    <string name="restore_on_boot_summary">Attiva tunnel attivati in precedenza all\'avvio</string>
     <string name="restore_on_boot_title">Ripristina all\'avvio</string>
     <string name="save">Salva</string>
     <string name="select_all">Seleziona tutto</string>

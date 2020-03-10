@@ -117,7 +117,6 @@
     <string name="public_key">公钥</string>
     <string name="public_key_description">公钥</string>
     <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 生成二维码</string>
-    <string name="restore_on_boot_summary">设备启动时自动开启上一次使用的隧道</string>
     <string name="restore_on_boot_title">开机自启</string>
     <string name="save">保存</string>
     <string name="select_all">全选</string>
