@@ -51,6 +51,7 @@ public class ModuleDownloaderPreference extends Preference {
             setState(State.NOTFOUND);
         else if (result == OsConstants.EXIT_SUCCESS) {
             setState(State.SUCCESS);
+            Application.getSharedPreferences().edit().remove("disable_kernel_module").apply();
             Application.getAsyncWorker().runAsync(() -> {
                 Thread.sleep(1000 * 5);
                 final Intent restartIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
