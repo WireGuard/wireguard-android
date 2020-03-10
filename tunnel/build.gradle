@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+version wireguardVersionName
+group groupName
+
 android {
     buildToolsVersion '29.0.3'
     compileSdkVersion 29

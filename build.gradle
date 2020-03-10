@@ -29,6 +29,8 @@ buildscript {
         eddsaVersion = '0.3.0'
         bintrayPluginVersion = '1.8.4'
         mavenPluginVersion = '2.1'
+
+        groupName = 'com.wireguard.android'
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$agpVersion"

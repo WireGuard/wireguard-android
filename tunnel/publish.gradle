@@ -1,9 +1,6 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version wireguardVersionName
-group 'com.wireguard.android'
-
 install {
     repositories.mavenInstaller {
         pom.project {
@@ -12,7 +9,7 @@ install {
             url 'https://www.wireguard.com/'
 
             packaging 'aar'
-            groupId 'com.wireguard.android'
+            groupId groupName
             artifactId 'tunnel'
             version wireguardVersionName
 
