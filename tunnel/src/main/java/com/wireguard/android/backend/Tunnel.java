@@ -33,7 +33,6 @@ public interface Tunnel {
      * React to a change in state of the tunnel. Should only be directly called by Backend.
      *
      * @param newState The new state of the tunnel.
-     * @return The new state of the tunnel.
      */
     void onStateChange(State newState);
 

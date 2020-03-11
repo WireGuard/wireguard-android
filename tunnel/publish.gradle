@@ -52,11 +52,25 @@ bintray {
     }
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier = 'sources'
-}
-
-artifacts {
-    archives sourcesJar
+android.libraryVariants.all { variant ->
+    if (variant.name == 'release') {
+        task javadoc(type: Javadoc) {
+            source = variant.javaCompiler.source
+            classpath = files((android.bootClasspath.join(File.pathSeparator)))
+            classpath += variant.javaCompiler.classpath
+            title = 'Embeddable WireGuard Tunnel for Android v$wireguardVersionName'
+        }
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            archiveClassifier = 'javadoc'
+            from javadoc.destinationDir
+        }
+        task sourcesJar(type: Jar) {
+            archiveClassifier = 'sources'
+            from android.sourceSets.main.java.srcDirs
+        }
+        artifacts {
+            archives sourcesJar
+            archives javadocJar
+        }
+    }
 }

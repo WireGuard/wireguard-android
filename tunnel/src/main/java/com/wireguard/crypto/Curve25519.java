@@ -28,7 +28,7 @@ import androidx.annotation.Nullable;
  */
 @SuppressWarnings({"MagicNumber", "NonConstantFieldWithUpperCaseName", "SuspiciousNameCombination"})
 @NonNullForAll
-public final class Curve25519 {
+final class Curve25519 {
     // Numbers modulo 2^255 - 19 are broken up into ten 26-bit words.
     private static final int NUM_LIMBS_255BIT = 10;
     private static final int NUM_LIMBS_510BIT = 20;
