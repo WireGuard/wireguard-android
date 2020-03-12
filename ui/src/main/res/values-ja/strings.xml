@@ -33,7 +33,6 @@
     <string name="bad_config_reason_invalid_value">無効な値</string>
     <string name="bad_config_reason_missing_attribute">属性が不足しています</string>
     <string name="bad_config_reason_missing_section">セクションが不足しています</string>
-    <string name="bad_config_reason_missing_value">値が不足しています</string>
     <string name="bad_config_reason_syntax_error">構文エラー</string>
     <string name="bad_config_reason_unknown_attribute">未知の属性</string>
     <string name="bad_config_reason_unknown_section">未知のセクション</string>

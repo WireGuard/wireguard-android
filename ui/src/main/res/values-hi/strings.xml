@@ -39,7 +39,6 @@
     <string name="bad_config_reason_invalid_value">अमान्य मूल्य</string>
     <string name="bad_config_reason_missing_attribute">गुम विशेषता</string>
     <string name="bad_config_reason_missing_section">छूटा हुआ भाग</string>
-    <string name="bad_config_reason_missing_value">अनुपस्थित मान</string>
     <string name="bad_config_reason_syntax_error">वक्य रचना त्रुटि</string>
     <string name="bad_config_reason_unknown_attribute">अज्ञात एट्रिब्यूट</string>
     <string name="bad_config_reason_unknown_section">अज्ञात एट्रिब्यूट </string>

@@ -39,7 +39,6 @@
     <string name="bad_config_reason_invalid_value">Valore non valido</string>
     <string name="bad_config_reason_missing_attribute">Attributo mancante</string>
     <string name="bad_config_reason_missing_section">Sezione mancante</string>
-    <string name="bad_config_reason_missing_value">Valore mancante</string>
     <string name="bad_config_reason_syntax_error">Errore di sintassi</string>
     <string name="bad_config_reason_unknown_attribute">Attributo sconosciuto</string>
     <string name="bad_config_reason_unknown_section">Sezione sconosciuta</string>
