@@ -96,7 +96,6 @@ public class BadConfigException extends Exception {
         INVALID_VALUE,
         MISSING_ATTRIBUTE,
         MISSING_SECTION,
-        MISSING_VALUE,
         SYNTAX_ERROR,
         UNKNOWN_ATTRIBUTE,
         UNKNOWN_SECTION

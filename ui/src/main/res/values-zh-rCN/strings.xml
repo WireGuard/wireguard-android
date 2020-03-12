@@ -33,7 +33,6 @@
     <string name="bad_config_reason_invalid_value">数值无效</string>
     <string name="bad_config_reason_missing_attribute">属性缺失</string>
     <string name="bad_config_reason_missing_section">节缺失</string>
-    <string name="bad_config_reason_missing_value">数值缺失</string>
     <string name="bad_config_reason_syntax_error">语法错误</string>
     <string name="bad_config_reason_unknown_attribute">属性未知</string>
     <string name="bad_config_reason_unknown_section">节未知</string>

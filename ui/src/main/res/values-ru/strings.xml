@@ -39,7 +39,6 @@
     <string name="bad_config_reason_invalid_value">Неправильное значение</string>
     <string name="bad_config_reason_missing_attribute">Несуществующий атрибут</string>
     <string name="bad_config_reason_missing_section">Несуществующий раздел</string>
-    <string name="bad_config_reason_missing_value">Несуществющее значение</string>
     <string name="bad_config_reason_syntax_error">Синтаксическая ошибка</string>
     <string name="bad_config_reason_unknown_attribute">Неизвестный атрибут</string>
     <string name="bad_config_reason_unknown_section">Неизвестный раздел</string>

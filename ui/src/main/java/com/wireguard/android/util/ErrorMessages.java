@@ -37,7 +37,6 @@ public final class ErrorMessages {
             BadConfigException.Reason.INVALID_VALUE, R.string.bad_config_reason_invalid_value,
             BadConfigException.Reason.MISSING_ATTRIBUTE, R.string.bad_config_reason_missing_attribute,
             BadConfigException.Reason.MISSING_SECTION, R.string.bad_config_reason_missing_section,
-            BadConfigException.Reason.MISSING_VALUE, R.string.bad_config_reason_missing_value,
             BadConfigException.Reason.SYNTAX_ERROR, R.string.bad_config_reason_syntax_error,
             BadConfigException.Reason.UNKNOWN_ATTRIBUTE, R.string.bad_config_reason_unknown_attribute,
             BadConfigException.Reason.UNKNOWN_SECTION, R.string.bad_config_reason_unknown_section
