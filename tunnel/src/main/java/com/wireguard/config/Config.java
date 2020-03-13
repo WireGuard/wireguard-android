@@ -69,6 +69,7 @@ public final class Config {
         final Collection<String> peerLines = new ArrayList<>();
         boolean inInterfaceSection = false;
         boolean inPeerSection = false;
+        boolean seenInterfaceSection = false;
         @Nullable String line;
         while ((line = reader.readLine()) != null) {
             final int commentIndex = line.indexOf('#');
@@ -86,6 +87,7 @@ public final class Config {
                 if ("[Interface]".equalsIgnoreCase(line)) {
                     inInterfaceSection = true;
                     inPeerSection = false;
+                    seenInterfaceSection = true;
                 } else if ("[Peer]".equalsIgnoreCase(line)) {
                     inInterfaceSection = false;
                     inPeerSection = true;
@@ -104,7 +106,7 @@ public final class Config {
         }
         if (inPeerSection)
             builder.parsePeer(peerLines);
-        else if (!inInterfaceSection)
+        if (!seenInterfaceSection)
             throw new BadConfigException(Section.CONFIG, Location.TOP_LEVEL,
                     Reason.MISSING_SECTION, null);
         // Combine all [Interface] sections in the file.
