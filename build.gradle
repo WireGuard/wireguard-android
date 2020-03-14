@@ -29,6 +29,7 @@ buildscript {
         eddsaVersion = '0.3.0'
         bintrayPluginVersion = '1.8.4'
         mavenPluginVersion = '2.1'
+        junitVersion = '4.13'
 
         groupName = 'com.wireguard.android'
     }
