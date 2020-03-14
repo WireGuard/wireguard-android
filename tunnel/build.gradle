@@ -21,6 +21,11 @@ android {
             path 'tools/CMakeLists.txt'
         }
     }
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
 
 dependencies {
@@ -30,6 +35,7 @@ dependencies {
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabpVersion"
     implementation "net.i2p.crypto:eddsa:$eddsaVersion"
+    testImplementation "junit:junit:$junitVersion"
 }
 
 apply from: "publish.gradle"
