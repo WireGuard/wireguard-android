@@ -55,9 +55,9 @@ bintray {
 android.libraryVariants.all { variant ->
     if (variant.name == 'release') {
         task javadoc(type: Javadoc) {
-            source = variant.javaCompiler.source
+            source = variant.javaCompileProvider.get().source
             classpath = files((android.bootClasspath.join(File.pathSeparator)))
-            classpath += variant.javaCompiler.classpath
+            classpath += variant.javaCompileProvider.get().classpath
             title = 'Embeddable WireGuard Tunnel for Android v$wireguardVersionName'
         }
         task javadocJar(type: Jar, dependsOn: javadoc) {
