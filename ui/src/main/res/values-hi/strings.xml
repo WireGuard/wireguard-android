@@ -98,7 +98,6 @@
     <string name="module_version_error">कर्नेल मॉड्यूल संस्करण निर्धारित करने में असमर्थ</string>
     <string name="module_installer_not_found">आपके डिवाइस के लिए कोई मॉड्यूल उपलब्ध नहीं हैं</string>
     <string name="module_installer_initial">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
-    <string name="module_installer_success">सफलता। ऐप 5 सेकंड में रीस्टार्ट होगा</string>
     <string name="module_installer_title">कर्नेल मॉड्यूल डाउनलोड और इंस्टॉल करें</string>
     <string name="module_installer_working">डाउनलोड कर रहा है और स्थापित कर रहा है…</string>
     <string name="module_installer_error">कुछ गलत हो गया। कृपया पुन: प्रयास करें</string>
@@ -106,7 +105,6 @@
     <string name="module_disabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
     <string name="module_disabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
     <string name="module_disabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
-    <string name="module_disabler_working">ऐप 5 सेकंड में रीस्टार्ट होगा</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">एक साथ कई टनलस को अनुमति दें</string>
     <string name="multiple_tunnels_summary_on">एक साथ कई टनलस को चालू किया जा सकता है</string>

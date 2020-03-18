@@ -92,7 +92,6 @@
     <string name="module_version_error">无法确定内核模块版本</string>
     <string name="module_installer_not_found">没有可用于此设备的模块</string>
     <string name="module_installer_initial">使用内核模块可以提升性能（实验性）</string>
-    <string name="module_installer_success">安装成功，应用将于 5 秒后重启</string>
     <string name="module_installer_title">下载并安装内核模块</string>
     <string name="module_installer_working">正在下载安装...</string>
     <string name="module_installer_error">发生错误，请重试</string>
@@ -100,7 +99,6 @@
     <string name="module_disabler_disabled_summary">内核空间的模块性能较强，但可能不稳定</string>
     <string name="module_disabler_enabled_title">停用内核模块</string>
     <string name="module_disabler_enabled_summary">用户空间的模块性能较弱，但稳定性更好</string>
-    <string name="module_disabler_working">应用将于 5 秒后重启</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">同时开启多条隧道</string>
     <string name="multiple_tunnels_summary_on">当前允许同时开启多条隧道</string>

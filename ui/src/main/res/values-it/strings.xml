@@ -98,7 +98,6 @@
     <string name="module_version_error">Impossibile determinare la versione modulo del kernel</string>
     <string name="module_installer_not_found">Nessun modulo disponibile per il tuo dispositivo</string>
     <string name="module_installer_initial">Il modulo del kernel sperimentale può migliorare le prestazioni</string>
-    <string name="module_installer_success">Fatto. L\'applicazione si riavvierà in 5 secondi</string>
     <string name="module_installer_title">Scarica e installa il modulo del kernel</string>
     <string name="module_installer_working">Scaricamento e installazione…</string>
     <string name="module_installer_error">Qualcosa è andato storto. Riprova</string>
