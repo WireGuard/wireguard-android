@@ -92,7 +92,6 @@
     <string name="module_version_error">カーネルモジュールバージョンを特定できません</string>
     <string name="module_installer_not_found">このデバイス用のモジュールは利用できません</string>
     <string name="module_installer_initial">実験的カーネルモジュールはパフォーマンスが向上する場合があります</string>
-    <string name="module_installer_success">成功. アプリは5秒後以内に再起動します</string>
     <string name="module_installer_title">カーネルモジュールをダウンロードしてインストールする</string>
     <string name="module_installer_working">ダウンロードしてインストールしています…</string>
     <string name="module_installer_error">失敗しました. 再度実行してみてください</string>
@@ -100,7 +99,6 @@
     <string name="module_disabler_disabled_summary">カーネルモジュールは実験的ですがパフォーマンスが向上する可能性があります。</string>
     <string name="module_disabler_enabled_title">カーネルモジュールバックエンドの無効化</string>
     <string name="module_disabler_enabled_summary">ユーザースペースバックエンドは低速ですが安定しています。</string>
-    <string name="module_disabler_working">アプリケーションは5秒以内に再起動します</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">複数トンネルの同時有効化</string>
     <string name="multiple_tunnels_summary_on">同時に複数のトンネルを有効化できます</string>

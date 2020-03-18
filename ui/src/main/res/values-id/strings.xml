@@ -98,7 +98,6 @@
     <string name="module_version_error">Tidak dapat menentukan versi modul kernel</string>
     <string name="module_installer_not_found">Tidak tersedia modul untuk perangkat anda</string>
     <string name="module_installer_initial">Modul kernel eksperimental dapat meningkatkan kinerja</string>
-    <string name="module_installer_success">Berhasil. Aplikasi akan memulai ulang dalam 5 detik</string>
     <string name="module_installer_title">Unduh dan pasang modul kernel</string>
     <string name="module_installer_working">Mengunduh and memasang…</string>
     <string name="module_installer_error">Ada yang salah. Silakan coba lagi</string>
@@ -106,7 +105,6 @@
     <string name="module_disabler_disabled_summary">Modul kernel eksperimental dapat meningkatkan kinerja</string>
     <string name="module_disabler_enabled_title">Nonaktifkan backend modul kernel</string>
     <string name="module_disabler_enabled_summary">Backend userspace yang lebih lambat dapat meningkatkan stabilitas</string>
-    <string name="module_disabler_working">Aplikasi akan mulai ulang dalam 5 detik</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">Izinkan beberapa sekaligus tunel</string>
     <string name="multiple_tunnels_summary_on">Beberapa tunel dapat dihidupkan secara bersamaan</string>

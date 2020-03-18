@@ -98,7 +98,6 @@
     <string name="module_version_error">Не удалось определить версию модуля ядра</string>
     <string name="module_installer_not_found">Для вашего устройства нет доступных модулей</string>
     <string name="module_installer_initial">Экспериментальный модуль ядра может улучшить производительность</string>
-    <string name="module_installer_success">Успех. Приложение перезапустится через 5 секунд</string>
     <string name="module_installer_title">Скачать и установить модуль ядра</string>
     <string name="module_installer_working">Скачивание и установка…</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
@@ -106,7 +105,6 @@
     <string name="module_disabler_disabled_summary">Экспериментальный модуль ядра приоритетнее и улучшает производительность</string>
     <string name="module_disabler_enabled_title">Выключить модуль ядра</string>
     <string name="module_disabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
-    <string name="module_disabler_working">Приложение перезапустится через 5 секунд</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">Разрешить несколько одновременных туннелей</string>
     <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
