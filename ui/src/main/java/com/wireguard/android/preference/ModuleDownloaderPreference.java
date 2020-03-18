@@ -5,6 +5,7 @@
 
 package com.wireguard.android.preference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.system.OsConstants;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.util.ErrorMessages;
 import com.wireguard.util.NonNullForAll;
 
@@ -43,6 +45,7 @@ public class ModuleDownloaderPreference extends Preference {
         Application.getAsyncWorker().supplyAsync(Application.getModuleLoader()::download).whenComplete(this::onDownloadResult);
     }
 
+    @SuppressLint("ApplySharedPref")
     private void onDownloadResult(final Integer result, @Nullable final Throwable throwable) {
         if (throwable != null) {
             setState(State.FAILURE);
@@ -51,12 +54,9 @@ public class ModuleDownloaderPreference extends Preference {
             setState(State.NOTFOUND);
         else if (result == OsConstants.EXIT_SUCCESS) {
             setState(State.SUCCESS);
-            Application.getSharedPreferences().edit().remove("disable_kernel_module").apply();
+            Application.getSharedPreferences().edit().remove("disable_kernel_module").commit();
             Application.getAsyncWorker().runAsync(() -> {
-                Thread.sleep(1000 * 5);
-                final Intent restartIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
-                if (restartIntent == null)
-                    return;
+                final Intent restartIntent = new Intent(getContext(), SettingsActivity.class);
                 restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Application.get().startActivity(restartIntent);
@@ -79,7 +79,7 @@ public class ModuleDownloaderPreference extends Preference {
         INITIAL(R.string.module_installer_initial, true),
         FAILURE(R.string.module_installer_error, true),
         WORKING(R.string.module_installer_working, false),
-        SUCCESS(R.string.module_installer_success, false),
+        SUCCESS(R.string.success_application_will_restart, false),
         NOTFOUND(R.string.module_installer_not_found, false);
 
         private final int messageResourceId;
