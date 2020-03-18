@@ -98,7 +98,6 @@
     <string name="module_version_error">Unable to determine kernel module version</string>
     <string name="module_installer_not_found">No modules are available for your device</string>
     <string name="module_installer_initial">The experimental kernel module can improve performance</string>
-    <string name="module_installer_success">Success. The application will restart in 5 seconds</string>
     <string name="module_installer_title">Download and install kernel module</string>
     <string name="module_installer_working">Downloading and installing…</string>
     <string name="module_installer_error">Something went wrong. Please try again</string>
@@ -106,7 +105,7 @@
     <string name="module_disabler_disabled_summary">The experimental kernel module can improve performance</string>
     <string name="module_disabler_enabled_title">Disable kernel module backend</string>
     <string name="module_disabler_enabled_summary">The slower userspace backend may improve stability</string>
-    <string name="module_disabler_working">The application will restart in 5 seconds</string>
+    <string name="success_application_will_restart">Success. The application will now restart…</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">Allow multiple simultaneous tunnels</string>
     <string name="multiple_tunnels_summary_on">Multiple tunnels may be turned on simultaneously</string>
