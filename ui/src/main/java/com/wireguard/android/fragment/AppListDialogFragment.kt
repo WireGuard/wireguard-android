@@ -19,9 +19,6 @@ import com.wireguard.android.model.ApplicationData
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.ObservableKeyedArrayList
 import com.wireguard.android.util.ObservableKeyedList
-import java9.util.Comparators
-import java9.util.function.Function
-import java.util.Collections
 
 class AppListDialogFragment : DialogFragment() {
     private val appData: ObservableKeyedList<String, ApplicationData> = ObservableKeyedArrayList()
@@ -39,8 +36,7 @@ class AppListDialogFragment : DialogFragment() {
                 val packageName = it.activityInfo.packageName
                 applicationData.add(ApplicationData(it.loadIcon(pm), it.loadLabel(pm).toString(), packageName, currentlyExcludedApps.contains(packageName)))
             }
-
-            Collections.sort(applicationData, Comparators.comparing(Function { obj: ApplicationData -> obj.name }, java.lang.String.CASE_INSENSITIVE_ORDER))
+            applicationData.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
             applicationData
         }.whenComplete { data, throwable ->
             if (data != null) {
@@ -77,7 +73,7 @@ class AppListDialogFragment : DialogFragment() {
         dialog.setOnShowListener {
             dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
                 val selectedItems = appData
-                        .filter { obj: ApplicationData -> obj.isExcludedFromTunnel }
+                        .filter { it.isExcludedFromTunnel }
 
                 val excludeAll = selectedItems.isEmpty()
                 appData.forEach {

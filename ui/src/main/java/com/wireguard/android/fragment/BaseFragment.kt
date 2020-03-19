@@ -69,7 +69,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
             is TunnelDetailFragmentBinding -> binding.tunnel
             is TunnelListItemBinding -> binding.item
             else -> return
-        }
+        } ?: return
         Application.getBackendAsync().thenAccept { backend: Backend? ->
             if (backend is GoBackend) {
                 val intent = GoBackend.VpnService.prepare(view.context)
@@ -80,7 +80,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     return@thenAccept
                 }
             }
-            setTunnelStateWithPermissionsResult(tunnel!!, checked)
+            setTunnelStateWithPermissionsResult(tunnel, checked)
         }
     }
 

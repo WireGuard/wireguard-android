@@ -35,9 +35,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
     private fun onConfigLoaded(config: Config) {
-        if (binding != null) {
-            binding!!.config = ConfigProxy(config)
-        }
+        binding?.config = ConfigProxy(config)
     }
 
     private fun onConfigSaved(savedTunnel: Tunnel, throwable: Throwable?) {
@@ -51,8 +49,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             val error = ErrorMessages.get(throwable)
             message = getString(R.string.config_save_error, savedTunnel.name, error)
             Log.e(TAG, message, throwable)
-            if (binding != null) {
-                Snackbar.make(binding!!.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            binding?.let {
+                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
             }
         }
     }
@@ -112,9 +110,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_action_save) {
-            if (binding == null) return false
-            val newConfig: Config
-            newConfig = try {
+            binding ?: return false
+            val newConfig = try {
                 binding!!.config!!.resolve()
             } catch (e: Exception) {
                 val error = ErrorMessages.get(e)
@@ -129,7 +126,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                     Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
                     val manager = Application.getTunnelManager()
                     manager.create(binding!!.name, newConfig)
-                            .whenComplete { newTunnel, throwable -> onTunnelCreated(newTunnel, throwable) }
+                            .whenComplete(this::onTunnelCreated)
                 }
                 tunnel!!.name != binding!!.name -> {
                     Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
@@ -169,7 +166,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         binding!!.config = ConfigProxy()
         if (tunnel != null) {
             binding!!.name = tunnel!!.name
-            tunnel!!.configAsync.thenAccept { config: Config -> onConfigLoaded(config) }
+            tunnel!!.configAsync.thenAccept(this::onConfigLoaded)
         } else {
             binding!!.name = ""
         }
@@ -187,8 +184,8 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             val error = ErrorMessages.get(throwable)
             message = getString(R.string.tunnel_create_error, error)
             Log.e(TAG, message, throwable)
-            if (binding != null) {
-                Snackbar.make(binding!!.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            binding?.let {
+                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
             }
         }
     }
@@ -206,16 +203,14 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             val error = ErrorMessages.get(throwable)
             message = getString(R.string.tunnel_rename_error, error)
             Log.e(TAG, message, throwable)
-            if (binding != null) {
-                Snackbar.make(binding!!.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            binding?.let {
+                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
             }
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        if (binding == null) {
-            return
-        }
+        binding ?: return
         binding!!.fragment = this
         if (savedInstanceState == null) {
             onSelectedTunnelChanged(null, selectedTunnel)
