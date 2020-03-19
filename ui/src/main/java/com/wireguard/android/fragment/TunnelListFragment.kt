@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.Application
 import com.wireguard.android.R
-import com.wireguard.android.activity.TunnelCreatorActivity
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler
 import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
@@ -33,7 +32,6 @@ import com.wireguard.android.ui.EdgeToEdge.setUpFAB
 import com.wireguard.android.ui.EdgeToEdge.setUpRoot
 import com.wireguard.android.ui.EdgeToEdge.setUpScrollingContent
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.util.ObservableSortedKeyedList
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
@@ -63,10 +61,11 @@ class TunnelListFragment : BaseFragment() {
 
             // Config text is valid, now create the tunnel…
             newInstance(configText).show(parentFragmentManager, null)
-        } catch (e: BadConfigException) {
-            onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
-        } catch (e: IOException) {
-            onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
+        } catch (e: Exception) {
+            when(e) {
+                is BadConfigException, is IOException -> onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
+                else -> throw e
+            }
         }
     }
 
@@ -86,28 +85,28 @@ class TunnelListFragment : BaseFragment() {
                 if (cursor.moveToFirst() && !cursor.isNull(0)) {
                     name = cursor.getString(0)
                 }
-                cursor.close()
             }
             if (name.isEmpty()) {
                 name = Uri.decode(uri.lastPathSegment)
             }
             var idx = name.lastIndexOf('/')
             if (idx >= 0) {
-                require(idx < name.length - 1) { "Illegal file name: $name" }
+                require(idx < name.length - 1) { resources.getString(R.string.illegal_filename_error, name) }
                 name = name.substring(idx + 1)
             }
             val isZip = name.toLowerCase(Locale.ROOT).endsWith(".zip")
             if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
                 name = name.substring(0, name.length - ".conf".length)
             } else {
-                require(isZip) { "File must be .conf or .zip" }
+                require(isZip) { resources.getString(R.string.bad_extension_error) }
             }
 
             if (isZip) {
                 ZipInputStream(contentResolver.openInputStream(uri)).use { zip ->
                     val reader = BufferedReader(InputStreamReader(zip, StandardCharsets.UTF_8))
-                    var entry: ZipEntry
-                    while (zip.nextEntry.also { entry = it } != null) {
+                    var entry: ZipEntry?
+                    while (true) {
+                        entry = zip.nextEntry ?: break
                         name = entry.name
                         idx = name.lastIndexOf('/')
                         if (idx >= 0) {
@@ -121,15 +120,13 @@ class TunnelListFragment : BaseFragment() {
                         } else {
                             continue
                         }
-                        val config: Config? = try {
+                        try {
                             Config.parse(reader)
                         } catch (e: Exception) {
                             throwables.add(e)
                             null
-                        }
-
-                        if (config != null) {
-                            futureTunnels.add(Application.getTunnelManager().create(name, config).toCompletableFuture())
+                        }?.let {
+                            futureTunnels.add(Application.getTunnelManager().create(name, it).toCompletableFuture())
                         }
                     }
                 }
@@ -146,7 +143,7 @@ class TunnelListFragment : BaseFragment() {
                 if (throwables.size == 1) {
                     throw throwables[0]
                 } else {
-                    require(throwables.isNotEmpty()) { "No configurations found" }
+                    require(throwables.isNotEmpty()) { resources.getString(R.string.no_configs_error) }
                 }
             }
             CompletableFuture.allOf(*futureTunnels.toTypedArray())
@@ -177,7 +174,7 @@ class TunnelListFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            val checkedItems: Collection<Int>? = savedInstanceState.getIntegerArrayList("CHECKED_ITEMS")
+            val checkedItems = savedInstanceState.getIntegerArrayList(CHECKED_ITEMS)
             if (checkedItems != null) {
                 for (i in checkedItems) actionModeListener.setItemChecked(i, true)
             }
@@ -225,18 +222,14 @@ class TunnelListFragment : BaseFragment() {
         super.onDestroyView()
     }
 
-    fun onRequestCreateConfig(view: View?) {
-        startActivity(Intent(activity, TunnelCreatorActivity::class.java))
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putIntegerArrayList("CHECKED_ITEMS", actionModeListener.getCheckedItems())
+        outState.putIntegerArrayList(CHECKED_ITEMS, actionModeListener.getCheckedItems())
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
-        if (binding == null) return
-        Application.getTunnelManager().tunnels.thenAccept { tunnels: ObservableSortedKeyedList<String?, ObservableTunnel?> ->
+        binding ?: return
+        Application.getTunnelManager().tunnels.thenAccept { tunnels ->
             if (newTunnel != null) viewForTunnel(newTunnel, tunnels).setSingleSelected(true)
             if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels).setSingleSelected(false)
         }
@@ -255,7 +248,7 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private fun onTunnelImportFinished(tunnels: List<ObservableTunnel>, throwables: Collection<Throwable>) {
-        var message: String? = null
+        var message = ""
         for (throwable in throwables) {
             val error = ErrorMessages.get(throwable)
             message = getString(R.string.import_error, error)
@@ -276,12 +269,10 @@ class TunnelListFragment : BaseFragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        if (binding == null) {
-            return
-        }
+        binding ?: return
         binding!!.fragment = this
-        Application.getTunnelManager().tunnels.thenAccept { tunnels: ObservableSortedKeyedList<String?, ObservableTunnel?>? -> binding!!.tunnels = tunnels }
-        binding!!.rowConfigurationHandler = RowConfigurationHandler { binding: TunnelListItemBinding, tunnel: ObservableTunnel, position: Int ->
+        Application.getTunnelManager().tunnels.thenAccept { tunnels -> binding!!.tunnels = tunnels }
+        binding!!.rowConfigurationHandler = RowConfigurationHandler { binding: TunnelListItemBinding, tunnel: ObservableTunnel, position ->
             binding.fragment = this
             binding.root.setOnClickListener {
                 if (actionMode == null) {
@@ -297,15 +288,15 @@ class TunnelListFragment : BaseFragment() {
             if (actionMode != null)
                 (binding.root as MultiselectableRelativeLayout).setMultiSelected(actionModeListener.checkedItems.contains(position))
             else
-                (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel === tunnel)
+                (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == tunnel)
         }
     }
 
-    private fun showSnackbar(message: CharSequence?) {
-        if (binding != null) {
-            val snackbar = Snackbar.make(binding!!.mainContainer, message!!, Snackbar.LENGTH_LONG)
-            snackbar.anchorView = binding!!.createFab
-            snackbar.show()
+    private fun showSnackbar(message: CharSequence) {
+        binding?.let {
+            Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG)
+                    .setAnchorView(it.createFab)
+                    .show()
         }
     }
 
@@ -316,6 +307,7 @@ class TunnelListFragment : BaseFragment() {
     private inner class ActionModeListener : ActionMode.Callback {
         val checkedItems: MutableCollection<Int> = HashSet()
         private var resources: Resources? = null
+
         fun getCheckedItems(): ArrayList<Int> {
             return ArrayList(checkedItems)
         }
@@ -323,8 +315,8 @@ class TunnelListFragment : BaseFragment() {
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.menu_action_delete -> {
-                    val copyCheckedItems: Iterable<Int> = HashSet(checkedItems)
-                    Application.getTunnelManager().tunnels.thenAccept { tunnels: ObservableSortedKeyedList<String, ObservableTunnel> ->
+                    val copyCheckedItems = HashSet(checkedItems)
+                    Application.getTunnelManager().tunnels.thenAccept { tunnels ->
                         val tunnelsToDelete = ArrayList<ObservableTunnel>()
                         for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
                         val futures = tunnelsToDelete
@@ -332,18 +324,16 @@ class TunnelListFragment : BaseFragment() {
                                 .toTypedArray()
                         CompletableFuture.allOf(*futures as Array<out CompletableFuture<*>>)
                                 .thenApply { futures.size }
-                                .whenComplete { count: Int, throwable: Throwable? -> onTunnelDeletionFinished(count, throwable) }
+                                .whenComplete(this@TunnelListFragment::onTunnelDeletionFinished)
                     }
                     checkedItems.clear()
                     mode.finish()
                     true
                 }
                 R.id.menu_action_select_all -> {
-                    Application.getTunnelManager().tunnels.thenAccept { tunnels: ObservableSortedKeyedList<String?, ObservableTunnel?> ->
-                        var i = 0
-                        while (i < tunnels.size) {
+                    Application.getTunnelManager().tunnels.thenAccept { tunnels ->
+                        for (i in 0 until tunnels.size) {
                             setItemChecked(i, true)
-                            ++i
                         }
                     }
                     true
@@ -410,6 +400,7 @@ class TunnelListFragment : BaseFragment() {
     companion object {
         const val REQUEST_IMPORT = 1
         private const val REQUEST_TARGET_FRAGMENT = 2
+        private const val CHECKED_ITEMS = "CHECKED_ITEMS"
         private val TAG = "WireGuard/" + TunnelListFragment::class.java.simpleName
     }
 }

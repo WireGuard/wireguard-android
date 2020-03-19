@@ -51,9 +51,11 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val dialog = dialog as BottomSheetDialog? ?: return
                 behavior = dialog.behavior
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.peekHeight = 0
-                behavior.addBottomSheetCallback(bottomSheetCallback)
+                behavior.apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    peekHeight = 0
+                    addBottomSheetCallback(bottomSheetCallback)
+                }
                 dialog.findViewById<View>(R.id.create_empty)?.setOnClickListener {
                     dismiss()
                     onRequestCreateConfig()

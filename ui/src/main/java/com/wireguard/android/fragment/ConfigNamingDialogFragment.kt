@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.fragment
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -15,7 +14,6 @@ import androidx.fragment.app.DialogFragment
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding
-import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import java.io.ByteArrayInputStream
@@ -28,13 +26,13 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private var imm: InputMethodManager? = null
 
     private fun createTunnelAndDismiss() {
-        if (binding != null) {
-            val name = binding!!.tunnelNameText.text.toString()
-            Application.getTunnelManager().create(name, config).whenComplete { tunnel: ObservableTunnel?, throwable: Throwable ->
+        binding?.let {
+            val name = it.tunnelNameText.text.toString()
+            Application.getTunnelManager().create(name, config).whenComplete { tunnel, throwable ->
                 if (tunnel != null) {
                     dismiss()
                 } else {
-                    binding!!.tunnelNameTextLayout.error = throwable.message
+                    it.tunnelNameTextLayout.error = throwable.message
                 }
             }
         }
@@ -51,15 +49,16 @@ class ConfigNamingDialogFragment : DialogFragment() {
         val configBytes = configText!!.toByteArray(StandardCharsets.UTF_8)
         config = try {
             Config.parse(ByteArrayInputStream(configBytes))
-        } catch (e: BadConfigException) {
-            throw IllegalArgumentException("Invalid config passed to " + javaClass.simpleName, e)
-        } catch (e: IOException) {
-            throw IllegalArgumentException("Invalid config passed to " + javaClass.simpleName, e)
+        } catch(e: Exception) {
+            when(e) {
+                is BadConfigException, is IOException -> throw IllegalArgumentException("Invalid config passed to ${javaClass.simpleName}", e)
+                else -> throw e
+            }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val activity: Activity = requireActivity()
+        val activity = requireActivity()
         imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setTitle(R.string.import_from_qr_code)

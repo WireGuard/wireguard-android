@@ -18,7 +18,6 @@ import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.ui.EdgeToEdge.setUpRoot
 import com.wireguard.android.ui.EdgeToEdge.setUpScrollingContent
-import com.wireguard.config.Config
 import java.util.Timer
 import java.util.TimerTask
 
@@ -27,7 +26,7 @@ import java.util.TimerTask
  */
 class TunnelDetailFragment : BaseFragment() {
     private var binding: TunnelDetailFragmentBinding? = null
-    private var lastState: Tunnel.State? = Tunnel.State.TOGGLE
+    private var lastState = Tunnel.State.TOGGLE
     private var timer: Timer? = null
 
     private fun formatBytes(bytes: Long): String {
@@ -78,9 +77,9 @@ class TunnelDetailFragment : BaseFragment() {
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
-        if (binding == null) return
+        binding ?: return
         binding!!.tunnel = newTunnel
-        if (newTunnel == null) binding!!.config = null else newTunnel.configAsync.thenAccept { config: Config? -> binding!!.config = config }
+        if (newTunnel == null) binding!!.config = null else newTunnel.configAsync.thenAccept { config -> binding!!.config = config }
         lastState = Tunnel.State.TOGGLE
         updateStats()
     }
@@ -94,9 +93,7 @@ class TunnelDetailFragment : BaseFragment() {
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        if (binding == null) {
-            return
-        }
+        binding ?: return
         binding!!.fragment = this
         onSelectedTunnelChanged(null, selectedTunnel)
         super.onViewStateRestored(savedInstanceState)
