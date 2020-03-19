@@ -316,10 +316,8 @@ class TunnelListFragment : BaseFragment() {
                     Application.getTunnelManager().tunnels.thenAccept { tunnels ->
                         val tunnelsToDelete = ArrayList<ObservableTunnel>()
                         for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
-                        val futures = tunnelsToDelete
-                                .map { obj -> obj.delete() }
-                                .toTypedArray()
-                        CompletableFuture.allOf(*futures as Array<out CompletableFuture<*>>)
+                        val futures = tunnelsToDelete.map { it.delete().toCompletableFuture() }.toTypedArray()
+                        CompletableFuture.allOf(*futures)
                                 .thenApply { futures.size }
                                 .whenComplete(this@TunnelListFragment::onTunnelDeletionFinished)
                     }
