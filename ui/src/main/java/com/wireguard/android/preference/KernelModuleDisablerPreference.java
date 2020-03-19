@@ -5,13 +5,14 @@
 
 package com.wireguard.android.preference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.R;
+import com.wireguard.android.activity.SettingsActivity;
 import com.wireguard.android.backend.Tunnel;
 import com.wireguard.android.backend.WgQuickBackend;
 import com.wireguard.util.NonNullForAll;
@@ -43,26 +44,20 @@ public class KernelModuleDisablerPreference extends Preference {
         return getContext().getString(state.titleResourceId);
     }
 
+    @SuppressLint("ApplySharedPref")
     @Override
     protected void onClick() {
         if (state == State.DISABLED) {
             setState(State.ENABLING);
-            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", false).apply();
+            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", false).commit();
         } else if (state == State.ENABLED) {
             setState(State.DISABLING);
-            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).apply();
+            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).commit();
         }
-        final long start = SystemClock.elapsedRealtime();
         Application.getAsyncWorker().runAsync(() -> Application.getTunnelManager().getTunnels().thenApply(observableTunnels -> {
             final Collection<CompletableFuture<Tunnel.State>> c = StreamSupport.stream(observableTunnels.values()).map(t -> t.setState(Tunnel.State.DOWN).toCompletableFuture()).collect(Collectors.toCollection(ArrayList::new));
             return CompletableFuture.allOf(c.toArray(new CompletableFuture[0])).thenRun(() -> {
-                try {
-                    Thread.sleep(Math.max(0, 1000 * 5 - (SystemClock.elapsedRealtime() - start)));
-                } catch (final Exception ignored) {
-                }
-                final Intent restartIntent = getContext().getPackageManager().getLaunchIntentForPackage(getContext().getPackageName());
-                if (restartIntent == null)
-                    return;
+                final Intent restartIntent = new Intent(getContext(), SettingsActivity.class);
                 restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Application.get().startActivity(restartIntent);
@@ -83,8 +78,8 @@ public class KernelModuleDisablerPreference extends Preference {
     private enum State {
         ENABLED(R.string.module_disabler_enabled_title, R.string.module_disabler_enabled_summary, true),
         DISABLED(R.string.module_disabler_disabled_title, R.string.module_disabler_disabled_summary, true),
-        ENABLING(R.string.module_disabler_disabled_title, R.string.module_disabler_working, false),
-        DISABLING(R.string.module_disabler_enabled_title, R.string.module_disabler_working, false);
+        ENABLING(R.string.module_disabler_disabled_title, R.string.success_application_will_restart, false),
+        DISABLING(R.string.module_disabler_enabled_title, R.string.success_application_will_restart, false);
 
         private final boolean shouldEnableView;
         private final int summaryResourceId;
