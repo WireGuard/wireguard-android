@@ -5,20 +5,20 @@
         <item quantity="other">Tidak dapat menghapus %d tunel: %s</item>
     </plurals>
     <plurals name="delete_success">
-        <item quantity="one">Berhasil menghapus %d tunel</item>
-        <item quantity="other">Berhasil menghapus %d tunel</item>
+        <item quantity="one">Berhasil menghapus tunel %d</item>
+        <item quantity="other">Berhasil menghapus tunel %d</item>
     </plurals>
     <plurals name="delete_title">
         <item quantity="one">%d tunnel dipilih</item>
         <item quantity="other">%d tunel dipilih</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="one">Mengimpor %d dari %d tunel</item>
-        <item quantity="other">Mengimpor %d dari %d tunel</item>
+        <item quantity="one">Mengimpor tunel %d dari %d</item>
+        <item quantity="other">Mengimpor tunel %d dari %d</item>
     </plurals>
     <plurals name="import_total_success">
-        <item quantity="one">Mengimpor %d tunel</item>
-        <item quantity="other">Mengimpor %d tunel</item>
+        <item quantity="one">Mengimpor tunel %d</item>
+        <item quantity="other">Mengimpor tunel %d</item>
     </plurals>
     <plurals name="set_excluded_applications">
         <item quantity="one">%d Aplikasi dikecualikan</item>
@@ -61,8 +61,8 @@
     <string name="create_downloads_file_error">Tidak dapat membuat file di direktori download</string>
     <string name="create_temp_dir_error">Tidak dapat membuat direktori lokal sementara</string>
     <string name="create_tunnel">Buat tunel</string>
-    <string name="dark_theme_summary_off">Saat ini menggunakan tema terang</string>
-    <string name="dark_theme_summary_on">Saat ini menggunakan tema gelap</string>
+    <string name="dark_theme_summary_off">Saat ini menggunakan tema terang (siang)</string>
+    <string name="dark_theme_summary_on">Saat ini menggunakan tema gelap (malam)</string>
     <string name="dark_theme_title">Gunakan tema gelap</string>
     <string name="delete">Hapus</string>
     <string name="toggle_all">Matikan semua</string>
@@ -81,7 +81,7 @@
     <string name="hint_generated">(generate)</string>
     <string name="hint_optional">(pilihan)</string>
     <string name="hint_random">(acak)</string>
-    <string name="illegal_filename_error">“%s” Nama file ilegal</string>
+    <string name="illegal_filename_error">Nama file “%s” ilegal</string>
     <string name="import_error">Tunel %s tidak bisa diimpor</string>
     <string name="import_from_qr_code">Mengimpor tunel dari kode QR</string>
     <string name="import_success">“%s” Sudah diimpor</string>
@@ -89,7 +89,7 @@
     <string name="key_length_explanation_base64">: Kunci WireGuard base64 harus terdiri dari 44 karakter (32 bit)</string>
     <string name="key_length_explanation_binary">: Kunci WireGuard harus terdiri dari 32 bit</string>
     <string name="key_length_explanation_hex">: Kunci hex WireGuard Harus terdiri dari 64 karakter (32 bit)</string>
-    <string name="listen_port">Perhatikan port</string>
+    <string name="listen_port">Isi port</string>
     <string name="log_export_error">Log %s tidak bisa diekspor</string>
     <string name="log_export_success">Simpan ke “%s”</string>
     <string name="log_export_summary">File log akan disimpan di folder download</string>
@@ -105,12 +105,13 @@
     <string name="module_disabler_disabled_summary">Modul kernel eksperimental dapat meningkatkan kinerja</string>
     <string name="module_disabler_enabled_title">Nonaktifkan backend modul kernel</string>
     <string name="module_disabler_enabled_summary">Backend userspace yang lebih lambat dapat meningkatkan stabilitas</string>
+    <string name="success_application_will_restart">Berhasil. Sekarang aplikasi akan memulai ulang…</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">Izinkan beberapa sekaligus tunel</string>
     <string name="multiple_tunnels_summary_on">Beberapa tunel dapat dihidupkan secara bersamaan</string>
     <string name="multiple_tunnels_summary_off">Menyalakan satu tunel akan mematikan semuanya</string>
     <string name="name">Name</string>
-    <string name="no_config_error">Coba lihat tunel tanpa konfigurasi</string>
+    <string name="no_config_error">Lihat tunel tanpa konfigurasi</string>
     <string name="no_configs_error">Tidak ditemukan konfigurasi</string>
     <string name="no_tunnels_error">Tidak ada tunel</string>
     <string name="parse_error_generic">rangkaian</string>
@@ -120,7 +121,7 @@
     <string name="parse_error_integer">angka</string>
     <string name="parse_error_reason">%1$s “%2$s” Tidak dapat diuraikan</string>
     <string name="peer">Peer</string>
-    <string name="permission_description">Memungkinkan aplikasi untuk mengontrol tunel WireGuard. Aplikasi dengan izin ini dapat mengaktifkan dan menonaktifkan tunel WireGuard yang berpotensi salah mengatur lalu lintas Internet.</string>
+    <string name="permission_description">Memungkinkan aplikasi untuk mengontrol tunel WireGuard. Aplikasi dengan izin ini dapat mengaktifkan dan menonaktifkan tunel WireGuard yang berakibat salah mengatur lalu lintas Internet.</string>
     <string name="permission_label">Kontrol tunel WireGuard</string>
     <string name="persistent_keepalive">Keepalive persisten</string>
     <string name="pre_shared_key">Kunci Pra-bersama</string>
