@@ -51,7 +51,7 @@ public final class InetEndpoint {
         try {
             uri = new URI("wg://" + endpoint);
         } catch (final URISyntaxException e) {
-            throw new IllegalArgumentException(e);
+            throw new ParseException(InetEndpoint.class, endpoint, e);
         }
         if (uri.getPort() < 0 || uri.getPort() > 65535)
             throw new ParseException(InetEndpoint.class, endpoint, "Missing/invalid port number");
