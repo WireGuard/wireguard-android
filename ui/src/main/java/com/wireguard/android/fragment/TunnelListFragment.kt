@@ -62,10 +62,7 @@ class TunnelListFragment : BaseFragment() {
             // Config text is valid, now create the tunnel…
             newInstance(configText).show(parentFragmentManager, null)
         } catch (e: Exception) {
-            when(e) {
-                is BadConfigException, is IOException -> onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
-                else -> throw e
-            }
+            onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
         }
     }
 
