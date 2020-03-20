@@ -13,6 +13,7 @@ import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
 import com.wireguard.android.R
+import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.util.DownloadsFileSaver
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.FragmentUtils
@@ -80,12 +81,16 @@ class LogExporterPreference(context: Context, attrs: AttributeSet?) : Preference
     override fun getTitle() = context.getString(R.string.log_export_title)
 
     override fun onClick() {
-        FragmentUtils.getPrefActivity(this).ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, granted ->
-            if (granted.isNotEmpty() && granted[0] == PackageManager.PERMISSION_GRANTED) {
-                isEnabled = false
-                exportLog()
-            }
-        }
+        FragmentUtils.getPrefActivity(this)
+                .ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        object: SettingsActivity.PermissionRequestCallback {
+                            override fun done(permissions: Array<String>, grantResults: IntArray) {
+                                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                    isEnabled = false
+                                    exportLog()
+                                }
+                            }
+                        })
     }
 
     companion object {
