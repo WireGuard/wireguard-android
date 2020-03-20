@@ -25,10 +25,10 @@ import java.util.Arrays
  * Interface for changing application-global persistent settings.
  */
 class SettingsActivity : ThemeChangeAwareActivity() {
-    private val permissionRequestCallbacks = SparseArray<PermissionRequestCallback>()
+    private val permissionRequestCallbacks = SparseArray<(permissions: Array<String>, granted: IntArray) -> Unit>()
     private var permissionRequestCounter = 0
 
-    fun ensurePermissions(permissions: Array<String>, cb: PermissionRequestCallback) {
+    fun ensurePermissions(permissions: Array<String>, cb: (permissions: Array<String>, granted: IntArray) -> Unit) {
         val needPermissions: MutableList<String> = ArrayList(permissions.size)
         permissions.forEach {
             if (ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED) {
@@ -38,7 +38,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
         if (needPermissions.isEmpty()) {
             val granted = IntArray(permissions.size)
             Arrays.fill(granted, PackageManager.PERMISSION_GRANTED)
-            cb.done(permissions, granted)
+            cb.invoke(permissions, granted)
             return
         }
         val idx = permissionRequestCounter++
@@ -70,12 +70,8 @@ class SettingsActivity : ThemeChangeAwareActivity() {
         val f = permissionRequestCallbacks[requestCode]
         if (f != null) {
             permissionRequestCallbacks.remove(requestCode)
-            f.done(permissions, grantResults)
+            f.invoke(permissions, grantResults)
         }
-    }
-
-    interface PermissionRequestCallback {
-        fun done(permissions: Array<String>, grantResults: IntArray)
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
