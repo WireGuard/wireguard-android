@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2020 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2020 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.widget
@@ -15,7 +15,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
  */
 
 object EdgeToEdge {
-
     @JvmStatic
     fun setUpRoot(root: ViewGroup) {
         root.systemUiVisibility =
