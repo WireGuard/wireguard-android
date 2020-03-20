@@ -2,7 +2,7 @@
  * Copyright © 2017-2020 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.wireguard.android.ui
+package com.wireguard.android.widget
 
 import android.view.View
 import android.view.ViewGroup
