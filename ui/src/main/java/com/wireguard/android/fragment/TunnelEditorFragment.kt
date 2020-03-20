@@ -22,8 +22,8 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.ObservableTunnel
-import com.wireguard.android.ui.EdgeToEdge.setUpRoot
-import com.wireguard.android.ui.EdgeToEdge.setUpScrollingContent
+import com.wireguard.android.widget.EdgeToEdge.setUpRoot
+import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.config.Config

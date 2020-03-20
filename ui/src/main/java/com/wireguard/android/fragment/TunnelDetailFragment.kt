@@ -16,8 +16,8 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
-import com.wireguard.android.ui.EdgeToEdge.setUpRoot
-import com.wireguard.android.ui.EdgeToEdge.setUpScrollingContent
+import com.wireguard.android.widget.EdgeToEdge.setUpRoot
+import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import java.util.Timer
 import java.util.TimerTask
 
