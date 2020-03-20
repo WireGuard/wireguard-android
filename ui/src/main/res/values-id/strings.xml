@@ -55,8 +55,6 @@
     <string name="create_activity_title">Buat tunel WireGuard</string>
     <string name="create_bin_dir_error">Tidak dapat membuat direktori biner lokal</string>
     <string name="create_empty">Buat dari awal</string>
-    <string name="create_from_file">Buat dari file atau arsip</string>
-    <string name="create_from_qr_code">Buat dari kode QR</string>
     <string name="create_output_dir_error">Tidak dapat membuat direktori keluaran</string>
     <string name="create_downloads_file_error">Tidak dapat membuat file di direktori download</string>
     <string name="create_temp_dir_error">Tidak dapat membuat direktori lokal sementara</string>

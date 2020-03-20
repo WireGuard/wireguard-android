@@ -55,8 +55,6 @@
     <string name="create_activity_title">Создать WireGuard туннель</string>
     <string name="create_bin_dir_error">Не удалось создать локальный двоичный каталог</string>
     <string name="create_empty">Создать вручную</string>
-    <string name="create_from_file">Создать из файла или архива</string>
-    <string name="create_from_qr_code">Создать из QR-кода</string>
     <string name="create_output_dir_error">Не удалось создать выходной каталог</string>
     <string name="create_downloads_file_error">Не удалось создать файл в каталоге загрузок</string>
     <string name="create_temp_dir_error">Не удалось создать временный локальный каталог</string>
