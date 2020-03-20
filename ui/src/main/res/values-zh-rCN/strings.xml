@@ -49,8 +49,6 @@
     <string name="create_activity_title">创建 WireGuard 隧道</string>
     <string name="create_bin_dir_error">无法创建本地二进制文件目录</string>
     <string name="create_empty">手动创建</string>
-    <string name="create_from_file">导入配置或压缩包</string>
-    <string name="create_from_qr_code">扫描二维码</string>
     <string name="create_output_dir_error">无法创建输出目录</string>
     <string name="create_downloads_file_error">无法在下载目录中创建文件</string>
     <string name="create_temp_dir_error">无法创建本地临时目录</string>
