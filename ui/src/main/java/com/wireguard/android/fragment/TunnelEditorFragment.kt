@@ -83,7 +83,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
 
     override fun onExcludedAppsSelected(excludedApps: List<String>) {
         requireNotNull(binding) { "Tried to set excluded apps while no view was loaded" }
-        binding!!.config!!.getInterface().excludedApplications.apply {
+        binding!!.config!!.`interface`.excludedApplications.apply {
             clear()
             addAll(excludedApps)
         }
@@ -125,12 +125,12 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 tunnel == null -> {
                     Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
                     val manager = Application.getTunnelManager()
-                    manager.create(binding!!.name, newConfig)
+                    manager.create(binding!!.name!!, newConfig)
                             .whenComplete(this::onTunnelCreated)
                 }
                 tunnel!!.name != binding!!.name -> {
                     Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
-                    tunnel!!.setName(binding!!.name)
+                    tunnel!!.setName(binding!!.name!!)
                             .whenComplete { _, t -> onTunnelRenamed(tunnel!!, newConfig, t) }
                 }
                 else -> {
@@ -147,7 +147,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     @Suppress("UNUSED_PARAMETER")
     fun onRequestSetExcludedApplications(view: View?) {
         if (binding != null) {
-            val excludedApps = ArrayList(binding!!.config!!.getInterface().excludedApplications)
+            val excludedApps = ArrayList(binding!!.config!!.`interface`.excludedApplications)
             val fragment = AppListDialogFragment.newInstance(excludedApps, this)
             fragment.show(parentFragmentManager, null)
         }
