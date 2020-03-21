@@ -49,6 +49,8 @@
     <string name="create_activity_title">WireGuard トンネルの作成</string>
     <string name="create_bin_dir_error">ローカルバイナリディレクトリを作成できません</string>
     <string name="create_empty">空の状態から作成</string>
+    <string name="create_from_file">ファイル、アーカイブからインポート</string>
+    <string name="create_from_qr_code">QRコードをスキャン</string>
     <string name="create_output_dir_error">出力ディレクトリを作成できません</string>
     <string name="create_downloads_file_error">ダウンロードディレクトリにファイルを作成できません</string>
     <string name="create_temp_dir_error">ローカルに一時ディレクトリを作成できません</string>
