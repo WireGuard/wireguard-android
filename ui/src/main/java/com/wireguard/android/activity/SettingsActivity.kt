@@ -77,8 +77,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)
-            val screen = preferenceScreen
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) screen.removePreference(preferenceManager.findPreference("dark_theme"))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val darkTheme = preferenceManager.findPreference<Preference>("dark_theme")
+                darkTheme?.parent?.removePreference(darkTheme)
+            }
             val wgQuickOnlyPrefs = arrayOf(
                     preferenceManager.findPreference("tools_installer"),
                     preferenceManager.findPreference("restore_on_boot"),
@@ -89,21 +91,21 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 if (backend is WgQuickBackend) {
                     wgQuickOnlyPrefs.forEach { it.isVisible = true }
                 } else {
-                    wgQuickOnlyPrefs.forEach { screen.removePreference(it) }
+                    wgQuickOnlyPrefs.forEach { it.parent?.removePreference(it) }
                 }
             }
             val moduleInstaller = preferenceManager.findPreference<Preference>("module_downloader")
             val kernelModuleDisabler = preferenceManager.findPreference<Preference>("kernel_module_disabler")
             moduleInstaller?.isVisible = false
             if (ModuleLoader.isModuleLoaded()) {
-                screen.removePreference(moduleInstaller)
+                moduleInstaller?.parent?.removePreference(moduleInstaller)
             } else {
-                screen.removePreference(kernelModuleDisabler)
+                kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
                 Application.getAsyncWorker().runAsync(Application.getRootShell()::start).whenComplete { _, e ->
                     if (e == null)
                         moduleInstaller?.isVisible = true
                     else
-                        screen.removePreference(moduleInstaller)
+                        moduleInstaller?.parent?.removePreference(moduleInstaller)
                 }
             }
         }
