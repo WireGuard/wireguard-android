@@ -119,7 +119,6 @@
     <string name="parse_error_integer">angka</string>
     <string name="parse_error_reason">%1$s “%2$s” Tidak dapat diuraikan</string>
     <string name="peer">Peer</string>
-    <string name="permission_description">Memungkinkan aplikasi untuk mengontrol tunel WireGuard. Aplikasi dengan izin ini dapat mengaktifkan dan menonaktifkan tunel WireGuard yang berakibat salah mengatur lalu lintas Internet.</string>
     <string name="permission_label">Kontrol tunel WireGuard</string>
     <string name="persistent_keepalive">Keepalive persisten</string>
     <string name="pre_shared_key">Kunci Pra-bersama</string>

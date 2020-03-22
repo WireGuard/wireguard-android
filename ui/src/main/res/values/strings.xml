@@ -26,6 +26,9 @@
     </plurals>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
+    <string name="allow_remote_control_intents_title">Allow remote control apps</string>
+    <string name="allow_remote_control_intents_summary_on">External apps may toggle tunnels (advanced)</string>
+    <string name="allow_remote_control_intents_summary_off">External apps may not toggle tunnels (recommended)</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
@@ -121,7 +124,7 @@
     <string name="parse_error_integer">number</string>
     <string name="parse_error_reason">Cannot parse %1$s “%2$s”</string>
     <string name="peer">Peer</string>
-    <string name="permission_description">Allows an app to control WireGuard tunnels. Apps with this permission may enable and disable WireGuard tunnels at will, potentially misdirecting Internet traffic.</string>
+    <string name="permission_description">control WireGuard tunnels, enabling and disabling tunnels at will, potentially misdirecting Internet traffic</string>
     <string name="permission_label">control WireGuard tunnels</string>
     <string name="persistent_keepalive">Persistent keepalive</string>
     <string name="pre_shared_key">Pre-shared key</string>

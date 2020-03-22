@@ -118,7 +118,6 @@
     <string name="parse_error_integer">संख्या</string>
     <string name="parse_error_reason">%1$s “%2$s” को पार्स नहीं कर सकता</string>
     <string name="peer">पीयर</string>
-    <string name="permission_description">किसी एप्लिकेशन को वायरगार्ड टनलस को नियंत्रित करने की अनुमति देता है। इस अनुमति वाले ऐप्स, इंटरनेट ट्रैफ़िक को संभावित रूप से गलत तरीके से वायरगार्ड टनलस को सक्षम और अक्षम कर सकते हैं।</string>
     <string name="permission_label">वायरगार्ड टनलस को नियंत्रित करें</string>
     <string name="persistent_keepalive">लगातार जिंदा रहो</string>
     <string name="pre_shared_key">प्री-शेयर्ड कीस</string>

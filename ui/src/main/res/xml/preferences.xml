@@ -24,4 +24,10 @@
         android:summaryOn="@string/dark_theme_summary_on"
         android:title="@string/dark_theme_title" />
     <com.wireguard.android.preference.KernelModuleDisablerPreference android:key="kernel_module_disabler" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="allow_remote_control_intents"
+        android:summaryOff="@string/allow_remote_control_intents_summary_off"
+        android:summaryOn="@string/allow_remote_control_intents_summary_on"
+        android:title="@string/allow_remote_control_intents_title" />
 </androidx.preference.PreferenceScreen>

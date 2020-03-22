@@ -118,7 +118,6 @@
     <string name="parse_error_integer">число</string>
     <string name="parse_error_reason">Не могу разобрать %1$s “%2$s”</string>
     <string name="peer">Пир</string>
-    <string name="permission_description">Приложение сможет управлять туннелями WireGuard. Приложения с таким разрешением могут по желанию включать и отключать туннели WireGuard, что может привести к неправильному перенаправлению интернет-трафика.</string>
     <string name="permission_label">управлять туннелями WireGuard</string>
     <string name="persistent_keepalive">Постоянное соединение</string>
     <string name="pre_shared_key">Общий ключ</string>

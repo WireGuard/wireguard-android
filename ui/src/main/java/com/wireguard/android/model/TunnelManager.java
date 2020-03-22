@@ -275,10 +275,7 @@ public final class TunnelManager extends BaseObservable {
                 return;
             }
 
-            /* We disable the below, for now, as the security model of allowing this
-             * might take a bit more consideration.
-             */
-            if (true)
+            if (!Application.getSharedPreferences().getBoolean("allow_remote_control_intents", false))
                 return;
 
             final State state;

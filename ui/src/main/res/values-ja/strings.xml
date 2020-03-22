@@ -115,7 +115,6 @@
     <string name="parse_error_integer">数値</string>
     <string name="parse_error_reason">%1$s の内容を解読できません “%2$s”</string>
     <string name="peer">ピア</string>
-    <string name="permission_description">アプリに WireGuard トンネルの制御を許可します。この権限を持つアプリはトンネルの起動停止ができるようになりますが、インターネットトラフィックが意図しない方向に向かう可能性があります。</string>
     <string name="permission_label">control WireGuard tunnels</string>
     <string name="persistent_keepalive">持続的キープアライブ</string>
     <string name="pre_shared_key">事前共有鍵</string>
