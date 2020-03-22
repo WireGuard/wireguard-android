@@ -20,7 +20,7 @@ export GOARCH := $(NDK_GO_ARCH_MAP_$(ANDROID_ARCH_NAME))
 export GOOS := android
 export CGO_ENABLED := 1
 
-DESIRED_GO_VERSION := 1.14
+DESIRED_GO_VERSION := 1.14.1
 
 default: $(DESTDIR)/libwg-go.so
 
