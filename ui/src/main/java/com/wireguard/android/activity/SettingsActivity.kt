@@ -15,7 +15,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.wireguard.android.Application
 import com.wireguard.android.R
-import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.ModuleLoader
 import java.util.ArrayList
@@ -77,9 +76,11 @@ class SettingsActivity : ThemeChangeAwareActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             addPreferencesFromResource(R.xml.preferences)
+            preferenceScreen.initialExpandedChildrenCount = 4
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val darkTheme = preferenceManager.findPreference<Preference>("dark_theme")
                 darkTheme?.parent?.removePreference(darkTheme)
+                --preferenceScreen.initialExpandedChildrenCount
             }
             val wgQuickOnlyPrefs = arrayOf(
                     preferenceManager.findPreference("tools_installer"),
@@ -89,6 +90,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             wgQuickOnlyPrefs.forEach { it.isVisible = false }
             Application.getBackendAsync().thenAccept { backend ->
                 if (backend is WgQuickBackend) {
+                    ++preferenceScreen.initialExpandedChildrenCount
                     wgQuickOnlyPrefs.forEach { it.isVisible = true }
                 } else {
                     wgQuickOnlyPrefs.forEach { it.parent?.removePreference(it) }
