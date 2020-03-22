@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <permission
         android:name="${applicationId}.permission.CONTROL_TUNNELS"
@@ -26,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="UnusedAttribute">
+        android:banner="@mipmap/banner">
 
         <activity android:name=".activity.TunnelToggleActivity" android:theme="@style/NoBackgroundTheme"/>
         <activity android:name=".activity.MainActivity">
