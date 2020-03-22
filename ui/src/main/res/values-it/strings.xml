@@ -111,7 +111,6 @@
     <string name="parse_error_integer">numero</string>
     <string name="parse_error_reason">Impossibile analizzare %1$s “%2$s”</string>
     <string name="peer">Peer</string>
-    <string name="permission_description">Permette ad un\'app di controllare i tunnel WireGuard. Le app con questa autorizzazione possono attivare e disattivare i tunnel WireGuard a piacimento, potenzialmente deviando il traffico internet.</string>
     <string name="permission_label">controlla tunnel WireGuard</string>
     <string name="persistent_keepalive">Tieni sempre attivo</string>
     <string name="pre_shared_key">Chiave condivisa (PSK)</string>

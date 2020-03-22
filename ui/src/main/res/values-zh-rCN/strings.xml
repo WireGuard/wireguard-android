@@ -112,7 +112,6 @@
     <string name="parse_error_integer">数字</string>
     <string name="parse_error_reason">无法解析%1$s “%2$s”&#32;</string>
     <string name="peer">节点 / Peer</string>
-    <string name="permission_description">允许其他应用控制 WireGuard 隧道（开启 / 关闭），但可能会误传一些流量</string>
     <string name="permission_label">控制 WireGuard 隧道</string>
     <string name="persistent_keepalive">连接保活间隔</string>
     <string name="pre_shared_key">预共享密钥</string>
