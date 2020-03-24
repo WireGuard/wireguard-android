@@ -31,6 +31,7 @@
         android:banner="@mipmap/banner">
 
         <activity android:name=".activity.TunnelToggleActivity" android:theme="@style/NoBackgroundTheme"/>
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,6 +58,19 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
+        <activity android:name=".activity.LogViewerActivity"
+            android:label="@string/log_viewer_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".activity.LogViewerActivity$ExportedLogContentProvider"
+            android:authorities="${applicationId}.exported-log"
+            android:exported="false"
+            android:grantUriPermissions="true" />
 
         <receiver android:name=".BootShutdownReceiver">
             <intent-filter>

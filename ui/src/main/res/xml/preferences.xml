@@ -8,7 +8,10 @@
         android:summaryOff="@string/restore_on_boot_summary_off"
         android:title="@string/restore_on_boot_title" />
     <com.wireguard.android.preference.ZipExporterPreference />
-    <com.wireguard.android.preference.LogExporterPreference />
+    <Preference
+        android:key="log_viewer"
+        android:title="@string/log_viewer_title"
+        android:summary="@string/log_viewer_pref_summary" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"
