@@ -4,6 +4,7 @@
  */
 package com.wireguard.android.activity
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -99,6 +100,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 } else {
                     wgQuickOnlyPrefs.forEach { it.parent?.removePreference(it) }
                 }
+            }
+            preferenceManager.findPreference<Preference>("log_viewer")?.setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), LogViewerActivity::class.java))
+                true
             }
             val moduleInstaller = preferenceManager.findPreference<Preference>("module_downloader")
             val kernelModuleDisabler = preferenceManager.findPreference<Preference>("kernel_module_disabler")

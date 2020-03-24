@@ -88,9 +88,7 @@
     <string name="key_length_explanation_binary">: वायरगार्ड कीज 32 बाइट होनी चाहिए</string>
     <string name="key_length_explanation_hex">: वायरगार्ड हेक्स कीज़ 64 अक्षरों की होनी चाहिए (32 बाइट्स)</string>
     <string name="listen_port">पोर्ट सूने</string>
-    <string name="log_export_error">लॉग निर्यात करने में असमर्थ: %s</string>
     <string name="log_export_success">“%s” में सहेजा गया</string>
-    <string name="log_export_summary">लॉग फ़ाइल को डाउनलोड फ़ोल्डर में सहेजा जाएगा</string>
     <string name="log_export_title">लॉग फ़ाइल निर्यात करें</string>
     <string name="logcat_error">लॉगकैट चलाने में असमर्थ: </string>
     <string name="module_version_error">कर्नेल मॉड्यूल संस्करण निर्धारित करने में असमर्थ</string>

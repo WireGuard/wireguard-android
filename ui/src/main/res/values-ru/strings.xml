@@ -93,9 +93,7 @@
     <string name="key_length_explanation_binary">: Ключи WireGuard должны быть 32 байта</string>
     <string name="key_length_explanation_hex">: HEX ключи WireGuard должны содержать 64 символа (32 байта)</string>
     <string name="listen_port">Порт</string>
-    <string name="log_export_error">Не удалось экспортировать логи: %s</string>
     <string name="log_export_success">Сохранено в “%s”</string>
-    <string name="log_export_summary">Файл логов будет сохранен в папке загрузок</string>
     <string name="log_export_title">Экспорт логов в файл</string>
     <string name="logcat_error">Не удалось запустить logcat: </string>
     <string name="module_version_error">Не удалось определить версию модуля ядра</string>

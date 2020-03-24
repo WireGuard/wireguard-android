@@ -18,4 +18,9 @@
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/secondary_color</color>
     <color name="white">#ffffffff</color>
 
+    <!-- Log viewer tag colors -->
+    <color name="debug_tag_color">#444444</color>
+    <color name="error_tag_color">#aa0000</color>
+    <color name="info_tag_color">#00aa00</color>
+    <color name="warning_tag_color">#aaaa00</color>
 </resources>
