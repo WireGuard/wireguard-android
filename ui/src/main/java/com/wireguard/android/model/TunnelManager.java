@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.wireguard.android.Application;
 import com.wireguard.android.BR;
@@ -278,7 +279,8 @@ public final class TunnelManager extends BaseObservable {
                 return;
             }
 
-            if (!Application.getSharedPreferences().getBoolean("allow_remote_control_intents", false))
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                    !Application.getSharedPreferences().getBoolean("allow_remote_control_intents", false))
                 return;
 
             final State state;

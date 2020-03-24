@@ -82,6 +82,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 darkTheme?.parent?.removePreference(darkTheme)
                 --preferenceScreen.initialExpandedChildrenCount
             }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                val remoteApps = preferenceManager.findPreference<Preference>("allow_remote_control_intents")
+                remoteApps?.parent?.removePreference(remoteApps)
+            }
             val wgQuickOnlyPrefs = arrayOf(
                     preferenceManager.findPreference("tools_installer"),
                     preferenceManager.findPreference("restore_on_boot"),
