@@ -129,7 +129,7 @@ class TunnelListFragment : BaseFragment() {
                 futureTunnels.add(
                         Application.getTunnelManager().create(
                                 name,
-                                Config.parse(contentResolver.openInputStream(uri))
+                                Config.parse(contentResolver.openInputStream(uri)!!)
                         ).toCompletableFuture()
                 )
             }

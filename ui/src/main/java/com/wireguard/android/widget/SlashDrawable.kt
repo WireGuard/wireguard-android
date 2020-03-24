@@ -59,7 +59,9 @@ class SlashDrawable(private val mDrawable: Drawable) : Drawable() {
         mPath.addRoundRect(mSlashRect, 1f * width, 1f * height, Path.Direction.CW)
         m.setRotate(mRotation + DEFAULT_ROTATION, width / 2f, height / 2f)
         mPath.transform(m)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) canvas.clipPath(mPath, Region.Op.DIFFERENCE) else canvas.clipOutPath(mPath)
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            canvas.clipPath(mPath, Region.Op.DIFFERENCE) else canvas.clipOutPath(mPath)
         mDrawable.draw(canvas)
         canvas.restore()
     }
