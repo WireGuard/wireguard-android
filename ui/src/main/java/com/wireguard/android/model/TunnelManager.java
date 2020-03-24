@@ -5,6 +5,7 @@
 
 package com.wireguard.android.model;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -189,23 +190,25 @@ public final class TunnelManager extends BaseObservable {
                 .toArray(CompletableFuture[]::new));
     }
 
+    @SuppressLint("ApplySharedPref")
     public void saveState() {
         final Set<String> runningTunnels = StreamSupport.stream(tunnels)
                 .filter(tunnel -> tunnel.getState() == State.UP)
                 .map(ObservableTunnel::getName)
                 .collect(Collectors.toUnmodifiableSet());
-        Application.getSharedPreferences().edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).apply();
+        Application.getSharedPreferences().edit().putStringSet(KEY_RUNNING_TUNNELS, runningTunnels).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void setLastUsedTunnel(@Nullable final ObservableTunnel tunnel) {
         if (tunnel == lastUsedTunnel)
             return;
         lastUsedTunnel = tunnel;
         notifyPropertyChanged(BR.lastUsedTunnel);
         if (tunnel != null)
-            Application.getSharedPreferences().edit().putString(KEY_LAST_USED_TUNNEL, tunnel.getName()).apply();
+            Application.getSharedPreferences().edit().putString(KEY_LAST_USED_TUNNEL, tunnel.getName()).commit();
         else
-            Application.getSharedPreferences().edit().remove(KEY_LAST_USED_TUNNEL).apply();
+            Application.getSharedPreferences().edit().remove(KEY_LAST_USED_TUNNEL).commit();
     }
 
     CompletionStage<Config> setTunnelConfig(final ObservableTunnel tunnel, final Config config) {
