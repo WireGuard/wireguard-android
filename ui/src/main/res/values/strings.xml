@@ -93,10 +93,9 @@
     <string name="key_length_explanation_binary">: WireGuard keys must be 32 bytes</string>
     <string name="key_length_explanation_hex">: WireGuard hex keys must be 64 characters (32 bytes)</string>
     <string name="listen_port">Listen port</string>
-    <string name="log_export_error">Unable to export log: %s</string>
     <string name="log_export_success">Saved to “%s”</string>
-    <string name="log_export_summary">Log file will be saved to downloads folder</string>
     <string name="log_export_title">Export log file</string>
+    <string name="log_export_subject">WireGuard Android Log File</string>
     <string name="logcat_error">Unable to run logcat: </string>
     <string name="module_version_error">Unable to determine kernel module version</string>
     <string name="module_installer_not_found">No modules are available for your device</string>
@@ -186,4 +185,7 @@
     <string name="zip_export_title">Export tunnels to zip file</string>
     <string name="key_length_error">Incorrect key length</string>
     <string name="key_contents_error">Bad characters in key</string>
+    <string name="log_viewer_title">View application log</string>
+    <string name="log_viewer_pref_summary">Logs may assist with debugging</string>
+    <string name="log_saver_activity_label">Save log</string>
 </resources>
