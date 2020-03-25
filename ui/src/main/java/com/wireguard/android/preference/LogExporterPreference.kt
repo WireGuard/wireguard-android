@@ -7,6 +7,7 @@ package com.wireguard.android.preference
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import androidx.preference.Preference
@@ -80,13 +81,18 @@ class LogExporterPreference(context: Context, attrs: AttributeSet?) : Preference
     override fun getTitle() = context.getString(R.string.log_export_title)
 
     override fun onClick() {
-        FragmentUtils.getPrefActivity(this)
-                .ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
-                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        isEnabled = false
-                        exportLog()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            FragmentUtils.getPrefActivity(this)
+                    .ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
+                        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            isEnabled = false
+                            exportLog()
+                        }
                     }
-                }
+        } else {
+            isEnabled = false
+            exportLog()
+        }
     }
 
     companion object {
