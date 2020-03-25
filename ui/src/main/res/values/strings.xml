@@ -13,8 +13,8 @@
         <item quantity="other">%d tunnels selected</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="one">Imported %d of %d tunnels</item>
-        <item quantity="other">Imported %d of %d tunnels</item>
+        <item quantity="one">Imported %1$d of %2$d tunnels</item>
+        <item quantity="other">Imported %1$d of %2$d tunnels</item>
     </plurals>
     <plurals name="import_total_success">
         <item quantity="one">Imported %d tunnel</item>
