@@ -13,8 +13,8 @@
         <item quantity="other">%d туннелей выбрано</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="one">Импортирован %d из %d туннелей</item>
-        <item quantity="other">Импортировано %d из %d туннелей</item>
+        <item quantity="one">Импортирован %1$d из %1$d туннелей</item>
+        <item quantity="other">Импортировано %1$d из %1$d туннелей</item>
     </plurals>
     <plurals name="import_total_success">
         <item quantity="one">Импортированный %d туннель</item>
@@ -95,6 +95,7 @@
     <string name="listen_port">Порт</string>
     <string name="log_export_success">Сохранено в “%s”</string>
     <string name="log_export_title">Экспорт логов в файл</string>
+    <string name="log_export_subject">Файл логов WireGuard Android</string>
     <string name="logcat_error">Не удалось запустить logcat: </string>
     <string name="module_version_error">Не удалось определить версию модуля ядра</string>
     <string name="module_installer_not_found">Для вашего устройства нет доступных модулей</string>
@@ -184,4 +185,8 @@
     <string name="zip_export_title">Экспорт туннелей в zip-архив</string>
     <string name="key_length_error">Неверная длина ключа</string>
     <string name="key_contents_error">Плохие символы в ключе</string>
+    <string name="log_viewer_title">Логи</string>
+    <string name="log_viewer_pref_title">Просмотр логов приложения</string>
+    <string name="log_viewer_pref_summary">Логи могут помочь с отладкой</string>
+    <string name="log_saver_activity_label">Сохранить логи</string>
 </resources>
