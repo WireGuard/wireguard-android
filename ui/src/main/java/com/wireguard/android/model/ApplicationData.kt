@@ -10,7 +10,7 @@ import androidx.databinding.Bindable
 import com.wireguard.android.BR
 import com.wireguard.util.Keyed
 
-class ApplicationData(val icon: Drawable, val name: String, val packageName: String, isExcludedFromTunnel : Boolean) : BaseObservable(), Keyed<String> {
+class ApplicationData(val icon: Drawable, val name: String, val packageName: String, isExcludedFromTunnel: Boolean) : BaseObservable(), Keyed<String> {
     override fun getKey(): String {
         return name
     }

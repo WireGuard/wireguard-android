@@ -28,10 +28,10 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.fragment.ConfigNamingDialogFragment.Companion.newInstance
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.widget.EdgeToEdge.setUpFAB
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
-import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
@@ -254,11 +254,11 @@ class TunnelListFragment : BaseFragment() {
         else if (tunnels.isEmpty() && throwables.size == 1)
         else if (throwables.isEmpty())
             message = resources.getQuantityString(R.plurals.import_total_success,
-                tunnels.size, tunnels.size)
+                    tunnels.size, tunnels.size)
         else if (!throwables.isEmpty())
             message = resources.getQuantityString(R.plurals.import_partial_success,
-                tunnels.size + throwables.size,
-                tunnels.size, tunnels.size + throwables.size)
+                    tunnels.size + throwables.size,
+                    tunnels.size, tunnels.size + throwables.size)
         showSnackbar(message)
     }
 

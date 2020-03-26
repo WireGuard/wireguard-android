@@ -6,7 +6,12 @@ package com.wireguard.android.widget
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.*
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 /**
@@ -18,7 +23,7 @@ object EdgeToEdge {
     @JvmStatic
     fun setUpRoot(root: ViewGroup) {
         root.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     }
 
     @JvmStatic
@@ -33,9 +38,9 @@ object EdgeToEdge {
 
         scrollingContent.setOnApplyWindowInsetsListener { _, windowInsets ->
             scrollingContent.updatePadding(
-                left = originalPaddingLeft + windowInsets.systemWindowInsetLeft,
-                right = originalPaddingRight + windowInsets.systemWindowInsetRight,
-                bottom = originalPaddingBottom + fabPaddingBottom + windowInsets.systemWindowInsetBottom
+                    left = originalPaddingLeft + windowInsets.systemWindowInsetLeft,
+                    right = originalPaddingRight + windowInsets.systemWindowInsetRight,
+                    bottom = originalPaddingBottom + fabPaddingBottom + windowInsets.systemWindowInsetBottom
             )
             scrollingContent.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 topMargin = originalMarginTop + windowInsets.systemWindowInsetTop
