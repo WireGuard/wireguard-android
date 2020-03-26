@@ -5,5 +5,5 @@
         android:id="@+id/save_log"
         android:icon="@drawable/ic_action_save"
         android:title="@string/log_export_title"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>

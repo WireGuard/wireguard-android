@@ -15,7 +15,9 @@
     <color name="status_bar_color">@color/primary_color</color>
     <color name="navigation_bar_color">#aaffffff</color>
     <color name="list_multiselect_background">#ffeeeeee</color>
-    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/secondary_color</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">
+        @color/secondary_color
+    </color>
     <color name="white">#ffffffff</color>
 
     <!-- Log viewer tag colors -->

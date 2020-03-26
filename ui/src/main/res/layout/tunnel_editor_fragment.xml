@@ -42,10 +42,10 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
                     android:background="?attr/colorBackground"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="2dp"
@@ -93,8 +93,8 @@
                             android:id="@+id/private_key_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:layout_below="@+id/private_key_label"
+                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@+id/generate_private_key_button"
                             android:contentDescription="@string/public_key_description"
                             android:inputType="textNoSuggestions|textVisiblePassword"
@@ -106,9 +106,9 @@
                             style="@style/Widget.AppCompat.Button.Borderless.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/private_key_label"
                             android:layout_alignBottom="@id/private_key_text"
                             android:layout_alignParentEnd="true"
-                            android:layout_below="@+id/private_key_label"
                             android:onClick="@{() -> config.interface.generateKeyPair()}"
                             android:text="@string/generate" />
 
@@ -138,8 +138,8 @@
                             android:id="@+id/addresses_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:layout_below="@+id/public_key_text"
+                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@+id/listen_port_label"
                             android:labelFor="@+id/addresses_text"
                             android:text="@string/addresses" />
@@ -148,8 +148,8 @@
                             android:id="@+id/addresses_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:layout_below="@+id/addresses_label"
+                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@+id/listen_port_text"
                             android:inputType="textNoSuggestions|textVisiblePassword"
                             android:text="@={config.interface.addresses}" />
@@ -159,8 +159,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@+id/addresses_label"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignStart="@+id/generate_private_key_button"
+                            android:layout_alignParentEnd="true"
                             android:labelFor="@+id/listen_port_text"
                             android:text="@string/listen_port" />
 
@@ -169,8 +169,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@+id/addresses_text"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignStart="@+id/generate_private_key_button"
+                            android:layout_alignParentEnd="true"
                             android:hint="@string/hint_random"
                             android:inputType="number"
                             android:text="@={config.interface.listenPort}"
@@ -180,8 +180,8 @@
                             android:id="@+id/dns_servers_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:layout_below="@+id/addresses_text"
+                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@+id/mtu_label"
                             android:labelFor="@+id/dns_servers_text"
                             android:text="@string/dns_servers" />
@@ -190,8 +190,8 @@
                             android:id="@+id/dns_servers_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
                             android:layout_below="@+id/dns_servers_label"
+                            android:layout_alignParentStart="true"
                             android:layout_toStartOf="@+id/mtu_text"
                             android:inputType="textNoSuggestions|textVisiblePassword"
                             android:text="@={config.interface.dnsServers}" />
@@ -201,8 +201,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@+id/dns_servers_label"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignStart="@+id/generate_private_key_button"
+                            android:layout_alignParentEnd="true"
                             android:labelFor="@+id/mtu_text"
                             android:text="@string/mtu" />
 
@@ -211,8 +211,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@+id/dns_servers_text"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignStart="@+id/generate_private_key_button"
+                            android:layout_alignParentEnd="true"
                             android:hint="@string/hint_automatic"
                             android:inputType="number"
                             android:text="@={config.interface.mtu}"
@@ -243,9 +243,9 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="4dp"
                     android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:onClick="@{() -> config.addPeer()}"
                     android:text="@string/add_peer" />
             </LinearLayout>

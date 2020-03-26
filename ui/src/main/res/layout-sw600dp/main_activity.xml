@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
+
     <LinearLayout
         android:id="@+id/master_detail_wrapper"
         android:layout_width="match_parent"
