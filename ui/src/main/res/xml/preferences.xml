@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="settings">
-    <com.wireguard.android.preference.VersionPreference android:icon="@mipmap/ic_launcher" android:key="version" />
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="settings">
+    <com.wireguard.android.preference.VersionPreference
+        android:icon="@mipmap/ic_launcher"
+        android:key="version" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="restore_on_boot"
-        android:summaryOn="@string/restore_on_boot_summary_on"
         android:summaryOff="@string/restore_on_boot_summary_off"
+        android:summaryOn="@string/restore_on_boot_summary_on"
         android:title="@string/restore_on_boot_title" />
     <com.wireguard.android.preference.ZipExporterPreference android:key="zip_exporter" />
     <Preference
         android:key="log_viewer"
-        android:title="@string/log_viewer_title"
-        android:summary="@string/log_viewer_pref_summary" />
+        android:summary="@string/log_viewer_pref_summary"
+        android:title="@string/log_viewer_title" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"

@@ -9,9 +9,15 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
-    <uses-feature android:name="android.software.leanback" android:required="false" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <permission
         android:name="${applicationId}.permission.CONTROL_TUNNELS"
@@ -23,18 +29,21 @@
     <application
         android:name=".Application"
         android:allowBackup="false"
+        android:banner="@mipmap/banner"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:banner="@mipmap/banner">
+        android:theme="@style/AppTheme">
 
-        <activity android:name=".activity.TunnelToggleActivity" android:theme="@style/NoBackgroundTheme"/>
+        <activity
+            android:name=".activity.TunnelToggleActivity"
+            android:theme="@style/NoBackgroundTheme" />
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
@@ -59,10 +68,11 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
 
-        <activity android:name=".activity.LogViewerActivity"
+        <activity
+            android:name=".activity.LogViewerActivity"
             android:label="@string/log_viewer_title">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 

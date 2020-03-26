@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnPrimary">@color/color_control_normal</item>

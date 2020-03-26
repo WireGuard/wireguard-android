@@ -4,13 +4,13 @@
     android:id="@+id/master_detail_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".activity.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detail_container"
         android:name="com.wireguard.android.fragment.TunnelListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="LIST"/>
+        android:tag="LIST" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -38,8 +38,8 @@
             app:configurationHandler="@{rowConfigurationHandler}"
             app:items="@{tunnels}"
             app:layout="@{@layout/tunnel_list_item}"
-            tools:listitem="@layout/tunnel_list_item"
-            tools:itemCount="12" />
+            tools:itemCount="12"
+            tools:listitem="@layout/tunnel_list_item" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,9 +65,10 @@
                 android:text="@string/tunnel_list_placeholder"
                 android:textSize="20sp" />
         </LinearLayout>
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
             android:id="@+id/create_fab"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
