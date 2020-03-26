@@ -88,6 +88,7 @@
     <string name="key_length_explanation_binary">: Kunci WireGuard harus terdiri dari 32 bit</string>
     <string name="key_length_explanation_hex">: Kunci hex WireGuard Harus terdiri dari 64 karakter (32 bit)</string>
     <string name="listen_port">Isi port</string>
+    <string name="log_export_error">Log tidak bisa diekspor: %s</string>
     <string name="log_export_success">Simpan ke “%s”</string>
     <string name="log_export_title">Ekspor file log</string>
     <string name="logcat_error">Tidak bisa menjalankan logcat: </string>

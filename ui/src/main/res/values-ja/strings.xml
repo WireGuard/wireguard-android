@@ -84,6 +84,7 @@
     <string name="key_length_explanation_binary">: WireGuard 鍵は32バイトでなければなりません</string>
     <string name="key_length_explanation_hex">: WireGuard hex 鍵は64文字（32バイト）でなければなりません</string>
     <string name="listen_port">Listen ポート</string>
+    <string name="log_export_error">ログをエクスポートできません: %s</string>
     <string name="log_export_success">“%s” に保存しました</string>
     <string name="log_export_title">ログのエクスポート</string>
     <string name="logcat_error">logcat を実行できません: </string>

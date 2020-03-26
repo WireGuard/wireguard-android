@@ -35,6 +35,7 @@ import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.databinding.LogViewerActivityBinding
 import com.wireguard.android.util.DownloadsFileSaver
+import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.widget.EdgeToEdge.setUpFAB
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
@@ -169,17 +170,25 @@ class LogViewerActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             saveButton?.isEnabled = false
             withContext(Dispatchers.IO) {
-                val outputFile = DownloadsFileSaver.save(context, "wireguard-log.txt", "text/plain", true)
-                outputFile.outputStream.use {
-                    it.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
+                var exception: Throwable? = null
+                var outputFile: DownloadsFileSaver.DownloadsFile? = null
+                try {
+                    outputFile = DownloadsFileSaver.save(context, "wireguard-log.txt", "text/plain", true)
+                    outputFile.outputStream.use {
+                        it.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
+                    }
+                } catch (e: Throwable) {
+                    outputFile?.delete()
+                    exception = e
                 }
                 withContext(Dispatchers.Main) {
+                    saveButton?.isEnabled = true
                     Snackbar.make(findViewById(android.R.id.content),
-                            getString(R.string.log_export_success, outputFile.fileName),
-                            Snackbar.LENGTH_SHORT)
+                            if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
+                            else getString(R.string.log_export_error, ErrorMessages.get(exception)),
+                            if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG)
                             .setAnchorView(binding.shareFab)
                             .show()
-                    saveButton?.isEnabled = true
                 }
             }
         }
