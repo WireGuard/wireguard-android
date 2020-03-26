@@ -209,8 +209,8 @@ class LogViewerActivity : AppCompatActivity() {
             rawLogLines.append(line)
             rawLogLines.append('\n')
             val logLine = parseLine(line)
-            if (logLine != null) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (logLine != null) {
                     recyclerView?.let {
                         val shouldScroll = it.canScrollVertically(1)
                         logLines.add(logLine)
@@ -218,6 +218,13 @@ class LogViewerActivity : AppCompatActivity() {
                         if (!shouldScroll)
                             it.scrollToPosition(logLines.size - 1)
                     }
+                } else {
+                    /* I'd prefer for the next line to be:
+                     *    logLines.lastOrNull()?.msg += "\n$line"
+                     * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
+                     */
+                    logLines.lastOrNull()?.apply { msg += "\n$line" }
+                    logAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -241,7 +248,7 @@ class LogViewerActivity : AppCompatActivity() {
         }
     }
 
-    private data class LogLine(val pid: Int, val tid: Int, val time: Date?, val level: String, val tag: String, val msg: String)
+    private data class LogLine(val pid: Int, val tid: Int, val time: Date?, val level: String, val tag: String, var msg: String)
 
     companion object {
         /**
