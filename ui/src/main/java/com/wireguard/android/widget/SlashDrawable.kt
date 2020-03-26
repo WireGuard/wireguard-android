@@ -6,13 +6,11 @@
 package com.wireguard.android.widget
 
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.FloatProperty
-import android.util.Property
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
@@ -23,6 +21,7 @@ class SlashDrawable(private val mDrawable: Drawable) : Drawable() {
     private val mPath = Path()
     private val mSlashRect = RectF()
     private var mAnimationEnabled = true
+
     // Animate this value on change
     private var mCurrentSlashLength = 0f
     private var mRotation = 0f

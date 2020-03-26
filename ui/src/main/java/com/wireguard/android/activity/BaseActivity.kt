@@ -23,6 +23,7 @@ abstract class BaseActivity : ThemeChangeAwareActivity() {
             onSelectedTunnelChanged(oldTunnel, value)
             selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, value)
         }
+
     fun addOnSelectedTunnelChangedListener(listener: OnSelectedTunnelChangedListener) {
         selectionChangeRegistry.add(listener)
     }

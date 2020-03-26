@@ -49,8 +49,8 @@ class ConfigNamingDialogFragment : DialogFragment() {
         val configBytes = configText!!.toByteArray(StandardCharsets.UTF_8)
         config = try {
             Config.parse(ByteArrayInputStream(configBytes))
-        } catch(e: Exception) {
-            when(e) {
+        } catch (e: Exception) {
+            when (e) {
                 is BadConfigException, is IOException -> throw IllegalArgumentException("Invalid config passed to ${javaClass.simpleName}", e)
                 else -> throw e
             }
