@@ -185,7 +185,8 @@
     <string name="zip_export_title">Export tunnels to zip file</string>
     <string name="key_length_error">Incorrect key length</string>
     <string name="key_contents_error">Bad characters in key</string>
-    <string name="log_viewer_title">View application log</string>
+    <string name="log_viewer_title">Log</string>
+    <string name="log_viewer_pref_title">View application log</string>
     <string name="log_viewer_pref_summary">Logs may assist with debugging</string>
     <string name="log_saver_activity_label">Save log</string>
 </resources>

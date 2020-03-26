@@ -14,7 +14,7 @@
     <Preference
         android:key="log_viewer"
         android:summary="@string/log_viewer_pref_summary"
-        android:title="@string/log_viewer_title" />
+        android:title="@string/log_viewer_pref_title" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"
