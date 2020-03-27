@@ -54,7 +54,7 @@ class QuickTileService : TileService() {
                     tile.icon = if (tile.icon == iconOn) iconOff else iconOn
                     tile.updateTile()
                 }
-                tunnel!!.setState(Tunnel.State.TOGGLE).whenComplete { _, t ->
+                tunnel!!.setStateAsync(Tunnel.State.TOGGLE).whenComplete { _, t ->
                     if (t == null) {
                         updateTile()
                     } else {
