@@ -65,9 +65,9 @@ class ObservableTunnel internal constructor(
     @get:Bindable
     var config = config
         get() {
-            if (config == null)
+            if (field == null)
                 manager.getTunnelConfig(this).whenComplete(ExceptionLoggers.E)
-            return config
+            return field
         }
         private set
 
