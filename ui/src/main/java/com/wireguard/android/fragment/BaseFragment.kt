@@ -87,7 +87,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
         tunnel.setStateAsync(Tunnel.State.of(checked)).whenComplete { _, throwable ->
             if (throwable == null) return@whenComplete
-            val error = ErrorMessages.get(throwable)
+            val error = ErrorMessages[throwable]
             val messageResId = if (checked) R.string.error_up else R.string.error_down
             val message = requireContext().getString(messageResId, error)
             val view = view

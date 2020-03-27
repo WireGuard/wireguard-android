@@ -63,7 +63,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
 
     private fun exportZipComplete(filePath: String?, throwable: Throwable?) {
         if (throwable != null) {
-            val error = ErrorMessages.get(throwable)
+            val error = ErrorMessages[throwable]
             val message = context.getString(R.string.zip_export_error, error)
             Log.e(TAG, message, throwable)
             Snackbar.make(

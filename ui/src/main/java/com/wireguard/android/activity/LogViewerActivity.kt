@@ -185,7 +185,7 @@ class LogViewerActivity : AppCompatActivity() {
                     saveButton?.isEnabled = true
                     Snackbar.make(findViewById(android.R.id.content),
                             if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
-                            else getString(R.string.log_export_error, ErrorMessages.get(exception)),
+                            else getString(R.string.log_export_error, ErrorMessages[exception]),
                             if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG)
                             .setAnchorView(binding.shareFab)
                             .show()

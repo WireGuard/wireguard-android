@@ -42,7 +42,7 @@ class AppListDialogFragment : DialogFragment() {
                 appData.clear()
                 appData.addAll(data)
             } else {
-                val error = ErrorMessages.get(throwable)
+                val error = ErrorMessages[throwable]
                 val message = activity.getString(R.string.error_fetching_apps, error)
                 Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
                 dismissAllowingStateLoss()

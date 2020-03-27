@@ -34,7 +34,7 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
         when {
             throwable != null -> {
                 setState(State.FAILURE)
-                Toast.makeText(context, ErrorMessages.get(throwable), Toast.LENGTH_LONG).show()
+                Toast.makeText(context, ErrorMessages[throwable], Toast.LENGTH_LONG).show()
             }
             result == OsConstants.ENOENT -> setState(State.NOTFOUND)
             result == OsConstants.EXIT_SUCCESS -> {
