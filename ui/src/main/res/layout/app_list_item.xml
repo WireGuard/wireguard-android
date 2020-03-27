@@ -8,7 +8,7 @@
 
         <variable
             name="collection"
-            type="com.wireguard.android.util.ObservableKeyedList&lt;String, com.wireguard.android.model.ApplicationData&gt;" />
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, com.wireguard.android.model.ApplicationData&gt;" />
 
         <variable
             name="key"

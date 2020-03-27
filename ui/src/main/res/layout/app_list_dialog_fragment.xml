@@ -15,7 +15,7 @@
 
         <variable
             name="appData"
-            type="com.wireguard.android.util.ObservableKeyedList&lt;String, ApplicationData&gt;" />
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ApplicationData&gt;" />
     </data>
 
     <FrameLayout

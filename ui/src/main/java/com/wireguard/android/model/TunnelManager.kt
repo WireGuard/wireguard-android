@@ -22,8 +22,7 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.util.ExceptionLoggers
-import com.wireguard.android.util.ObservableSortedKeyedArrayList
-import com.wireguard.android.util.ObservableSortedKeyedList
+import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
 import com.wireguard.config.Config
 import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
@@ -34,10 +33,10 @@ import java.util.ArrayList
  * Maintains and mediates changes to the set of available WireGuard tunnels,
  */
 class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
-    val tunnels = CompletableFuture<ObservableSortedKeyedList<String, ObservableTunnel>>()
+    val tunnels = CompletableFuture<ObservableSortedKeyedArrayList<String, ObservableTunnel>>()
     private val context: Context = get()
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
-    private val tunnelMap: ObservableSortedKeyedList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(COMPARATOR)
+    private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(COMPARATOR)
     private var haveLoaded = false
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel? {

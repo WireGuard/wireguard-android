@@ -8,12 +8,10 @@ import android.graphics.drawable.Drawable
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.BR
-import com.wireguard.util.Keyed
+import com.wireguard.android.databinding.Keyed
 
 class ApplicationData(val icon: Drawable, val name: String, val packageName: String, isExcludedFromTunnel: Boolean) : BaseObservable(), Keyed<String> {
-    override fun getKey(): String {
-        return name
-    }
+    override val key = name
 
     @get:Bindable
     var isExcludedFromTunnel = isExcludedFromTunnel

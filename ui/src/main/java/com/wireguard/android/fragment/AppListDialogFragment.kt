@@ -17,11 +17,10 @@ import com.wireguard.android.R
 import com.wireguard.android.databinding.AppListDialogFragmentBinding
 import com.wireguard.android.model.ApplicationData
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.util.ObservableKeyedArrayList
-import com.wireguard.android.util.ObservableKeyedList
+import com.wireguard.android.databinding.ObservableKeyedArrayList
 
 class AppListDialogFragment : DialogFragment() {
-    private val appData: ObservableKeyedList<String, ApplicationData> = ObservableKeyedArrayList()
+    private val appData: ObservableKeyedArrayList<String, ApplicationData> = ObservableKeyedArrayList()
     private var currentlyExcludedApps = emptyList<String>()
 
     private fun loadData() {
