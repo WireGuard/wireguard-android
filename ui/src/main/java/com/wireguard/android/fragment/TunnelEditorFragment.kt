@@ -130,12 +130,12 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 }
                 tunnel!!.name != binding!!.name -> {
                     Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
-                    tunnel!!.setName(binding!!.name!!)
+                    tunnel!!.setNameAsync(binding!!.name!!)
                             .whenComplete { _, t -> onTunnelRenamed(tunnel!!, newConfig, t) }
                 }
                 else -> {
                     Log.d(TAG, "Attempting to save config of " + tunnel!!.name)
-                    tunnel!!.setConfig(newConfig)
+                    tunnel!!.setConfigAsync(newConfig)
                             .whenComplete { _, t -> onConfigSaved(tunnel!!, t) }
                 }
             }
@@ -198,7 +198,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             Log.d(TAG, message)
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel!!.name)
-            renamedTunnel.setConfig(newConfig).whenComplete { _, t -> onConfigSaved(renamedTunnel, t) }
+            renamedTunnel.setConfigAsync(newConfig).whenComplete { _, t -> onConfigSaved(renamedTunnel, t) }
         } else {
             val error = ErrorMessages.get(throwable)
             message = getString(R.string.tunnel_rename_error, error)

@@ -23,7 +23,7 @@ class TunnelToggleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
-        tunnel.setState(Tunnel.State.TOGGLE).whenComplete { _, t ->
+        tunnel.setStateAsync(Tunnel.State.TOGGLE).whenComplete { _, t ->
             TileService.requestListeningState(this, ComponentName(this, QuickTileService::class.java))
             onToggleFinished(t)
             finishAffinity()

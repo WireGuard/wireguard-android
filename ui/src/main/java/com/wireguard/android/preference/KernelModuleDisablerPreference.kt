@@ -35,7 +35,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
         }
         Application.getAsyncWorker().runAsync {
             Application.getTunnelManager().tunnels.thenApply { observableTunnels ->
-                val downings = observableTunnels.values().map { it.setState(Tunnel.State.DOWN).toCompletableFuture() }.toTypedArray()
+                val downings = observableTunnels.values().map { it.setStateAsync(Tunnel.State.DOWN).toCompletableFuture() }.toTypedArray()
                 CompletableFuture.allOf(*downings).thenRun {
                     val restartIntent = Intent(context, SettingsActivity::class.java)
                     restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
