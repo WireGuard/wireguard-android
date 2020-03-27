@@ -14,7 +14,7 @@ $ ./gradlew assembleRelease
 
 ## Embedding
 
-The tunnel library is [on JCenter](https://bintray.com/wireguard/wireguard-android/wireguard-android/_latestVersion):
+The tunnel library is [on JCenter](https://bintray.com/wireguard/wireguard-android/wireguard-android/_latestVersion), alongside [extensive class library documentation](https://javadoc.io/doc/com.wireguard.android/tunnel).
 
 ```
 implementation 'com.wireguard.android:tunnel:$wireguardTunnelVersion'
