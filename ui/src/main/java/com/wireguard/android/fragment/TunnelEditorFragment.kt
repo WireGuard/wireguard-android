@@ -125,13 +125,11 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                 tunnel == null -> {
                     Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
                     val manager = Application.getTunnelManager()
-                    manager.create(binding!!.name!!, newConfig)
-                            .whenComplete(this::onTunnelCreated)
+                    manager.create(binding!!.name!!, newConfig).whenComplete(this::onTunnelCreated)
                 }
                 tunnel!!.name != binding!!.name -> {
                     Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
-                    tunnel!!.setNameAsync(binding!!.name!!)
-                            .whenComplete { _, t -> onTunnelRenamed(tunnel!!, newConfig, t) }
+                    tunnel!!.setNameAsync(binding!!.name!!).whenComplete { _, t -> onTunnelRenamed(tunnel!!, newConfig, t) }
                 }
                 else -> {
                     Log.d(TAG, "Attempting to save config of " + tunnel!!.name)
