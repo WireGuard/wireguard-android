@@ -2,33 +2,45 @@
 <resources>
     <plurals name="delete_error">
         <item quantity="one">Не удалось удалить %d туннель: %s</item>
+        <item quantity="few">Не удалось удалить %d туннелей: %s</item>
+        <item quantity="many">Не удалось удалить %d туннелей: %s</item>
         <item quantity="other">Не удалось удалить %d туннелей: %s</item>
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">Успешно удален %d туннель</item>
+        <item quantity="few">Успешно удалено %d туннелей</item>
+        <item quantity="many">Успешно удалено %d туннелей</item>
         <item quantity="other">Успешно удалено %d туннелей</item>
     </plurals>
     <plurals name="delete_title">
         <item quantity="one">%d туннель выбран</item>
+        <item quantity="few">%d туннелей выбрано</item>
+        <item quantity="many">%d туннелей выбрано</item>
         <item quantity="other">%d туннелей выбрано</item>
     </plurals>
     <plurals name="import_partial_success">
         <item quantity="one">Импортирован %1$d из %1$d туннелей</item>
+        <item quantity="few">Импортировано %1$d из %1$d туннелей</item>
+        <item quantity="many">Импортировано %1$d из %1$d туннелей</item>
         <item quantity="other">Импортировано %1$d из %1$d туннелей</item>
     </plurals>
     <plurals name="import_total_success">
         <item quantity="one">Импортированный %d туннель</item>
+        <item quantity="few">Импортировано %d туннелей</item>
+        <item quantity="many">Импортировано %d туннелей</item>
         <item quantity="other">Импортировано %d туннелей</item>
     </plurals>
     <plurals name="set_excluded_applications">
         <item quantity="one">%d Исключенное приложение</item>
+        <item quantity="few">%d Исключенных приложений</item>
+        <item quantity="many">%d Исключенных приложений</item>
         <item quantity="other">%d Исключенных приложений</item>
     </plurals>
     <string name="add_peer">Добавить пира</string>
     <string name="addresses">IP-адреса</string>
-    <string name="allow_remote_control_intents_title">Доступ к другим приложениям</string>
-    <string name="allow_remote_control_intents_summary_on">Сторонние приложения могут переключать туннели (дополнительно)</string>
     <string name="allow_remote_control_intents_summary_off">Сторонние приложения не могут переключать туннели (рекомендуется)</string>
+    <string name="allow_remote_control_intents_summary_on">Сторонние приложения могут переключать туннели (дополнительно)</string>
+    <string name="allow_remote_control_intents_title">Доступ к другим приложениям</string>
     <string name="allowed_ips">Разрешенные IP-адреса</string>
     <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s из %2$s</string>
@@ -114,9 +126,9 @@
     <string name="module_installer_working">Скачивание и установка…</string>
     <string name="module_version_error">Не удалось определить версию модуля ядра</string>
     <string name="mtu">MTU</string>
-    <string name="multiple_tunnels_title">Несколько одновременных туннелей</string>
-    <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
     <string name="multiple_tunnels_summary_off">Только один туннель, выключит другие</string>
+    <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
+    <string name="multiple_tunnels_title">Несколько одновременных туннелей</string>
     <string name="name">Имя</string>
     <string name="no_config_error">Попытка поднять туннель без конфигурации</string>
     <string name="no_configs_error">Конфигурации не найдены</string>
@@ -136,8 +148,8 @@
     <string name="public_key">Публичный ключ</string>
     <string name="public_key_description">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
-    <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_summary_off">Не поднимать ранее выбранные туннели при загрузке</string>
+    <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_title">Восстанавливать при загрузке</string>
     <string name="save">Сохранить</string>
     <string name="select_all">Выбрать все</string>
