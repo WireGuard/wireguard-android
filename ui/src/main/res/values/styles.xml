@@ -53,4 +53,6 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="MediumText" parent="@android:style/TextAppearance.DeviceDefault.Medium" />
+
 </resources>
