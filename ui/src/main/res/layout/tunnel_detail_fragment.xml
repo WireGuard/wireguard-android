@@ -49,9 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/interface_title"
-                    style="@style/MediumText"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interface_title"

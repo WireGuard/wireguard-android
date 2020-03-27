@@ -55,4 +55,8 @@
 
     <style name="MediumText" parent="@android:style/TextAppearance.DeviceDefault.Medium" />
 
+    <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">?attr/colorSecondary</item>
+        <item name="hintTextColor">?attr/colorOnPrimary</item>
+    </style>
 </resources>

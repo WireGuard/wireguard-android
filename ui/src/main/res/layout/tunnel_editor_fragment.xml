@@ -25,230 +25,248 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorBackground">
+            android:id="@+id/main_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorBackground">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="?attr/colorBackground"
-                    app:cardCornerRadius="4dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/elevationOverlayColor"
+                    app:cardCornerRadius="0dp"
                     app:cardElevation="2dp"
                     app:contentPadding="8dp">
 
-                    <RelativeLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/interface_title"
-                            style="?android:attr/textAppearanceMedium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:text="@string/interface_title" />
-
-                        <TextView
-                            android:id="@+id/interface_name_label"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/interface_title"
-                            android:layout_marginTop="8dp"
-                            android:labelFor="@+id/interface_name_text"
-                            android:text="@string/name" />
-
-                        <EditText
-                            android:id="@+id/interface_name_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/interface_name_label"
-                            android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={name}"
-                            app:filter="@{NameInputFilter.newInstance()}" />
-
-                        <TextView
-                            android:id="@+id/private_key_label"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/interface_name_text"
-                            android:labelFor="@+id/private_key_text"
-                            android:text="@string/private_key" />
-
-                        <EditText
-                            android:id="@+id/private_key_text"
+                            style="@style/TextAppearance.MaterialComponents.Headline6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/private_key_label"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/generate_private_key_button"
-                            android:contentDescription="@string/public_key_description"
-                            android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interface.privateKey}"
-                            app:filter="@{KeyInputFilter.newInstance()}" />
+                            android:layout_margin="8dp"
+                            android:layout_marginTop="32dp"
+                            android:text="@string/interface_title"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <Button
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/interface_name_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/interface_title">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/interface_name_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/name"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:text="@={name}"
+                                app:filter="@{NameInputFilter.newInstance()}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/private_key_text_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            app:layout_constraintHorizontal_weight="0.7"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintEnd_toStartOf="@id/generate_private_key_button"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/interface_name_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/private_key_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/private_key"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:text="@={config.interface.privateKey}"
+                                app:filter="@{KeyInputFilter.newInstance()}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/generate_private_key_button"
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                            android:layout_width="wrap_content"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/private_key_label"
-                            android:layout_alignBottom="@id/private_key_text"
-                            android:layout_alignParentEnd="true"
+                            android:layout_margin="4dp"
                             android:onClick="@{() -> config.interface.generateKeyPair()}"
-                            android:text="@string/generate" />
+                            android:text="@string/generate"
+                            android:textColor="?attr/colorSecondary"
+                            app:layout_constraintHorizontal_weight="0.3"
+                            app:layout_constraintBaseline_toBaselineOf="@id/private_key_text_layout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/private_key_text_layout"
+                            app:rippleColor="?attr/colorSecondary" />
 
-                        <TextView
-                            android:id="@+id/public_key_label"
-                            android:layout_width="match_parent"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/public_key_label_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/private_key_text"
-                            android:labelFor="@+id/public_key_text"
-                            android:text="@string/public_key" />
+                            android:layout_margin="4dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/private_key_text_layout">
 
-                        <TextView
-                            android:id="@+id/public_key_text"
-                            style="?attr/editTextStyle"
-                            android:layout_width="match_parent"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/public_key_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:editable="false"
+                                android:ellipsize="end"
+                                android:focusable="false"
+                                android:hint="@string/public_key"
+                                android:onClick="@{ClipboardUtils::copyTextView}"
+                                android:singleLine="true"
+                                android:text="@{config.interface.publicKey}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/addresses_label_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/public_key_label"
-                            android:contentDescription="@string/public_key_description"
-                            android:ellipsize="end"
-                            android:focusable="false"
-                            android:hint="@string/hint_generated"
-                            android:maxLines="1"
-                            android:onClick="@{ClipboardUtils::copyTextView}"
-                            android:text="@{config.interface.publicKey}" />
+                            android:layout_margin="4dp"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintHorizontal_weight="0.7"
+                            app:layout_constraintEnd_toStartOf="@id/listen_port_label_layout"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
 
-                        <TextView
-                            android:id="@+id/addresses_label"
-                            android:layout_width="wrap_content"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/addresses_label_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/addresses"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:text="@={config.interface.addresses}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/listen_port_label_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/public_key_text"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/listen_port_label"
-                            android:labelFor="@+id/addresses_text"
-                            android:text="@string/addresses" />
+                            android:layout_margin="4dp"
+                            app:layout_constraintHorizontal_weight="0.3"
+                            app:layout_constraintTop_toBottomOf="@id/public_key_label_layout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/addresses_label_layout">
 
-                        <EditText
-                            android:id="@+id/addresses_text"
-                            android:layout_width="wrap_content"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/listen_port"
+                                android:inputType="number"
+                                android:text="@={config.interface.listenPort}"
+                                android:textAlignment="center" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/dns_servers_label_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/addresses_label"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/listen_port_text"
-                            android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interface.addresses}" />
+                            android:layout_margin="4dp"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintHorizontal_weight="0.8"
+                            app:layout_constraintEnd_toStartOf="@id/mtu_label_layout"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/addresses_label_layout">
 
-                        <TextView
-                            android:id="@+id/listen_port_label"
-                            android:layout_width="wrap_content"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/dns_servers_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/dns_servers"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:text="@={config.interface.dnsServers}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/mtu_label_layout"
+                            style="@style/TextInputLayoutBase"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/addresses_label"
-                            android:layout_alignStart="@+id/generate_private_key_button"
-                            android:layout_alignParentEnd="true"
-                            android:labelFor="@+id/listen_port_text"
-                            android:text="@string/listen_port" />
+                            android:layout_marginStart="4dp"
+                            app:layout_constraintHorizontal_weight="0.2"
+                            app:layout_constraintStart_toEndOf="@id/dns_servers_label_layout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/dns_servers_label_layout">
 
-                        <EditText
-                            android:id="@+id/listen_port_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/addresses_text"
-                            android:layout_alignStart="@+id/generate_private_key_button"
-                            android:layout_alignParentEnd="true"
-                            android:hint="@string/hint_random"
-                            android:inputType="number"
-                            android:text="@={config.interface.listenPort}"
-                            android:textAlignment="center" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/mtu_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/mtu"
+                                android:inputType="number"
+                                android:text="@={config.interface.mtu}"
+                                android:textAlignment="center" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:id="@+id/dns_servers_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/addresses_text"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/mtu_label"
-                            android:labelFor="@+id/dns_servers_text"
-                            android:text="@string/dns_servers" />
-
-                        <EditText
-                            android:id="@+id/dns_servers_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/dns_servers_label"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/mtu_text"
-                            android:inputType="textNoSuggestions|textVisiblePassword"
-                            android:text="@={config.interface.dnsServers}" />
-
-                        <TextView
-                            android:id="@+id/mtu_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/dns_servers_label"
-                            android:layout_alignStart="@+id/generate_private_key_button"
-                            android:layout_alignParentEnd="true"
-                            android:labelFor="@+id/mtu_text"
-                            android:text="@string/mtu" />
-
-                        <EditText
-                            android:id="@+id/mtu_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/dns_servers_text"
-                            android:layout_alignStart="@+id/generate_private_key_button"
-                            android:layout_alignParentEnd="true"
-                            android:hint="@string/hint_automatic"
-                            android:inputType="number"
-                            android:text="@={config.interface.mtu}"
-                            android:textAlignment="center" />
-
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/set_excluded_applications"
-                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                            android:layout_width="wrap_content"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/dns_servers_text"
-                            android:layout_marginLeft="-8dp"
+                            android:layout_margin="4dp"
                             android:onClick="@{fragment::onRequestSetExcludedApplications}"
-                            android:text="@{@plurals/set_excluded_applications(config.interface.excludedApplications.size, config.interface.excludedApplications.size)}" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                            android:text="@{@plurals/set_excluded_applications(config.interface.excludedApplications.size, config.interface.excludedApplications.size)}"
+                            android:textColor="?attr/colorSecondary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/mtu_label_layout"
+                            app:rippleColor="?attr/colorSecondary" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@null"
                     android:orientation="vertical"
+                    android:layout_marginBottom="?attr/actionBarSize"
                     app:items="@{config.peers}"
                     app:layout="@{@layout/tunnel_editor_peer}"
                     tools:ignore="UselessLeaf" />
-
-                <Button
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:onClick="@{() -> config.addPeer()}"
-                    android:text="@string/add_peer" />
             </LinearLayout>
         </ScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:background="?attr/colorPrimaryDark"
+            android:gravity="center"
+            android:onClick="@{() -> config.addPeer()}"
+            android:text="@string/add_peer"
+            app:layout_anchorGravity="bottom" />
+     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
