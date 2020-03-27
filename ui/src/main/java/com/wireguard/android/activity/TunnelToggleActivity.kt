@@ -32,7 +32,7 @@ class TunnelToggleActivity : AppCompatActivity() {
 
     private fun onToggleFinished(throwable: Throwable?) {
         if (throwable == null) return
-        val error = ErrorMessages.get(throwable)
+        val error = ErrorMessages[throwable]
         val message = getString(R.string.toggle_error, error)
         Log.e(TAG, message, throwable)
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()

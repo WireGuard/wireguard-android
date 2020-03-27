@@ -235,7 +235,7 @@ class TunnelListFragment : BaseFragment() {
         if (throwable == null) {
             message = resources.getQuantityString(R.plurals.delete_success, count, count)
         } else {
-            val error = ErrorMessages.get(throwable)
+            val error = ErrorMessages[throwable]
             message = resources.getQuantityString(R.plurals.delete_error, count, count, error)
             Log.e(TAG, message, throwable)
         }
@@ -245,7 +245,7 @@ class TunnelListFragment : BaseFragment() {
     private fun onTunnelImportFinished(tunnels: List<ObservableTunnel>, throwables: Collection<Throwable>) {
         var message = ""
         for (throwable in throwables) {
-            val error = ErrorMessages.get(throwable)
+            val error = ErrorMessages[throwable]
             message = getString(R.string.import_error, error)
             Log.e(TAG, message, throwable)
         }
