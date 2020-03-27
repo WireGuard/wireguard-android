@@ -11,7 +11,7 @@
 
         <variable
             name="collection"
-            type="com.wireguard.android.util.ObservableKeyedList&lt;String, ObservableTunnel&gt;" />
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
 
         <variable
             name="key"

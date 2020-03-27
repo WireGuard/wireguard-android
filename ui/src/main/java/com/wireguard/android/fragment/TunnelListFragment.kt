@@ -267,23 +267,26 @@ class TunnelListFragment : BaseFragment() {
         binding ?: return
         binding!!.fragment = this
         Application.getTunnelManager().tunnels.thenAccept { tunnels -> binding!!.tunnels = tunnels }
-        binding!!.rowConfigurationHandler = RowConfigurationHandler { binding: TunnelListItemBinding, tunnel: ObservableTunnel, position ->
-            binding.fragment = this
-            binding.root.setOnClickListener {
-                if (actionMode == null) {
-                    selectedTunnel = tunnel
-                } else {
-                    actionModeListener.toggleItemChecked(position)
+        val parent = this
+        binding!!.rowConfigurationHandler = object : RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel> {
+            override fun onConfigureRow(binding: TunnelListItemBinding, item: ObservableTunnel, position: Int) {
+                binding.fragment = parent
+                binding.root.setOnClickListener {
+                    if (actionMode == null) {
+                        selectedTunnel = item
+                    } else {
+                        actionModeListener.toggleItemChecked(position)
+                    }
                 }
+                binding.root.setOnLongClickListener {
+                    actionModeListener.toggleItemChecked(position)
+                    true
+                }
+                if (actionMode != null)
+                    (binding.root as MultiselectableRelativeLayout).setMultiSelected(actionModeListener.checkedItems.contains(position))
+                else
+                    (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == item)
             }
-            binding.root.setOnLongClickListener {
-                actionModeListener.toggleItemChecked(position)
-                true
-            }
-            if (actionMode != null)
-                (binding.root as MultiselectableRelativeLayout).setMultiSelected(actionModeListener.checkedItems.contains(position))
-            else
-                (binding.root as MultiselectableRelativeLayout).setSingleSelected(selectedTunnel == tunnel)
         }
     }
 

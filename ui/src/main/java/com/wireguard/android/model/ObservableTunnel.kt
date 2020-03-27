@@ -11,7 +11,7 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.config.Config
-import com.wireguard.util.Keyed
+import com.wireguard.android.databinding.Keyed
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
 
@@ -24,8 +24,7 @@ class ObservableTunnel internal constructor(
         config: Config?,
         state: Tunnel.State
 ) : BaseObservable(), Keyed<String>, Tunnel {
-    override fun getKey() = name
-
+    override val key = name
 
     @Bindable
     override fun getName() = name
