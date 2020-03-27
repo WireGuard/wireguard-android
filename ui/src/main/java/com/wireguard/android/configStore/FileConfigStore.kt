@@ -24,8 +24,9 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     override fun create(name: String, config: Config): Config {
         Log.d(TAG, "Creating configuration for tunnel $name")
         val file = fileFor(name)
-        if (!file.createNewFile()) throw IOException(context.getString(R.string.config_file_exists_error, file.name))
-        FileOutputStream(file, false).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
+        if (!file.createNewFile())
+            throw IOException(context.getString(R.string.config_file_exists_error, file.name))
+        FileOutputStream(file, false).use { it.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
         return config
     }
 
@@ -33,7 +34,8 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     override fun delete(name: String) {
         Log.d(TAG, "Deleting configuration for tunnel $name")
         val file = fileFor(name)
-        if (!file.delete()) throw IOException(context.getString(R.string.config_delete_error, file.name))
+        if (!file.delete())
+            throw IOException(context.getString(R.string.config_delete_error, file.name))
     }
 
     override fun enumerate(): Set<String> {
@@ -68,7 +70,8 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     override fun save(name: String, config: Config): Config {
         Log.d(TAG, "Saving configuration for tunnel $name")
         val file = fileFor(name)
-        if (!file.isFile) throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.name))
+        if (!file.isFile)
+            throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.name))
         FileOutputStream(file, false).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
         return config
     }

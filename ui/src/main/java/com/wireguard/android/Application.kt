@@ -72,7 +72,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         }
         tunnelManager = TunnelManager(FileConfigStore(applicationContext))
         tunnelManager.onCreate()
-        asyncWorker.supplyAsync { getBackend() }.thenAccept { futureBackend.complete(it) }
+        asyncWorker.supplyAsync(Companion::getBackend).thenAccept { futureBackend.complete(it) }
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 

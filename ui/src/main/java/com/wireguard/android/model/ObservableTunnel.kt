@@ -77,7 +77,7 @@ class ObservableTunnel internal constructor(
     else
         CompletableFuture.completedFuture(config)
 
-    fun setConfigAsync(config: Config): CompletionStage<Config?> = if (config != this.config)
+    fun setConfigAsync(config: Config): CompletionStage<Config> = if (config != this.config)
         manager.setTunnelConfig(this, config)
     else
         CompletableFuture.completedFuture(this.config)
@@ -93,13 +93,13 @@ class ObservableTunnel internal constructor(
     var statistics: Statistics? = null
         get() {
             if (field == null || field!!.isStale)
-                TunnelManager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E)
+                manager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E)
             return field
         }
         private set
 
     val statisticsAsync: CompletionStage<Statistics> = if (statistics == null || statistics!!.isStale)
-        TunnelManager.getTunnelStatistics(this)
+        manager.getTunnelStatistics(this)
     else
         CompletableFuture.completedFuture(statistics)
 
