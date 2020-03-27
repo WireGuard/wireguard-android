@@ -90,7 +90,7 @@ object BindingAdapters {
     @BindingAdapter(requireAll = false, value = ["items", "layout", "configurationHandler"])
     fun <K, E : Keyed<out K>> setItems(view: RecyclerView,
                                        oldList: ObservableKeyedArrayList<K, E>?, oldLayoutId: Int,
-                                       oldRowConfigurationHandler: RowConfigurationHandler<*, *>?,
+                                       @Suppress("UNUSED_PARAMETER") oldRowConfigurationHandler: RowConfigurationHandler<*, *>?,
                                        newList: ObservableKeyedArrayList<K, E>?, newLayoutId: Int,
                                        newRowConfigurationHandler: RowConfigurationHandler<*, *>?) {
         if (view.layoutManager == null)
@@ -98,7 +98,7 @@ object BindingAdapters {
         if (oldList === newList && oldLayoutId == newLayoutId)
             return
         // The ListAdapter interface is not generic, so this cannot be checked.
-        var adapter = view.adapter as ObservableKeyedRecyclerViewAdapter<K, E>?
+        @Suppress("UNCHECKED_CAST") var adapter = view.adapter as? ObservableKeyedRecyclerViewAdapter<K, E>?
         // If the layout changes, any existing adapter must be replaced.
         if (adapter != null && oldList != null && oldLayoutId != newLayoutId) {
             adapter.setList(null)

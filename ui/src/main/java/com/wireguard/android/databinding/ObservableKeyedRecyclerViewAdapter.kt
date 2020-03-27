@@ -4,6 +4,7 @@
  */
 package com.wireguard.android.databinding
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
     }
 
     fun setRowConfigurationHandler(rowConfigurationHandler: RowConfigurationHandler<*, *>?) {
+        @Suppress("UNCHECKED_CAST")
         this.rowConfigurationHandler = rowConfigurationHandler as? RowConfigurationHandler<ViewDataBinding, Any>
     }
 
