@@ -24,7 +24,6 @@ import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
 import com.wireguard.config.Config
-import java9.util.Comparators
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
 import java.util.ArrayList
@@ -36,7 +35,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     val tunnels = CompletableFuture<ObservableSortedKeyedArrayList<String, ObservableTunnel>>()
     private val context: Context = get()
     private val delayedLoadRestoreTunnels = ArrayList<CompletableFuture<Void>>()
-    private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(COMPARATOR)
+    private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(TunnelComparator)
     private var haveLoaded = false
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel? {
@@ -230,7 +229,6 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             .supplyAsync { getBackend().getStatistics(tunnel) }.thenApply(tunnel::onStatisticsChanged)
 
     companion object {
-        private val COMPARATOR = Comparators.thenComparing(java.lang.String.CASE_INSENSITIVE_ORDER, Comparators.naturalOrder())
         private const val KEY_LAST_USED_TUNNEL = "last_used_tunnel"
         private const val KEY_RESTORE_ON_BOOT = "restore_on_boot"
         private const val KEY_RUNNING_TUNNELS = "enabled_configs"
