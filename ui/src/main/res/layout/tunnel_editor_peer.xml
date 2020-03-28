@@ -139,11 +139,9 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/allowed_ips_label_layout"
                 style="@style/TextInputLayoutBase"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
+                android:layout_margin="4dp"
                 android:hint="@string/allowed_ips"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -153,6 +151,7 @@
                     android:id="@+id/allowed_ips_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:text="@={item.allowedIps}" />
             </com.google.android.material.textfield.TextInputLayout>
