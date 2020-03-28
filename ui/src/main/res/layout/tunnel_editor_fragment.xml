@@ -93,9 +93,9 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:hint="@string/private_key"
-                            app:endIconMode="custom"
-                            app:endIconDrawable="@drawable/ic_action_generate"
                             app:endIconContentDescription="@string/generate_new_private_key"
+                            app:endIconDrawable="@drawable/ic_action_generate"
+                            app:endIconMode="custom"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/interface_name_layout">
@@ -239,24 +239,25 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="?attr/actionBarSize"
                     android:divider="@null"
                     android:orientation="vertical"
                     app:items="@{config.peers}"
                     app:layout="@{@layout/tunnel_editor_peer}"
                     tools:ignore="UselessLeaf" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="?attr/colorPrimaryDark"
+                    android:gravity="center"
+                    android:onClick="@{() -> config.addPeer()}"
+                    android:text="@string/add_peer"
+                    android:textColor="?attr/colorSecondary"
+                    app:layout_anchorGravity="bottom"
+                    app:rippleColor="?attr/colorSecondary" />
             </LinearLayout>
         </ScrollView>
-
-        <TextView
-            style="@style/TextAppearance.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="bottom"
-            android:background="?attr/colorPrimaryDark"
-            android:gravity="center"
-            android:onClick="@{() -> config.addPeer()}"
-            android:text="@string/add_peer"
-            app:layout_anchorGravity="bottom" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
