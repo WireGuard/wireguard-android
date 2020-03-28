@@ -97,10 +97,11 @@ class ObservableTunnel internal constructor(
         }
         private set
 
-    val statisticsAsync: CompletionStage<Statistics> = if (statistics == null || statistics!!.isStale)
-        manager.getTunnelStatistics(this)
-    else
-        CompletableFuture.completedFuture(statistics)
+    val statisticsAsync: CompletionStage<Statistics>
+        get() = if (statistics == null || statistics!!.isStale)
+            manager.getTunnelStatistics(this)
+        else
+            CompletableFuture.completedFuture(statistics)
 
     fun onStatisticsChanged(statistics: Statistics?): Statistics? {
         this.statistics = statistics
