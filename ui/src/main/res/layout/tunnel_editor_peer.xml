@@ -20,10 +20,10 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:cardBackgroundColor="?attr/elevationOverlayColor"
         app:cardCornerRadius="0dp"
         app:cardElevation="2dp"
@@ -38,23 +38,23 @@
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/peer"
                 android:layout_margin="8dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/peer"
                 app:layout_constraintBottom_toTopOf="@+id/public_key_label_layout"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/delete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> item.unbind()}"
-                android:src="@drawable/ic_action_delete"
-                android:padding="8dp"
                 android:background="@null"
+                android:onClick="@{() -> item.unbind()}"
+                android:padding="8dp"
+                android:src="@drawable/ic_action_delete"
                 app:layout_constraintBaseline_toBaselineOf="@id/peer_title"
-                app:layout_constraintTop_toTopOf="@id/peer_title"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/peer_title" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/public_key_label_layout"
@@ -62,19 +62,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/peer_title"
+                app:layout_constraintBottom_toTopOf="@+id/pre_shared_key_label_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/pre_shared_key_label_layout">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/peer_title">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/public_key_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/public_key"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:text="@={item.publicKey}"
-                    android:hint="@string/public_key"
-                    app:filter="@{KeyInputFilter.newInstance()}"/>
+                    app:filter="@{KeyInputFilter.newInstance()}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -84,9 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/pre_shared_key"
-                app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
 
                 <com.wireguard.android.widget.MonkeyedTextInputEditText
                     android:id="@+id/pre_shared_key_text"
@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_optional"
                     android:inputType="textNoSuggestions|textVisiblePassword"
-                    android:text="@={item.preSharedKey}"/>
+                    android:text="@={item.preSharedKey}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -104,9 +104,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/persistent_keepalive"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout">
 
                 <com.wireguard.android.widget.MonkeyedTextInputEditText
                     android:id="@+id/persistent_keepalive_text"
@@ -131,9 +131,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:inputType="textNoSuggestions|textVisiblePassword"
                     android:hint="@string/endpoint"
-                    android:text="@={item.endpoint}"/>
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:text="@={item.endpoint}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -141,20 +141,20 @@
                 style="@style/TextInputLayoutBase"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
-                app:layout_constraintTop_toBottomOf="@id/endpoint_label_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/endpoint_label_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/allowed_ips_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions|textVisiblePassword"
                     android:hint="@string/allowed_ips"
-                    android:text="@={item.allowedIps}"/>
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:text="@={item.allowedIps}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
@@ -163,11 +163,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="0dp"
+                android:checked="@={item.excludingPrivateIps}"
                 android:text="@string/exclude_private_ips"
                 android:visibility="@{item.ableToExcludePrivateIps ? View.VISIBLE : View.GONE}"
-                android:checked="@={item.excludingPrivateIps}"
-                app:layout_constraintTop_toBottomOf="@id/allowed_ips_label_layout"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/allowed_ips_label_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
