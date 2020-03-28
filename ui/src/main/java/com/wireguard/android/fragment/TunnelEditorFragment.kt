@@ -13,6 +13,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
@@ -73,10 +74,12 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             setUpRoot(root as ViewGroup)
             setUpScrollingContent(mainContainer, null)
         }
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         return binding?.root
     }
 
     override fun onDestroyView() {
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         binding = null
         super.onDestroyView()
     }
