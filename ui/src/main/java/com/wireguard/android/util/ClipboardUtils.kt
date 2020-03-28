@@ -6,10 +6,11 @@ package com.wireguard.android.util
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.getSystemService
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 
 /**
  * Standalone utilities for interacting with the system clipboard.
@@ -17,14 +18,16 @@ import com.google.android.material.snackbar.Snackbar
 object ClipboardUtils {
     @JvmStatic
     fun copyTextView(view: View) {
-        if (view !is TextView)
+        val data = when (view) {
+            is TextInputEditText -> Pair(view.editableText, view.hint)
+            is TextView -> Pair(view.text, view.contentDescription)
+            else -> return
+        }
+        if (data.first == null || data.first.isEmpty()) {
             return
-        val text = view.text
-        if (text == null || text.length == 0) return
-        val service = view.getContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-                ?: return
-        val description = view.getContentDescription()
-        service.setPrimaryClip(ClipData.newPlainText(description, text))
-        Snackbar.make(view, "$description copied to clipboard", Snackbar.LENGTH_LONG).show()
+        }
+        val service = view.context.getSystemService<ClipboardManager>() ?: return
+        service.setPrimaryClip(ClipData.newPlainText(data.second, data.first))
+        Snackbar.make(view, "${data.second} copied to clipboard", Snackbar.LENGTH_LONG).show()
     }
 }
