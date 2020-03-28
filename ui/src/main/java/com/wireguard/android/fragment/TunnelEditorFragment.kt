@@ -229,6 +229,6 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     companion object {
         private const val KEY_LOCAL_CONFIG = "local_config"
         private const val KEY_ORIGINAL_NAME = "original_name"
-        private val TAG = "WireGuard/" + TunnelEditorFragment::class.java.simpleName
+        private val TAG = "WireGuard/${TunnelEditorFragment::class.simpleName!!}"
     }
 }

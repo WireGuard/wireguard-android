@@ -91,6 +91,6 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
     }
 
     companion object {
-        private val TAG = "WireGuard/" + ZipExporterPreference::class.java.simpleName
+        private val TAG = "WireGuard/${ZipExporterPreference::class.simpleName!!}"
     }
 }

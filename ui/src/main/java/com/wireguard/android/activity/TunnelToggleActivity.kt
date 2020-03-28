@@ -39,6 +39,6 @@ class TunnelToggleActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val TAG = "WireGuard/" + TunnelToggleActivity::class.java.simpleName
+        private val TAG = "WireGuard/${TunnelToggleActivity::class.simpleName!!}"
     }
 }

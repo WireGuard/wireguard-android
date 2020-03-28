@@ -397,6 +397,6 @@ class TunnelListFragment : BaseFragment() {
         const val REQUEST_IMPORT = 1
         private const val REQUEST_TARGET_FRAGMENT = 2
         private const val CHECKED_ITEMS = "CHECKED_ITEMS"
-        private val TAG = "WireGuard/" + TunnelListFragment::class.java.simpleName
+        private val TAG = "WireGuard/${TunnelListFragment::class.simpleName!!}"
     }
 }

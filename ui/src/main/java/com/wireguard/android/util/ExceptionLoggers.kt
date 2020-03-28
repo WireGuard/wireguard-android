@@ -22,6 +22,6 @@ enum class ExceptionLoggers(private val priority: Int) : BiConsumer<Any?, Throwa
     }
 
     companion object {
-        private val TAG = "WireGuard/" + ExceptionLoggers::class.java.simpleName
+        private val TAG = "WireGuard/${ExceptionLoggers::class.simpleName!!}"
     }
 }
