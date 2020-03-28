@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/public_key_text"
-                style="@style/MediumText"
+                style="@style/DetailText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/public_key_description"
@@ -70,7 +70,7 @@
 
             <TextView
                 android:id="@+id/allowed_ips_text"
-                style="@style/MediumText"
+                style="@style/DetailText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{item.allowedIps}"
@@ -90,7 +90,7 @@
 
             <TextView
                 android:id="@+id/endpoint_text"
-                style="@style/MediumText"
+                style="@style/DetailText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{item.endpoint}"
@@ -113,7 +113,7 @@
 
             <TextView
                 android:id="@+id/transfer_text"
-                style="@style/MediumText"
+                style="@style/DetailText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/transfer_label"
