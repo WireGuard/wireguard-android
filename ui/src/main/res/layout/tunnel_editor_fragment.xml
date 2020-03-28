@@ -72,6 +72,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
+                            android:hint="@string/name"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/interface_title">
@@ -80,7 +81,6 @@
                                 android:id="@+id/interface_name_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/name"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
                                 android:text="@={name}"
                                 app:filter="@{NameInputFilter.newInstance()}" />
@@ -92,6 +92,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
+                            android:hint="@string/private_key"
                             app:layout_constraintEnd_toStartOf="@id/generate_private_key_button"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintHorizontal_weight="0.7"
@@ -102,7 +103,6 @@
                                 android:id="@+id/private_key_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/private_key"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
                                 android:text="@={config.interface.privateKey}"
                                 app:filter="@{KeyInputFilter.newInstance()}" />
@@ -153,6 +153,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
+                            android:hint="@string/addresses"
                             app:layout_constraintEnd_toStartOf="@id/listen_port_label_layout"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintHorizontal_weight="0.7"
@@ -163,7 +164,6 @@
                                 android:id="@+id/addresses_label_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/addresses"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
                                 android:text="@={config.interface.addresses}" />
                         </com.google.android.material.textfield.TextInputLayout>
@@ -196,6 +196,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
+                            android:hint="@string/dns_servers"
                             app:layout_constraintEnd_toStartOf="@id/mtu_label_layout"
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintHorizontal_weight="0.7"
@@ -206,7 +207,6 @@
                                 android:id="@+id/dns_servers_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/dns_servers"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
                                 android:text="@={config.interface.dnsServers}" />
                         </com.google.android.material.textfield.TextInputLayout>
