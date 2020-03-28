@@ -82,6 +82,7 @@
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
     <string name="hint_optional">(optional)</string>
+    <string name="hint_optional_discouraged">(optional, not recommended)</string>
     <string name="hint_random">(random)</string>
     <string name="illegal_filename_error">Illegal file name “%s”</string>
     <string name="import_error">Unable to import tunnel: %s</string>
