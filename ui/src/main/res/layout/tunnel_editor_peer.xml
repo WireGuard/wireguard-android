@@ -83,15 +83,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
+                android:hint="@string/pre_shared_key"
                 app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.wireguard.android.widget.MonkeyedTextInputEditText
                     android:id="@+id/pre_shared_key_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/pre_shared_key"
+                    android:hint="@string/hint_optional"
                     android:inputType="textNoSuggestions|textVisiblePassword"
                     android:text="@={item.preSharedKey}"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -102,15 +103,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
+                android:hint="@string/persistent_keepalive"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.wireguard.android.widget.MonkeyedTextInputEditText
                     android:id="@+id/persistent_keepalive_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/persistent_keepalive"
+                    android:hint="@string/hint_optional"
                     android:inputType="number"
                     android:text="@={item.persistentKeepalive}" />
             </com.google.android.material.textfield.TextInputLayout>
