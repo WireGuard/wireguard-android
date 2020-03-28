@@ -71,7 +71,6 @@
     <string name="error_up">トンネル起動時エラー: %s</string>
     <string name="exclude_private_ips">プライベート IP アドレスを除外</string>
     <string name="excluded_applications">対象外とするアプリケーション</string>
-    <string name="generate">生成</string>
     <string name="generic_error">未知の “%s” エラー</string>
     <string name="hint_automatic">(自動)</string>
     <string name="hint_generated">(生成済み)</string>

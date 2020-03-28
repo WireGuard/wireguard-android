@@ -71,7 +71,6 @@
     <string name="error_up">建立连接时出错：%s</string>
     <string name="exclude_private_ips">排除局域网</string>
     <string name="excluded_applications">排除的应用</string>
-    <string name="generate">生成密钥</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
     <string name="hint_generated">（生成）</string>

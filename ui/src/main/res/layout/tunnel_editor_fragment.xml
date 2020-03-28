@@ -93,9 +93,10 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:hint="@string/private_key"
-                            app:layout_constraintEnd_toStartOf="@id/generate_private_key_button"
-                            app:layout_constraintHorizontal_chainStyle="spread"
-                            app:layout_constraintHorizontal_weight="0.7"
+                            app:endIconMode="custom"
+                            app:endIconDrawable="@drawable/ic_action_generate"
+                            app:endIconContentDescription="@string/generate_new_private_key"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/interface_name_layout">
 
@@ -107,21 +108,6 @@
                                 android:text="@={config.interface.privateKey}"
                                 app:filter="@{KeyInputFilter.newInstance()}" />
                         </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/generate_private_key_button"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:onClick="@{() -> config.interface.generateKeyPair()}"
-                            android:text="@string/generate"
-                            android:textColor="?attr/colorSecondary"
-                            app:layout_constraintBaseline_toBaselineOf="@id/private_key_text_layout"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_weight="0.3"
-                            app:layout_constraintStart_toEndOf="@id/private_key_text_layout"
-                            app:rippleColor="?attr/colorSecondary" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/public_key_label_layout"

@@ -77,7 +77,7 @@
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="exclude_private_ips">Exclude private IPs</string>
     <string name="excluded_applications">Excluded Applications</string>
-    <string name="generate">Generate</string>
+    <string name="generate_new_private_key">Generate new private key</string>
     <string name="generic_error">Unknown “%s” error</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>

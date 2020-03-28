@@ -73,7 +73,6 @@
     <string name="error_up">Errore di attivazione del tunnel: %s</string>
     <string name="exclude_private_ips">Escludi IP privati</string>
     <string name="excluded_applications">Applicazioni escluse</string>
-    <string name="generate">Genera</string>
     <string name="generic_error">Errore “%s” sconosciuto</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generato)</string>

@@ -89,7 +89,6 @@
     <string name="error_up">Ошибка при запуске туннеля: %s</string>
     <string name="exclude_private_ips">Исключить частные IP-адреса</string>
     <string name="excluded_applications">Исключенные приложения</string>
-    <string name="generate">Создать</string>
     <string name="generic_error">Неизвестная “%s” ошибка</string>
     <string name="hint_automatic">(авто)</string>
     <string name="hint_generated">(авто)</string>

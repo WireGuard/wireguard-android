@@ -17,6 +17,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
@@ -73,6 +74,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             executePendingBindings()
             setUpRoot(root as ViewGroup)
             setUpScrollingContent(mainContainer, null)
+            privateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateKeyPair() }
         }
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         return binding?.root

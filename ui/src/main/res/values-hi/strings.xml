@@ -73,7 +73,6 @@
     <string name="error_up">टनल को लाने में त्रुटि: %s</string>
     <string name="exclude_private_ips">निजी आईपी को छोड़ दें</string>
     <string name="excluded_applications">निकाले गए ऐप्स</string>
-    <string name="generate">उत्पन्न</string>
     <string name="generic_error">अज्ञात “%s” त्रुटि</string>
     <string name="hint_automatic">(ऑटो)</string>
     <string name="hint_generated">(उत्पन्न)</string>

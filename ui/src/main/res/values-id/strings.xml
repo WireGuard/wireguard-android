@@ -73,7 +73,6 @@
     <string name="error_up">Kesalahan menambahkan tunel: %s</string>
     <string name="exclude_private_ips">Kecualikan IP pribadi</string>
     <string name="excluded_applications">Kecualikan aplikasi</string>
-    <string name="generate">Generate</string>
     <string name="generic_error">Eror “%s” Tidak diketahui</string>
     <string name="hint_automatic">(otomatis)</string>
     <string name="hint_generated">(generate)</string>
