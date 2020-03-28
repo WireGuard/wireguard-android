@@ -55,7 +55,8 @@
                 android:onClick="@{ClipboardUtils::copyTextView}"
                 android:text="@{item.publicKey.toBase64}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/public_key_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/public_key_label"
+                tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA="/>
 
             <TextView
                 android:id="@+id/allowed_ips_label"
@@ -74,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:text="@{item.allowedIps}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/allowed_ips_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/allowed_ips_label"
+                tools:text="0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3"/>
 
             <TextView
                 android:id="@+id/endpoint_label"
@@ -93,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:text="@{item.endpoint}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/endpoint_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/endpoint_label"
+                tools:text="192.168.0.1:51820" />
 
             <TextView
                 android:id="@+id/transfer_label"
@@ -105,7 +108,8 @@
                 android:text="@string/transfer"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/endpoint_text" />
+                app:layout_constraintTop_toBottomOf="@+id/endpoint_text"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/transfer_text"
@@ -116,6 +120,7 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transfer_label"
+                tools:visibility="visible"
                 tools:text="1024 MB" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

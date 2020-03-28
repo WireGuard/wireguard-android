@@ -85,7 +85,8 @@
                     android:layout_height="wrap_content"
                     android:text="@{tunnel.name}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interface_name_label"/>
+                    app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
+                    tools:text="wg0"/>
 
                 <TextView
                     android:id="@+id/public_key_label"
@@ -108,7 +109,8 @@
                     android:onClick="@{ClipboardUtils::copyTextView}"
                     android:text="@{config.interface.keyPair.publicKey.toBase64}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/public_key_label"/>
+                    app:layout_constraintTop_toBottomOf="@+id/public_key_label"
+                    tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA="/>
 
                 <TextView
                     android:id="@+id/addresses_label"
@@ -128,7 +130,8 @@
                     android:contentDescription="@string/addresses"
                     android:text="@{config.interface.addresses}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/addresses_label"/>
+                    app:layout_constraintTop_toBottomOf="@+id/addresses_label"
+                    tools:text="fc00:bbbb:bbbb:bb11::3:368b/128"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
