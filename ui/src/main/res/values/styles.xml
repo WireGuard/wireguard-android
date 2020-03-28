@@ -54,6 +54,7 @@
     </style>
 
     <style name="DetailText" parent="TextAppearance.MaterialComponents.Body1" />
+    <style name="SectionText" parent="TextAppearance.MaterialComponents.Headline6" />
 
     <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">?attr/colorSecondary</item>
