@@ -26,9 +26,11 @@ default: $(DESTDIR)/libwg-go.so
 
 $(BUILDDIR)/go-$(DESIRED_GO_VERSION)/.prepared:
 	mkdir -p "$(dir $@)"
-	curl "https://dl.google.com/go/go$(DESIRED_GO_VERSION).$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(NDK_GO_ARCH_MAP_$(shell uname -m)).tar.gz" | tar -C "$(dir $@)" --strip-components=1 -xzf -
-	patch -p1 -f -N -r- -d "$(dir $@)" < goruntime-boottime-over-monotonic.diff
-	touch "$@"
+	flock -x "$@.lock" -c ' \
+	[ -f "$@" ] && exit 0; \
+	curl "https://dl.google.com/go/go$(DESIRED_GO_VERSION).$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(NDK_GO_ARCH_MAP_$(shell uname -m)).tar.gz" | tar -C "$(dir $@)" --strip-components=1 -xzf - && \
+	patch -p1 -f -N -r- -d "$(dir $@)" < goruntime-boottime-over-monotonic.diff && \
+	touch "$@"'
 
 $(DESTDIR)/libwg-go.so: export PATH := $(BUILDDIR)/go-$(DESIRED_GO_VERSION)/bin/:$(PATH)
 $(DESTDIR)/libwg-go.so: $(BUILDDIR)/go-$(DESIRED_GO_VERSION)/.prepared go.mod
