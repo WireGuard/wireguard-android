@@ -78,7 +78,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "net.sourceforge.streamsupport:android-retrofuture:$streamsupportVersion"
-    implementation "net.sourceforge.streamsupport:android-retrostreams:$streamsupportVersion"
 }
 
 tasks.withType(JavaCompile) {
