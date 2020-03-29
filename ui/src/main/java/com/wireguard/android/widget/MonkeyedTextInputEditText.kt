@@ -19,12 +19,12 @@ class MonkeyedTextInputEditText @JvmOverloads constructor(context: Context, attr
         val text = super.getText()
         if (!text.isNullOrEmpty())
             return text
-        /* We want this expression in TextInputLayout.java to be true:
+        /* We want this expression in TextInputLayout.java to be true if there's a hint set:
          *        final boolean hasText = editText != null && !TextUtils.isEmpty(editText.getText());
          * But for everyone else it should return the real value, so we check the caller.
          */
-        if (Thread.currentThread().stackTrace[3].className == TextInputLayout::class.qualifiedName)
-            return SpannableStringBuilder(" ")
+        if (!hint.isNullOrEmpty() && Thread.currentThread().stackTrace[3].className == TextInputLayout::class.qualifiedName)
+            return SpannableStringBuilder(hint)
         return text
     }
 }
