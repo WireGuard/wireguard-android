@@ -23,7 +23,7 @@ import com.wireguard.android.util.resolveAttribute
 
 class AddTunnelsSheet : BottomSheetDialogFragment() {
 
-    private lateinit var behavior: BottomSheetBehavior<FrameLayout>
+    private var behavior: BottomSheetBehavior<FrameLayout>? = null
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
@@ -51,7 +51,7 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val dialog = dialog as BottomSheetDialog? ?: return
                 behavior = dialog.behavior
-                behavior.apply {
+                behavior?.apply {
                     state = BottomSheetBehavior.STATE_EXPANDED
                     peekHeight = 0
                     addBottomSheetCallback(bottomSheetCallback)
@@ -78,7 +78,7 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
 
     override fun dismiss() {
         super.dismiss()
-        behavior.removeBottomSheetCallback(bottomSheetCallback)
+        behavior?.removeBottomSheetCallback(bottomSheetCallback)
     }
 
     private fun requireTargetFragment(): Fragment {
