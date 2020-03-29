@@ -204,6 +204,9 @@ class LogViewerActivity : AppCompatActivity() {
             return@withContext
         }
         val stdout = BufferedReader(InputStreamReader(process!!.inputStream, StandardCharsets.UTF_8))
+        var haveScrolled = false
+        val start = System.nanoTime()
+        var startPeriod = start
         while (true) {
             val line = stdout.readLine() ?: break
             rawLogLines.append(line)
@@ -212,10 +215,10 @@ class LogViewerActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 if (logLine != null) {
                     recyclerView?.let {
-                        val shouldScroll = it.canScrollVertically(1)
+                        val shouldScroll = haveScrolled && !it.canScrollVertically(1)
                         logLines.add(logLine)
-                        logAdapter.notifyDataSetChanged()
-                        if (!shouldScroll)
+                        if (haveScrolled) logAdapter.notifyDataSetChanged()
+                        if (shouldScroll)
                             it.scrollToPosition(logLines.size - 1)
                     }
                 } else {
@@ -224,7 +227,17 @@ class LogViewerActivity : AppCompatActivity() {
                      * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
                      */
                     logLines.lastOrNull()?.apply { msg += "\n$line" }
-                    logAdapter.notifyDataSetChanged()
+                    if (haveScrolled) logAdapter.notifyDataSetChanged()
+                }
+                if (!haveScrolled) {
+                    val end = System.nanoTime()
+                    val scroll = (end - start) > 1000000000L * 2.5 || !stdout.ready()
+                    if (logLines.isNotEmpty() && (scroll || (end - startPeriod) > 1000000000L / 4)) {
+                        logAdapter.notifyDataSetChanged()
+                        recyclerView?.scrollToPosition(logLines.size - 1)
+                        startPeriod = end
+                    }
+                    if (scroll) haveScrolled = true
                 }
             }
         }
