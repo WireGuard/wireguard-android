@@ -19,10 +19,10 @@
         <item quantity="other">%d туннелей выбрано</item>
     </plurals>
     <plurals name="import_partial_success">
-        <item quantity="one">Импортирован %1$d из %1$d туннелей</item>
-        <item quantity="few">Импортировано %1$d из %1$d туннелей</item>
-        <item quantity="many">Импортировано %1$d из %1$d туннелей</item>
-        <item quantity="other">Импортировано %1$d из %1$d туннелей</item>
+        <item quantity="one">Импортирован %1$d из %2$d туннелей</item>
+        <item quantity="few">Импортировано %1$d из %2$d туннелей</item>
+        <item quantity="many">Импортировано %1$d из %2$d туннелей</item>
+        <item quantity="other">Импортировано %1$d из %2$d туннелей</item>
     </plurals>
     <plurals name="import_total_success">
         <item quantity="one">Импортированный %d туннель</item>
