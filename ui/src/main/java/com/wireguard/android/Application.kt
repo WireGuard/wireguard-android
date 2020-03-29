@@ -88,7 +88,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
 
     companion object {
         val USER_AGENT = String.format(Locale.ENGLISH, "WireGuard/%s (Android %d; %s; %s; %s %s; %s)", BuildConfig.VERSION_NAME, Build.VERSION.SDK_INT, if (Build.SUPPORTED_ABIS.isNotEmpty()) Build.SUPPORTED_ABIS[0] else "unknown ABI", Build.BOARD, Build.MANUFACTURER, Build.MODEL, Build.FINGERPRINT)
-        private val TAG = "WireGuard/${Application::class.simpleName!!}"
+        private val TAG = "WireGuard/${Application::class.simpleName}"
         private lateinit var weakSelf: WeakReference<Application>
 
         @JvmStatic

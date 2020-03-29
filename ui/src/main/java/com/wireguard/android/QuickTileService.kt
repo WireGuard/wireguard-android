@@ -153,6 +153,6 @@ class QuickTileService : TileService() {
     }
 
     companion object {
-        private val TAG = "WireGuard/${QuickTileService::class.simpleName!!}"
+        private val TAG = "WireGuard/${QuickTileService::class.simpleName}"
     }
 }

@@ -103,6 +103,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
     companion object {
         private const val REQUEST_CODE_VPN_PERMISSION = 23491
-        private val TAG = "WireGuard/${BaseFragment::class.simpleName!!}"
+        private val TAG = "WireGuard/${BaseFragment::class.simpleName}"
     }
 }
