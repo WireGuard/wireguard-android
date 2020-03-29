@@ -68,7 +68,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/interface_name_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -88,7 +87,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/private_key_text_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -111,7 +109,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/public_key_label_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -135,7 +132,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/addresses_label_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -156,7 +152,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/listen_port_label_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -178,7 +173,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/dns_servers_label_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
@@ -199,7 +193,6 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/mtu_label_layout"
-                            style="@style/TextInputLayoutBase"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
