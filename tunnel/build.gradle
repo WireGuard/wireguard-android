@@ -30,14 +30,14 @@ android {
         release {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_PACKAGE_NAME=${groupName}"
+                    arguments "-DANDROID_PACKAGE_NAME=${groupName}", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
                 }
             }
         }
         debug {
             externalNativeBuild {
                 cmake {
-                    arguments "-DANDROID_PACKAGE_NAME=${groupName}.debug"
+                    arguments "-DANDROID_PACKAGE_NAME=${groupName}.debug", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
                 }
             }
         }
