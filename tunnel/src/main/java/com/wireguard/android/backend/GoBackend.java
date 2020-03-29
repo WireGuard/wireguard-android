@@ -35,7 +35,7 @@ import androidx.collection.ArraySet;
 
 @NonNullForAll
 public final class GoBackend implements Backend {
-    private static final String TAG = "WireGuard/" + GoBackend.class.getSimpleName();
+    private static final String TAG = "WireGuard/GoBackend";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
     private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
     private final Context context;

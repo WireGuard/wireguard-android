@@ -39,7 +39,7 @@ public final class ToolsInstaller {
             new File("/system/bin"),
     };
     @Nullable private static final File INSTALL_DIR = getInstallDir();
-    private static final String TAG = "WireGuard/" + ToolsInstaller.class.getSimpleName();
+    private static final String TAG = "WireGuard/ToolsInstaller";
 
     private final Context context;
     private final File localBinaryDir;

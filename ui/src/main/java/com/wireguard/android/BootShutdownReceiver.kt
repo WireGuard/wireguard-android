@@ -29,6 +29,6 @@ class BootShutdownReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        private val TAG = "WireGuard/${BootShutdownReceiver::class.simpleName}"
+        private const val TAG = "WireGuard/BootShutdownReceiver"
     }
 }

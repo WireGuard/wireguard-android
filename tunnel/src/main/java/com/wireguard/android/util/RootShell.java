@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 @NonNullForAll
 public class RootShell {
     private static final String SU = "su";
-    private static final String TAG = "WireGuard/" + RootShell.class.getSimpleName();
+    private static final String TAG = "WireGuard/RootShell";
 
     private final File localBinaryDir;
     private final File localTemporaryDir;

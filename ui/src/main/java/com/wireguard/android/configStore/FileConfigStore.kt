@@ -77,6 +77,6 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     }
 
     companion object {
-        private val TAG = "WireGuard/${FileConfigStore::class.simpleName}"
+        private const val TAG = "WireGuard/FileConfigStore"
     }
 }

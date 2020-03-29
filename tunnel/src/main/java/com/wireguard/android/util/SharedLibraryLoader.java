@@ -27,7 +27,7 @@ import androidx.annotation.RestrictTo.Scope;
 @NonNullForAll
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class SharedLibraryLoader {
-    private static final String TAG = "WireGuard/" + SharedLibraryLoader.class.getSimpleName();
+    private static final String TAG = "WireGuard/SharedLibraryLoader";
 
     private SharedLibraryLoader() {
     }

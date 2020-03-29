@@ -41,7 +41,7 @@ import java9.util.stream.Stream;
 
 @NonNullForAll
 public final class WgQuickBackend implements Backend {
-    private static final String TAG = "WireGuard/" + WgQuickBackend.class.getSimpleName();
+    private static final String TAG = "WireGuard/WgQuickBackend";
     private final File localTemporaryDir;
     private final RootShell rootShell;
     private final Map<Tunnel, Config> runningConfigs = new HashMap<>();
