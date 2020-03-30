@@ -6,6 +6,8 @@ package com.wireguard.android.databinding
 
 import android.text.InputFilter
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -13,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableList
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.adapters.ListenerUtil
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wireguard.android.BR
@@ -41,10 +44,10 @@ object BindingAdapters {
     }
 
     @JvmStatic
-    @BindingAdapter("items", "layout")
+    @BindingAdapter("items", "layout", "fragment")
     fun <E> setItems(view: LinearLayout,
-                     oldList: ObservableList<E>?, oldLayoutId: Int,
-                     newList: ObservableList<E>?, newLayoutId: Int) {
+                     oldList: ObservableList<E>?, oldLayoutId: Int, @Suppress("UNUSED_PARAMETER") oldFragment: Fragment?,
+                     newList: ObservableList<E>?, newLayoutId: Int, newFragment: Fragment?) {
         if (oldList === newList && oldLayoutId == newLayoutId)
             return
         var listener: ItemChangeListener<E>? = ListenerUtil.getListener(view, R.id.item_change_listener)
@@ -59,7 +62,7 @@ object BindingAdapters {
         if (newList == null || newLayoutId == 0)
             return
         if (listener == null) {
-            listener = ItemChangeListener(view, newLayoutId)
+            listener = ItemChangeListener(view, newLayoutId, newFragment)
             ListenerUtil.trackListener(view, listener, R.id.item_change_listener)
         }
         // Either the list changed, or this is an entirely new listener because the layout changed.
@@ -121,6 +124,13 @@ object BindingAdapters {
     fun setOnBeforeCheckedChanged(view: ToggleSwitch,
                                   listener: OnBeforeCheckedChangeListener?) {
         view.setOnBeforeCheckedChangeListener(listener)
+    }
+
+    @JvmStatic
+    @BindingAdapter("onFocusChange")
+    fun setOnFocusChange(view: EditText,
+                         listener: View.OnFocusChangeListener?) {
+        view.setOnFocusChangeListener(listener)
     }
 
     @JvmStatic

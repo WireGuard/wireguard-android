@@ -15,6 +15,10 @@
         <variable
             name="item"
             type="com.wireguard.android.viewmodel.PeerProxy" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelEditorFragment" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -91,8 +95,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_optional"
-                    android:inputType="textNoSuggestions|textVisiblePassword"
-                    android:text="@={item.preSharedKey}" />
+                    android:inputType="textNoSuggestions|textPassword"
+                    android:onClick="@{fragment::onKeyClick}"
+                    android:text="@={item.preSharedKey}"
+                    app:filter="@{KeyInputFilter.newInstance()}"
+                    app:onFocusChange="@{fragment::onKeyFocusChange}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

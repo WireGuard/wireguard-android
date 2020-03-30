@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableList
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import com.wireguard.android.BR
 import java.lang.ref.WeakReference
 
 /**
  * Helper class for binding an ObservableList to the children of a ViewGroup.
  */
-internal class ItemChangeListener<T>(private val container: ViewGroup, private val layoutId: Int) {
+internal class ItemChangeListener<T>(private val container: ViewGroup, private val layoutId: Int, private val fragment: Fragment?) {
     private val callback = OnListChangedCallback(this)
     private val layoutInflater: LayoutInflater = LayoutInflater.from(container.context)
     private var list: ObservableList<T>? = null
@@ -29,6 +30,7 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
         require(list != null) { "Trying to get a view while list is still null" }
         binding!!.setVariable(BR.collection, list)
         binding.setVariable(BR.item, list!![position])
+        binding.setVariable(BR.fragment, fragment)
         binding.executePendingBindings()
         return binding.root
     }

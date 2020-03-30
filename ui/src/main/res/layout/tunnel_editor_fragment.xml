@@ -102,9 +102,11 @@
                                 android:id="@+id/private_key_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:inputType="textNoSuggestions|textPassword"
+                                android:onClick="@{fragment::onKeyClick}"
                                 android:text="@={config.interface.privateKey}"
-                                app:filter="@{KeyInputFilter.newInstance()}" />
+                                app:filter="@{KeyInputFilter.newInstance()}"
+                                app:onFocusChange="@{fragment::onKeyFocusChange}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -234,6 +236,7 @@
                     android:layout_height="wrap_content"
                     android:divider="@null"
                     android:orientation="vertical"
+                    app:fragment="@{fragment}"
                     app:items="@{config.peers}"
                     app:layout="@{@layout/tunnel_editor_peer}"
                     tools:ignore="UselessLeaf" />

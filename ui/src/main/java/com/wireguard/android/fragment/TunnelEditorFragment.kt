@@ -6,6 +6,7 @@ package com.wireguard.android.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -15,9 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
@@ -34,6 +35,7 @@ import com.wireguard.config.Config
  * Fragment for editing a WireGuard configuration.
  */
 class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
+    private var haveShownKeys = false
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
     private fun onConfigLoaded(config: Config) {
@@ -76,7 +78,6 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             setUpScrollingContent(mainContainer, null)
             privateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateKeyPair() }
         }
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         return binding?.root
     }
 
@@ -224,6 +225,23 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
             if (tunnel != null && tunnel!!.name != originalName) onSelectedTunnelChanged(null, tunnel) else binding!!.config = config
         }
         super.onViewStateRestored(savedInstanceState)
+    }
+
+    fun onKeyClick(view: View) = onKeyFocusChange(view, true)
+
+    fun onKeyFocusChange(view: View, isFocused: Boolean) {
+        if (!isFocused) return
+        val edit = view as? EditText ?: return
+        if (!haveShownKeys && edit.text.isNotEmpty()) {
+            if (true /* TODO: do biometric auth prompt */) {
+                haveShownKeys = true
+            } else {
+                /* Unauthorized, so return and don't change visibility. */
+                return
+            }
+        }
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        edit.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
     }
 
     companion object {
