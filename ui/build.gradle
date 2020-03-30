@@ -68,6 +68,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardviewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
+    implementation "androidx.biometric:biometric:$biometricVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.databinding:databinding-runtime:$agpVersion"
     implementation "androidx.fragment:fragment:$fragmentVersion"

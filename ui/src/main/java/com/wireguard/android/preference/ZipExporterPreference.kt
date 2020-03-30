@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.DownloadsFileSaver
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.FragmentUtils
@@ -81,13 +82,27 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
     override fun getTitle() = context.getString(R.string.zip_export_title)
 
     override fun onClick() {
-        FragmentUtils.getPrefActivity(this)
-                .ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
-                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        isEnabled = false
-                        exportZip()
+        val prefActivity = FragmentUtils.getPrefActivity(this)
+        BiometricAuthenticator.authenticate(R.string.biometric_prompt_zip_exporter_title, prefActivity) {
+            when (it) {
+                // When we have successful authentication, or when there is no biometric hardware available.
+                is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
+                    prefActivity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
+                        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            isEnabled = false
+                            exportZip()
+                        }
                     }
                 }
+                is BiometricAuthenticator.Result.Failure -> {
+                    Snackbar.make(
+                        prefActivity.findViewById(android.R.id.content),
+                        it.message,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     companion object {

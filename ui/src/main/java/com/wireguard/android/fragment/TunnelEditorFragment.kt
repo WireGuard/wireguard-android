@@ -25,6 +25,7 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
@@ -233,13 +234,27 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         if (!isFocused) return
         val edit = view as? EditText ?: return
         if (!haveShownKeys && edit.text.isNotEmpty()) {
-            if (true /* TODO: do biometric auth prompt */) {
-                haveShownKeys = true
-            } else {
-                /* Unauthorized, so return and don't change visibility. */
-                return
+            BiometricAuthenticator.authenticate(R.string.biometric_prompt_private_key_title, requireActivity()) {
+                when (it) {
+                    is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
+                        haveShownKeys = true
+                        showPrivateKey(edit)
+                    }
+                    is BiometricAuthenticator.Result.Failure -> {
+                        Snackbar.make(
+                                binding!!.mainContainer,
+                                it.message,
+                                Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
+        } else {
+            showPrivateKey(edit)
         }
+    }
+
+    private fun showPrivateKey(edit: EditText) {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         edit.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
     }
