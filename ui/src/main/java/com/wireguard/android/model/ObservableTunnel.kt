@@ -71,10 +71,11 @@ class ObservableTunnel internal constructor(
         }
         private set
 
-    val configAsync: CompletionStage<Config> = if (config == null)
-        manager.getTunnelConfig(this)
-    else
-        CompletableFuture.completedFuture(config)
+    val configAsync: CompletionStage<Config>
+        get() = if (config == null)
+            manager.getTunnelConfig(this)
+        else
+            CompletableFuture.completedFuture(config)
 
     fun setConfigAsync(config: Config): CompletionStage<Config> = if (config != this.config)
         manager.setTunnelConfig(this, config)
