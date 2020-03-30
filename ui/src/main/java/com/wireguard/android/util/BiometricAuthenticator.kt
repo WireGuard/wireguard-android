@@ -5,14 +5,20 @@
 
 package com.wireguard.android.util
 
+import android.annotation.SuppressLint
+import android.app.KeyguardManager
+import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.biometric.BiometricConstants
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
-import androidx.fragment.app.FragmentActivity
+import androidx.core.content.getSystemService
+import androidx.fragment.app.Fragment
 import com.wireguard.android.R
+
 
 object BiometricAuthenticator {
     private const val TAG = "WireGuard/BiometricAuthenticator"
@@ -25,12 +31,25 @@ object BiometricAuthenticator {
         object Cancelled : Result()
     }
 
+    @SuppressLint("PrivateApi")
+    private fun isPinEnabled(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            return context.getSystemService<KeyguardManager>()!!.isDeviceSecure
+        return try {
+            val lockUtilsClass = Class.forName("com.android.internal.widget.LockPatternUtils")
+            val lockUtils = lockUtilsClass.getConstructor(Context::class.java).newInstance(context)
+            val method = lockUtilsClass.getMethod("isLockScreenDisabled")
+            !(method.invoke(lockUtils) as Boolean)
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun authenticate(
             @StringRes dialogTitleRes: Int,
-            fragmentActivity: FragmentActivity,
+            fragment: Fragment,
             callback: (Result) -> Unit
     ) {
-        val biometricManager = BiometricManager.from(fragmentActivity)
         val authCallback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
@@ -44,13 +63,13 @@ object BiometricAuthenticator {
                     BiometricConstants.ERROR_NO_BIOMETRICS, BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL -> {
                         Result.HardwareUnavailableOrDisabled
                     }
-                    else -> Result.Failure(errorCode, fragmentActivity.getString(R.string.biometric_auth_error_reason, errString))
+                    else -> Result.Failure(errorCode, fragment.getString(R.string.biometric_auth_error_reason, errString))
                 })
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
-                callback(Result.Failure(null, fragmentActivity.getString(R.string.biometric_auth_error)))
+                callback(Result.Failure(null, fragment.getString(R.string.biometric_auth_error)))
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -58,13 +77,12 @@ object BiometricAuthenticator {
                 callback(Result.Success(result.cryptoObject))
             }
         }
-        val biometricPrompt = BiometricPrompt(fragmentActivity, { handler.post(it) }, authCallback)
+        val biometricPrompt = BiometricPrompt(fragment, { handler.post(it) }, authCallback)
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle(fragmentActivity.getString(dialogTitleRes))
+                .setTitle(fragment.getString(dialogTitleRes))
                 .setDeviceCredentialAllowed(true)
                 .build()
-
-        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+        if (BiometricManager.from(fragment.requireContext()).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS || isPinEnabled(fragment.requireContext())) {
             biometricPrompt.authenticate(promptInfo)
         } else {
             callback(Result.HardwareUnavailableOrDisabled)

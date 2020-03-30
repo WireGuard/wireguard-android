@@ -83,7 +83,8 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
 
     override fun onClick() {
         val prefActivity = FragmentUtils.getPrefActivity(this)
-        BiometricAuthenticator.authenticate(R.string.biometric_prompt_zip_exporter_title, prefActivity) {
+        val fragment = prefActivity.supportFragmentManager.fragments.first()
+        BiometricAuthenticator.authenticate(R.string.biometric_prompt_zip_exporter_title, fragment) {
             when (it) {
                 // When we have successful authentication, or when there is no biometric hardware available.
                 is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {

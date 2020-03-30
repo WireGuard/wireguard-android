@@ -4,6 +4,7 @@
  */
 package com.wireguard.android.fragment
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
@@ -83,7 +84,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     }
 
     override fun onDestroyView() {
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         binding = null
         super.onDestroyView()
     }
@@ -106,7 +107,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
                     InputMethodManager.HIDE_NOT_ALWAYS)
         }
         // Tell the activity to finish itself or go back to the detail view.
-        requireActivity().runOnUiThread {
+        activity.runOnUiThread {
             // TODO(smaeul): Remove this hack when fixing the Config ViewModel
             // The selected tunnel has to actually change, but we have to remember this one.
             val savedTunnel = tunnel
@@ -228,13 +229,17 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         super.onViewStateRestored(savedInstanceState)
     }
 
+    private var showingAuthenticator = false
+
     fun onKeyClick(view: View) = onKeyFocusChange(view, true)
 
     fun onKeyFocusChange(view: View, isFocused: Boolean) {
-        if (!isFocused) return
+        if (!isFocused || showingAuthenticator) return
         val edit = view as? EditText ?: return
         if (!haveShownKeys && edit.text.isNotEmpty()) {
-            BiometricAuthenticator.authenticate(R.string.biometric_prompt_private_key_title, requireActivity()) {
+            showingAuthenticator = true
+            BiometricAuthenticator.authenticate(R.string.biometric_prompt_private_key_title, this) {
+                showingAuthenticator = false
                 when (it) {
                     is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
                         haveShownKeys = true
@@ -255,7 +260,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     }
 
     private fun showPrivateKey(edit: EditText) {
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         edit.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
     }
 
