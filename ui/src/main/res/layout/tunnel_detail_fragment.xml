@@ -105,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/public_key_description"
                     android:ellipsize="end"
+                    android:singleLine="true"
                     android:maxLines="1"
                     android:onClick="@{ClipboardUtils::copyTextView}"
                     android:text="@{config.interface.keyPair.publicKey.toBase64}"
