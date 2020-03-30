@@ -72,7 +72,7 @@
     <string name="edit">Modifica</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Errore di disattivazione del tunnel: %s</string>
-    <string name="error_fetching_apps">Errore di recupero della lista app: %s</string>
+    <string name="error_fetching_apps">Errore di recupero dell\'elenco applicazioni: %s</string>
     <string name="error_root">Accedi come root e riprova</string>
     <string name="error_up">Errore di attivazione del tunnel: %s</string>
     <string name="exclude_private_ips">Escludi IP privati</string>
@@ -93,13 +93,13 @@
     <string name="key_length_error">Lunghezza non valida della chiave</string>
     <string name="key_length_explanation_base64">: le chiavi base64 di WireGuard devono essere di 44 caratteri (32 byte)</string>
     <string name="key_length_explanation_binary">: le chiavi di WireGuard devono essere di 32 byte</string>
-    <string name="key_length_explanation_hex">: le chiavi hex di WireGuard devono essere di 64 caratteri (32 byte)</string>
+    <string name="key_length_explanation_hex">: le chiavi esadecimali di WireGuard devono essere di 64 caratteri (32 byte)</string>
     <string name="listen_port">Porta in ascolto</string>
-    <string name="log_export_error">Impossibile esportare il registro: %s</string>
-    <string name="log_export_subject">File di log di WireGuard Android</string>
+    <string name="log_export_error">Impossibile esportare il log: %s</string>
+    <string name="log_export_subject">File di log WireGuard Android</string>
     <string name="log_export_success">Salvato in “%s”</string>
-    <string name="log_export_title">Esporta file registro</string>
-    <string name="log_saver_activity_label">Salva il log</string>
+    <string name="log_export_title">Esporta file di log</string>
+    <string name="log_saver_activity_label">Salva log</string>
     <string name="log_viewer_pref_summary">I log possono aiutare in fase di debug</string>
     <string name="log_viewer_pref_title">Visualizza log dell\'applicazione</string>
     <string name="log_viewer_title">Log</string>
@@ -181,7 +181,7 @@
     <string name="type_name_go_userspace">Spazio utente Go</string>
     <string name="type_name_kernel_module">Modulo kernel</string>
     <string name="unknown_error">Errore sconosciuto</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">Backend %1$s v%2$s</string>
     <string name="version_summary_checking">Controllo versione backend %s</string>
     <string name="version_summary_unknown">Versione %s sconosciuta</string>
     <string name="version_title">WireGuard per Android v%s</string>

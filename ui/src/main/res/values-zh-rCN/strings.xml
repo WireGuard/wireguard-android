@@ -71,10 +71,12 @@
     <string name="error_up">建立连接时出错：%s</string>
     <string name="exclude_private_ips">排除局域网</string>
     <string name="excluded_applications">排除的应用</string>
+    <string name="generate_new_private_key">生成新的私钥</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
     <string name="hint_generated">（生成）</string>
     <string name="hint_optional">（可选）</string>
+    <string name="hint_optional_discouraged">（可选，不建议设置）</string>
     <string name="hint_random">（随机）</string>
     <string name="illegal_filename_error">文件名 “%s” 不合法</string>
     <string name="import_error">无法导入隧道：%s</string>
@@ -115,11 +117,11 @@
     <string name="no_configs_error">未找到配置</string>
     <string name="no_tunnels_error">无隧道</string>
     <string name="parse_error_generic">字符串</string>
-    <string name="parse_error_inet_address">&#x0020;IP 地址</string>
+    <string name="parse_error_inet_address">\u0020IP 地址</string>
     <string name="parse_error_inet_endpoint">对端</string>
-    <string name="parse_error_inet_network">&#x0020;IP 网络</string>
+    <string name="parse_error_inet_network">\u0020IP 网络</string>
     <string name="parse_error_integer">数字</string>
-    <string name="parse_error_reason">无法解析%1$s “%2$s”&#x0020;</string>
+    <string name="parse_error_reason">无法解析%1$s “%2$s”\u0020</string>
     <string name="peer">节点 / Peer</string>
     <string name="permission_description">自由控制 WireGuard 隧道的开启或关闭，但可能会导致流量误传</string>
     <string name="permission_label">控制 WireGuard 隧道</string>

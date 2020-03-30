@@ -37,14 +37,14 @@
     <string name="bad_config_explanation_pka">: Muss positiv sein und nicht größer als 65535</string>
     <string name="bad_config_explanation_positive_number">: Muss positiv sein</string>
     <string name="bad_config_explanation_udp_port">: Muss eine gültige UDP-Portnummer sein</string>
-    <string name="bad_config_reason_invalid_key">Invalider Wert</string>
+    <string name="bad_config_reason_invalid_key">Ungültiger Schlüssel</string>
     <string name="bad_config_reason_invalid_number">Ungültige Zahl</string>
     <string name="bad_config_reason_invalid_value">Ungültiger Wert</string>
     <string name="bad_config_reason_missing_attribute">Attribut fehlt</string>
     <string name="bad_config_reason_missing_section">Fehlende Sektion</string>
     <string name="bad_config_reason_syntax_error">Syntaxfehler</string>
     <string name="bad_config_reason_unknown_attribute">Unbekanntes Attribut</string>
-    <string name="bad_config_reason_unknown_section">Unbekannte Sektion</string>
+    <string name="bad_config_reason_unknown_section">Unbekannter Abschnitt</string>
     <string name="bad_config_reason_value_out_of_range">Wert ist außerhalb des gültigen Bereichs</string>
     <string name="bad_extension_error">Dateiendung muss .conf oder .zip sein</string>
     <string name="cancel">Abbrechen</string>
@@ -77,7 +77,7 @@
     <string name="error_up">Fehler beim Starten des Tunnels: %s</string>
     <string name="exclude_private_ips">Private IPs ausschließen</string>
     <string name="excluded_applications">Ausgeschlossene Anwendungen</string>
-    <string name="generate_new_private_key">Neuen Privatschlüssel erstellen</string>
+    <string name="generate_new_private_key">Neuen privaten Schlüssel generieren</string>
     <string name="generic_error">Unbekannter „%s“ Fehler</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generiert)</string>

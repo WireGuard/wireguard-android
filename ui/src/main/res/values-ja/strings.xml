@@ -71,10 +71,12 @@
     <string name="error_up">トンネル起動時エラー: %s</string>
     <string name="exclude_private_ips">プライベート IP アドレスを除外</string>
     <string name="excluded_applications">対象外とするアプリケーション</string>
+    <string name="generate_new_private_key">新しい秘密鍵を生成する</string>
     <string name="generic_error">未知の “%s” エラー</string>
     <string name="hint_automatic">(自動)</string>
     <string name="hint_generated">(生成済み)</string>
     <string name="hint_optional">(任意)</string>
+    <string name="hint_optional_discouraged">(任意項目ですが、設定は推奨しません)</string>
     <string name="hint_random">(ランダム)</string>
     <string name="illegal_filename_error">不正なファイル名 “%s”</string>
     <string name="import_error">トンネル設定をインポートできません: %s</string>
