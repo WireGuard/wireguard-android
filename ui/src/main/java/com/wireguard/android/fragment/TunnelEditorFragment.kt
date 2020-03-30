@@ -235,6 +235,7 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     fun onKeyFocusChange(view: View, isFocused: Boolean) {
         if (!isFocused || showingAuthenticator) return
         val edit = view as? EditText ?: return
+        if (edit.inputType == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) return
         if (!haveShownKeys && edit.text.isNotEmpty()) {
             showingAuthenticator = true
             BiometricAuthenticator.authenticate(R.string.biometric_prompt_private_key_title, this) {
