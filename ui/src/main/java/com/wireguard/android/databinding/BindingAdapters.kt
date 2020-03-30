@@ -136,7 +136,7 @@ object BindingAdapters {
     @JvmStatic
     @BindingAdapter("android:text")
     fun setText(view: TextView, text: Optional<*>) {
-        view.text = text.map { obj: Any -> obj.toString() }.orElse("")
+        view.text = text.map { it.toString() }.orElse("")
     }
 
     @JvmStatic
