@@ -346,7 +346,10 @@ class LogViewerActivity : AppCompatActivity() {
             if (mode != "r") return null
             val log = logForUri(uri) ?: return null
             return openPipeHelper(uri, "text/plain", null, log) { output, _, _, _, l ->
-                FileOutputStream(output.fileDescriptor).write(l!!)
+                try {
+                    FileOutputStream(output.fileDescriptor).write(l!!)
+                } catch (_: Exception) {
+                }
             }
         }
     }
