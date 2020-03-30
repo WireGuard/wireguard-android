@@ -189,6 +189,7 @@ public class RootShell {
     public static class RootShellException extends Exception {
         private final Object[] format;
         private final Reason reason;
+
         public RootShellException(final Reason reason, final Object... format) {
             this.reason = reason;
             this.format = format;

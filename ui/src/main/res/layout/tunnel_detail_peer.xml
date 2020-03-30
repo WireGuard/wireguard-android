@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/peer"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/public_key_label"
@@ -42,7 +42,7 @@
                 android:labelFor="@+id/public_key_text"
                 android:text="@string/public_key"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/peer_title"/>
+                app:layout_constraintTop_toBottomOf="@id/peer_title" />
 
             <TextView
                 android:id="@+id/public_key_text"
@@ -51,13 +51,13 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/public_key_description"
                 android:ellipsize="end"
-                android:singleLine="true"
                 android:maxLines="1"
                 android:onClick="@{ClipboardUtils::copyTextView}"
+                android:singleLine="true"
                 android:text="@{item.publicKey.toBase64}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/public_key_label"
-                tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA="/>
+                tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA=" />
 
             <TextView
                 android:id="@+id/allowed_ips_label"
@@ -67,7 +67,7 @@
                 android:labelFor="@+id/allowed_ips_text"
                 android:text="@string/allowed_ips"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/public_key_text"/>
+                app:layout_constraintTop_toBottomOf="@+id/public_key_text" />
 
             <TextView
                 android:id="@+id/allowed_ips_text"
@@ -77,7 +77,7 @@
                 android:text="@{item.allowedIps}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/allowed_ips_label"
-                tools:text="0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3"/>
+                tools:text="0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3" />
 
             <TextView
                 android:id="@+id/endpoint_label"
@@ -87,7 +87,7 @@
                 android:labelFor="@+id/endpoint_text"
                 android:text="@string/endpoint"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/allowed_ips_text"/>
+                app:layout_constraintTop_toBottomOf="@+id/allowed_ips_text" />
 
             <TextView
                 android:id="@+id/endpoint_text"
@@ -121,8 +121,8 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transfer_label"
-                tools:visibility="visible"
-                tools:text="1024 MB" />
+                tools:text="1024 MB"
+                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.AppListDialogFragmentBinding
+import com.wireguard.android.databinding.ObservableKeyedArrayList
 import com.wireguard.android.model.ApplicationData
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.databinding.ObservableKeyedArrayList
 
 class AppListDialogFragment : DialogFragment() {
     private val appData: ObservableKeyedArrayList<String, ApplicationData> = ObservableKeyedArrayList()

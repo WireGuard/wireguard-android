@@ -97,9 +97,9 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                 }
                 is BiometricAuthenticator.Result.Failure -> {
                     Snackbar.make(
-                        prefActivity.findViewById(android.R.id.content),
-                        it.message,
-                        Snackbar.LENGTH_SHORT
+                            prefActivity.findViewById(android.R.id.content),
+                            it.message,
+                            Snackbar.LENGTH_SHORT
                     ).show()
                 }
             }

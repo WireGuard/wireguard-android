@@ -55,6 +55,7 @@
     </style>
 
     <style name="DetailText" parent="TextAppearance.MaterialComponents.Body1" />
+
     <style name="SectionText" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
     <style name="ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
@@ -64,6 +65,8 @@
     <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">?attr/colorSecondary</item>
         <item name="hintTextColor">?attr/colorOnPrimary</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox</item>
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox
+        </item>
     </style>
 </resources>

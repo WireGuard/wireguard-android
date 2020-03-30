@@ -18,9 +18,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class BadConfigExceptionTest {
+    private static final Map<String, InputStream> CONFIG_MAP = new HashMap<>();
     private static final String[] CONFIG_NAMES = {
             "invalid-key",
             "invalid-number",
@@ -31,14 +33,6 @@ public class BadConfigExceptionTest {
             "unknown-attribute",
             "unknown-section"
     };
-    private static final Map<String, InputStream> CONFIG_MAP = new HashMap<>();
-
-    @BeforeClass
-    public static void readConfigs() {
-        for (final String config: CONFIG_NAMES) {
-            CONFIG_MAP.put(config, BadConfigExceptionTest.class.getClassLoader().getResourceAsStream(config + ".conf"));
-        }
-    }
 
     @AfterClass
     public static void closeStreams() {
@@ -47,6 +41,13 @@ public class BadConfigExceptionTest {
                 inputStream.close();
             } catch (final IOException ignored) {
             }
+        }
+    }
+
+    @BeforeClass
+    public static void readConfigs() {
+        for (final String config : CONFIG_NAMES) {
+            CONFIG_MAP.put(config, BadConfigExceptionTest.class.getClassLoader().getResourceAsStream(config + ".conf"));
         }
     }
 

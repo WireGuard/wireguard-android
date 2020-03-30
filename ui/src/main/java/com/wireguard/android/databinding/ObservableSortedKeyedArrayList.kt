@@ -7,7 +7,6 @@ package com.wireguard.android.databinding
 import java.util.AbstractList
 import java.util.Collections
 import java.util.Comparator
-import java.util.NoSuchElementException
 import java.util.Spliterator
 
 /**

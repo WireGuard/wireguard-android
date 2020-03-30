@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType

@@ -25,7 +25,9 @@ object TunnelComparator : Comparator<String> {
                 return 0
             }
         }
+
         val tokens: MutableList<NaturalSortToken> = ArrayList()
+
         init {
             for (s in NATURAL_SORT_DIGIT_FINDER.findAll(originalString.split(WHITESPACE_FINDER).joinToString(" ").toLowerCase(Locale.ENGLISH))) {
                 try {
@@ -36,6 +38,7 @@ object TunnelComparator : Comparator<String> {
                 }
             }
         }
+
         private companion object {
             private val NATURAL_SORT_DIGIT_FINDER = Regex("""\d+|\D+""")
             private val WHITESPACE_FINDER = Regex("""\s""")

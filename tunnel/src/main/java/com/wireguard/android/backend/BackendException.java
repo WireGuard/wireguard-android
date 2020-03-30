@@ -11,6 +11,7 @@ import com.wireguard.util.NonNullForAll;
 public final class BackendException extends Exception {
     private final Object[] format;
     private final Reason reason;
+
     public BackendException(final Reason reason, final Object... format) {
         this.reason = reason;
         this.format = format;

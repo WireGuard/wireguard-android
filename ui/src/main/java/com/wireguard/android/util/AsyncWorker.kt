@@ -5,9 +5,9 @@
 package com.wireguard.android.util
 
 import android.os.Handler
-import java.util.concurrent.Executor
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
+import java.util.concurrent.Executor
 
 /**
  * Helper class for running asynchronous tasks and ensuring they are completed on the main thread.

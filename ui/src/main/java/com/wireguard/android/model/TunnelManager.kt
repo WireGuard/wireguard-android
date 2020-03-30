@@ -21,8 +21,8 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
-import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
+import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.config.Config
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage

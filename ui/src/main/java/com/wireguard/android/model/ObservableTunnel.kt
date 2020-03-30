@@ -9,9 +9,9 @@ import androidx.databinding.Bindable
 import com.wireguard.android.BR
 import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
+import com.wireguard.android.databinding.Keyed
 import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.config.Config
-import com.wireguard.android.databinding.Keyed
 import java9.util.concurrent.CompletableFuture
 import java9.util.concurrent.CompletionStage
 

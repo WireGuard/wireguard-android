@@ -25,25 +25,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:background="?attr/colorBackground"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/colorBackground">
+        android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/tunnel_detail_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:cardBackgroundColor="?attr/elevationOverlayColor"
             app:cardCornerRadius="0dp"
             app:cardElevation="2dp"
             app:contentPadding="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -55,8 +55,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interface_title"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.wireguard.android.widget.ToggleSwitch
                     android:id="@+id/tunnel_switch"
@@ -64,9 +64,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     app:checked="@{tunnel.state == State.UP}"
-                    app:onBeforeCheckedChanged="@{fragment::setTunnelState}"
                     app:layout_constraintBaseline_toBaselineOf="@+id/interface_title"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
 
                 <TextView
                     android:id="@+id/interface_name_label"
@@ -76,7 +76,7 @@
                     android:labelFor="@+id/interface_name_text"
                     android:text="@string/name"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interface_title"/>
+                    app:layout_constraintTop_toBottomOf="@+id/interface_title" />
 
                 <TextView
                     android:id="@+id/interface_name_text"
@@ -86,7 +86,7 @@
                     android:text="@{tunnel.name}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
-                    tools:text="wg0"/>
+                    tools:text="wg0" />
 
                 <TextView
                     android:id="@+id/public_key_label"
@@ -96,7 +96,7 @@
                     android:labelFor="@+id/public_key_text"
                     android:text="@string/public_key"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/interface_name_text"/>
+                    app:layout_constraintTop_toBottomOf="@id/interface_name_text" />
 
                 <TextView
                     android:id="@+id/public_key_text"
@@ -105,13 +105,13 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/public_key_description"
                     android:ellipsize="end"
-                    android:singleLine="true"
                     android:maxLines="1"
                     android:onClick="@{ClipboardUtils::copyTextView}"
+                    android:singleLine="true"
                     android:text="@{config.interface.keyPair.publicKey.toBase64}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/public_key_label"
-                    tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA="/>
+                    tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA=" />
 
                 <TextView
                     android:id="@+id/addresses_label"
@@ -121,7 +121,7 @@
                     android:labelFor="@+id/addresses_text"
                     android:text="@string/addresses"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/public_key_text"/>
+                    app:layout_constraintTop_toBottomOf="@id/public_key_text" />
 
                 <TextView
                     android:id="@+id/addresses_text"
@@ -132,7 +132,7 @@
                     android:text="@{config.interface.addresses}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/addresses_label"
-                    tools:text="fc00:bbbb:bbbb:bb11::3:368b/128"/>
+                    tools:text="fc00:bbbb:bbbb:bb11::3:368b/128" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -145,8 +145,8 @@
             android:orientation="vertical"
             app:items="@{config.peers}"
             app:layout="@{@layout/tunnel_detail_peer}"
-            app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="UselessLeaf"/>
+            app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card"
+            tools:ignore="UselessLeaf" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

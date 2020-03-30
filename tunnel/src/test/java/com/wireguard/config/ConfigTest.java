@@ -5,7 +5,6 @@
 
 package com.wireguard.config;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,7 +14,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 public class ConfigTest {
+
+    @Test(expected = BadConfigException.class)
+    public void invalid_config_throws() throws IOException, BadConfigException {
+        try (final InputStream is = Objects.requireNonNull(getClass().getClassLoader()).getResourceAsStream("broken.conf")) {
+            Config.parse(is);
+        }
+    }
 
     @Test
     public void valid_config_parses_correctly() throws IOException, ParseException {
@@ -34,12 +45,5 @@ public class ConfigTest {
         assertEquals("Test config has exactly one peer", 1, config.getPeers().size());
         assertEquals("Test config's allowed IPs are 0.0.0.0/0 and ::0/0", config.getPeers().get(0).getAllowedIps(), expectedAllowedIps);
         assertEquals("Test config has one DNS server", 1, config.getInterface().getDnsServers().size());
-    }
-
-    @Test(expected = BadConfigException.class)
-    public void invalid_config_throws() throws IOException, BadConfigException {
-        try (final InputStream is = Objects.requireNonNull(getClass().getClassLoader()).getResourceAsStream("broken.conf")) {
-            Config.parse(is);
-        }
     }
 }
