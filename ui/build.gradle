@@ -59,6 +59,9 @@ android {
             versionNameSuffix "-debug"
         }
     }
+    lintOptions {
+        disable('LongLogTag')
+    }
 }
 
 dependencies {
