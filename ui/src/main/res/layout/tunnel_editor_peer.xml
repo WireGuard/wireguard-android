@@ -86,15 +86,15 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/pre_shared_key"
+                app:placeholderText="@string/hint_optional"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
 
-                <com.wireguard.android.widget.MonkeyedTextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/pre_shared_key_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_optional"
                     android:inputType="textNoSuggestions|textPassword"
                     android:onClick="@{fragment::onKeyClick}"
                     android:text="@={item.preSharedKey}"
@@ -108,15 +108,15 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/persistent_keepalive"
+                app:placeholderText="@string/hint_optional_discouraged"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout">
 
-                <com.wireguard.android.widget.MonkeyedTextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/persistent_keepalive_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_optional_discouraged"
                     android:inputType="number"
                     android:text="@={item.persistentKeepalive}" />
             </com.google.android.material.textfield.TextInputLayout>

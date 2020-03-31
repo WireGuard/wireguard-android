@@ -115,18 +115,18 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:hint="@string/public_key"
+                            app:placeholderText="@string/hint_generated"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/private_key_text_layout">
 
-                            <com.wireguard.android.widget.MonkeyedTextInputEditText
+                            <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/public_key_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:editable="false"
                                 android:ellipsize="end"
                                 android:focusable="false"
-                                android:hint="@string/hint_generated"
                                 android:onClick="@{ClipboardUtils::copyTextView}"
                                 android:singleLine="true"
                                 android:text="@{config.interface.publicKey}" />
@@ -158,15 +158,15 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:hint="@string/listen_port"
+                            app:placeholderText="@string/hint_random"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="0.3"
                             app:layout_constraintStart_toEndOf="@id/addresses_label_layout"
                             app:layout_constraintTop_toBottomOf="@id/public_key_label_layout">
 
-                            <com.wireguard.android.widget.MonkeyedTextInputEditText
+                            <com.google.android.material.textfield.TextInputEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/hint_random"
                                 android:inputType="number"
                                 android:text="@={config.interface.listenPort}"
                                 android:textAlignment="center" />
@@ -199,16 +199,16 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:hint="@string/mtu"
+                            app:placeholderText="@string/hint_automatic"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="0.3"
                             app:layout_constraintStart_toEndOf="@id/dns_servers_label_layout"
                             app:layout_constraintTop_toBottomOf="@id/addresses_label_layout">
 
-                            <com.wireguard.android.widget.MonkeyedTextInputEditText
+                            <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/mtu_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/hint_automatic"
                                 android:inputType="number"
                                 android:text="@={config.interface.mtu}"
                                 android:textAlignment="center" />
