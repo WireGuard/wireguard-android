@@ -1,3 +1,4 @@
+
 allprojects {
     repositories {
         google()
@@ -7,7 +8,7 @@ allprojects {
 
 buildscript {
     ext {
-        agpVersion = '3.6.1'
+        agpVersion = '3.6.2'
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.1.0'
         bintrayPluginVersion = '1.8.4'
