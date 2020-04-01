@@ -20,7 +20,7 @@ buildscript {
         coreKtxVersion = '1.2.0'
         coroutinesVersion = '1.3.5'
         eddsaVersion = '0.3.0'
-        fragmentVersion = '1.2.3'
+        fragmentVersion = '1.2.4'
         jsr305Version = '3.0.2'
         junitVersion = '4.13'
         kotlinVersion = '1.3.71'

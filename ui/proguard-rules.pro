@@ -4,3 +4,11 @@
 
 # Retain some information to keep stacktraces usable
 -keepattributes SourceFile,LineNumberTable
+
+# Fragment 1.2.4 allows Fragment classes to be obfuscated but
+# databinding references in XML seem to not be rewritten to
+# match, so we preserve the names as 1.2.3 did.
+-if public class ** extends androidx.fragment.app.Fragment
+-keep public class <1> {
+    public <init>();
+}
