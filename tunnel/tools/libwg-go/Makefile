@@ -30,7 +30,7 @@ default: $(DESTDIR)/libwg-go.so
 
 $(GRADLE_USER_HOME)/caches/golang/$(GO_TARBALL):
 	mkdir -p "$(dir $@)"
-	flock -x "$@.lock" -c ' \
+	flock "$@.lock" -c ' \
 	[ -f "$@" ] && exit 0; \
 	curl -o "$@.tmp" "https://dl.google.com/go/$(GO_TARBALL)" && \
 	echo "$(GO_HASH_$(GO_PLATFORM))  $@.tmp" | sha256sum -c && \
@@ -38,7 +38,7 @@ $(GRADLE_USER_HOME)/caches/golang/$(GO_TARBALL):
 
 $(BUILDDIR)/go-$(GO_VERSION)/.prepared: $(GRADLE_USER_HOME)/caches/golang/$(GO_TARBALL)
 	mkdir -p "$(dir $@)"
-	flock -x "$@.lock" -c ' \
+	flock "$@.lock" -c ' \
 	[ -f "$@" ] && exit 0; \
 	tar -C "$(dir $@)" --strip-components=1 -xzf "$^" && \
 	patch -p1 -f -N -r- -d "$(dir $@)" < goruntime-boottime-over-monotonic.diff && \

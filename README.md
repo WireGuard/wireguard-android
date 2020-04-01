@@ -12,6 +12,8 @@ $ cd wireguard-android
 $ ./gradlew assembleRelease
 ```
 
+macOS users may need [flock(1)](https://github.com/discoteq/flock).
+
 ## Embedding
 
 The tunnel library is [on JCenter](https://bintray.com/wireguard/wireguard-android/wireguard-android/_latestVersion), alongside [extensive class library documentation](https://javadoc.io/doc/com.wireguard.android/tunnel).
