@@ -191,4 +191,8 @@
     <string name="zip_export_success">Salvato in “%s”</string>
     <string name="zip_export_summary">Il file zip verrà salvato nella cartella di download</string>
     <string name="zip_export_title">Esporta i tunnel in un file zip</string>
+    <string name="biometric_prompt_zip_exporter_title">Autenticati per esportare le chiavi i tunnel</string>
+    <string name="biometric_prompt_private_key_title">Autenticati per visualizzare le chiavi private</string>
+    <string name="biometric_auth_error">Autenticazione non riuscita</string>
+    <string name="biometric_auth_error_reason">Autenticazione non riuscita: %s</string>
 </resources>

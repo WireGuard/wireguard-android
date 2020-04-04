@@ -72,7 +72,7 @@
     <string name="create_downloads_file_error">Не удалось создать файл в каталоге загрузок</string>
     <string name="create_empty">Создать вручную</string>
     <string name="create_from_file">Импорт из файла или архива</string>
-    <string name="create_from_qr_code">Сканировать из QR-кода</string>
+    <string name="create_from_qr_code">Сканировать QR-код</string>
     <string name="create_output_dir_error">Не удалось создать выходной каталог</string>
     <string name="create_temp_dir_error">Не удалось создать временный локальный каталог</string>
     <string name="create_tunnel">Создать туннель</string>
@@ -92,8 +92,8 @@
     <string name="generate_new_private_key">Сгенерировать новый приватный ключ</string>
     <string name="generic_error">Неизвестная “%s” ошибка</string>
     <string name="hint_automatic">(авто)</string>
-    <string name="hint_generated">(авто)</string>
-    <string name="hint_optional">(авто)</string>
+    <string name="hint_generated">(сгенерирован)</string>
+    <string name="hint_optional">(опционально)</string>
     <string name="hint_optional_discouraged">(опционально, не рекомендуется)</string>
     <string name="hint_random">(авто)</string>
     <string name="illegal_filename_error">Неверное имя файла “%s”</string>
@@ -203,4 +203,8 @@
     <string name="zip_export_success">Сохранено в “%s”</string>
     <string name="zip_export_summary">Zip-архив будет сохранен в папке загрузок</string>
     <string name="zip_export_title">Экспорт туннелей в zip-архив</string>
+    <string name="biometric_prompt_zip_exporter_title">Аутентификация для экспорта туннелей</string>
+    <string name="biometric_prompt_private_key_title">Аутентификация для просмотра приватного ключа</string>
+    <string name="biometric_auth_error">Ошибка аутентификации</string>
+    <string name="biometric_auth_error_reason">Ошибка аутентификации: %s</string>
 </resources>
