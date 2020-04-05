@@ -22,131 +22,134 @@
             type="com.wireguard.config.Config" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorBackground"
         android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/tunnel_detail_card"
+        android:focusable="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="?attr/elevationOverlayColor"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="2dp"
-            app:contentPadding="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tunnel_detail_card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="?attr/elevationOverlayColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="2dp"
+                app:contentPadding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/interface_title"
-                    style="@style/SectionText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/interface_title"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.wireguard.android.widget.ToggleSwitch
-                    android:id="@+id/tunnel_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:checked="@{tunnel.state == State.UP}"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/interface_title"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
-
-                <TextView
-                    android:id="@+id/interface_name_label"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/interface_name_text"
-                    android:text="@string/name"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interface_title" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/interface_name_text"
-                    style="@style/DetailText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{tunnel.name}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
-                    tools:text="wg0" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/interface_title"
+                        style="@style/SectionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/interface_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/public_key_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/public_key_text"
-                    android:text="@string/public_key"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/interface_name_text" />
+                    <com.wireguard.android.widget.ToggleSwitch
+                        android:id="@+id/tunnel_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:checked="@{tunnel.state == State.UP}"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/interface_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:onBeforeCheckedChanged="@{fragment::setTunnelState}" />
 
-                <TextView
-                    android:id="@+id/public_key_text"
-                    style="@style/DetailText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/public_key_description"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:onClick="@{ClipboardUtils::copyTextView}"
-                    android:singleLine="true"
-                    android:text="@{config.interface.keyPair.publicKey.toBase64}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/public_key_label"
-                    tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA=" />
+                    <TextView
+                        android:id="@+id/interface_name_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/interface_name_text"
+                        android:text="@string/name"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/interface_title" />
 
-                <TextView
-                    android:id="@+id/addresses_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:labelFor="@+id/addresses_text"
-                    android:text="@string/addresses"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/public_key_text" />
+                    <TextView
+                        android:id="@+id/interface_name_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{tunnel.name}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
+                        tools:text="wg0" />
 
-                <TextView
-                    android:id="@+id/addresses_text"
-                    style="@style/DetailText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/addresses"
-                    android:text="@{config.interface.addresses}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/addresses_label"
-                    tools:text="fc00:bbbb:bbbb:bb11::3:368b/128" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/public_key_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/public_key_text"
+                        android:text="@string/public_key"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/interface_name_text" />
 
-        <LinearLayout
-            android:id="@+id/peers_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:divider="@null"
-            android:orientation="vertical"
-            app:items="@{config.peers}"
-            app:layout="@{@layout/tunnel_detail_peer}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card"
-            tools:ignore="UselessLeaf" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/public_key_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/public_key_description"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:singleLine="true"
+                        android:text="@{config.interface.keyPair.publicKey.toBase64}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/public_key_label"
+                        tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA=" />
+
+                    <TextView
+                        android:id="@+id/addresses_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/addresses_text"
+                        android:text="@string/addresses"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/public_key_text" />
+
+                    <TextView
+                        android:id="@+id/addresses_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/addresses"
+                        android:text="@{config.interface.addresses}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/addresses_label"
+                        tools:text="fc00:bbbb:bbbb:bb11::3:368b/128" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/peers_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:divider="@null"
+                android:orientation="vertical"
+                app:items="@{config.peers}"
+                app:layout="@{@layout/tunnel_detail_peer}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card"
+                tools:ignore="UselessLeaf" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
