@@ -17,10 +17,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import androidx.annotation.Nullable;
 
@@ -187,7 +185,7 @@ public final class Config {
     @SuppressWarnings("UnusedReturnValue")
     public static final class Builder {
         // Defaults to an empty set.
-        private final Set<Peer> peers = new LinkedHashSet<>();
+        private final ArrayList<Peer> peers = new ArrayList<>();
         // No default; must be provided before building.
         @Nullable private Interface interfaze;
 
