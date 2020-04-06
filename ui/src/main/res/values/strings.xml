@@ -29,8 +29,8 @@
         <item quantity="other">%d Included Applications</item>
     </plurals>
     <string name="all_applications">All Applications</string>
-    <string name="exclude_from_tunnel">Exclude:</string>
-    <string name="include_in_tunnel">Include only:</string>
+    <string name="exclude_from_tunnel">Exclude</string>
+    <string name="include_in_tunnel">Include only</string>
     <plurals name="include_n_applications">
         <item quantity="one">Include %d apps</item>
         <item quantity="other">Include %d apps</item>
