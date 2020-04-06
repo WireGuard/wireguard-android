@@ -70,7 +70,6 @@
     <string name="error_root">root 権限を取得して再試行してください</string>
     <string name="error_up">トンネル起動時エラー: %s</string>
     <string name="exclude_private_ips">プライベート IP アドレスを除外</string>
-    <string name="excluded_applications">対象外とするアプリケーション</string>
     <string name="generate_new_private_key">新しい秘密鍵を生成する</string>
     <string name="generic_error">未知の “%s” エラー</string>
     <string name="hint_automatic">(自動)</string>
@@ -136,7 +135,6 @@
     <string name="restore_on_boot_title">起動時に復元</string>
     <string name="save">保存</string>
     <string name="select_all">すべて選択</string>
-    <string name="set_exclusions">対象外アプリを設定</string>
     <string name="settings">設定</string>
     <string name="shell_exit_status_read_error">シェルは終了ステータスを取得できません</string>
     <string name="shell_marker_count_error">シェルは 4 マーカーを期待していますが、 %d マーカーを受け取りました</string>

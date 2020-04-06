@@ -24,6 +24,22 @@
         <item quantity="one">%d Excluded Application</item>
         <item quantity="other">%d Excluded Applications</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d Included Application</item>
+        <item quantity="other">%d Included Applications</item>
+    </plurals>
+    <string name="all_applications">All Applications</string>
+    <string name="exclude_from_tunnel">Exclude:</string>
+    <string name="include_in_tunnel">Include only:</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Include %d apps</item>
+        <item quantity="other">Include %d apps</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Exclude %d apps</item>
+        <item quantity="other">Exclude %d apps</item>
+    </plurals>
+    <string name="use_all_applications">Use all apps</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
     <string name="allow_remote_control_intents_summary_off">External apps may not toggle tunnels (recommended)</string>
@@ -76,7 +92,6 @@
     <string name="error_root">Please obtain root access and try again</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="exclude_private_ips">Exclude private IPs</string>
-    <string name="excluded_applications">Excluded Applications</string>
     <string name="generate_new_private_key">Generate new private key</string>
     <string name="generic_error">Unknown “%s” error</string>
     <string name="hint_automatic">(auto)</string>
@@ -142,7 +157,6 @@
     <string name="restore_on_boot_title">Restore on boot</string>
     <string name="save">Save</string>
     <string name="select_all">Select all</string>
-    <string name="set_exclusions">Set Exclusions</string>
     <string name="settings">Settings</string>
     <string name="shell_exit_status_read_error">Shell cannot read exit status</string>
     <string name="shell_marker_count_error">Shell expected 4 markers, received %d</string>

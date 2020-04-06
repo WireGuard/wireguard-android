@@ -159,7 +159,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
-                android:id="@+id/excluded_checkbox"
+                android:id="@+id/selected_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"

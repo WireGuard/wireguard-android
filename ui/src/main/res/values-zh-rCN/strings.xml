@@ -70,7 +70,6 @@
     <string name="error_root">请获取 root 权限并重试</string>
     <string name="error_up">建立连接时出错：%s</string>
     <string name="exclude_private_ips">排除局域网</string>
-    <string name="excluded_applications">排除的应用</string>
     <string name="generate_new_private_key">生成新的私钥</string>
     <string name="generic_error">未知的 “%s” 错误</string>
     <string name="hint_automatic">（自动）</string>
@@ -136,7 +135,6 @@
     <string name="restore_on_boot_title">启动时恢复</string>
     <string name="save">保存</string>
     <string name="select_all">全选</string>
-    <string name="set_exclusions">确定</string>
     <string name="settings">设置</string>
     <string name="shell_exit_status_read_error">Shell 无法读取退出状态</string>
     <string name="shell_marker_count_error">Shell 应获取 4 个标记，获取到 %d 个</string>

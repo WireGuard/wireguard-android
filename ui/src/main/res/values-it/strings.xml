@@ -76,7 +76,6 @@
     <string name="error_root">Accedi come root e riprova</string>
     <string name="error_up">Errore di attivazione del tunnel: %s</string>
     <string name="exclude_private_ips">Escludi IP privati</string>
-    <string name="excluded_applications">Applicazioni escluse</string>
     <string name="generate_new_private_key">Genera nuova chiave privata</string>
     <string name="generic_error">Errore “%s” sconosciuto</string>
     <string name="hint_automatic">(auto)</string>
@@ -142,7 +141,6 @@
     <string name="restore_on_boot_title">Ripristina all\'avvio</string>
     <string name="save">Salva</string>
     <string name="select_all">Seleziona tutto</string>
-    <string name="set_exclusions">Imposta esclusioni</string>
     <string name="settings">Impostazioni</string>
     <string name="shell_exit_status_read_error">La shell non riesce a leggere lo stato di uscita</string>
     <string name="shell_marker_count_error">La shell si aspettava 4 marker, ne ha ricevuti %d</string>

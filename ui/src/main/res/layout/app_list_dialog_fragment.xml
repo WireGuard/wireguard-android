@@ -18,30 +18,50 @@
             type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ApplicationData&gt;" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="200dp">
+        android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}"
-            tools:visibility="gone" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/app_list"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exclude_from_tunnel" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/include_in_tunnel" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:items="@{appData}"
-            app:layout="@{@layout/app_list_item}"
-            tools:itemCount="10"
-            tools:listitem="@layout/app_list_item" />
+            android:minHeight="200dp">
 
-    </FrameLayout>
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="@{appData.isEmpty() ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
 
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/app_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:items="@{appData}"
+                app:layout="@{@layout/app_list_item}"
+                tools:itemCount="10"
+                tools:listitem="@layout/app_list_item" />
+        </FrameLayout>
+    </LinearLayout>
 </layout>

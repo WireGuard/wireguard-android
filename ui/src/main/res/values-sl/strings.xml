@@ -65,7 +65,7 @@
     <string name="config_file_exists_error">Konfiguracijska datoteka za „%s“ že obstaja</string>
     <string name="config_not_found_error">Konfiguracijske datoteke za „%s“ ni bilo mogoče najti</string>
     <string name="config_rename_error">Konfiguracijske datoteke za „%s“ ni bilo mogoče preimenovati</string>
-    <string name="config_save_error">Konfiguracijske datoteke za „%s“ ni bilo mogoče shraniti: %2$s</string>
+    <string name="config_save_error">Konfiguracijske datoteke za „%1$s“ ni bilo mogoče shraniti: %2$s</string>
     <string name="config_save_success">Konfiguracijska datoteka za „%s“ uspešno shranjena</string>
     <string name="create_activity_title">Ustvarite WireGuard tunel</string>
     <string name="create_bin_dir_error">Lokalnega imenika za aplikacijo ni bilo mogoče kreirati</string>
@@ -88,7 +88,6 @@
     <string name="error_root">Prosim omogočite root dostop in poskusite ponovno</string>
     <string name="error_up">Napaka pri vzpostavitvi tunela: %s</string>
     <string name="exclude_private_ips">Izključitev privatnih IP naslovov</string>
-    <string name="excluded_applications">Izključitev aplikacije</string>
     <string name="generate_new_private_key">Generiraj nov privatni ključ</string>
     <string name="generic_error">Neznana napaka „%s“</string>
     <string name="hint_automatic">(samodejno)</string>
@@ -154,7 +153,6 @@
     <string name="restore_on_boot_title">Ponovna vzpostavitev pri ponovnem zagonu</string>
     <string name="save">Shrani</string>
     <string name="select_all">Izbor vseh</string>
-    <string name="set_exclusions">Določite izključitve</string>
     <string name="settings">Nastavitve</string>
     <string name="shell_exit_status_read_error">Lupina ne more prebrati izhodnega statusa</string>
     <string name="shell_marker_count_error">Lupina je pričakovala 4 markerje, dobila pa je %d</string>

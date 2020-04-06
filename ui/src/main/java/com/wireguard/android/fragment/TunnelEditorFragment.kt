@@ -23,7 +23,7 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
-import com.wireguard.android.fragment.AppListDialogFragment.AppExclusionListener
+import com.wireguard.android.fragment.AppListDialogFragment.AppSelectionListener
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.ErrorMessages
@@ -35,7 +35,7 @@ import com.wireguard.config.Config
 /**
  * Fragment for editing a WireGuard configuration.
  */
-class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
+class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
     private var haveShownKeys = false
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
@@ -88,11 +88,20 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
         super.onDestroyView()
     }
 
-    override fun onExcludedAppsSelected(excludedApps: List<String>) {
-        requireNotNull(binding) { "Tried to set excluded apps while no view was loaded" }
-        binding!!.config!!.`interface`.excludedApplications.apply {
-            clear()
-            addAll(excludedApps)
+    override fun onSelectedAppsSelected(selectedApps: List<String>, isExcluded: Boolean) {
+        requireNotNull(binding) { "Tried to set excluded/included apps while no view was loaded" }
+        if (isExcluded) {
+            binding!!.config!!.`interface`.includedApplications.clear()
+            binding!!.config!!.`interface`.excludedApplications.apply {
+                clear()
+                addAll(selectedApps)
+            }
+        } else {
+            binding!!.config!!.`interface`.excludedApplications.clear()
+            binding!!.config!!.`interface`.includedApplications.apply {
+                clear()
+                addAll(selectedApps)
+            }
         }
     }
 
@@ -150,10 +159,16 @@ class TunnelEditorFragment : BaseFragment(), AppExclusionListener {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun onRequestSetExcludedApplications(view: View?) {
+    fun onRequestSetExcludedIncludedApplications(view: View?) {
         if (binding != null) {
-            val excludedApps = ArrayList(binding!!.config!!.`interface`.excludedApplications)
-            val fragment = AppListDialogFragment.newInstance(excludedApps, this)
+            var isExcluded = true
+            var selectedApps = ArrayList(binding!!.config!!.`interface`.excludedApplications)
+            if (selectedApps.isEmpty()) {
+                selectedApps = ArrayList(binding!!.config!!.`interface`.includedApplications)
+                if (selectedApps.isNotEmpty())
+                    isExcluded = false
+            }
+            val fragment = AppListDialogFragment.newInstance(selectedApps, isExcluded, this)
             fragment.show(parentFragmentManager, null)
         }
     }

@@ -70,7 +70,6 @@
     <string name="error_root">Izinkan akses root dan coba lagi</string>
     <string name="error_up">Kesalahan menambahkan tunel: %s</string>
     <string name="exclude_private_ips">Kecualikan IP pribadi</string>
-    <string name="excluded_applications">Kecualikan aplikasi</string>
     <string name="generate_new_private_key">Buat kunci privat baru</string>
     <string name="generic_error">Eror “%s” Tidak diketahui</string>
     <string name="hint_automatic">(otomatis)</string>
@@ -136,7 +135,6 @@
     <string name="restore_on_boot_title">Pulihkan saat boot</string>
     <string name="save">Simpan</string>
     <string name="select_all">Pilih semua</string>
-    <string name="set_exclusions">Tetapkan pengecualian</string>
     <string name="settings">Pengaturan</string>
     <string name="shell_exit_status_read_error">Shell tidak dapat membaca status keluar</string>
     <string name="shell_marker_count_error">Shell diharapkan 4 nilai, diterima %d</string>

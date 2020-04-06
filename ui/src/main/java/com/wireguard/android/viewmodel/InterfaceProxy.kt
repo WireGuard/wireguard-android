@@ -23,6 +23,9 @@ class InterfaceProxy : BaseObservable, Parcelable {
     val excludedApplications: ObservableList<String> = ObservableArrayList()
 
     @get:Bindable
+    val includedApplications: ObservableList<String> = ObservableArrayList()
+
+    @get:Bindable
     var addresses: String = ""
         set(value) {
             field = value
@@ -70,6 +73,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         addresses = parcel.readString() ?: ""
         dnsServers = parcel.readString() ?: ""
         parcel.readStringList(excludedApplications)
+        parcel.readStringList(includedApplications)
         listenPort = parcel.readString() ?: ""
         mtu = parcel.readString() ?: ""
         privateKey = parcel.readString() ?: ""
@@ -80,6 +84,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         val dnsServerStrings = other.dnsServers.map { it.hostAddress }
         dnsServers = Attribute.join(dnsServerStrings)
         excludedApplications.addAll(other.excludedApplications)
+        includedApplications.addAll(other.includedApplications)
         listenPort = other.listenPort.map { it.toString() }.orElse("")
         mtu = other.mtu.map { it.toString() }.orElse("")
         val keyPair = other.keyPair
@@ -103,6 +108,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         if (addresses.isNotEmpty()) builder.parseAddresses(addresses)
         if (dnsServers.isNotEmpty()) builder.parseDnsServers(dnsServers)
         if (excludedApplications.isNotEmpty()) builder.excludeApplications(excludedApplications)
+        if (includedApplications.isNotEmpty()) builder.includeApplications(includedApplications)
         if (listenPort.isNotEmpty()) builder.parseListenPort(listenPort)
         if (mtu.isNotEmpty()) builder.parseMtu(mtu)
         if (privateKey.isNotEmpty()) builder.parsePrivateKey(privateKey)
@@ -113,6 +119,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         dest.writeString(addresses)
         dest.writeString(dnsServers)
         dest.writeStringList(excludedApplications)
+        dest.writeStringList(includedApplications)
         dest.writeString(listenPort)
         dest.writeString(mtu)
         dest.writeString(privateKey)

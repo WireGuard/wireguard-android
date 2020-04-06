@@ -76,7 +76,6 @@
     <string name="error_root">Bitte root-Zugriff anfordern und erneut versuchen</string>
     <string name="error_up">Fehler beim Starten des Tunnels: %s</string>
     <string name="exclude_private_ips">Private IPs ausschließen</string>
-    <string name="excluded_applications">Ausgeschlossene Anwendungen</string>
     <string name="generate_new_private_key">Neuen privaten Schlüssel generieren</string>
     <string name="generic_error">Unbekannter „%s“ Fehler</string>
     <string name="hint_automatic">(auto)</string>
@@ -142,7 +141,6 @@
     <string name="restore_on_boot_title">Beim Neustart wiederherstellen</string>
     <string name="save">Speichern</string>
     <string name="select_all">Alle auswählen</string>
-    <string name="set_exclusions">Ausnahmen festlegen</string>
     <string name="settings">Einstellungen</string>
     <string name="shell_exit_status_read_error">Shell kann den Exit-Status nicht lesen</string>
     <string name="shell_marker_count_error">Die Shell erwartete 4 Marker, erhielt aber %d</string>

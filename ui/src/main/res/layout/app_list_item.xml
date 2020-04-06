@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background"
         android:gravity="center_vertical"
-        android:onClick="@{(view) -> item.setExcludedFromTunnel(!item.excludedFromTunnel)}"
+        android:onClick="@{(view) -> item.setSelected(!item.selected)}"
         android:orientation="horizontal"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
@@ -51,10 +51,10 @@
             tools:text="@tools:sample/full_names" />
 
         <CheckBox
-            android:id="@+id/excluded_checkbox"
+            android:id="@+id/selected_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@={item.excludedFromTunnel}"
+            android:checked="@={item.selected}"
             tools:checked="true" />
 
     </LinearLayout>

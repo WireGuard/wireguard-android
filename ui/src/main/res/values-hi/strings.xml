@@ -72,7 +72,6 @@
     <string name="error_root">कृपया रूट एक्सेस प्राप्त करें और पुनः प्रयास करें</string>
     <string name="error_up">टनल को लाने में त्रुटि: %s</string>
     <string name="exclude_private_ips">निजी आईपी को छोड़ दें</string>
-    <string name="excluded_applications">निकाले गए ऐप्स</string>
     <string name="generic_error">अज्ञात “%s” त्रुटि</string>
     <string name="hint_automatic">(ऑटो)</string>
     <string name="hint_generated">(उत्पन्न)</string>
@@ -128,7 +127,6 @@
     <string name="restore_on_boot_title">बूट पर पुनर्स्थापित करें</string>
     <string name="save">सहेजें</string>
     <string name="select_all">सभी का चयन करे</string>
-    <string name="set_exclusions">बहिष्करण सेट करें</string>
     <string name="settings">सेटिंग्स</string>
     <string name="shell_exit_status_read_error">शेल बाहर निकलने की स्थिति नहीं पढ़ सकता</string>
     <string name="shell_marker_count_error">शेल ने 4 मार्करों की अपेक्षा की, %d प्राप्त किया</string>

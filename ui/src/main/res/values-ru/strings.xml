@@ -88,7 +88,6 @@
     <string name="error_root">Пожалуйста, получите root-доступ и попробуйте снова</string>
     <string name="error_up">Ошибка при запуске туннеля: %s</string>
     <string name="exclude_private_ips">Исключить частные IP-адреса</string>
-    <string name="excluded_applications">Исключенные приложения</string>
     <string name="generate_new_private_key">Сгенерировать новый приватный ключ</string>
     <string name="generic_error">Неизвестная “%s” ошибка</string>
     <string name="hint_automatic">(авто)</string>
@@ -154,7 +153,6 @@
     <string name="restore_on_boot_title">Восстанавливать при загрузке</string>
     <string name="save">Сохранить</string>
     <string name="select_all">Выбрать все</string>
-    <string name="set_exclusions">ОК</string>
     <string name="settings">Настройки</string>
     <string name="shell_exit_status_read_error">Shell не может прочитать статус выхода</string>
     <string name="shell_marker_count_error">Shell ожидает 4 маркера, получено %d</string>
