@@ -193,6 +193,9 @@ public final class GoBackend implements Backend {
             for (final String excludedApplication : config.getInterface().getExcludedApplications())
                 builder.addDisallowedApplication(excludedApplication);
 
+            for (final String includedApplication : config.getInterface().getIncludedApplications())
+                builder.addAllowedApplication(includedApplication);
+
             for (final InetNetwork addr : config.getInterface().getAddresses())
                 builder.addAddress(addr.getAddress(), addr.getMask());
 

@@ -43,6 +43,7 @@ public final class Interface {
     private final Set<InetNetwork> addresses;
     private final Set<InetAddress> dnsServers;
     private final Set<String> excludedApplications;
+    private final Set<String> includedApplications;
     private final KeyPair keyPair;
     private final Optional<Integer> listenPort;
     private final Optional<Integer> mtu;
@@ -52,6 +53,7 @@ public final class Interface {
         addresses = Collections.unmodifiableSet(new LinkedHashSet<>(builder.addresses));
         dnsServers = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsServers));
         excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
+        includedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.includedApplications));
         keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
         listenPort = builder.listenPort;
         mtu = builder.mtu;
@@ -81,6 +83,9 @@ public final class Interface {
                 case "excludedapplications":
                     builder.parseExcludedApplications(attribute.getValue());
                     break;
+                case "includedapplications":
+                    builder.parseIncludedApplications(attribute.getValue());
+                    break;
                 case "listenport":
                     builder.parseListenPort(attribute.getValue());
                     break;
@@ -106,6 +111,7 @@ public final class Interface {
         return addresses.equals(other.addresses)
                 && dnsServers.equals(other.dnsServers)
                 && excludedApplications.equals(other.excludedApplications)
+                && includedApplications.equals(other.includedApplications)
                 && keyPair.equals(other.keyPair)
                 && listenPort.equals(other.listenPort)
                 && mtu.equals(other.mtu);
@@ -142,6 +148,16 @@ public final class Interface {
     }
 
     /**
+     * Returns the set of applications included exclusively for using the interface.
+     *
+     * @return a set of package names
+     */
+    public Set<String> getIncludedApplications() {
+        // The collection is already immutable.
+        return includedApplications;
+    }
+
+    /**
      * Returns the public/private key pair used by the interface.
      *
      * @return a key pair
@@ -174,6 +190,7 @@ public final class Interface {
         hash = 31 * hash + addresses.hashCode();
         hash = 31 * hash + dnsServers.hashCode();
         hash = 31 * hash + excludedApplications.hashCode();
+        hash = 31 * hash + includedApplications.hashCode();
         hash = 31 * hash + keyPair.hashCode();
         hash = 31 * hash + listenPort.hashCode();
         hash = 31 * hash + mtu.hashCode();
@@ -213,6 +230,8 @@ public final class Interface {
         }
         if (!excludedApplications.isEmpty())
             sb.append("ExcludedApplications = ").append(Attribute.join(excludedApplications)).append('\n');
+        if (!includedApplications.isEmpty())
+            sb.append("IncludedApplications = ").append(Attribute.join(includedApplications)).append('\n');
         listenPort.ifPresent(lp -> sb.append("ListenPort = ").append(lp).append('\n'));
         mtu.ifPresent(m -> sb.append("MTU = ").append(m).append('\n'));
         sb.append("PrivateKey = ").append(keyPair.getPrivateKey().toBase64()).append('\n');
@@ -240,6 +259,8 @@ public final class Interface {
         private final Set<InetAddress> dnsServers = new LinkedHashSet<>();
         // Defaults to an empty set.
         private final Set<String> excludedApplications = new LinkedHashSet<>();
+        // Defaults to an empty set.
+        private final Set<String> includedApplications = new LinkedHashSet<>();
         // No default; must be provided before building.
         @Nullable private KeyPair keyPair;
         // Defaults to not present.
@@ -271,6 +292,9 @@ public final class Interface {
             if (keyPair == null)
                 throw new BadConfigException(Section.INTERFACE, Location.PRIVATE_KEY,
                         Reason.MISSING_ATTRIBUTE, null);
+            if (!includedApplications.isEmpty() && !excludedApplications.isEmpty())
+                throw new BadConfigException(Section.INTERFACE, Location.INCLUDED_APPLICATIONS,
+                        Reason.INVALID_KEY, null);
             return new Interface(this);
         }
 
@@ -281,6 +305,16 @@ public final class Interface {
 
         public Builder excludeApplications(final Collection<String> applications) {
             excludedApplications.addAll(applications);
+            return this;
+        }
+
+        public Builder includeApplication(final String application) {
+            includedApplications.add(application);
+            return this;
+        }
+
+        public Builder includeApplications(final Collection<String> applications) {
+            includedApplications.addAll(applications);
             return this;
         }
 
@@ -306,6 +340,10 @@ public final class Interface {
 
         public Builder parseExcludedApplications(final CharSequence apps) {
             return excludeApplications(Lists.of(Attribute.split(apps)));
+        }
+
+        public Builder parseIncludedApplications(final CharSequence apps) {
+            return includeApplications(Lists.of(Attribute.split(apps)));
         }
 
         public Builder parseListenPort(final String listenPort) throws BadConfigException {
