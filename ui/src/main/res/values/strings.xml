@@ -32,11 +32,11 @@
     <string name="exclude_from_tunnel">Exclude</string>
     <string name="include_in_tunnel">Include only</string>
     <plurals name="include_n_applications">
-        <item quantity="one">Include %d apps</item>
+        <item quantity="one">Include %d app</item>
         <item quantity="other">Include %d apps</item>
     </plurals>
     <plurals name="exclude_n_applications">
-        <item quantity="one">Exclude %d apps</item>
+        <item quantity="one">Exclude %d app</item>
         <item quantity="other">Exclude %d apps</item>
     </plurals>
     <string name="use_all_applications">Use all apps</string>
