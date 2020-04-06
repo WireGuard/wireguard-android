@@ -344,7 +344,7 @@ class TunnelListFragment : BaseFragment() {
                 resources = activity!!.resources
             }
             mode.menuInflater.inflate(R.menu.tunnel_list_action_mode, menu)
-            binding!!.tunnelList.adapter!!.notifyDataSetChanged()
+            binding?.tunnelList?.adapter?.notifyDataSetChanged()
             return true
         }
 
