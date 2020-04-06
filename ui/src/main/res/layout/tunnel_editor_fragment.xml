@@ -45,11 +45,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="?attr/elevationOverlayColor"
-                    app:cardCornerRadius="0dp"
-                    app:cardElevation="2dp"
-                    app:contentPadding="8dp">
+                    android:layout_marginBottom="16dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

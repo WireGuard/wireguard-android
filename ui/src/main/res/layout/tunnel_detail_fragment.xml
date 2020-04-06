@@ -40,10 +40,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="?attr/elevationOverlayColor"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="2dp"
-                app:contentPadding="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

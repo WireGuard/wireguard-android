@@ -21,6 +21,14 @@
         <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <item name="textInputStyle">@style/TextInputLayoutBase</item>
+        <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
+    </style>
+
+    <style name="AppTheme.MaterialCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cornerRadius">4dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">8dp</item>
+        <item name="cardBackgroundColor">?attr/elevationOverlayColor</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
