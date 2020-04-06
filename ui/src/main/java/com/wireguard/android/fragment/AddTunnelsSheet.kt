@@ -12,13 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.R
 import com.wireguard.android.activity.TunnelCreatorActivity
+import com.wireguard.android.util.requireTargetFragment
 import com.wireguard.android.util.resolveAttribute
 
 class AddTunnelsSheet : BottomSheetDialogFragment() {
@@ -79,10 +79,6 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
     override fun dismiss() {
         super.dismiss()
         behavior?.removeBottomSheetCallback(bottomSheetCallback)
-    }
-
-    private fun requireTargetFragment(): Fragment {
-        return requireNotNull(targetFragment) { "A target fragment should always be set" }
     }
 
     private fun onRequestCreateConfig() {

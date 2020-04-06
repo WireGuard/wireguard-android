@@ -21,11 +21,12 @@ import com.wireguard.android.databinding.AppListDialogFragmentBinding
 import com.wireguard.android.databinding.ObservableKeyedArrayList
 import com.wireguard.android.model.ApplicationData
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.requireTargetFragment
 
 class AppListDialogFragment : DialogFragment() {
-    private val appData: ObservableKeyedArrayList<String, ApplicationData> = ObservableKeyedArrayList()
+    private val appData = ObservableKeyedArrayList<String, ApplicationData>()
     private var currentlySelectedApps = emptyList<String>()
-    private var initiallyExcluded: Boolean = false
+    private var initiallyExcluded = false
     private var button: Button? = null
     private var tabs: TabLayout? = null
 
@@ -65,6 +66,7 @@ class AppListDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        require(requireTargetFragment() is AppSelectionListener) { "${requireTargetFragment()} must implement AppSelectionListener" }
         currentlySelectedApps = (arguments?.getStringArrayList(KEY_SELECTED_APPS) ?: emptyList())
         initiallyExcluded = arguments?.getBoolean(KEY_IS_EXCLUDED) ?: true
     }
@@ -86,12 +88,14 @@ class AppListDialogFragment : DialogFragment() {
         binding.executePendingBindings()
         alertDialogBuilder.setView(binding.root)
         tabs = binding.tabs
-        tabs!!.selectTab(binding.tabs.getTabAt(if (initiallyExcluded) 0 else 1))
-        tabs!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabSelected(tab: TabLayout.Tab?) = setButtonText()
-        })
+        tabs?.apply {
+            selectTab(binding.tabs.getTabAt(if (initiallyExcluded) 0 else 1))
+            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+                override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+                override fun onTabSelected(tab: TabLayout.Tab?) = setButtonText()
+            })
+        }
         alertDialogBuilder.setPositiveButton(" ") { _, _ -> setSelectionAndDismiss() }
         alertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         alertDialogBuilder.setNeutralButton(R.string.toggle_all) { _, _ -> }
@@ -119,7 +123,7 @@ class AppListDialogFragment : DialogFragment() {
                 selectedApps.add(data.packageName)
             }
         }
-        (targetFragment as AppSelectionListener?)!!.onSelectedAppsSelected(selectedApps, tabs?.selectedTabPosition == 0)
+        (requireTargetFragment() as AppSelectionListener).onSelectedAppsSelected(selectedApps, tabs?.selectedTabPosition == 0)
         dismiss()
     }
 
