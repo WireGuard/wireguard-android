@@ -134,7 +134,6 @@
     <string name="pre_shared_key">Vorab geteilter Schlüssel</string>
     <string name="private_key">Privater Schlüssel</string>
     <string name="public_key">Öffentlicher Schlüssel</string>
-    <string name="public_key_description">Öffentlicher Schlüssel</string>
     <string name="qr_code_hint">Tipp: Mit `qrencode -t ansiutf8 &lt; tunnel.conf` generieren.</string>
     <string name="restore_on_boot_summary_off">Wird aktivierte Tunnel beim Systemstart nicht automatisch starten</string>
     <string name="restore_on_boot_summary_on">Wird aktivierte Tunnel beim Systemstart automatisch wieder starten</string>

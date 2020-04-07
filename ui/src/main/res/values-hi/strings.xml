@@ -120,7 +120,6 @@
     <string name="pre_shared_key">प्री-शेयर्ड कीस</string>
     <string name="private_key">निजी कीस</string>
     <string name="public_key">सार्वजनिक कीस</string>
-    <string name="public_key_description">सार्वजनिक कीस</string>
     <string name="qr_code_hint">सुझाव: `qrencode -t ansiutf8 &lt; tunnel.conf` के साथ उत्पन्न करो</string>
     <string name="restore_on_boot_summary_on">बूट पर सक्षम टनलस को लाएगा</string>
     <string name="restore_on_boot_summary_off">बूट पर सक्षम टनलस को नहीं लाएगा</string>

@@ -128,7 +128,6 @@
     <string name="pre_shared_key">预共享密钥</string>
     <string name="private_key">私钥</string>
     <string name="public_key">公钥</string>
-    <string name="public_key_description">公钥</string>
     <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 生成二维码</string>
     <string name="restore_on_boot_summary_off">未启用</string>
     <string name="restore_on_boot_summary_on">设备启动时自动开启上次使用的隧道</string>

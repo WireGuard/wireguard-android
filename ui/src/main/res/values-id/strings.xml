@@ -128,7 +128,6 @@
     <string name="pre_shared_key">Kunci Pra-bersama</string>
     <string name="private_key">Kunci pribadi</string>
     <string name="public_key">Kunci publik</string>
-    <string name="public_key_description">Kunci publik</string>
     <string name="qr_code_hint">Tips: generate dengan `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary_off">Tunel yang diaktifkan tidak akan ditampilkan saat boot</string>
     <string name="restore_on_boot_summary_on">Tunel yang diaktifkan akan dimunculkan saat boot</string>

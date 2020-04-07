@@ -128,7 +128,6 @@
     <string name="pre_shared_key">事前共有鍵</string>
     <string name="private_key">秘密鍵</string>
     <string name="public_key">公開鍵</string>
-    <string name="public_key_description">公開鍵</string>
     <string name="qr_code_hint">Tip: `qrencode -t ansiutf8 &lt; tunnel.conf` で生成できます</string>
     <string name="restore_on_boot_summary_off">起動時にトンネルを有効化しない</string>
     <string name="restore_on_boot_summary_on">起動時に、前回有効だったトンネルを有効化する</string>

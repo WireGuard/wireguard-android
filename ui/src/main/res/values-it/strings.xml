@@ -134,7 +134,6 @@
     <string name="pre_shared_key">Chiave condivisa (PSK)</string>
     <string name="private_key">Chiave privata</string>
     <string name="public_key">Chiave pubblica</string>
-    <string name="public_key_description">La chiave pubblica</string>
     <string name="qr_code_hint">Suggerimento: genera con `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary_off">Non attiverà i tunnel configurati all\'avvio</string>
     <string name="restore_on_boot_summary_on">Attiverà i tunnel configurati all\'avvio</string>

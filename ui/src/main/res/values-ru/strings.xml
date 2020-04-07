@@ -146,7 +146,6 @@
     <string name="pre_shared_key">Общий ключ</string>
     <string name="private_key">Приватный ключ</string>
     <string name="public_key">Публичный ключ</string>
-    <string name="public_key_description">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary_off">Не поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>

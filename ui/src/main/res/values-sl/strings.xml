@@ -146,7 +146,6 @@
     <string name="pre_shared_key">Vnaprej deljen ključ</string>
     <string name="private_key">Privatni ključ</string>
     <string name="public_key">Javni ključ</string>
-    <string name="public_key_description">Javni ključ</string>
     <string name="qr_code_hint">Namig: Generirajte z `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="restore_on_boot_summary_off">Pri vklopu telefona, aktivirani tuneli ne bodo avtimatično vzpostavljeni</string>
     <string name="restore_on_boot_summary_on">Pri vklopu telefona bodo aktivirani tuneli avtimatično vzpostavljeni</string>

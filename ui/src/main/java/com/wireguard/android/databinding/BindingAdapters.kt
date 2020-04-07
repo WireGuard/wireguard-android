@@ -26,6 +26,7 @@ import com.wireguard.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener
 import com.wireguard.config.Attribute
 import com.wireguard.config.InetNetwork
 import java9.util.Optional
+import java.net.InetAddress
 
 /**
  * Static methods for use by generated code in the Android data binding library.
@@ -135,13 +136,19 @@ object BindingAdapters {
 
     @JvmStatic
     @BindingAdapter("android:text")
-    fun setText(view: TextView, text: Optional<*>) {
-        view.text = text.map { it.toString() }.orElse("")
+    fun setOptionalText(view: TextView, text: Optional<*>?) {
+        view.text = text?.map { it.toString() }?.orElse("") ?: ""
     }
 
     @JvmStatic
     @BindingAdapter("android:text")
-    fun setText(view: TextView, networks: Iterable<InetNetwork?>?) {
+    fun setInetNetworkSetText(view: TextView, networks: Iterable<InetNetwork?>?) {
         view.text = if (networks != null) Attribute.join(networks) else ""
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:text")
+    fun setInetAddressSetText(view: TextView, addresses: Iterable<InetAddress?>?) {
+        view.text = if (addresses != null) Attribute.join(addresses.map { it?.hostAddress }) else ""
     }
 }

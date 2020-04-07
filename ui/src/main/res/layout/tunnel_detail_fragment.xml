@@ -28,6 +28,7 @@
         android:background="?attr/colorBackground"
         android:clickable="true"
         android:focusable="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -81,6 +82,8 @@
                         style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/name"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{tunnel.name}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
@@ -101,7 +104,7 @@
                         style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/public_key_description"
+                        android:contentDescription="@string/public_key"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:onClick="@{ClipboardUtils::copyTextView}"
@@ -118,6 +121,7 @@
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/addresses_text"
                         android:text="@string/addresses"
+                        android:visibility="@{config.interface.addresses.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/public_key_text" />
 
@@ -127,10 +131,84 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/addresses"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.addresses}"
+                        android:visibility="@{config.interface.addresses.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/addresses_label"
                         tools:text="fc00:bbbb:bbbb:bb11::3:368b/128" />
+
+                    <TextView
+                        android:id="@+id/dns_servers_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/dns_servers_text"
+                        android:text="@string/dns_servers"
+                        android:visibility="@{config.interface.dnsServers.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/addresses_text" />
+
+                    <TextView
+                        android:id="@+id/dns_servers_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/dns_servers"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.interface.dnsServers}"
+                        android:visibility="@{config.interface.dnsServers.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dns_servers_label"
+                        tools:text="8.8.8.8, 8.8.4.4" />
+
+                    <TextView
+                        android:id="@+id/listen_port_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/listen_port_text"
+                        android:text="@string/listen_port"
+                        android:visibility="@{config.interface.listenPort.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/dns_servers_text" />
+
+                    <TextView
+                        android:id="@+id/listen_port_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/listen_port"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.interface.listenPort}"
+                        android:visibility="@{config.interface.listenPort.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/listen_port_label"
+                        tools:text="51820" />
+
+                    <TextView
+                        android:id="@+id/mtu_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/mtu_text"
+                        android:text="@string/mtu"
+                        android:visibility="@{config.interface.mtu.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/listen_port_text" />
+
+                    <TextView
+                        android:id="@+id/mtu_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/mtu"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.interface.mtu}"
+                        android:visibility="@{config.interface.mtu.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/mtu_label"
+                        tools:text="1500" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
