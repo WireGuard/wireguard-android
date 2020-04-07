@@ -8,6 +8,8 @@
 
         <import type="com.wireguard.android.widget.KeyInputFilter" />
 
+        <import type="com.wireguard.android.databinding.BindingAdapters" />
+
         <variable
             name="collection"
             type="androidx.databinding.ObservableList&lt;com.wireguard.android.viewmodel.PeerProxy&gt;" />
@@ -104,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:hint="@string/persistent_keepalive"
+                app:suffixText="@{@plurals/persistent_keepalive_seconds_suffix(BindingAdapters.tryParseInt(item.persistentKeepalive))}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout">
@@ -114,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_optional_discouraged"
                     android:inputType="number"
-                    android:text="@={item.persistentKeepalive}" />
+                    android:text="@={item.persistentKeepalive}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

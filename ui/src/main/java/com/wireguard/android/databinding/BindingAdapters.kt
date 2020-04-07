@@ -151,4 +151,15 @@ object BindingAdapters {
     fun setInetAddressSetText(view: TextView, addresses: Iterable<InetAddress?>?) {
         view.text = if (addresses != null) Attribute.join(addresses.map { it?.hostAddress }) else ""
     }
+
+    @JvmStatic
+    fun tryParseInt(s: String?): Int {
+        if (s == null)
+            return 0
+        return try {
+            Integer.parseInt(s)
+        } catch (_: Exception) {
+            0
+        }
+    }
 }

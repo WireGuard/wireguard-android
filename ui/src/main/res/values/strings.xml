@@ -43,6 +43,10 @@
         <item quantity="one">every second</item>
         <item quantity="other">every %d seconds</item>
     </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">second</item>
+        <item quantity="other">seconds</item>
+    </plurals>
     <string name="use_all_applications">Use all apps</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
