@@ -164,49 +164,59 @@
 
                     <TextView
                         android:id="@+id/listen_port_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/listen_port_text"
                         android:text="@string/listen_port"
                         android:visibility="@{config.interface.listenPort.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/mtu_label"
+                        app:layout_constraintHorizontal_weight="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/dns_servers_text" />
 
                     <TextView
                         android:id="@+id/listen_port_text"
                         style="@style/DetailText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/listen_port"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.listenPort}"
                         android:visibility="@{config.interface.listenPort.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintEnd_toStartOf="@id/mtu_label"
+                        app:layout_constraintHorizontal_weight="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/listen_port_label"
                         tools:text="51820" />
 
                     <TextView
                         android:id="@+id/mtu_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/mtu_text"
                         android:text="@string/mtu"
                         android:visibility="@{config.interface.mtu.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/listen_port_text" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="0.5"
+                        app:layout_constraintLeft_toRightOf="@id/listen_port_label"
+                        app:layout_constraintStart_toEndOf="@id/listen_port_label"
+                        app:layout_constraintTop_toBottomOf="@id/dns_servers_text" />
 
                     <TextView
                         android:id="@+id/mtu_text"
                         style="@style/DetailText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/mtu"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.mtu}"
                         android:visibility="@{config.interface.mtu.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="0.5"
+                        app:layout_constraintStart_toEndOf="@id/listen_port_label"
+                        app:layout_constraintStart_toStartOf="@+id/mtu_label"
                         app:layout_constraintTop_toBottomOf="@+id/mtu_label"
                         tools:text="1500" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
