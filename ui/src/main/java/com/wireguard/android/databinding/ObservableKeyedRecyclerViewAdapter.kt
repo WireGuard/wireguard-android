@@ -17,8 +17,10 @@ import java.lang.ref.WeakReference
 /**
  * A generic `RecyclerView.Adapter` backed by a `ObservableKeyedArrayList`.
  */
-class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal constructor(context: Context, private val layoutId: Int,
-                                                                                   list: ObservableKeyedArrayList<K, E>?) : RecyclerView.Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder>() {
+class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal constructor(
+        context: Context, private val layoutId: Int,
+        list: ObservableKeyedArrayList<K, E>?
+) : RecyclerView.Adapter<ObservableKeyedRecyclerViewAdapter.ViewHolder>() {
     private val callback = OnListChangedCallback(this)
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var list: ObservableKeyedArrayList<K, E>? = null
