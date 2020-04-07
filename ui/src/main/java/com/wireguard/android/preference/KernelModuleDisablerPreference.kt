@@ -18,11 +18,18 @@ import java9.util.concurrent.CompletableFuture
 import kotlin.system.exitProcess
 
 class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
-    private var state = if (Application.getBackend() is WgQuickBackend) State.ENABLED else State.DISABLED
+    private var state = State.UNKNOWN
 
-    override fun getSummary() = context.getString(state.summaryResourceId)
+    init {
+        isVisible = false
+        Application.getBackendAsync().thenAccept { backend ->
+            setState(if (backend is WgQuickBackend) State.ENABLED else State.DISABLED)
+        }
+    }
 
-    override fun getTitle() = context.getString(state.titleResourceId)
+    override fun getSummary() = if (state == State.UNKNOWN) "" else context.getString(state.summaryResourceId)
+
+    override fun getTitle() = if (state == State.UNKNOWN) "" else context.getString(state.titleResourceId)
 
     @SuppressLint("ApplySharedPref")
     override fun onClick() {
@@ -51,13 +58,15 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
         if (this.state == state) return
         this.state = state
         if (isEnabled != state.shouldEnableView) isEnabled = state.shouldEnableView
+        if (isVisible != state.visible) isVisible = state.visible
         notifyChanged()
     }
 
-    private enum class State(val titleResourceId: Int, val summaryResourceId: Int, val shouldEnableView: Boolean) {
-        ENABLED(R.string.module_disabler_enabled_title, R.string.module_disabler_enabled_summary, true),
-        DISABLED(R.string.module_disabler_disabled_title, R.string.module_disabler_disabled_summary, true),
-        ENABLING(R.string.module_disabler_disabled_title, R.string.success_application_will_restart, false),
-        DISABLING(R.string.module_disabler_enabled_title, R.string.success_application_will_restart, false);
+    private enum class State(val titleResourceId: Int, val summaryResourceId: Int, val shouldEnableView: Boolean, val visible: Boolean) {
+        UNKNOWN(0, 0, false, false),
+        ENABLED(R.string.module_disabler_enabled_title, R.string.module_disabler_enabled_summary, true, true),
+        DISABLED(R.string.module_disabler_disabled_title, R.string.module_disabler_disabled_summary, true, true),
+        ENABLING(R.string.module_disabler_disabled_title, R.string.success_application_will_restart, false, true),
+        DISABLING(R.string.module_disabler_enabled_title, R.string.success_application_will_restart, false, true);
     }
 }
