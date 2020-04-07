@@ -16,13 +16,12 @@
         tools:itemCount="20"
         tools:listitem="@layout/log_viewer_entry" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/share_fab"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:icon="@drawable/ic_action_share_white" />
+        app:srcCompat="@drawable/ic_action_share_white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

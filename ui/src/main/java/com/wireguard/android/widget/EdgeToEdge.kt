@@ -12,7 +12,7 @@ import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
  * A utility for edge-to-edge display. It provides several features needed to make the app
@@ -27,7 +27,7 @@ object EdgeToEdge {
     }
 
     @JvmStatic
-    fun setUpScrollingContent(scrollingContent: ViewGroup, fab: ExtendedFloatingActionButton?) {
+    fun setUpScrollingContent(scrollingContent: ViewGroup, fab: FloatingActionButton?) {
         val originalPaddingLeft = scrollingContent.paddingLeft
         val originalPaddingRight = scrollingContent.paddingRight
         val originalPaddingBottom = scrollingContent.paddingBottom
@@ -50,7 +50,7 @@ object EdgeToEdge {
     }
 
     @JvmStatic
-    fun setUpFAB(fab: ExtendedFloatingActionButton) {
+    fun setUpFAB(fab: FloatingActionButton) {
         val originalMarginLeft = fab.marginLeft
         val originalMarginRight = fab.marginRight
         val originalMarginBottom = fab.marginBottom
