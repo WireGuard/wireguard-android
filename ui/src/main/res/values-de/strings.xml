@@ -24,8 +24,41 @@
         <item quantity="one">%d ausgeschlossene Anwendung</item>
         <item quantity="other">%d ausgeschlossene Anwendungen</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d ausgeschlossene Anwendung</item>
+        <item quantity="other">%d einbezogene Anwendungen</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d ausgeschlossen</item>
+        <item quantity="other">%d ausgeschlossen</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d einbezogen</item>
+        <item quantity="other">%d einbezogen</item>
+    </plurals>
+    <string name="all_applications">Alle Anwendungen</string>
+    <string name="exclude_from_tunnel">Ausschließen</string>
+    <string name="include_in_tunnel">Nur einbeziehen</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">%d App einbeziehen</item>
+        <item quantity="other">%d App einbeziehen</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">%d App ausschließen</item>
+        <item quantity="other">%d App ausschließen</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">jede Sekunde</item>
+        <item quantity="other">alle %d Sekunden</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">Sekunde</item>
+        <item quantity="other">Sekunde</item>
+    </plurals>
+    <string name="use_all_applications">Alle Apps verwenden</string>
     <string name="add_peer">Teilnehmer hinzufügen</string>
     <string name="addresses">Adressen</string>
+    <string name="applications">Applikationen</string>
     <string name="allow_remote_control_intents_summary_off">Externe Apps dürfen keine Tunnel umschalten (empfohlen)</string>
     <string name="allow_remote_control_intents_summary_on">Externe Apps dürfen Tunnel umschalten (erweitert)</string>
     <string name="allow_remote_control_intents_title">Erlaube Steuerung über externe Apps</string>
@@ -132,11 +165,12 @@
     <string name="permission_label">WireGuard-Tunnel steuern</string>
     <string name="persistent_keepalive">Dauerhafte Erhaltung</string>
     <string name="pre_shared_key">Vorab geteilter Schlüssel</string>
+    <string name="pre_shared_key_enabled">aktiviert</string>
     <string name="private_key">Privater Schlüssel</string>
     <string name="public_key">Öffentlicher Schlüssel</string>
     <string name="qr_code_hint">Tipp: Mit `qrencode -t ansiutf8 &lt; tunnel.conf` generieren.</string>
-    <string name="restore_on_boot_summary_off">Wird aktivierte Tunnel beim Systemstart nicht automatisch starten</string>
-    <string name="restore_on_boot_summary_on">Wird aktivierte Tunnel beim Systemstart automatisch wieder starten</string>
+    <string name="restore_on_boot_summary_off">Aktivierte Tunnel beim Systemstart nicht automatisch starten</string>
+    <string name="restore_on_boot_summary_on">Aktivierte Tunnel beim Systemstart automatisch wieder starten</string>
     <string name="restore_on_boot_title">Beim Neustart wiederherstellen</string>
     <string name="save">Speichern</string>
     <string name="select_all">Alle auswählen</string>

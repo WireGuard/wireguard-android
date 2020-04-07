@@ -16,10 +16,36 @@
         <item quantity="other">导入了 %d 项</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="other">%d 个排除应用</item>
+        <item quantity="other">对 %d 个应用不生效</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="other">对 %d 个应用生效</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="other">对 %d 个应用不生效</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="other">对 %d 个应用生效</item>
+    </plurals>
+    <string name="all_applications">对全部应用生效</string>
+    <string name="exclude_from_tunnel">不生效</string>
+    <string name="include_in_tunnel">生效</string>
+    <plurals name="include_n_applications">
+        <item quantity="other">设定 %d 个应用</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="other">设定 %d 个应用</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="other">每隔 %d 秒</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="other">秒</item>
+    </plurals>
+    <string name="use_all_applications">不设定过滤</string>
     <string name="add_peer">添加节点</string>
     <string name="addresses">局域网 IP 地址</string>
+    <string name="applications">应用过滤</string>
     <string name="allow_remote_control_intents_summary_off">外部应用当前不能控制隧道（不建议勾选）</string>
     <string name="allow_remote_control_intents_summary_on">外部应用当前能够控制隧道（面向高级用户）</string>
     <string name="allow_remote_control_intents_title">授权外部控制</string>
@@ -126,6 +152,7 @@
     <string name="permission_label">控制 WireGuard 隧道</string>
     <string name="persistent_keepalive">连接保活间隔</string>
     <string name="pre_shared_key">预共享密钥</string>
+    <string name="pre_shared_key_enabled">已启用</string>
     <string name="private_key">私钥</string>
     <string name="public_key">公钥</string>
     <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 生成二维码</string>
@@ -182,7 +209,7 @@
     <string name="zip_export_success">已保存至 “%s”</string>
     <string name="zip_export_summary">zip 压缩包将保存至下载文件夹</string>
     <string name="zip_export_title">导出隧道配置</string>
-    <string name="biometric_prompt_zip_exporter_title">导出隧道需要认证指纹</string>
+    <string name="biometric_prompt_zip_exporter_title">导出配置需要认证指纹</string>
     <string name="biometric_prompt_private_key_title">查看私钥需要认证指纹</string>
     <string name="biometric_auth_error">认证失败</string>
     <string name="biometric_auth_error_reason">认证失败：%s</string>
