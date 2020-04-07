@@ -28,6 +28,14 @@
         <item quantity="one">%d Included Application</item>
         <item quantity="other">%d Included Applications</item>
     </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d excluded</item>
+        <item quantity="other">%d excluded</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d included</item>
+        <item quantity="other">%d included</item>
+    </plurals>
     <string name="all_applications">All Applications</string>
     <string name="exclude_from_tunnel">Exclude</string>
     <string name="include_in_tunnel">Include only</string>
@@ -50,6 +58,7 @@
     <string name="use_all_applications">Use all apps</string>
     <string name="add_peer">Add peer</string>
     <string name="addresses">Addresses</string>
+    <string name="applications">Applications</string>
     <string name="allow_remote_control_intents_summary_off">External apps may not toggle tunnels (recommended)</string>
     <string name="allow_remote_control_intents_summary_on">External apps may toggle tunnels (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>

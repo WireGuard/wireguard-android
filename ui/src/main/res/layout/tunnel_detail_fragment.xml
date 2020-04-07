@@ -219,6 +219,30 @@
                         app:layout_constraintStart_toStartOf="@+id/mtu_label"
                         app:layout_constraintTop_toBottomOf="@+id/mtu_label"
                         tools:text="1500" />
+
+                    <TextView
+                        android:id="@+id/applications_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/applications_text"
+                        android:text="@string/applications"
+                        android:visibility="@{config.interface.includedApplications.isEmpty() &amp;&amp; config.interface.excludedApplications.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/listen_port_text" />
+
+                    <TextView
+                        android:id="@+id/applications_text"
+                        style="@style/DetailText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/dns_servers"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.interface.includedApplications.isEmpty() ? @plurals/n_excluded_applications(config.interface.excludedApplications.size(), config.interface.excludedApplications.size()) : @plurals/n_included_applications(config.interface.includedApplications.size(), config.interface.includedApplications.size())}"
+                        android:visibility="@{config.interface.includedApplications.isEmpty() &amp;&amp; config.interface.excludedApplications.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/applications_label"
+                        tools:text="8 excluded" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
