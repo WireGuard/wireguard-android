@@ -21,6 +21,9 @@ android {
             path 'tools/CMakeLists.txt'
         }
     }
+    libraryVariants.all {
+        it.generateBuildConfigProvider.configure { enabled = false }
+    }
     testOptions.unitTests.all {
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
