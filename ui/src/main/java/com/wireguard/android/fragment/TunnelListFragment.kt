@@ -4,6 +4,7 @@
  */
 package com.wireguard.android.fragment
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -305,6 +306,7 @@ class TunnelListFragment : BaseFragment() {
     private inner class ActionModeListener : ActionMode.Callback {
         val checkedItems: MutableCollection<Int> = HashSet()
         private var resources: Resources? = null
+        private var initialFabTranslation = 0f
 
         fun getCheckedItems(): ArrayList<Int> {
             return ArrayList(checkedItems)
@@ -314,6 +316,7 @@ class TunnelListFragment : BaseFragment() {
             return when (item.itemId) {
                 R.id.menu_action_delete -> {
                     val copyCheckedItems = HashSet(checkedItems)
+                    binding?.createFab?.translationY = initialFabTranslation
                     Application.getTunnelManager().tunnels.thenAccept { tunnels ->
                         val tunnelsToDelete = ArrayList<ObservableTunnel>()
                         for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
@@ -343,6 +346,13 @@ class TunnelListFragment : BaseFragment() {
             if (activity != null) {
                 resources = activity!!.resources
             }
+            binding?.createFab?.let {
+                initialFabTranslation = it.translationY
+                ObjectAnimator.ofFloat(it, View.TRANSLATION_Y, 400f).apply {
+                    duration = 400
+                    start()
+                }
+            }
             mode.menuInflater.inflate(R.menu.tunnel_list_action_mode, menu)
             binding?.tunnelList?.adapter?.notifyDataSetChanged()
             return true
@@ -351,6 +361,15 @@ class TunnelListFragment : BaseFragment() {
         override fun onDestroyActionMode(mode: ActionMode) {
             actionMode = null
             resources = null
+            binding?.createFab?.let {
+                if (it.translationY != initialFabTranslation) {
+                    ObjectAnimator.ofFloat(it, View.TRANSLATION_Y, initialFabTranslation).apply {
+                        duration = 400
+                        start()
+                    }
+                }
+            }
+
             checkedItems.clear()
             binding!!.tunnelList.adapter!!.notifyDataSetChanged()
         }
