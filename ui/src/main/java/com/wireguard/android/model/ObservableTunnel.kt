@@ -93,14 +93,14 @@ class ObservableTunnel internal constructor(
     @get:Bindable
     var statistics: Statistics? = null
         get() {
-            if (field == null || field!!.isStale)
+            if (field == null || field?.isStale != false)
                 manager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E)
             return field
         }
         private set
 
     val statisticsAsync: CompletionStage<Statistics>
-        get() = if (statistics == null || statistics!!.isStale)
+        get() = if (statistics == null || statistics?.isStale != false)
             manager.getTunnelStatistics(this)
         else
             CompletableFuture.completedFuture(statistics)
