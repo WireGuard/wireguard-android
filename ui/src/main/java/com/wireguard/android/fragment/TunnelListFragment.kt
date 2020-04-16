@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.fragment
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -18,6 +17,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import com.google.android.material.snackbar.Snackbar
@@ -306,7 +307,6 @@ class TunnelListFragment : BaseFragment() {
     private inner class ActionModeListener : ActionMode.Callback {
         val checkedItems: MutableCollection<Int> = HashSet()
         private var resources: Resources? = null
-        private var initialFabTranslation = 0f
 
         fun getCheckedItems(): ArrayList<Int> {
             return ArrayList(checkedItems)
@@ -316,7 +316,11 @@ class TunnelListFragment : BaseFragment() {
             return when (item.itemId) {
                 R.id.menu_action_delete -> {
                     val copyCheckedItems = HashSet(checkedItems)
-                    binding?.createFab?.translationY = initialFabTranslation
+                    binding?.createFab?.apply {
+                        visibility = View.VISIBLE
+                        scaleX = 1f
+                        scaleY = 1f
+                    }
                     Application.getTunnelManager().tunnels.thenAccept { tunnels ->
                         val tunnelsToDelete = ArrayList<ObservableTunnel>()
                         for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
@@ -346,13 +350,7 @@ class TunnelListFragment : BaseFragment() {
             if (activity != null) {
                 resources = activity!!.resources
             }
-            binding?.createFab?.let {
-                initialFabTranslation = it.translationY
-                ObjectAnimator.ofFloat(it, View.TRANSLATION_Y, 400f).apply {
-                    duration = 400
-                    start()
-                }
-            }
+            animateFab(binding?.createFab, false)
             mode.menuInflater.inflate(R.menu.tunnel_list_action_mode, menu)
             binding?.tunnelList?.adapter?.notifyDataSetChanged()
             return true
@@ -361,15 +359,7 @@ class TunnelListFragment : BaseFragment() {
         override fun onDestroyActionMode(mode: ActionMode) {
             actionMode = null
             resources = null
-            binding?.createFab?.let {
-                if (it.translationY != initialFabTranslation) {
-                    ObjectAnimator.ofFloat(it, View.TRANSLATION_Y, initialFabTranslation).apply {
-                        duration = 400
-                        start()
-                    }
-                }
-            }
-
+            animateFab(binding?.createFab, true)
             checkedItems.clear()
             binding!!.tunnelList.adapter!!.notifyDataSetChanged()
         }
@@ -409,6 +399,26 @@ class TunnelListFragment : BaseFragment() {
             } else {
                 mode.title = resources!!.getQuantityString(R.plurals.delete_title, count, count)
             }
+        }
+
+        private fun animateFab(view: View?, show: Boolean) {
+            view ?: return
+            val animation = AnimationUtils.loadAnimation(
+                    context, if (show) R.anim.scale_up else R.anim.scale_down
+            )
+            animation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    if (!show) view.visibility = View.GONE
+                }
+
+                override fun onAnimationStart(animation: Animation?) {
+                    if (show) view.visibility = View.VISIBLE
+                }
+            })
+            view.startAnimation(animation)
         }
     }
 
