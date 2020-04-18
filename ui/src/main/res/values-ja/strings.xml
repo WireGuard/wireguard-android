@@ -18,8 +18,34 @@
     <plurals name="set_excluded_applications">
         <item quantity="other">除外アプリ %d 個</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="other">トンネリング対象アプリケーション %d 個</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="other">除外 %d 個</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="other">対象 %d 個</item>
+    </plurals>
+    <string name="all_applications">すべてのアプリケーションがトンネル対象</string>
+    <string name="exclude_from_tunnel">トンネル対象外</string>
+    <string name="include_in_tunnel">指定したもののみ</string>
+    <plurals name="include_n_applications">
+        <item quantity="other">%d アプリが対象</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="other">%d アプリを除外</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="other">%d 秒ごと</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="other">秒</item>
+    </plurals>
+    <string name="use_all_applications">全アプリをトンネル対象とする</string>
     <string name="add_peer">ピアを追加する</string>
     <string name="addresses">アドレス</string>
+    <string name="applications">アプリ</string>
     <string name="allow_remote_control_intents_summary_off">外部アプリはトンネルを制御できない(推奨)</string>
     <string name="allow_remote_control_intents_summary_on">外部アプリにトンネルの制御を許可(上級者向け)</string>
     <string name="allow_remote_control_intents_title">外部アプリからの制御</string>
@@ -126,6 +152,7 @@
     <string name="permission_label">WireGuard トンネルの制御</string>
     <string name="persistent_keepalive">持続的キープアライブ</string>
     <string name="pre_shared_key">事前共有鍵</string>
+    <string name="pre_shared_key_enabled">有効</string>
     <string name="private_key">秘密鍵</string>
     <string name="public_key">公開鍵</string>
     <string name="qr_code_hint">Tip: `qrencode -t ansiutf8 &lt; tunnel.conf` で生成できます</string>
@@ -139,7 +166,7 @@
     <string name="shell_marker_count_error">シェルは 4 マーカーを期待していますが、 %d マーカーを受け取りました</string>
     <string name="shell_start_error">シェルの起動に失敗しました: %d</string>
     <string name="success_application_will_restart">成功。アプリケーションは再起動します…</string>
-    <string name="toggle_all">すべてのトンネルの状態を切り替え</string>
+    <string name="toggle_all">すべての状態を切り替え</string>
     <string name="toggle_error">WireGuard トンネルの状態切り替え時にエラー: %s</string>
     <string name="tools_installer_already">wg および wg-quick はインストール済みです</string>
     <string name="tools_installer_failure">コマンドラインツールをインストールできません(root権限がない？)</string>

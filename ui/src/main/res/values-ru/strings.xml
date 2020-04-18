@@ -2,31 +2,31 @@
 <resources>
     <plurals name="delete_error">
         <item quantity="one">Не удалось удалить %d туннель: %s</item>
-        <item quantity="few">Не удалось удалить %d туннелей: %s</item>
+        <item quantity="few">Не удалось удалить %d туннеля: %s</item>
         <item quantity="many">Не удалось удалить %d туннелей: %s</item>
         <item quantity="other">Не удалось удалить %d туннелей: %s</item>
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">Успешно удален %d туннель</item>
-        <item quantity="few">Успешно удалено %d туннелей</item>
+        <item quantity="few">Успешно удалено %d туннеля</item>
         <item quantity="many">Успешно удалено %d туннелей</item>
         <item quantity="other">Успешно удалено %d туннелей</item>
     </plurals>
     <plurals name="delete_title">
         <item quantity="one">%d туннель выбран</item>
-        <item quantity="few">%d туннелей выбрано</item>
+        <item quantity="few">%d туннеля выбрано</item>
         <item quantity="many">%d туннелей выбрано</item>
         <item quantity="other">%d туннелей выбрано</item>
     </plurals>
     <plurals name="import_partial_success">
         <item quantity="one">Импортирован %1$d из %2$d туннелей</item>
-        <item quantity="few">Импортировано %1$d из %2$d туннелей</item>
+        <item quantity="few">Импортировано %1$d из %2$d туннеля</item>
         <item quantity="many">Импортировано %1$d из %2$d туннелей</item>
         <item quantity="other">Импортировано %1$d из %2$d туннелей</item>
     </plurals>
     <plurals name="import_total_success">
         <item quantity="one">Импортированный %d туннель</item>
-        <item quantity="few">Импортировано %d туннелей</item>
+        <item quantity="few">Импортировано %d туннеля</item>
         <item quantity="many">Импортировано %d туннелей</item>
         <item quantity="other">Импортировано %d туннелей</item>
     </plurals>
@@ -36,8 +36,55 @@
         <item quantity="many">%d Исключенных приложений</item>
         <item quantity="other">%d Исключенных приложений</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d Включенное приложение</item>
+        <item quantity="few">%d Включенных приложений</item>
+        <item quantity="many">%d Включенных приложений</item>
+        <item quantity="other">%d Включенных приложений</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d исключен</item>
+        <item quantity="few">%d исключено</item>
+        <item quantity="many">%d исключено</item>
+        <item quantity="other">%d исключено</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d влючен</item>
+        <item quantity="few">%d включено</item>
+        <item quantity="many">%d включено</item>
+        <item quantity="other">%d включено</item>
+    </plurals>
+    <string name="all_applications">Все приложения</string>
+    <string name="exclude_from_tunnel">Исключить</string>
+    <string name="include_in_tunnel">Только включить</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Включить %d приложение</item>
+        <item quantity="few">Включить %d приложения</item>
+        <item quantity="many">Включить %d приложений</item>
+        <item quantity="other">Включить %d приложений</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Исключить %d приложение</item>
+        <item quantity="few">Исключить %d приложения</item>
+        <item quantity="many">Исключить %d приложений</item>
+        <item quantity="other">Исключить %d приложений</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">каждую %d секунду</item>
+        <item quantity="few">каждые %d секунды</item>
+        <item quantity="many">каждые %d секунд</item>
+        <item quantity="other">каждые %d секунд</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">секунда</item>
+        <item quantity="few">секунд</item>
+        <item quantity="many">секунд</item>
+        <item quantity="other">секунд</item>
+    </plurals>
+    <string name="use_all_applications">Использовать все приложения</string>
     <string name="add_peer">Добавить пира</string>
     <string name="addresses">IP-адреса</string>
+    <string name="applications">Приложения</string>
     <string name="allow_remote_control_intents_summary_off">Сторонние приложения не могут переключать туннели (рекомендуется)</string>
     <string name="allow_remote_control_intents_summary_on">Сторонние приложения могут переключать туннели (дополнительно)</string>
     <string name="allow_remote_control_intents_title">Доступ к другим приложениям</string>
@@ -128,7 +175,7 @@
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_summary_off">Только один туннель, выключит другие</string>
     <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
-    <string name="multiple_tunnels_title">Несколько одновременных туннелей</string>
+    <string name="multiple_tunnels_title">Несколько туннелей</string>
     <string name="name">Имя</string>
     <string name="no_config_error">Попытка поднять туннель без конфигурации</string>
     <string name="no_configs_error">Конфигурации не найдены</string>
@@ -144,6 +191,7 @@
     <string name="permission_label">управлять туннелями WireGuard</string>
     <string name="persistent_keepalive">Постоянное соединение</string>
     <string name="pre_shared_key">Общий ключ</string>
+    <string name="pre_shared_key_enabled">включено</string>
     <string name="private_key">Приватный ключ</string>
     <string name="public_key">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>

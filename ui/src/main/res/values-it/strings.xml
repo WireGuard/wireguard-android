@@ -24,8 +24,41 @@
         <item quantity="one">%d applicazione esclusa</item>
         <item quantity="other">%d applicazioni escluse</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d applicazione esclusa</item>
+        <item quantity="other">%d applicazioni incluse</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d escluse</item>
+        <item quantity="other">%d escluse</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d escluse</item>
+        <item quantity="other">%d incluse</item>
+    </plurals>
+    <string name="all_applications">Tutte le applicazioni</string>
+    <string name="exclude_from_tunnel">Escludi</string>
+    <string name="include_in_tunnel">Includi solo</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Includi %d applicazione</item>
+        <item quantity="other">Includi %d applicazioni</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Escludi %d applicazione</item>
+        <item quantity="other">Escludi %d applicazioni</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">ogni secondo</item>
+        <item quantity="other">ogni %d secondi</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">secondo</item>
+        <item quantity="other">secondi</item>
+    </plurals>
+    <string name="use_all_applications">Utilizza tutte le applicazioni</string>
     <string name="add_peer">Aggiungi peer</string>
     <string name="addresses">Indirizzi</string>
+    <string name="applications">Applicazioni</string>
     <string name="allow_remote_control_intents_summary_off">Le applicazioni esterne non possono attivare tunnel (consigliato)</string>
     <string name="allow_remote_control_intents_summary_on">Le applicazioni esterne possono attivare tunnel (avanzato)</string>
     <string name="allow_remote_control_intents_title">Consenti applicazioni di controllo remoto</string>
@@ -132,6 +165,7 @@
     <string name="permission_label">controlla tunnel WireGuard</string>
     <string name="persistent_keepalive">Tieni sempre attivo</string>
     <string name="pre_shared_key">Chiave condivisa (PSK)</string>
+    <string name="pre_shared_key_enabled">abilitata</string>
     <string name="private_key">Chiave privata</string>
     <string name="public_key">Chiave pubblica</string>
     <string name="qr_code_hint">Suggerimento: genera con `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>

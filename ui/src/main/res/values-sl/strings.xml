@@ -235,7 +235,7 @@
     <string name="tunnel_on_error">Tunela ni bilo mogoče vključiti (wgTurnOn je vrnil %d)</string>
     <string name="tunnel_rename_error">Tunela ni bilo mogoče preimenovati: %s</string>
     <string name="tunnel_rename_success">Tunel uspešno preimenovan v „%s“</string>
-    <string name="type_name_go_userspace">Go userspace</string>
+    <string name="type_name_go_userspace">Uporabniški prostor Go</string>
     <string name="type_name_kernel_module">Modul jedra</string>
     <string name="unknown_error">Neznana napaka</string>
     <string name="version_summary">Zaledje %1$s v%2$s</string>
