@@ -45,6 +45,9 @@ android {
             }
         }
     }
+    lintOptions {
+        disable('LongLogTag')
+    }
 }
 
 dependencies {
