@@ -13,7 +13,6 @@ buildscript {
         appcompatVersion = '1.1.0'
         bintrayPluginVersion = '1.8.4'
         biometricVersion = '1.0.1'
-        cardviewVersion = '1.0.0'
         collectionVersion = '1.1.0'
         constraintLayoutVersion = '1.1.3'
         coordinatorLayoutVersion = '1.1.0'

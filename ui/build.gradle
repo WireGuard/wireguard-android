@@ -68,7 +68,6 @@ dependencies {
     implementation project(":tunnel")
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.cardview:cardview:$cardviewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
     implementation "androidx.biometric:biometric:$biometricVersion"
