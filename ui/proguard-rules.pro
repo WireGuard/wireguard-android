@@ -2,9 +2,6 @@
 # escalates them as errors.
 -dontwarn sun.misc.Unsafe
 
-# Retain some information to keep stacktraces usable
--keepattributes SourceFile,LineNumberTable
-
 # Fragment 1.2.4 allows Fragment classes to be obfuscated but
 # databinding references in XML seem to not be rewritten to
 # match, so we preserve the names as 1.2.3 did.
@@ -12,3 +9,6 @@
 -keep public class <1> {
     public <init>();
 }
+
+# Don't obfuscate
+-dontobfuscate
