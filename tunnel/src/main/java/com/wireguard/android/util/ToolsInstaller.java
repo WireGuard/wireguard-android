@@ -143,12 +143,12 @@ public final class ToolsInstaller {
         extract();
         final StringBuilder script = new StringBuilder("set -ex; ");
 
-        script.append("trap 'rm -rf /sbin/.magisk/img/wireguard' INT TERM EXIT; ");
-        script.append(String.format("rm -rf /sbin/.magisk/img/wireguard/; mkdir -p /sbin/.magisk/img/wireguard%s; ", INSTALL_DIR));
-        script.append("printf 'name=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /sbin/.magisk/img/wireguard/module.prop; ");
-        script.append("touch /sbin/.magisk/img/wireguard/auto_mount; ");
+        script.append("trap 'rm -rf /data/adb/moduleswireguard' INT TERM EXIT; ");
+        script.append(String.format("rm -rf /data/adb/modules/wireguard/; mkdir -p /data/adb/modules/wireguard%s; ", INSTALL_DIR));
+        script.append("printf 'name=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /data/adb/modules/wireguard/module.prop; ");
+        script.append("touch /data/adb/modules/wireguard/auto_mount; ");
         for (final String name : EXECUTABLES) {
-            final File destination = new File("/sbin/.magisk/img/wireguard" + INSTALL_DIR, name);
+            final File destination = new File("/data/adb/modules/wireguard" + INSTALL_DIR, name);
             script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
                     new File(localBinaryDir, name), destination, destination, destination));
         }
@@ -191,7 +191,7 @@ public final class ToolsInstaller {
         synchronized (lock) {
             if (installAsMagiskModule == null) {
                 try {
-                    installAsMagiskModule = rootShell.run(null, "[ -d /sbin/.magisk/mirror -a -d /sbin/.magisk/img -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
+                    installAsMagiskModule = rootShell.run(null, "[ -d /data/adb/modules -a ! -f /cache/.disable_magisk ]") == OsConstants.EXIT_SUCCESS;
                 } catch (final Exception ignored) {
                     installAsMagiskModule = false;
                 }
