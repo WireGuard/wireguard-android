@@ -27,7 +27,7 @@ buildscript {
         mavenPluginVersion = '2.1'
         preferenceVersion = '1.1.1'
         streamsupportVersion = '1.7.2'
-        threetenabpVersion = '1.2.3'
+        threetenabpVersion = '1.2.4'
         zxingEmbeddedVersion = '3.6.0'
 
         groupName = 'com.wireguard.android'
