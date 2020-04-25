@@ -12,8 +12,8 @@
 
     <!-- Theme variables -->
     <color name="list_multiselect_background">#1aeeeeee</color>
-    <color name="status_bar_color">#21242424</color>
-    <color name="navigation_bar_color">#aa242424</color>
+    <color name="status_bar_color">@color/primary_color</color>
+    <color name="navigation_bar_color">#aa212121</color>
 
     <!-- Log viewer tag colors -->
     <color name="debug_tag_color">#aaaaaa</color>
