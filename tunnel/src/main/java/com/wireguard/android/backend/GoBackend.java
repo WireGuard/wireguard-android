@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.system.OsConstants;
 import android.util.Log;
 
 import com.wireguard.android.backend.BackendException.Reason;
@@ -202,9 +203,19 @@ public final class GoBackend implements Backend {
             for (final InetAddress addr : config.getInterface().getDnsServers())
                 builder.addDnsServer(addr.getHostAddress());
 
+            boolean sawDefaultRoute = false;
             for (final Peer peer : config.getPeers()) {
-                for (final InetNetwork addr : peer.getAllowedIps())
+                for (final InetNetwork addr : peer.getAllowedIps()) {
+                    if (addr.getMask() == 0)
+                        sawDefaultRoute = true;
                     builder.addRoute(addr.getAddress(), addr.getMask());
+                }
+            }
+
+            // "Kill-switch" semantics
+            if (!(sawDefaultRoute && config.getPeers().size() == 1)) {
+                builder.allowFamily(OsConstants.AF_INET);
+                builder.allowFamily(OsConstants.AF_INET6);
             }
 
             builder.setMtu(config.getInterface().getMtu().orElse(1280));
