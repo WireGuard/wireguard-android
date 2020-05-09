@@ -50,8 +50,9 @@ task clean(type: Delete) {
 
 tasks {
     wrapper {
-        gradleVersion = "6.3"
+        gradleVersion = "6.4"
         distributionType = Wrapper.DistributionType.ALL
+        distributionSha256Sum = "d08f7e24d061910382c2fda9915e6ed42dd1480ae2e99211f92c70190cb697e0"
     }
 }
 
