@@ -20,7 +20,6 @@
         <item name="android:windowBackground">@color/primary_color</item>
         <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <item name="textInputStyle">@style/TextInputLayoutBase</item>
         <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
     </style>
