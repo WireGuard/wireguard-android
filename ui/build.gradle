@@ -21,8 +21,8 @@ android {
         }
     }
     compileSdkVersion 29
-    dataBinding.enabled true
-    viewBinding.enabled true
+    buildFeatures.dataBinding = true
+    buildFeatures.viewBinding = true
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
