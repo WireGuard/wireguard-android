@@ -9,8 +9,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.wireguard.android.R
@@ -55,16 +56,15 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         actionBar = supportActionBar
-        isTwoPaneLayout = findViewById<View>(R.id.master_detail_wrapper) is LinearLayout
+        isTwoPaneLayout = findViewById<View?>(R.id.master_detail_wrapper) != null
         supportFragmentManager.addOnBackStackChangedListener(this)
         onBackStackChanged()
         // Dispatch insets on back stack change
         // This is required to ensure replaced fragments are also able to consume insets
-        findViewById<View>(R.id.master_detail_wrapper).setOnApplyWindowInsetsListener { _, insets ->
-            val fragmentManager = supportFragmentManager
-            fragmentManager.addOnBackStackChangedListener {
-                fragmentManager.fragments.forEach {
-                    it.requireView().dispatchApplyWindowInsets(insets)
+        findViewById<View>(R.id.main_activity_container).setOnApplyWindowInsetsListener { _, insets ->
+            supportFragmentManager.addOnBackStackChangedListener {
+                supportFragmentManager.fragments.forEach {
+                    ViewCompat.dispatchApplyWindowInsets(it.requireView(), WindowInsetsCompat.toWindowInsetsCompat(insets))
                 }
             }
             insets
