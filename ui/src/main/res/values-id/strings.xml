@@ -18,10 +18,36 @@
     <plurals name="set_excluded_applications">
         <item quantity="other">%d Aplikasi Dikecualikan</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="other">%d Aplikasi Dikecualikan</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="other">%d dikecualikan</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="other">%d termasuk</item>
+    </plurals>
+    <string name="all_applications">Semua aplikasi</string>
+    <string name="exclude_from_tunnel">Kecualikan</string>
+    <string name="include_in_tunnel">Berlaku hanya untuk</string>
+    <plurals name="include_n_applications">
+        <item quantity="other">Aplikasi %d yang disertakan</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="other">Aplikasi %d yang disertakan</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="other">setiap 10 detik</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="other">detik</item>
+    </plurals>
+    <string name="use_all_applications">Gunakan semua aplikasi</string>
     <string name="add_peer">Tambahkan rekan</string>
     <string name="addresses">Alamat</string>
-    <string name="allow_remote_control_intents_summary_off">Apl eksternal tidak dapat mengalihkan terowongan (disarankan)</string>
-    <string name="allow_remote_control_intents_summary_on">Apl eksternal dapat mengalihkan terowongan (lanjutan)</string>
+    <string name="applications">Aplikasi</string>
+    <string name="allow_remote_control_intents_summary_off">Apl eksternal tidak dapat mengalihkan tunnel (disarankan)</string>
+    <string name="allow_remote_control_intents_summary_on">Apl eksternal dapat mengalihkan tunnel (lanjutan)</string>
     <string name="allow_remote_control_intents_title">Izinkan apl kendali jarak jauh</string>
     <string name="allowed_ips">IP diizinkan</string>
     <string name="app_name">WireGuard</string>
@@ -64,11 +90,11 @@
     <string name="delete">Hapus</string>
     <string name="dns_servers">Server DNS</string>
     <string name="edit">Edit</string>
-    <string name="endpoint">Titik akhir</string>
-    <string name="error_down">Kesalahan mengurangi tunel: %s</string>
+    <string name="endpoint">Endpoint</string>
+    <string name="error_down">Kesalahan pada tunel: %s</string>
     <string name="error_fetching_apps">Kesalahan mengambil daftar aplikasi: %s</string>
     <string name="error_root">Izinkan akses root dan coba lagi</string>
-    <string name="error_up">Kesalahan menambahkan tunel: %s</string>
+    <string name="error_up">Kesalahan pada tunel: %s</string>
     <string name="exclude_private_ips">Kecualikan IP pribadi</string>
     <string name="generate_new_private_key">Buat kunci privat baru</string>
     <string name="generic_error">Eror “%s” Tidak diketahui</string>
@@ -126,6 +152,7 @@
     <string name="permission_label">Kontrol tunel WireGuard</string>
     <string name="persistent_keepalive">Keepalive persisten</string>
     <string name="pre_shared_key">Kunci Pra-bersama</string>
+    <string name="pre_shared_key_enabled">diaktifkan</string>
     <string name="private_key">Kunci pribadi</string>
     <string name="public_key">Kunci publik</string>
     <string name="qr_code_hint">Tips: generate dengan `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>

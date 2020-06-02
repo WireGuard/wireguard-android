@@ -19,17 +19,17 @@
         <item quantity="other">除外アプリ %d 個</item>
     </plurals>
     <plurals name="set_included_applications">
-        <item quantity="other">トンネリング対象アプリケーション %d 個</item>
+        <item quantity="other">トンネリング対象アプリ %d 個</item>
     </plurals>
     <plurals name="n_excluded_applications">
-        <item quantity="other">除外 %d 個</item>
+        <item quantity="other">対象外アプリ %d 個</item>
     </plurals>
     <plurals name="n_included_applications">
-        <item quantity="other">対象 %d 個</item>
+        <item quantity="other">トンネル対象アプリ %d 個</item>
     </plurals>
-    <string name="all_applications">すべてのアプリケーションがトンネル対象</string>
-    <string name="exclude_from_tunnel">トンネル対象外</string>
-    <string name="include_in_tunnel">指定したもののみ</string>
+    <string name="all_applications">すべてのアプリがトンネル対象</string>
+    <string name="exclude_from_tunnel">トンネルしない</string>
+    <string name="include_in_tunnel">トンネルする</string>
     <plurals name="include_n_applications">
         <item quantity="other">%d アプリが対象</item>
     </plurals>
@@ -42,7 +42,7 @@
     <plurals name="persistent_keepalive_seconds_suffix">
         <item quantity="other">秒</item>
     </plurals>
-    <string name="use_all_applications">全アプリをトンネル対象とする</string>
+    <string name="use_all_applications">全アプリをトンネル対象にする</string>
     <string name="add_peer">ピアを追加する</string>
     <string name="addresses">アドレス</string>
     <string name="applications">アプリ</string>
