@@ -8,7 +8,7 @@ allprojects {
 
 buildscript {
     ext {
-        agpVersion = '4.0.0'
+        agpVersion = '4.0.1'
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.1.0'
         bintrayPluginVersion = '1.8.4'
