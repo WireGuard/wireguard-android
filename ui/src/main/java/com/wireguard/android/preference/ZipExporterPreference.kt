@@ -16,6 +16,7 @@ import com.wireguard.android.R
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.DownloadsFileSaver
+import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.FragmentUtils
 import java9.util.concurrent.CompletableFuture
@@ -82,6 +83,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
     override fun getTitle() = context.getString(R.string.zip_export_title)
 
     override fun onClick() {
+        if (AdminKnobs.disableConfigExport) return
         val prefActivity = FragmentUtils.getPrefActivity(this)
         val fragment = prefActivity.supportFragmentManager.fragments.first()
         BiometricAuthenticator.authenticate(R.string.biometric_prompt_zip_exporter_title, fragment) {

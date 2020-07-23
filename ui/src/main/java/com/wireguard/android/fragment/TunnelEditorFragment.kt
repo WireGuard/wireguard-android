@@ -26,6 +26,7 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppSelectionListener
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.BiometricAuthenticator
+import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
@@ -252,6 +253,7 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
         val edit = view as? EditText ?: return
         if (edit.inputType == InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) return
         if (!haveShownKeys && edit.text.isNotEmpty()) {
+            if (AdminKnobs.disableConfigExport) return
             showingAuthenticator = true
             BiometricAuthenticator.authenticate(R.string.biometric_prompt_private_key_title, this) {
                 showingAuthenticator = false

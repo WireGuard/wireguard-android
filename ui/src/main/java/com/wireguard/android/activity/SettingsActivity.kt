@@ -17,6 +17,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ModuleLoader
 import java.util.ArrayList
 import java.util.Arrays
@@ -86,6 +87,10 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 val remoteApps = preferenceManager.findPreference<Preference>("allow_remote_control_intents")
                 remoteApps?.parent?.removePreference(remoteApps)
+            }
+            if (AdminKnobs.disableConfigExport) {
+                val zipExporter = preferenceManager.findPreference<Preference>("zip_exporter")
+                zipExporter?.parent?.removePreference(zipExporter)
             }
             val wgQuickOnlyPrefs = arrayOf(
                     preferenceManager.findPreference("tools_installer"),

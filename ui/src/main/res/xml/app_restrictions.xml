@@ -1,0 +1,13 @@
+<!--
+  ~ Copyright © 2020 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+    <restriction
+        android:defaultValue="false"
+        android:description="@string/disable_config_export_description"
+        android:key="disable_config_export"
+        android:restrictionType="bool"
+        android:title="@string/disable_config_export_title" />
+</restrictions>
