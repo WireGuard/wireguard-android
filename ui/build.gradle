@@ -11,15 +11,6 @@ final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
     buildToolsVersion '29.0.3'
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions {
-            jvmTarget = '1.8'
-        }
-    }
     compileSdkVersion 29
     buildFeatures.dataBinding = true
     buildFeatures.viewBinding = true
@@ -31,12 +22,12 @@ android {
         versionName wireguardVersionName
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
-    // If the keystore file exists
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     if (keystorePropertiesFile.exists()) {
-        // Initialize a new Properties() object called keystoreProperties.
         final def keystoreProperties = new Properties()
-
-        // Load your keystore.properties file into the keystoreProperties object.
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
         signingConfigs {
@@ -86,4 +77,10 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:unchecked'
     options.deprecation = true
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
 }
