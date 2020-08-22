@@ -10,6 +10,7 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.biometric.BiometricConstants
@@ -22,7 +23,7 @@ import com.wireguard.android.R
 
 object BiometricAuthenticator {
     private const val TAG = "WireGuard/BiometricAuthenticator"
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     sealed class Result {
         data class Success(val cryptoObject: BiometricPrompt.CryptoObject?) : Result()
