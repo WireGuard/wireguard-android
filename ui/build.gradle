@@ -10,7 +10,6 @@ group groupName
 final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
-    buildToolsVersion '29.0.3'
     compileSdkVersion 29
     buildFeatures.dataBinding = true
     buildFeatures.viewBinding = true

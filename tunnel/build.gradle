@@ -4,7 +4,6 @@ version wireguardVersionName
 group groupName
 
 android {
-    buildToolsVersion '29.0.3'
     compileSdkVersion 29
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
