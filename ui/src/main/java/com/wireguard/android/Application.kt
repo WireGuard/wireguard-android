@@ -14,6 +14,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
@@ -53,6 +54,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         }
         if (BuildConfig.DEBUG) {
             StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
+            StrictMode.setThreadPolicy(ThreadPolicy.Builder().detectAll().penaltyLog().build())
         }
     }
 
