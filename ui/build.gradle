@@ -10,13 +10,13 @@ group groupName
 final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildFeatures.dataBinding = true
     buildFeatures.viewBinding = true
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode wireguardVersionCode
         versionName wireguardVersionName
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
