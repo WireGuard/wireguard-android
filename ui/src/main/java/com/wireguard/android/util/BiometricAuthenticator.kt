@@ -23,7 +23,6 @@ import com.wireguard.android.R
 
 object BiometricAuthenticator {
     private const val TAG = "WireGuard/BiometricAuthenticator"
-    private val handler = Handler(Looper.getMainLooper())
 
     sealed class Result {
         data class Success(val cryptoObject: BiometricPrompt.CryptoObject?) : Result()
@@ -78,7 +77,7 @@ object BiometricAuthenticator {
                 callback(Result.Success(result.cryptoObject))
             }
         }
-        val biometricPrompt = BiometricPrompt(fragment, { handler.post(it) }, authCallback)
+        val biometricPrompt = BiometricPrompt(fragment, { Handler(Looper.getMainLooper()).post(it) }, authCallback)
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setTitle(fragment.getString(dialogTitleRes))
                 .setDeviceCredentialAllowed(true)
