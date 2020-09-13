@@ -5,10 +5,6 @@
 
 package com.wireguard.android.util
 
-import android.annotation.SuppressLint
-import android.app.KeyguardManager
-import android.content.Context
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -17,7 +13,6 @@ import androidx.biometric.BiometricConstants
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import com.wireguard.android.R
 
@@ -33,20 +28,6 @@ object BiometricAuthenticator {
         data class Failure(val code: Int?, val message: CharSequence) : Result()
         object HardwareUnavailableOrDisabled : Result()
         object Cancelled : Result()
-    }
-
-    @SuppressLint("PrivateApi")
-    private fun isPinEnabled(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            return context.getSystemService<KeyguardManager>()!!.isDeviceSecure
-        return try {
-            val lockUtilsClass = Class.forName("com.android.internal.widget.LockPatternUtils")
-            val lockUtils = lockUtilsClass.getConstructor(Context::class.java).newInstance(context)
-            val method = lockUtilsClass.getMethod("isLockScreenDisabled")
-            !(method.invoke(lockUtils) as Boolean)
-        } catch (e: Exception) {
-            false
-        }
     }
 
     fun authenticate(
@@ -86,7 +67,7 @@ object BiometricAuthenticator {
                 .setTitle(fragment.getString(dialogTitleRes))
                 .setAllowedAuthenticators(allowedAuthenticators)
                 .build()
-        if (BiometricManager.from(fragment.requireContext()).canAuthenticate(allowedAuthenticators) == BiometricManager.BIOMETRIC_SUCCESS || isPinEnabled(fragment.requireContext())) {
+        if (BiometricManager.from(fragment.requireContext()).canAuthenticate(allowedAuthenticators) == BiometricManager.BIOMETRIC_SUCCESS) {
             biometricPrompt.authenticate(promptInfo)
         } else {
             callback(Result.HardwareUnavailableOrDisabled)
