@@ -19,6 +19,10 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ModuleLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.ArrayList
 import java.util.Arrays
 
@@ -117,11 +121,13 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 moduleInstaller?.parent?.removePreference(moduleInstaller)
             } else {
                 kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
-                Application.getAsyncWorker().runAsync(Application.getRootShell()::start).whenComplete { _, e ->
-                    if (e == null)
+                CoroutineScope(Dispatchers.Main).launch {
+                    try {
+                        withContext(Dispatchers.IO) { Application.getRootShell().start() }
                         moduleInstaller?.isVisible = true
-                    else
+                    } catch (_: Exception) {
                         moduleInstaller?.parent?.removePreference(moduleInstaller)
+                    }
                 }
             }
         }
