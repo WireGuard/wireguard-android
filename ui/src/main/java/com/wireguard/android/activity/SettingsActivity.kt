@@ -19,8 +19,8 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ModuleLoader
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
@@ -102,8 +102,8 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                     preferenceManager.findPreference<Preference>("multiple_tunnels")
             ).filterNotNull()
             wgQuickOnlyPrefs.forEach { it.isVisible = false }
-            Application.getBackendAsync().thenAccept { backend ->
-                if (backend is WgQuickBackend) {
+            GlobalScope.launch(Dispatchers.Main.immediate) {
+                if (Application.getBackend() is WgQuickBackend) {
                     ++preferenceScreen.initialExpandedChildrenCount
                     wgQuickOnlyPrefs.forEach { it.isVisible = true }
                 } else {
@@ -121,11 +121,11 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 moduleInstaller?.parent?.removePreference(moduleInstaller)
             } else {
                 kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
-                CoroutineScope(Dispatchers.Main).launch {
+                GlobalScope.launch(Dispatchers.Main.immediate) {
                     try {
                         withContext(Dispatchers.IO) { Application.getRootShell().start() }
                         moduleInstaller?.isVisible = true
-                    } catch (_: Exception) {
+                    } catch (_: Throwable) {
                         moduleInstaller?.parent?.removePreference(moduleInstaller)
                     }
                 }

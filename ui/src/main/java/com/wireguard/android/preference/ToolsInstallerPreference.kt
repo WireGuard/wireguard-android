@@ -10,8 +10,8 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.util.ToolsInstaller
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,15 +21,13 @@ import kotlinx.coroutines.withContext
  */
 class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var state = State.INITIAL
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
     override fun getSummary() = context.getString(state.messageResourceId)
 
     override fun getTitle() = context.getString(R.string.tools_installer_title)
 
     override fun onAttached() {
         super.onAttached()
-        coroutineScope.launch {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
             try {
                 val state = withContext(Dispatchers.IO) { Application.getToolsInstaller().areInstalled() }
                 when {
@@ -39,7 +37,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
                     state and (ToolsInstaller.SYSTEM or ToolsInstaller.NO) == ToolsInstaller.SYSTEM or ToolsInstaller.NO -> setState(State.INITIAL_SYSTEM)
                     else -> setState(State.INITIAL)
                 }
-            } catch (_: Exception) {
+            } catch (_: Throwable) {
                 setState(State.INITIAL)
             }
         }
@@ -47,7 +45,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
 
     override fun onClick() {
         setState(State.WORKING)
-        coroutineScope.launch {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
             try {
                 val result = withContext(Dispatchers.IO) { Application.getToolsInstaller().install() }
                 when {
@@ -55,7 +53,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
                     result and (ToolsInstaller.YES or ToolsInstaller.SYSTEM) == ToolsInstaller.YES or ToolsInstaller.SYSTEM -> setState(State.SUCCESS_SYSTEM)
                     else -> setState(State.FAILURE)
                 }
-            } catch (_: Exception) {
+            } catch (_: Throwable) {
                 setState(State.FAILURE)
             }
         }

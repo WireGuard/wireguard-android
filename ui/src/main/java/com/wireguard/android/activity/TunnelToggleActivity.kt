@@ -17,27 +17,31 @@ import com.wireguard.android.QuickTileService
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ErrorMessages
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.N)
 class TunnelToggleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
-        tunnel.setStateAsync(Tunnel.State.TOGGLE).whenComplete { _, t ->
-            TileService.requestListeningState(this, ComponentName(this, QuickTileService::class.java))
-            onToggleFinished(t)
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            try {
+                tunnel.setStateAsync(Tunnel.State.TOGGLE)
+            } catch (e: Throwable) {
+                TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
+                val error = ErrorMessages[e]
+                val message = getString(R.string.toggle_error, error)
+                Log.e(TAG, message, e)
+                Toast.makeText(this@TunnelToggleActivity, message, Toast.LENGTH_LONG).show()
+                finishAffinity()
+                return@launch
+            }
+            TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
             finishAffinity()
         }
     }
-
-    private fun onToggleFinished(throwable: Throwable?) {
-        if (throwable == null) return
-        val error = ErrorMessages[throwable]
-        val message = getString(R.string.toggle_error, error)
-        Log.e(TAG, message, throwable)
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
     companion object {
         private const val TAG = "WireGuard/TunnelToggleActivity"
     }

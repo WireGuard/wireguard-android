@@ -16,8 +16,8 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -47,16 +47,16 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
     }
 
     init {
-        Application.getBackendAsync().thenAccept { backend ->
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            val backend = Application.getBackend()
             versionSummary = getContext().getString(R.string.version_summary_checking, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
-            CoroutineScope(Dispatchers.Main).launch {
-                versionSummary = try {
-                    getContext().getString(R.string.version_summary, getBackendPrettyName(context, backend), withContext(Dispatchers.IO) { backend.version })
-                } catch (_: Exception) {
-                    getContext().getString(R.string.version_summary_unknown, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
-                }
-                notifyChanged()
+            notifyChanged()
+            versionSummary = try {
+                getContext().getString(R.string.version_summary, getBackendPrettyName(context, backend), withContext(Dispatchers.IO) { backend.version })
+            } catch (_: Throwable) {
+                getContext().getString(R.string.version_summary_unknown, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
             }
+            notifyChanged()
         }
     }
 }

@@ -25,13 +25,16 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.fragment.AppListDialogFragment.AppSelectionListener
 import com.wireguard.android.model.ObservableTunnel
-import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.AdminKnobs
+import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.config.Config
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Fragment for editing a WireGuard configuration.
@@ -130,7 +133,7 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
             binding ?: return false
             val newConfig = try {
                 binding!!.config!!.resolve()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 val error = ErrorMessages[e]
                 val tunnelName = if (tunnel == null) binding!!.name else tunnel!!.name
                 val message = getString(R.string.config_save_error, tunnelName, error)
@@ -138,20 +141,35 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
                 Snackbar.make(binding!!.mainContainer, error, Snackbar.LENGTH_LONG).show()
                 return false
             }
-            when {
-                tunnel == null -> {
-                    Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
-                    val manager = Application.getTunnelManager()
-                    manager.create(binding!!.name!!, newConfig).whenComplete(this::onTunnelCreated)
-                }
-                tunnel!!.name != binding!!.name -> {
-                    Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
-                    tunnel!!.setNameAsync(binding!!.name!!).whenComplete { _, t -> onTunnelRenamed(tunnel!!, newConfig, t) }
-                }
-                else -> {
-                    Log.d(TAG, "Attempting to save config of " + tunnel!!.name)
-                    tunnel!!.setConfigAsync(newConfig)
-                            .whenComplete { _, t -> onConfigSaved(tunnel!!, t) }
+            GlobalScope.launch(Dispatchers.Main.immediate) {
+                when {
+                    tunnel == null -> {
+                        Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
+                        val manager = Application.getTunnelManager()
+                        try {
+                            onTunnelCreated(manager.create(binding!!.name!!, newConfig), null)
+                        } catch (e: Throwable) {
+                            onTunnelCreated(null, e)
+                        }
+                    }
+                    tunnel!!.name != binding!!.name -> {
+                        Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
+                        try {
+                            tunnel!!.setNameAsync(binding!!.name!!)
+                            onTunnelRenamed(tunnel!!, newConfig, null)
+                        } catch (e: Throwable) {
+                            onTunnelRenamed(tunnel!!, newConfig, e)
+                        }
+                    }
+                    else -> {
+                        Log.d(TAG, "Attempting to save config of " + tunnel!!.name)
+                        try {
+                            tunnel!!.setConfigAsync(newConfig)
+                            onConfigSaved(tunnel!!, null)
+                        } catch (e: Throwable) {
+                            onConfigSaved(tunnel!!, e)
+                        }
+                    }
                 }
             }
             return true
@@ -187,13 +205,18 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
         binding!!.config = ConfigProxy()
         if (tunnel != null) {
             binding!!.name = tunnel!!.name
-            tunnel!!.configAsync.thenAccept(this::onConfigLoaded)
+            GlobalScope.launch(Dispatchers.Main.immediate) {
+                try {
+                    onConfigLoaded(tunnel!!.getConfigAsync())
+                } catch (_: Throwable) {
+                }
+            }
         } else {
             binding!!.name = ""
         }
     }
 
-    private fun onTunnelCreated(newTunnel: ObservableTunnel, throwable: Throwable?) {
+    private fun onTunnelCreated(newTunnel: ObservableTunnel?, throwable: Throwable?) {
         val message: String
         if (throwable == null) {
             tunnel = newTunnel
@@ -219,7 +242,14 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
             Log.d(TAG, message)
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel!!.name)
-            renamedTunnel.setConfigAsync(newConfig).whenComplete { _, t -> onConfigSaved(renamedTunnel, t) }
+            GlobalScope.launch(Dispatchers.Main.immediate) {
+                try {
+                    renamedTunnel.setConfigAsync(newConfig)
+                    onConfigSaved(renamedTunnel, null)
+                } catch (e: Throwable) {
+                    onConfigSaved(renamedTunnel, e)
+                }
+            }
         } else {
             val error = ErrorMessages[throwable]
             message = getString(R.string.tunnel_rename_error, error)

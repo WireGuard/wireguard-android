@@ -15,16 +15,14 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.util.ErrorMessages
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
 
 class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var state = State.INITIAL
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
     override fun getSummary() = context.getString(state.messageResourceId)
 
     override fun getTitle() = context.getString(R.string.module_installer_title)
@@ -32,24 +30,26 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
     @SuppressLint("ApplySharedPref")
     override fun onClick() {
         setState(State.WORKING)
-        coroutineScope.launch {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
             try {
                 when (withContext(Dispatchers.IO) { Application.getModuleLoader().download() }) {
                     OsConstants.ENOENT -> setState(State.NOTFOUND)
                     OsConstants.EXIT_SUCCESS -> {
                         setState(State.SUCCESS)
                         Application.getSharedPreferences().edit().remove("disable_kernel_module").commit()
-                        CoroutineScope(Dispatchers.Default).launch {
-                            val restartIntent = Intent(context, SettingsActivity::class.java)
-                            restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            Application.get().startActivity(restartIntent)
-                            exitProcess(0)
+                        GlobalScope.launch(Dispatchers.Main.immediate) {
+                            withContext(Dispatchers.IO) {
+                                val restartIntent = Intent(context, SettingsActivity::class.java)
+                                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                Application.get().startActivity(restartIntent)
+                                exitProcess(0)
+                            }
                         }
                     }
                     else -> setState(State.FAILURE)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 setState(State.FAILURE)
                 Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_LONG).show()
             }

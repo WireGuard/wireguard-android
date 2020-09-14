@@ -14,7 +14,6 @@ import androidx.databinding.Observable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import com.wireguard.android.Application
 import com.wireguard.android.BR
 import com.wireguard.android.R
 import com.wireguard.android.databinding.AppListDialogFragmentBinding
@@ -22,8 +21,8 @@ import com.wireguard.android.databinding.ObservableKeyedArrayList
 import com.wireguard.android.model.ApplicationData
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.requireTargetFragment
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -37,7 +36,7 @@ class AppListDialogFragment : DialogFragment() {
     private fun loadData() {
         val activity = activity ?: return
         val pm = activity.packageManager
-        CoroutineScope(Dispatchers.Default).launch {
+        GlobalScope.launch(Dispatchers.Default) {
             try {
                 val applicationData: MutableList<ApplicationData> = ArrayList()
                 withContext(Dispatchers.IO) {
@@ -57,12 +56,12 @@ class AppListDialogFragment : DialogFragment() {
                     }
                 }
                 applicationData.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main.immediate) {
                     appData.clear()
                     appData.addAll(applicationData)
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
+            } catch (e: Throwable) {
+                withContext(Dispatchers.Main.immediate) {
                     val error = ErrorMessages[e]
                     val message = activity.getString(R.string.error_fetching_apps, error)
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show()

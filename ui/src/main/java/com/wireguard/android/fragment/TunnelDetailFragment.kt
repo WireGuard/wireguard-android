@@ -18,6 +18,9 @@ import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
 
@@ -79,7 +82,13 @@ class TunnelDetailFragment : BaseFragment() {
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
         binding!!.tunnel = newTunnel
-        if (newTunnel == null) binding!!.config = null else newTunnel.configAsync.thenAccept { config -> binding!!.config = config }
+        if (newTunnel == null) binding!!.config = null else GlobalScope.launch(Dispatchers.Main.immediate) {
+            try {
+                binding!!.config = newTunnel.getConfigAsync()
+            } catch (_: Throwable) {
+                binding!!.config = null
+            }
+        }
         lastState = Tunnel.State.TOGGLE
         updateStats()
     }
@@ -105,30 +114,31 @@ class TunnelDetailFragment : BaseFragment() {
         val state = tunnel.state
         if (state != Tunnel.State.UP && lastState == state) return
         lastState = state
-        tunnel.statisticsAsync.whenComplete { statistics, throwable ->
-            if (throwable != null) {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            try {
+                val statistics = tunnel.getStatisticsAsync()
+                for (i in 0 until binding!!.peersLayout.childCount) {
+                    val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding!!.peersLayout.getChildAt(i))
+                            ?: continue
+                    val publicKey = peer.item!!.publicKey
+                    val rx = statistics.peerRx(publicKey)
+                    val tx = statistics.peerTx(publicKey)
+                    if (rx == 0L && tx == 0L) {
+                        peer.transferLabel.visibility = View.GONE
+                        peer.transferText.visibility = View.GONE
+                        continue
+                    }
+                    peer.transferText.text = requireContext().getString(R.string.transfer_rx_tx, formatBytes(rx), formatBytes(tx))
+                    peer.transferLabel.visibility = View.VISIBLE
+                    peer.transferText.visibility = View.VISIBLE
+                }
+            } catch (e: Throwable) {
                 for (i in 0 until binding!!.peersLayout.childCount) {
                     val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding!!.peersLayout.getChildAt(i))
                             ?: continue
                     peer.transferLabel.visibility = View.GONE
                     peer.transferText.visibility = View.GONE
                 }
-                return@whenComplete
-            }
-            for (i in 0 until binding!!.peersLayout.childCount) {
-                val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding!!.peersLayout.getChildAt(i))
-                        ?: continue
-                val publicKey = peer.item!!.publicKey
-                val rx = statistics.peerRx(publicKey)
-                val tx = statistics.peerTx(publicKey)
-                if (rx == 0L && tx == 0L) {
-                    peer.transferLabel.visibility = View.GONE
-                    peer.transferText.visibility = View.GONE
-                    continue
-                }
-                peer.transferText.text = requireContext().getString(R.string.transfer_rx_tx, formatBytes(rx), formatBytes(tx))
-                peer.transferLabel.visibility = View.VISIBLE
-                peer.transferText.visibility = View.VISIBLE
             }
         }
     }

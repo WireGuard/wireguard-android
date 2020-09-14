@@ -21,6 +21,9 @@ import com.wireguard.android.activity.TunnelToggleActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.widget.SlashDrawable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Service that maintains the application's custom Quick Settings tile. This service is bound by the
@@ -40,7 +43,7 @@ class QuickTileService : TileService() {
         var ret: IBinder? = null
         try {
             ret = super.onBind(intent)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d(TAG, "Failed to bind to TileService", e)
         }
         return ret
@@ -54,11 +57,12 @@ class QuickTileService : TileService() {
                     tile.icon = if (tile.icon == iconOn) iconOff else iconOn
                     tile.updateTile()
                 }
-                tunnel!!.setStateAsync(Tunnel.State.TOGGLE).whenComplete { _, t ->
-                    if (t == null) {
+                GlobalScope.launch(Dispatchers.Main.immediate) {
+                    try {
+                        tunnel!!.setStateAsync(Tunnel.State.TOGGLE)
                         updateTile()
-                    } else {
-                        val toggleIntent = Intent(this, TunnelToggleActivity::class.java)
+                    } catch (_: Throwable) {
+                        val toggleIntent = Intent(this@QuickTileService, TunnelToggleActivity::class.java)
                         toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(toggleIntent)
                     }

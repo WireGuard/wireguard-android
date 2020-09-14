@@ -8,19 +8,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.WgQuickBackend
-import com.wireguard.android.util.ExceptionLoggers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BootShutdownReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Application.getBackendAsync().thenAccept { backend: Backend? ->
-            if (backend !is WgQuickBackend) return@thenAccept
-            val action = intent.action ?: return@thenAccept
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            if (Application.getBackend() !is WgQuickBackend) return@launch
+            val action = intent.action ?: return@launch
             val tunnelManager = Application.getTunnelManager()
             if (Intent.ACTION_BOOT_COMPLETED == action) {
                 Log.i(TAG, "Broadcast receiver restoring state (boot)")
-                tunnelManager.restoreState(false).whenComplete(ExceptionLoggers.D)
+                tunnelManager.restoreState(false)
             } else if (Intent.ACTION_SHUTDOWN == action) {
                 Log.i(TAG, "Broadcast receiver saving state (shutdown)")
                 tunnelManager.saveState()

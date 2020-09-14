@@ -42,6 +42,7 @@ import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.crypto.KeyPair
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,7 +68,7 @@ class LogViewerActivity : AppCompatActivity() {
     private var rawLogLines = StringBuffer()
     private var recyclerView: RecyclerView? = null
     private var saveButton: MenuItem? = null
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private val logStreamingScope = CoroutineScope(Dispatchers.IO)
     private val year by lazy {
         val yearFormatter: DateFormat = SimpleDateFormat("yyyy", Locale.US)
         yearFormatter.format(Date())
@@ -114,7 +115,7 @@ class LogViewerActivity : AppCompatActivity() {
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
 
-        coroutineScope.launch { streamingLog() }
+        logStreamingScope.launch { streamingLog() }
 
         binding.shareFab.setOnClickListener {
             revokeLastUri()
@@ -131,6 +132,11 @@ class LogViewerActivity : AppCompatActivity() {
             grantUriPermission("android", lastUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivityForResult(shareIntent, SHARE_ACTIVITY_REQUEST)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        logStreamingScope.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -153,27 +159,21 @@ class LogViewerActivity : AppCompatActivity() {
                 true
             }
             R.id.save_log -> {
-                coroutineScope.launch { saveLog() }
+                GlobalScope.launch { saveLog() }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        coroutineScope.cancel()
-    }
-
     private suspend fun saveLog() {
-        val context = this
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main.immediate) {
             saveButton?.isEnabled = false
             withContext(Dispatchers.IO) {
                 var exception: Throwable? = null
                 var outputFile: DownloadsFileSaver.DownloadsFile? = null
                 try {
-                    outputFile = DownloadsFileSaver.save(context, "wireguard-log.txt", "text/plain", true)
+                    outputFile = DownloadsFileSaver.save(this@LogViewerActivity, "wireguard-log.txt", "text/plain", true)
                     outputFile.outputStream.use {
                         it.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
                     }
@@ -181,7 +181,7 @@ class LogViewerActivity : AppCompatActivity() {
                     outputFile?.delete()
                     exception = e
                 }
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main.immediate) {
                     saveButton?.isEnabled = true
                     Snackbar.make(findViewById(android.R.id.content),
                             if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
@@ -212,7 +212,7 @@ class LogViewerActivity : AppCompatActivity() {
             rawLogLines.append(line)
             rawLogLines.append('\n')
             val logLine = parseLine(line)
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main.immediate) {
                 if (logLine != null) {
                     recyclerView?.let {
                         val shouldScroll = haveScrolled && !it.canScrollVertically(1)
@@ -348,7 +348,7 @@ class LogViewerActivity : AppCompatActivity() {
             return openPipeHelper(uri, "text/plain", null, log) { output, _, _, _, l ->
                 try {
                     FileOutputStream(output.fileDescriptor).write(l!!)
-                } catch (_: Exception) {
+                } catch (_: Throwable) {
                 }
             }
         }

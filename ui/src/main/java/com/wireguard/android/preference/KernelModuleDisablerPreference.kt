@@ -8,22 +8,28 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import android.util.Log
 import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.backend.WgQuickBackend
-import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
 
 class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var state = State.UNKNOWN
-
     init {
         isVisible = false
-        Application.getBackendAsync().thenAccept { backend ->
-            setState(if (backend is WgQuickBackend) State.ENABLED else State.DISABLED)
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            setState(if (Application.getBackend() is WgQuickBackend) State.ENABLED else State.DISABLED)
         }
     }
 
@@ -40,17 +46,21 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
             setState(State.DISABLING)
             Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).commit()
         }
-        Application.getAsyncWorker().runAsync {
-            Application.getTunnelManager().tunnels.thenApply { observableTunnels ->
-                val downings = observableTunnels.map { it.setStateAsync(Tunnel.State.DOWN).toCompletableFuture() }.toTypedArray()
-                CompletableFuture.allOf(*downings).thenRun {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            val observableTunnels = Application.getTunnelManager().getTunnels()
+                val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
+            try {
+                downings.awaitAll()
+                withContext(Dispatchers.IO) {
                     val restartIntent = Intent(context, SettingsActivity::class.java)
                     restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     Application.get().startActivity(restartIntent)
                     exitProcess(0)
                 }
-            }.join()
+            } catch (e: Throwable) {
+                Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+            }
         }
     }
 
@@ -68,5 +78,9 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
         DISABLED(R.string.module_disabler_disabled_title, R.string.module_disabler_disabled_summary, true, true),
         ENABLING(R.string.module_disabler_disabled_title, R.string.success_application_will_restart, false, true),
         DISABLING(R.string.module_disabler_enabled_title, R.string.success_application_will_restart, false, true);
+    }
+
+    companion object {
+        private const val TAG = "WireGuard/KernelModuleDisablerPreference"
     }
 }

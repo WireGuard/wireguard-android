@@ -36,7 +36,14 @@ import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.Config
-import java9.util.concurrent.CompletableFuture
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -61,108 +68,96 @@ class TunnelListFragment : BaseFragment() {
 
             // Config text is valid, now create the tunnel…
             newInstance(configText).show(parentFragmentManager, null)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
         }
     }
 
     private fun importTunnel(uri: Uri?) {
-        val activity = activity
-        if (activity == null || uri == null) {
-            return
-        }
-        val contentResolver = activity.contentResolver
-
-        val futureTunnels = ArrayList<CompletableFuture<ObservableTunnel>>()
-        val throwables = ArrayList<Throwable>()
-        Application.getAsyncWorker().supplyAsync {
-            val columns = arrayOf(OpenableColumns.DISPLAY_NAME)
-            var name = ""
-            contentResolver.query(uri, columns, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst() && !cursor.isNull(0)) {
-                    name = cursor.getString(0)
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            withContext(Dispatchers.IO) {
+                val activity = activity
+                if (activity == null || uri == null) {
+                    return@withContext
                 }
-            }
-            if (name.isEmpty()) {
-                name = Uri.decode(uri.lastPathSegment)
-            }
-            var idx = name.lastIndexOf('/')
-            if (idx >= 0) {
-                require(idx < name.length - 1) { resources.getString(R.string.illegal_filename_error, name) }
-                name = name.substring(idx + 1)
-            }
-            val isZip = name.toLowerCase(Locale.ROOT).endsWith(".zip")
-            if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
-                name = name.substring(0, name.length - ".conf".length)
-            } else {
-                require(isZip) { resources.getString(R.string.bad_extension_error) }
-            }
+                val contentResolver = activity.contentResolver
+                val futureTunnels = ArrayList<Deferred<ObservableTunnel>>()
+                val throwables = ArrayList<Throwable>()
+                try {
+                    val columns = arrayOf(OpenableColumns.DISPLAY_NAME)
+                    var name = ""
+                    contentResolver.query(uri, columns, null, null, null)?.use { cursor ->
+                        if (cursor.moveToFirst() && !cursor.isNull(0)) {
+                            name = cursor.getString(0)
+                        }
+                    }
+                    if (name.isEmpty()) {
+                        name = Uri.decode(uri.lastPathSegment)
+                    }
+                    var idx = name.lastIndexOf('/')
+                    if (idx >= 0) {
+                        require(idx < name.length - 1) { resources.getString(R.string.illegal_filename_error, name) }
+                        name = name.substring(idx + 1)
+                    }
+                    val isZip = name.toLowerCase(Locale.ROOT).endsWith(".zip")
+                    if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
+                        name = name.substring(0, name.length - ".conf".length)
+                    } else {
+                        require(isZip) { resources.getString(R.string.bad_extension_error) }
+                    }
 
-            if (isZip) {
-                ZipInputStream(contentResolver.openInputStream(uri)).use { zip ->
-                    val reader = BufferedReader(InputStreamReader(zip, StandardCharsets.UTF_8))
-                    var entry: ZipEntry?
-                    while (true) {
-                        entry = zip.nextEntry ?: break
-                        name = entry.name
-                        idx = name.lastIndexOf('/')
-                        if (idx >= 0) {
-                            if (idx >= name.length - 1) {
-                                continue
+                    if (isZip) {
+                        ZipInputStream(contentResolver.openInputStream(uri)).use { zip ->
+                            val reader = BufferedReader(InputStreamReader(zip, StandardCharsets.UTF_8))
+                            var entry: ZipEntry?
+                            while (true) {
+                                entry = zip.nextEntry ?: break
+                                name = entry.name
+                                idx = name.lastIndexOf('/')
+                                if (idx >= 0) {
+                                    if (idx >= name.length - 1) {
+                                        continue
+                                    }
+                                    name = name.substring(name.lastIndexOf('/') + 1)
+                                }
+                                if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
+                                    name = name.substring(0, name.length - ".conf".length)
+                                } else {
+                                    continue
+                                }
+                                try {
+                                    Config.parse(reader)
+                                } catch (e: Throwable) {
+                                    throwables.add(e)
+                                    null
+                                }?.let {
+                                    val nameCopy = name
+                                    futureTunnels.add(async(SupervisorJob()) { Application.getTunnelManager().create(nameCopy, it) })
+                                }
                             }
-                            name = name.substring(name.lastIndexOf('/') + 1)
                         }
-                        if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
-                            name = name.substring(0, name.length - ".conf".length)
+                    } else {
+                        futureTunnels.add(async(SupervisorJob()) { Application.getTunnelManager().create(name, Config.parse(contentResolver.openInputStream(uri)!!)) })
+                    }
+
+                    if (futureTunnels.isEmpty()) {
+                        if (throwables.size == 1) {
+                            throw throwables[0]
                         } else {
-                            continue
+                            require(throwables.isNotEmpty()) { resources.getString(R.string.no_configs_error) }
                         }
+                    }
+                    val tunnels = futureTunnels.mapNotNull {
                         try {
-                            Config.parse(reader)
-                        } catch (e: Exception) {
-                            throwables.add(e)
-                            null
-                        }?.let {
-                            futureTunnels.add(Application.getTunnelManager().create(name, it).toCompletableFuture())
-                        }
-                    }
-                }
-            } else {
-                futureTunnels.add(
-                        Application.getTunnelManager().create(
-                                name,
-                                Config.parse(contentResolver.openInputStream(uri)!!)
-                        ).toCompletableFuture()
-                )
-            }
-
-            if (futureTunnels.isEmpty()) {
-                if (throwables.size == 1) {
-                    throw throwables[0]
-                } else {
-                    require(throwables.isNotEmpty()) { resources.getString(R.string.no_configs_error) }
-                }
-            }
-            CompletableFuture.allOf(*futureTunnels.toTypedArray())
-        }.whenComplete { future, exception ->
-            if (exception != null) {
-                onTunnelImportFinished(emptyList(), listOf(exception))
-            } else {
-                future.whenComplete { _, _ ->
-                    val tunnels = mutableListOf<ObservableTunnel>()
-                    for (futureTunnel in futureTunnels) {
-                        val tunnel: ObservableTunnel? = try {
-                            futureTunnel.getNow(null)
-                        } catch (e: Exception) {
+                            it.await()
+                        } catch (e: Throwable) {
                             throwables.add(e)
                             null
                         }
-
-                        if (tunnel != null) {
-                            tunnels.add(tunnel)
-                        }
                     }
-                    onTunnelImportFinished(tunnels, throwables)
+                    withContext(Dispatchers.Main.immediate) { onTunnelImportFinished(tunnels, throwables) }
+                } catch (e: Throwable) {
+                    withContext(Dispatchers.Main.immediate) { onTunnelImportFinished(emptyList(), listOf(e)) }
                 }
             }
         }
@@ -226,7 +221,8 @@ class TunnelListFragment : BaseFragment() {
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
-        Application.getTunnelManager().tunnels.thenAccept { tunnels ->
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            val tunnels = Application.getTunnelManager().getTunnels()
             if (newTunnel != null) viewForTunnel(newTunnel, tunnels).setSingleSelected(true)
             if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels).setSingleSelected(false)
         }
@@ -268,11 +264,10 @@ class TunnelListFragment : BaseFragment() {
         super.onViewStateRestored(savedInstanceState)
         binding ?: return
         binding!!.fragment = this
-        Application.getTunnelManager().tunnels.thenAccept { tunnels -> binding!!.tunnels = tunnels }
-        val parent = this
+        GlobalScope.launch(Dispatchers.Main.immediate) { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
         binding!!.rowConfigurationHandler = object : RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TunnelListItemBinding, item: ObservableTunnel, position: Int) {
-                binding.fragment = parent
+                binding.fragment = this@TunnelListFragment
                 binding.root.setOnClickListener {
                     if (actionMode == null) {
                         selectedTunnel = item
@@ -321,20 +316,24 @@ class TunnelListFragment : BaseFragment() {
                         scaleX = 1f
                         scaleY = 1f
                     }
-                    Application.getTunnelManager().tunnels.thenAccept { tunnels ->
-                        val tunnelsToDelete = ArrayList<ObservableTunnel>()
-                        for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
-                        val futures = tunnelsToDelete.map { it.delete().toCompletableFuture() }.toTypedArray()
-                        CompletableFuture.allOf(*futures)
-                                .thenApply { futures.size }
-                                .whenComplete(this@TunnelListFragment::onTunnelDeletionFinished)
+                    GlobalScope.launch(Dispatchers.Main.immediate) {
+                        try {
+                            val tunnels = Application.getTunnelManager().getTunnels()
+                            val tunnelsToDelete = ArrayList<ObservableTunnel>()
+                            for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
+                            val futures = tunnelsToDelete.map { async(SupervisorJob()) { it.deleteAsync() } }
+                            onTunnelDeletionFinished(futures.awaitAll().size, null)
+                        } catch (e: Throwable) {
+                            onTunnelDeletionFinished(0, e)
+                        }
                     }
                     checkedItems.clear()
                     mode.finish()
                     true
                 }
                 R.id.menu_action_select_all -> {
-                    Application.getTunnelManager().tunnels.thenAccept { tunnels ->
+                    GlobalScope.launch(Dispatchers.Main.immediate) {
+                        val tunnels = Application.getTunnelManager().getTunnels()
                         for (i in 0 until tunnels.size) {
                             setItemChecked(i, true)
                         }

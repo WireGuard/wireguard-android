@@ -158,7 +158,7 @@ object BindingAdapters {
             return 0
         return try {
             Integer.parseInt(s)
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             0
         }
     }

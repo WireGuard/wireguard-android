@@ -4,16 +4,18 @@
  */
 package com.wireguard.android.model
 
+import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.BR
 import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.Keyed
-import com.wireguard.android.util.ExceptionLoggers
 import com.wireguard.config.Config
-import java9.util.concurrent.CompletableFuture
-import java9.util.concurrent.CompletionStage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Encapsulates the volatile and nonvolatile state of a WireGuard tunnel.
@@ -30,10 +32,12 @@ class ObservableTunnel internal constructor(
     @Bindable
     override fun getName() = name
 
-    fun setNameAsync(name: String): CompletionStage<String> = if (name != this.name)
-        manager.setTunnelName(this, name)
-    else
-        CompletableFuture.completedFuture(this.name)
+    suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
+        if (name != this@ObservableTunnel.name)
+            manager.setTunnelName(this@ObservableTunnel, name)
+        else
+            this@ObservableTunnel.name
+    }
 
     fun onNameChanged(name: String): String {
         this.name = name
@@ -57,31 +61,42 @@ class ObservableTunnel internal constructor(
         return state
     }
 
-    fun setStateAsync(state: Tunnel.State): CompletionStage<Tunnel.State> = if (state != this.state)
-        manager.setTunnelState(this, state)
-    else
-        CompletableFuture.completedFuture(this.state)
+    suspend fun setStateAsync(state: Tunnel.State): Tunnel.State = withContext(Dispatchers.Main.immediate) {
+        if (state != this@ObservableTunnel.state)
+            manager.setTunnelState(this@ObservableTunnel, state)
+        else
+            this@ObservableTunnel.state
+    }
 
 
     @get:Bindable
     var config = config
         get() {
             if (field == null)
-                manager.getTunnelConfig(this).whenComplete(ExceptionLoggers.E)
+                // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
+                GlobalScope.launch(Dispatchers.Main.immediate) {
+                    try {
+                        manager.getTunnelConfig(this@ObservableTunnel)
+                    } catch (e: Throwable) {
+                        Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                    }
+                }
             return field
         }
         private set
 
-    val configAsync: CompletionStage<Config>
-        get() = if (config == null)
-            manager.getTunnelConfig(this)
-        else
-            CompletableFuture.completedFuture(config)
+    suspend fun getConfigAsync(): Config = withContext(Dispatchers.Main.immediate) {
+        config ?: manager.getTunnelConfig(this@ObservableTunnel)
+    }
 
-    fun setConfigAsync(config: Config): CompletionStage<Config> = if (config != this.config)
-        manager.setTunnelConfig(this, config)
-    else
-        CompletableFuture.completedFuture(this.config)
+    suspend fun setConfigAsync(config: Config): Config = withContext(Dispatchers.Main.immediate) {
+        this@ObservableTunnel.config.let {
+            if (config != it)
+                manager.setTunnelConfig(this@ObservableTunnel, config)
+            else
+                it
+        }
+    }
 
     fun onConfigChanged(config: Config?): Config? {
         this.config = config
@@ -94,16 +109,26 @@ class ObservableTunnel internal constructor(
     var statistics: Statistics? = null
         get() {
             if (field == null || field?.isStale != false)
-                manager.getTunnelStatistics(this).whenComplete(ExceptionLoggers.E)
+                // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
+                GlobalScope.launch(Dispatchers.Main.immediate) {
+                    try {
+                        manager.getTunnelStatistics(this@ObservableTunnel)
+                    } catch (e: Throwable) {
+                        Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                    }
+                }
             return field
         }
         private set
 
-    val statisticsAsync: CompletionStage<Statistics>
-        get() = if (statistics == null || statistics?.isStale != false)
-            manager.getTunnelStatistics(this)
-        else
-            CompletableFuture.completedFuture(statistics)
+    suspend fun getStatisticsAsync(): Statistics = withContext(Dispatchers.Main.immediate) {
+        statistics.let {
+            if (it == null || it.isStale)
+                manager.getTunnelStatistics(this@ObservableTunnel)
+            else
+                it
+        }
+    }
 
     fun onStatisticsChanged(statistics: Statistics?): Statistics? {
         this.statistics = statistics
@@ -112,5 +137,10 @@ class ObservableTunnel internal constructor(
     }
 
 
-    fun delete(): CompletionStage<Void> = manager.delete(this)
+    suspend fun deleteAsync() = manager.delete(this)
+
+
+    companion object {
+        private const val TAG = "WireGuard/ObservableTunnel"
+    }
 }

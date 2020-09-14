@@ -17,13 +17,15 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.BaseActivity
 import com.wireguard.android.activity.BaseActivity.OnSelectedTunnelChangedListener
-import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -70,14 +72,14 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
             is TunnelListItemBinding -> binding.item
             else -> return
         } ?: return
-        Application.getBackendAsync().thenAccept { backend: Backend? ->
-            if (backend is GoBackend) {
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            if (Application.getBackend() is GoBackend) {
                 val intent = GoBackend.VpnService.prepare(view.context)
                 if (intent != null) {
                     pendingTunnel = tunnel
                     pendingTunnelUp = checked
                     startActivityForResult(intent, REQUEST_CODE_VPN_PERMISSION)
-                    return@thenAccept
+                    return@launch
                 }
             }
             setTunnelStateWithPermissionsResult(tunnel, checked)
@@ -85,19 +87,22 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
-        tunnel.setStateAsync(Tunnel.State.of(checked)).whenComplete { _, throwable ->
-            if (throwable == null) return@whenComplete
-            val error = ErrorMessages[throwable]
-            val messageResId = if (checked) R.string.error_up else R.string.error_down
-            val message = requireContext().getString(messageResId, error)
-            val view = view
-            if (view != null)
-                Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-                        .setAnchorView(view.findViewById<View>(R.id.create_fab))
-                        .show()
-            else
-                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-            Log.e(TAG, message, throwable)
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            try {
+                tunnel.setStateAsync(Tunnel.State.of(checked))
+            } catch (e: Throwable) {
+                val error = ErrorMessages[e]
+                val messageResId = if (checked) R.string.error_up else R.string.error_down
+                val message = requireContext().getString(messageResId, error)
+                val view = view
+                if (view != null)
+                    Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                            .setAnchorView(view.findViewById<View>(R.id.create_fab))
+                            .show()
+                else
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                Log.e(TAG, message, e)
+            }
         }
     }
 
