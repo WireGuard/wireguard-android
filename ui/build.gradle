@@ -24,6 +24,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
     }
     if (keystorePropertiesFile.exists()) {
         final def keystoreProperties = new Properties()
@@ -69,6 +70,7 @@ dependencies {
     implementation "com.journeyapps:zxing-android-embedded:$zxingEmbeddedVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarVersion"
 }
 
 tasks.withType(JavaCompile) {

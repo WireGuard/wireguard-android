@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
-import java9.util.Optional;
 
 /**
  * Represents the configuration for a WireGuard peer (a [Peer] block). Peers must have a public key,

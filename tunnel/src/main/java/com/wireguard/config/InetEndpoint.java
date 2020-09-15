@@ -7,18 +7,17 @@ package com.wireguard.config;
 
 import com.wireguard.util.NonNullForAll;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
-import java9.util.Optional;
 
 
 /**
