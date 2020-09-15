@@ -13,6 +13,12 @@ import com.google.android.material.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
+/* Is this no longer necessary?
+ * https://github.com/material-components/material-components-android/pull/1163 was merged via
+ * https://github.com/material-components/material-components-android/commit/22973ff10305397bfc72fed41684175fee8aeefb .
+ * It would seem like we can now set expandedHintEnabled=false
+ * TODO: when a new material-components library comes out, switch to expandedHintEnabled=false.
+ */
 class MonkeyedTextInputEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.editTextStyle) : TextInputEditText(context, attrs, defStyleAttr) {
     @Override
     override fun getText(): Editable? {
