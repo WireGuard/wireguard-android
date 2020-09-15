@@ -221,7 +221,7 @@ class TunnelListFragment : BaseFragment() {
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        GlobalScope.launch(Dispatchers.Main) {
             val tunnels = Application.getTunnelManager().getTunnels()
             if (newTunnel != null) viewForTunnel(newTunnel, tunnels).setSingleSelected(true)
             if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels).setSingleSelected(false)
