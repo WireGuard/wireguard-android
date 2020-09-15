@@ -18,7 +18,6 @@ import com.wireguard.android.QuickTileService
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ErrorMessages
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -26,7 +25,7 @@ class TunnelToggleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 tunnel.setStateAsync(Tunnel.State.TOGGLE)
             } catch (e: Throwable) {

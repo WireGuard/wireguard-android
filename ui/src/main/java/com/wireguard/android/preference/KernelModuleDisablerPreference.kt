@@ -28,7 +28,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
     private var state = State.UNKNOWN
     init {
         isVisible = false
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             setState(if (Application.getBackend() is WgQuickBackend) State.ENABLED else State.DISABLED)
         }
     }
@@ -46,7 +46,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
             setState(State.DISABLING)
             Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).commit()
         }
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             val observableTunnels = Application.getTunnelManager().getTunnels()
                 val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
             try {

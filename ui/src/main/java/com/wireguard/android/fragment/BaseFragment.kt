@@ -24,7 +24,6 @@ import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -72,7 +71,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
             is TunnelListItemBinding -> binding.item
             else -> return
         } ?: return
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             if (Application.getBackend() is GoBackend) {
                 val intent = GoBackend.VpnService.prepare(view.context)
                 if (intent != null) {
@@ -87,7 +86,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 tunnel.setStateAsync(Tunnel.State.of(checked))
             } catch (e: Throwable) {

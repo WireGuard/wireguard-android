@@ -17,7 +17,6 @@ import com.wireguard.android.R
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -31,7 +30,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private fun createTunnelAndDismiss() {
         binding?.let {
             val name = it.tunnelNameText.text.toString()
-            lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch {
                 try {
                     Application.getTunnelManager().create(name, config)
                     dismiss()

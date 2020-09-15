@@ -35,7 +35,7 @@ import java.util.zip.ZipOutputStream
 class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var exportedFilePath: String? = null
     private fun exportZip() {
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             val tunnels = Application.getTunnelManager().getTunnels()
             try {
                 exportedFilePath = withContext(Dispatchers.IO) {

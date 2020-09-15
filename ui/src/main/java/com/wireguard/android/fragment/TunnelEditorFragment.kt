@@ -33,7 +33,6 @@ import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.config.Config
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -141,7 +140,7 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
                 Snackbar.make(binding!!.mainContainer, error, Snackbar.LENGTH_LONG).show()
                 return false
             }
-            lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch {
                 when {
                     tunnel == null -> {
                         Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
@@ -205,7 +204,7 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
         binding!!.config = ConfigProxy()
         if (tunnel != null) {
             binding!!.name = tunnel!!.name
-            lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch {
                 try {
                     onConfigLoaded(tunnel!!.getConfigAsync())
                 } catch (_: Throwable) {
@@ -242,7 +241,7 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
             Log.d(TAG, message)
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel!!.name)
-            lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch {
                 try {
                     renamedTunnel.setConfigAsync(newConfig)
                     onConfigSaved(renamedTunnel, null)

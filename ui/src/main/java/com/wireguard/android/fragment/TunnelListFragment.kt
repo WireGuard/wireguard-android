@@ -74,7 +74,7 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private fun importTunnel(uri: Uri?) {
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val activity = activity
                 if (activity == null || uri == null) {
@@ -264,7 +264,7 @@ class TunnelListFragment : BaseFragment() {
         super.onViewStateRestored(savedInstanceState)
         binding ?: return
         binding!!.fragment = this
-        lifecycleScope.launch(Dispatchers.Main.immediate) { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
+        lifecycleScope.launch { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
         binding!!.rowConfigurationHandler = object : RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TunnelListItemBinding, item: ObservableTunnel, position: Int) {
                 binding.fragment = this@TunnelListFragment
@@ -316,7 +316,7 @@ class TunnelListFragment : BaseFragment() {
                         scaleX = 1f
                         scaleY = 1f
                     }
-                    lifecycleScope.launch(Dispatchers.Main.immediate) {
+                    lifecycleScope.launch {
                         try {
                             val tunnels = Application.getTunnelManager().getTunnels()
                             val tunnelsToDelete = ArrayList<ObservableTunnel>()
@@ -332,7 +332,7 @@ class TunnelListFragment : BaseFragment() {
                     true
                 }
                 R.id.menu_action_select_all -> {
-                    lifecycleScope.launch(Dispatchers.Main.immediate) {
+                    lifecycleScope.launch {
                         val tunnels = Application.getTunnelManager().getTunnels()
                         for (i in 0 until tunnels.size) {
                             setItemChecked(i, true)

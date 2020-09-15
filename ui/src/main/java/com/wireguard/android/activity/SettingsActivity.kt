@@ -102,7 +102,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                     preferenceManager.findPreference<Preference>("multiple_tunnels")
             ).filterNotNull()
             wgQuickOnlyPrefs.forEach { it.isVisible = false }
-            lifecycleScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch {
                 if (Application.getBackend() is WgQuickBackend) {
                     ++preferenceScreen.initialExpandedChildrenCount
                     wgQuickOnlyPrefs.forEach { it.isVisible = true }
@@ -121,7 +121,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 moduleInstaller?.parent?.removePreference(moduleInstaller)
             } else {
                 kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
-                lifecycleScope.launch(Dispatchers.Main.immediate) {
+                lifecycleScope.launch {
                     try {
                         withContext(Dispatchers.IO) { Application.getRootShell().start() }
                         moduleInstaller?.isVisible = true

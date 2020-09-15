@@ -27,7 +27,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
 
     override fun onAttached() {
         super.onAttached()
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 val state = withContext(Dispatchers.IO) { Application.getToolsInstaller().areInstalled() }
                 when {
@@ -45,7 +45,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
 
     override fun onClick() {
         setState(State.WORKING)
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) { Application.getToolsInstaller().install() }
                 when {

@@ -47,7 +47,7 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
     }
 
     init {
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             val backend = Application.getBackend()
             versionSummary = getContext().getString(R.string.version_summary_checking, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
             notifyChanged()

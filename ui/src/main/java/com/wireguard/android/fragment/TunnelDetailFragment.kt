@@ -19,7 +19,6 @@ import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
@@ -82,7 +81,7 @@ class TunnelDetailFragment : BaseFragment() {
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
         binding!!.tunnel = newTunnel
-        if (newTunnel == null) binding!!.config = null else lifecycleScope.launch(Dispatchers.Main.immediate) {
+        if (newTunnel == null) binding!!.config = null else lifecycleScope.launch {
             try {
                 binding!!.config = newTunnel.getConfigAsync()
             } catch (_: Throwable) {
@@ -114,7 +113,7 @@ class TunnelDetailFragment : BaseFragment() {
         val state = tunnel.state
         if (state != Tunnel.State.UP && lastState == state) return
         lastState = state
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 val statistics = tunnel.getStatisticsAsync()
                 for (i in 0 until binding!!.peersLayout.childCount) {

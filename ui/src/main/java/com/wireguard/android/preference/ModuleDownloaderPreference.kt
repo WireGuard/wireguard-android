@@ -30,7 +30,7 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
     @SuppressLint("ApplySharedPref")
     override fun onClick() {
         setState(State.WORKING)
-        lifecycleScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch {
             try {
                 when (withContext(Dispatchers.IO) { Application.getModuleLoader().download() }) {
                     OsConstants.ENOENT -> setState(State.NOTFOUND)
