@@ -15,8 +15,8 @@ import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -28,7 +28,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
     private var state = State.UNKNOWN
     init {
         isVisible = false
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             setState(if (Application.getBackend() is WgQuickBackend) State.ENABLED else State.DISABLED)
         }
     }
@@ -46,7 +46,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
             setState(State.DISABLING)
             Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).commit()
         }
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             val observableTunnels = Application.getTunnelManager().getTunnels()
                 val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
             try {

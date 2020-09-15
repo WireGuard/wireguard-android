@@ -10,8 +10,8 @@ import androidx.preference.Preference
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.util.ToolsInstaller
+import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -27,7 +27,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
 
     override fun onAttached() {
         super.onAttached()
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             try {
                 val state = withContext(Dispatchers.IO) { Application.getToolsInstaller().areInstalled() }
                 when {
@@ -45,7 +45,7 @@ class ToolsInstallerPreference(context: Context, attrs: AttributeSet?) : Prefere
 
     override fun onClick() {
         setState(State.WORKING)
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             try {
                 val result = withContext(Dispatchers.IO) { Application.getToolsInstaller().install() }
                 when {

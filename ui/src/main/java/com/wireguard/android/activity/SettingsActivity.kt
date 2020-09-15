@@ -12,6 +12,7 @@ import android.util.SparseArray
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.wireguard.android.Application
@@ -20,7 +21,6 @@ import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ModuleLoader
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
@@ -102,7 +102,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                     preferenceManager.findPreference<Preference>("multiple_tunnels")
             ).filterNotNull()
             wgQuickOnlyPrefs.forEach { it.isVisible = false }
-            GlobalScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch(Dispatchers.Main.immediate) {
                 if (Application.getBackend() is WgQuickBackend) {
                     ++preferenceScreen.initialExpandedChildrenCount
                     wgQuickOnlyPrefs.forEach { it.isVisible = true }
@@ -121,7 +121,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
                 moduleInstaller?.parent?.removePreference(moduleInstaller)
             } else {
                 kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
-                GlobalScope.launch(Dispatchers.Main.immediate) {
+                lifecycleScope.launch(Dispatchers.Main.immediate) {
                     try {
                         withContext(Dispatchers.IO) { Application.getRootShell().start() }
                         moduleInstaller?.isVisible = true

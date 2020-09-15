@@ -11,6 +11,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
@@ -19,7 +20,6 @@ import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
@@ -82,7 +82,7 @@ class TunnelDetailFragment : BaseFragment() {
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
         binding!!.tunnel = newTunnel
-        if (newTunnel == null) binding!!.config = null else GlobalScope.launch(Dispatchers.Main.immediate) {
+        if (newTunnel == null) binding!!.config = null else lifecycleScope.launch(Dispatchers.Main.immediate) {
             try {
                 binding!!.config = newTunnel.getConfigAsync()
             } catch (_: Throwable) {
@@ -114,7 +114,7 @@ class TunnelDetailFragment : BaseFragment() {
         val state = tunnel.state
         if (state != Tunnel.State.UP && lastState == state) return
         lastState = state
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             try {
                 val statistics = tunnel.getStatisticsAsync()
                 for (i in 0 until binding!!.peersLayout.childCount) {

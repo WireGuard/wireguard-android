@@ -17,9 +17,9 @@ import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.DownloadsFileSaver
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.util.FragmentUtils
+import com.wireguard.android.util.activity
+import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -35,7 +35,7 @@ import java.util.zip.ZipOutputStream
 class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var exportedFilePath: String? = null
     private fun exportZip() {
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             val tunnels = Application.getTunnelManager().getTunnels()
             try {
                 exportedFilePath = withContext(Dispatchers.IO) {
@@ -64,7 +64,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                 val message = context.getString(R.string.zip_export_error, error)
                 Log.e(TAG, message, e)
                 Snackbar.make(
-                        FragmentUtils.getPrefActivity(this@ZipExporterPreference).findViewById(android.R.id.content),
+                        activity.findViewById(android.R.id.content),
                         message, Snackbar.LENGTH_LONG).show()
                 isEnabled = true
             }
@@ -77,13 +77,12 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
 
     override fun onClick() {
         if (AdminKnobs.disableConfigExport) return
-        val prefActivity = FragmentUtils.getPrefActivity(this)
-        val fragment = prefActivity.supportFragmentManager.fragments.first()
+        val fragment = activity.supportFragmentManager.fragments.first()
         BiometricAuthenticator.authenticate(R.string.biometric_prompt_zip_exporter_title, fragment) {
             when (it) {
                 // When we have successful authentication, or when there is no biometric hardware available.
                 is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
-                    prefActivity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
+                    activity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
                         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                             isEnabled = false
                             exportZip()
@@ -92,7 +91,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                 }
                 is BiometricAuthenticator.Result.Failure -> {
                     Snackbar.make(
-                            prefActivity.findViewById(android.R.id.content),
+                            activity.findViewById(android.R.id.content),
                             it.message,
                             Snackbar.LENGTH_SHORT
                     ).show()

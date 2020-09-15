@@ -21,6 +21,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.Application
@@ -38,7 +39,6 @@ import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.Config
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -74,7 +74,7 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private fun importTunnel(uri: Uri?) {
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             withContext(Dispatchers.IO) {
                 val activity = activity
                 if (activity == null || uri == null) {
@@ -221,7 +221,7 @@ class TunnelListFragment : BaseFragment() {
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             val tunnels = Application.getTunnelManager().getTunnels()
             if (newTunnel != null) viewForTunnel(newTunnel, tunnels).setSingleSelected(true)
             if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels).setSingleSelected(false)
@@ -264,7 +264,7 @@ class TunnelListFragment : BaseFragment() {
         super.onViewStateRestored(savedInstanceState)
         binding ?: return
         binding!!.fragment = this
-        GlobalScope.launch(Dispatchers.Main.immediate) { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
+        lifecycleScope.launch(Dispatchers.Main.immediate) { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
         binding!!.rowConfigurationHandler = object : RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TunnelListItemBinding, item: ObservableTunnel, position: Int) {
                 binding.fragment = this@TunnelListFragment
@@ -316,7 +316,7 @@ class TunnelListFragment : BaseFragment() {
                         scaleX = 1f
                         scaleY = 1f
                     }
-                    GlobalScope.launch(Dispatchers.Main.immediate) {
+                    lifecycleScope.launch(Dispatchers.Main.immediate) {
                         try {
                             val tunnels = Application.getTunnelManager().getTunnels()
                             val tunnelsToDelete = ArrayList<ObservableTunnel>()
@@ -332,7 +332,7 @@ class TunnelListFragment : BaseFragment() {
                     true
                 }
                 R.id.menu_action_select_all -> {
-                    GlobalScope.launch(Dispatchers.Main.immediate) {
+                    lifecycleScope.launch(Dispatchers.Main.immediate) {
                         val tunnels = Application.getTunnelManager().getTunnels()
                         for (i in 0 until tunnels.size) {
                             setItemChecked(i, true)

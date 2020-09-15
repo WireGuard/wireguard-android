@@ -11,13 +11,13 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -31,7 +31,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private fun createTunnelAndDismiss() {
         binding?.let {
             val name = it.tunnelNameText.text.toString()
-            GlobalScope.launch(Dispatchers.Main.immediate) {
+            lifecycleScope.launch(Dispatchers.Main.immediate) {
                 try {
                     Application.getTunnelManager().create(name, config)
                     dismiss()

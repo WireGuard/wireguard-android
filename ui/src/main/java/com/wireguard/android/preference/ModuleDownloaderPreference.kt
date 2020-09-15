@@ -15,8 +15,8 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
@@ -30,21 +30,19 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
     @SuppressLint("ApplySharedPref")
     override fun onClick() {
         setState(State.WORKING)
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        lifecycleScope.launch(Dispatchers.Main.immediate) {
             try {
                 when (withContext(Dispatchers.IO) { Application.getModuleLoader().download() }) {
                     OsConstants.ENOENT -> setState(State.NOTFOUND)
                     OsConstants.EXIT_SUCCESS -> {
                         setState(State.SUCCESS)
                         Application.getSharedPreferences().edit().remove("disable_kernel_module").commit()
-                        GlobalScope.launch(Dispatchers.Main.immediate) {
-                            withContext(Dispatchers.IO) {
-                                val restartIntent = Intent(context, SettingsActivity::class.java)
-                                restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                Application.get().startActivity(restartIntent)
-                                exitProcess(0)
-                            }
+                        withContext(Dispatchers.IO) {
+                            val restartIntent = Intent(context, SettingsActivity::class.java)
+                            restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            Application.get().startActivity(restartIntent)
+                            exitProcess(0)
                         }
                     }
                     else -> setState(State.FAILURE)

@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,10 +41,7 @@ import com.wireguard.android.widget.EdgeToEdge.setUpFAB
 import com.wireguard.android.widget.EdgeToEdge.setUpRoot
 import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.crypto.KeyPair
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -68,7 +66,6 @@ class LogViewerActivity : AppCompatActivity() {
     private var rawLogLines = StringBuffer()
     private var recyclerView: RecyclerView? = null
     private var saveButton: MenuItem? = null
-    private val logStreamingScope = CoroutineScope(Dispatchers.IO)
     private val year by lazy {
         val yearFormatter: DateFormat = SimpleDateFormat("yyyy", Locale.US)
         yearFormatter.format(Date())
@@ -115,7 +112,7 @@ class LogViewerActivity : AppCompatActivity() {
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
 
-        logStreamingScope.launch { streamingLog() }
+        lifecycleScope.launch(Dispatchers.IO) { streamingLog() }
 
         binding.shareFab.setOnClickListener {
             revokeLastUri()
@@ -136,7 +133,6 @@ class LogViewerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        logStreamingScope.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -159,7 +155,7 @@ class LogViewerActivity : AppCompatActivity() {
                 true
             }
             R.id.save_log -> {
-                GlobalScope.launch { saveLog() }
+                lifecycleScope.launch(Dispatchers.IO) { saveLog() }
                 true
             }
             else -> super.onOptionsItemSelected(item)
