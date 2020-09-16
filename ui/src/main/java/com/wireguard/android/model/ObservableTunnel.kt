@@ -11,9 +11,9 @@ import com.wireguard.android.BR
 import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.Keyed
+import com.wireguard.android.util.applicationScope
 import com.wireguard.config.Config
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -74,7 +74,7 @@ class ObservableTunnel internal constructor(
         get() {
             if (field == null)
             // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
-                GlobalScope.launch(Dispatchers.Main.immediate) {
+                applicationScope.launch {
                     try {
                         manager.getTunnelConfig(this@ObservableTunnel)
                     } catch (e: Throwable) {
@@ -110,7 +110,7 @@ class ObservableTunnel internal constructor(
         get() {
             if (field == null || field?.isStale != false)
             // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
-                GlobalScope.launch(Dispatchers.Main.immediate) {
+                applicationScope.launch {
                     try {
                         manager.getTunnelStatistics(this@ObservableTunnel)
                     } catch (e: Throwable) {

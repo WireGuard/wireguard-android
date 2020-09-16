@@ -20,9 +20,8 @@ import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.activity.TunnelToggleActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.applicationScope
 import com.wireguard.android.widget.SlashDrawable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -57,7 +56,7 @@ class QuickTileService : TileService() {
                     tile.icon = if (tile.icon == iconOn) iconOff else iconOn
                     tile.updateTile()
                 }
-                GlobalScope.launch(Dispatchers.Main.immediate) {
+                applicationScope.launch {
                     try {
                         tunnel!!.setStateAsync(Tunnel.State.TOGGLE)
                         updateTile()
