@@ -5,13 +5,16 @@
 package com.wireguard.android.fragment
 
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.databinding.ConfigNamingDialogFragmentBinding
@@ -62,7 +65,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val activity = requireActivity()
-        imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm = activity.getSystemService()
         val alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setTitle(R.string.import_from_qr_code)
         binding = ConfigNamingDialogFragmentBinding.inflate(activity.layoutInflater, null, false)
@@ -72,7 +75,18 @@ class ConfigNamingDialogFragment : DialogFragment() {
         }
         alertDialogBuilder.setPositiveButton(R.string.create_tunnel, null)
         alertDialogBuilder.setNegativeButton(R.string.cancel) { _, _ -> dismiss() }
-        return alertDialogBuilder.create()
+        return alertDialogBuilder.create().apply {
+            setOnShowListener {
+                findViewById<TextInputEditText>(R.id.tunnel_name_text)?.apply {
+                    setOnFocusChangeListener { v, _ ->
+                        v.post {
+                            imm?.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT)
+                        }
+                    }
+                    requestFocus()
+                }
+            }
+        }
     }
 
     override fun onResume() {
