@@ -36,11 +36,20 @@ public interface Tunnel {
      */
     void onStateChange(State newState);
 
+    /**
+     * Enum class to represent all possible states of a {@link Tunnel}.
+     */
     enum State {
         DOWN,
         TOGGLE,
         UP;
 
+        /**
+         * Get the state of a {@link Tunnel}
+         *
+         * @param running boolean indicating if the tunnel is running.
+         * @return State of the tunnel based on whether or not it is running.
+         */
         public static State of(final boolean running) {
             return running ? UP : DOWN;
         }

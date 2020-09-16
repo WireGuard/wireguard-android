@@ -30,6 +30,7 @@ public interface Backend {
      *
      * @param tunnel The tunnel to examine the state of.
      * @return The state of the tunnel.
+     * @throws Exception Exception raised when retrieving tunnel's state.
      */
     Tunnel.State getState(Tunnel tunnel) throws Exception;
 
@@ -39,6 +40,7 @@ public interface Backend {
      *
      * @param tunnel The tunnel to retrieve statistics for.
      * @return The statistics for the tunnel.
+     * @throws Exception Exception raised when retrieving statistics.
      */
     Statistics getStatistics(Tunnel tunnel) throws Exception;
 
@@ -46,7 +48,7 @@ public interface Backend {
      * Determine version of underlying backend.
      *
      * @return The version of the backend.
-     * @throws Exception
+     * @throws Exception Exception raised while retrieving version.
      */
     String getVersion() throws Exception;
 
@@ -59,6 +61,7 @@ public interface Backend {
      *               {@code TOGGLE}.
      * @param config The configuration for this tunnel, may be null if state is {@code DOWN}.
      * @return The updated state of the tunnel.
+     * @throws Exception Exception raised while changing state.
      */
     Tunnel.State setState(Tunnel tunnel, Tunnel.State state, @Nullable Config config) throws Exception;
 }
