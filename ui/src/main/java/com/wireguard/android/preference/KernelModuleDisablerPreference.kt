@@ -59,7 +59,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
                     exitProcess(0)
                 }
             } catch (e: Throwable) {
-                Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                Log.e(TAG, Log.getStackTraceString(e))
             }
         }
     }

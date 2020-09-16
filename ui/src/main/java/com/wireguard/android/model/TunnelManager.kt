@@ -105,7 +105,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             try {
                 onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate() }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
             } catch (e: Throwable) {
-                Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                Log.e(TAG, Log.getStackTraceString(e))
             }
         }
     }
@@ -128,7 +128,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 for (tunnel in tunnelMap)
                     tunnel.onStateChanged(if (running.contains(tunnel.name)) Tunnel.State.UP else Tunnel.State.DOWN)
             } catch (e: Throwable) {
-                Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                Log.e(TAG, Log.getStackTraceString(e))
             }
         }
     }
@@ -144,7 +144,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 try {
                     tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }.awaitAll()
                 } catch (e: Throwable) {
-                    Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                    Log.e(TAG, Log.getStackTraceString(e))
                 }
             }
         }

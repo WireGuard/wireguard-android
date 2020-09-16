@@ -103,7 +103,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
                 backend = determineBackend()
                 futureBackend.complete(backend!!)
             } catch (e: Throwable) {
-                Log.println(Log.ERROR, TAG, Log.getStackTraceString(e))
+                Log.e(TAG, Log.getStackTraceString(e))
             }
         }
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
