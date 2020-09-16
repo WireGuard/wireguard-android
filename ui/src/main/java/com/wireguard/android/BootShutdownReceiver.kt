@@ -9,13 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.wireguard.android.backend.WgQuickBackend
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import com.wireguard.android.util.applicationScope
 import kotlinx.coroutines.launch
 
 class BootShutdownReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        applicationScope.launch {
             if (Application.getBackend() !is WgQuickBackend) return@launch
             val action = intent.action ?: return@launch
             val tunnelManager = Application.getTunnelManager()

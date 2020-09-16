@@ -24,14 +24,17 @@ import com.wireguard.android.util.ModuleLoader
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 import java.util.Locale
 
 class Application : android.app.Application(), OnSharedPreferenceChangeListener {
     private val futureBackend = CompletableDeferred<Backend>()
+    private val coroutineScope = CoroutineScope(Job() + Dispatchers.Main.immediate)
     private var backend: Backend? = null
     private lateinit var moduleLoader: ModuleLoader
     private lateinit var rootShell: RootShell
@@ -98,7 +101,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         }
         tunnelManager = TunnelManager(FileConfigStore(applicationContext))
         tunnelManager.onCreate()
-        GlobalScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(Dispatchers.IO) {
             try {
                 backend = determineBackend()
                 futureBackend.complete(backend!!)
@@ -116,6 +119,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
 
     override fun onTerminate() {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        coroutineScope.cancel()
         super.onTerminate()
     }
 
@@ -146,6 +150,9 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
 
         @JvmStatic
         fun getTunnelManager() = get().tunnelManager
+
+        @JvmStatic
+        fun getCoroutineScope() = get().coroutineScope
     }
 
     init {

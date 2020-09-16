@@ -22,10 +22,10 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
+import com.wireguard.android.util.applicationScope
 import com.wireguard.config.Config
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -101,7 +101,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     fun onCreate() {
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        applicationScope.launch {
             try {
                 onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate() }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
             } catch (e: Throwable) {
@@ -122,7 +122,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     private fun refreshTunnelStates() {
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        applicationScope.launch {
             try {
                 val running = withContext(Dispatchers.IO) { getBackend().runningTunnelNames }
                 for (tunnel in tunnelMap)
@@ -139,7 +139,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         val previouslyRunning = getSharedPreferences().getStringSet(KEY_RUNNING_TUNNELS, null)
                 ?: return
         if (previouslyRunning.isEmpty()) return
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        applicationScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }.awaitAll()
@@ -232,7 +232,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 else -> return
             }
             val tunnelName = intent.getStringExtra("tunnel") ?: return
-            GlobalScope.launch(Dispatchers.Main.immediate) {
+            applicationScope.launch {
                 val tunnels = manager.getTunnels()
                 val tunnel = tunnels[tunnelName] ?: return@launch
                 manager.setTunnelState(tunnel, state)
