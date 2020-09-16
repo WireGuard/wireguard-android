@@ -24,6 +24,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.content.res.ResourcesCompat
@@ -109,6 +110,10 @@ class LogViewerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) { streamingLog() }
 
+        val revokeLastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            revokeLastUri()
+        }
+
         binding.shareFab.setOnClickListener {
             revokeLastUri()
             val key = KeyPair().privateKey.toHex()
@@ -122,15 +127,8 @@ class LogViewerActivity : AppCompatActivity() {
                     .createChooserIntent()
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             grantUriPermission("android", lastUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            startActivityForResult(shareIntent, SHARE_ACTIVITY_REQUEST)
+            revokeLastActivityResultLauncher.launch(shareIntent)
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SHARE_ACTIVITY_REQUEST) {
-            revokeLastUri()
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -207,10 +205,10 @@ class LogViewerActivity : AppCompatActivity() {
                                 it.scrollToPosition(logLines.size - 1)
                         }
                     } else {
-                        /* I'd prefer for the next line to be:
-                     *    logLines.lastOrNull()?.msg += "\n$line"
-                     * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
-                     */
+                        /* TODO: I'd prefer for the next line to be:
+                         * logLines.lastOrNull()?.msg += "\n$line"
+                         * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
+                         */
                         logLines.lastOrNull()?.apply { msg += "\n$line" }
                         if (haveScrolled) logAdapter.notifyDataSetChanged()
                     }
@@ -259,7 +257,6 @@ class LogViewerActivity : AppCompatActivity() {
          */
         private val THREADTIME_LINE: Pattern = Pattern.compile("^(\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\s+[0-9A-Za-z]+)?\\s+(\\d+)\\s+(\\d+)\\s+([A-Z])\\s+(.+?)\\s*: (.*)$")
         private val LOGS: MutableMap<String, ByteArray> = ConcurrentHashMap()
-        private const val SHARE_ACTIVITY_REQUEST = 49133
     }
 
     private inner class LogEntryAdapter : RecyclerView.Adapter<LogEntryAdapter.ViewHolder>() {

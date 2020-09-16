@@ -5,10 +5,10 @@
 package com.wireguard.android.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -34,20 +34,20 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     private var baseActivity: BaseActivity? = null
     private var pendingTunnel: ObservableTunnel? = null
     private var pendingTunnelUp: Boolean? = null
+    private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val tunnel = pendingTunnel
+        val checked = pendingTunnelUp
+        if (tunnel != null && checked != null)
+            setTunnelStateWithPermissionsResult(tunnel, checked)
+        pendingTunnel = null
+        pendingTunnelUp = null
+    }
+
     protected var selectedTunnel: ObservableTunnel?
         get() = baseActivity?.selectedTunnel
         protected set(tunnel) {
             baseActivity?.selectedTunnel = tunnel
         }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_VPN_PERMISSION) {
-            if (pendingTunnel != null && pendingTunnelUp != null) setTunnelStateWithPermissionsResult(pendingTunnel!!, pendingTunnelUp!!)
-            pendingTunnel = null
-            pendingTunnelUp = null
-        }
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -77,7 +77,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                 if (intent != null) {
                     pendingTunnel = tunnel
                     pendingTunnelUp = checked
-                    startActivityForResult(intent, REQUEST_CODE_VPN_PERMISSION)
+                    permissionActivityResultLauncher.launch(intent)
                     return@launch
                 }
             }
@@ -96,7 +96,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                 val view = view
                 if (view != null)
                     Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-                            .setAnchorView(view.findViewById<View>(R.id.create_fab))
+                            .setAnchorView(view.findViewById(R.id.create_fab))
                             .show()
                 else
                     Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
@@ -106,7 +106,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     companion object {
-        private const val REQUEST_CODE_VPN_PERMISSION = 23491
         private const val TAG = "WireGuard/BaseFragment"
     }
 }
