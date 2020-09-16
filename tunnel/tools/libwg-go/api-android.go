@@ -172,7 +172,7 @@ func wgGetSocketV6(tunnelHandle int32) int32 {
 	if bind == nil {
 		return -1
 	}
-	fd, err := bind.PeekLookAtSocketFd4()
+	fd, err := bind.PeekLookAtSocketFd6()
 	if err != nil {
 		return -1
 	}
