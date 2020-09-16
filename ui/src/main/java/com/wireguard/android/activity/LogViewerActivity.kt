@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,20 +72,15 @@ class LogViewerActivity : AppCompatActivity() {
         yearFormatter.format(Date())
     }
 
-    @Suppress("Deprecation")
-    private val defaultColor by lazy { resources.getColor(R.color.primary_text_color) }
+    private val defaultColor by lazy { ResourcesCompat.getColor(resources, R.color.primary_text_color, theme) }
 
-    @Suppress("Deprecation")
-    private val debugColor by lazy { resources.getColor(R.color.debug_tag_color) }
+    private val debugColor by lazy { ResourcesCompat.getColor(resources, R.color.debug_tag_color, theme) }
 
-    @Suppress("Deprecation")
-    private val errorColor by lazy { resources.getColor(R.color.error_tag_color) }
+    private val errorColor by lazy { ResourcesCompat.getColor(resources, R.color.error_tag_color, theme) }
 
-    @Suppress("Deprecation")
-    private val infoColor by lazy { resources.getColor(R.color.info_tag_color) }
+    private val infoColor by lazy { ResourcesCompat.getColor(resources, R.color.info_tag_color, theme) }
 
-    @Suppress("Deprecation")
-    private val warningColor by lazy { resources.getColor(R.color.warning_tag_color) }
+    private val warningColor by lazy { ResourcesCompat.getColor(resources, R.color.warning_tag_color, theme) }
 
     private var lastUri: Uri? = null
 
@@ -129,10 +125,6 @@ class LogViewerActivity : AppCompatActivity() {
             grantUriPermission("android", lastUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivityForResult(shareIntent, SHARE_ACTIVITY_REQUEST)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
