@@ -10,13 +10,8 @@ import android.system.OsConstants;
 import android.util.Base64;
 
 import com.wireguard.android.util.RootShell.RootShellException;
+import com.wireguard.crypto.Ed25519;
 import com.wireguard.util.NonNullForAll;
-
-import net.i2p.crypto.eddsa.EdDSAEngine;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
-import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -129,7 +123,7 @@ public class ModuleLoader {
 
     @Nullable
     private Map<String, Sha256Digest> verifySignedHashes(final String signifyDigest) {
-        final byte[] publicKeyBytes = Base64.decode(MODULE_PUBLIC_KEY_BASE64, Base64.DEFAULT);
+        byte[] publicKeyBytes = Base64.decode(MODULE_PUBLIC_KEY_BASE64, Base64.DEFAULT);
 
         if (publicKeyBytes == null || publicKeyBytes.length != 32 + 10 || publicKeyBytes[0] != 'E' || publicKeyBytes[1] != 'd')
             return null;
@@ -140,26 +134,17 @@ public class ModuleLoader {
         if (!lines[0].startsWith("untrusted comment: "))
             return null;
 
-        final byte[] signatureBytes = Base64.decode(lines[1], Base64.DEFAULT);
+        byte[] signatureBytes = Base64.decode(lines[1], Base64.DEFAULT);
         if (signatureBytes == null || signatureBytes.length != 64 + 10)
             return null;
         for (int i = 0; i < 10; ++i) {
             if (signatureBytes[i] != publicKeyBytes[i])
                 return null;
         }
-
-        try {
-            final EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-            final Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
-            final byte[] rawPublicKeyBytes = new byte[32];
-            System.arraycopy(publicKeyBytes, 10, rawPublicKeyBytes, 0, 32);
-            signature.initVerify(new EdDSAPublicKey(new EdDSAPublicKeySpec(rawPublicKeyBytes, parameterSpec)));
-            signature.update(lines[2].getBytes(StandardCharsets.UTF_8));
-            if (!signature.verify(signatureBytes, 10, 64))
-                return null;
-        } catch (final Exception ignored) {
+        publicKeyBytes = Arrays.copyOfRange(publicKeyBytes, 10, 10 + 32);
+        signatureBytes = Arrays.copyOfRange(signatureBytes, 10, 10 + 64);
+        if (!Ed25519.verify(lines[2].getBytes(StandardCharsets.UTF_8), signatureBytes, publicKeyBytes))
             return null;
-        }
 
         final Map<String, Sha256Digest> hashes = new HashMap<>();
         for (final String line : lines[2].split("\n")) {
