@@ -117,14 +117,13 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
             inputManager?.hideSoftInputFromWindow(focusedView.windowToken,
                     InputMethodManager.HIDE_NOT_ALWAYS)
         }
+
         // Tell the activity to finish itself or go back to the detail view.
-        activity.runOnUiThread {
-            // TODO(smaeul): Remove this hack when fixing the Config ViewModel
-            // The selected tunnel has to actually change, but we have to remember this one.
-            val savedTunnel = tunnel
-            if (savedTunnel === selectedTunnel) selectedTunnel = null
-            selectedTunnel = savedTunnel
-        }
+        // TODO(smaeul): Remove this hack when fixing the Config ViewModel
+        // The selected tunnel has to actually change, but we have to remember this one.
+        val savedTunnel = tunnel
+        if (savedTunnel === selectedTunnel) selectedTunnel = null
+        selectedTunnel = savedTunnel
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
