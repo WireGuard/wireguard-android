@@ -4,9 +4,7 @@
  */
 package com.wireguard.android.preference
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.util.AttributeSet
 import android.util.Log
 import androidx.preference.Preference
@@ -43,7 +41,13 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                     if (configs.isEmpty()) {
                         throw IllegalArgumentException(context.getString(R.string.no_tunnels_error))
                     }
-                    val outputFile = DownloadsFileSaver.save(context, "wireguard-export.zip", "application/zip", true)
+                    val outputFile = DownloadsFileSaver.save(activity, "wireguard-export.zip", "application/zip", true)
+                    if (outputFile == null) {
+                        withContext(Dispatchers.Main.immediate) {
+                            isEnabled = true
+                        }
+                        return@withContext null
+                    }
                     try {
                         ZipOutputStream(outputFile.outputStream).use { zip ->
                             for (i in configs.indices) {
@@ -82,17 +86,8 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
             when (it) {
                 // When we have successful authentication, or when there is no biometric hardware available.
                 is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
-                    if (DownloadsFileSaver.needsWriteExternalStoragePermission) {
-                        activity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
-                            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                                isEnabled = false
-                                exportZip()
-                            }
-                        }
-                    } else {
-                        isEnabled = false
-                        exportZip()
-                    }
+                    isEnabled = false
+                    exportZip()
                 }
                 is BiometricAuthenticator.Result.Failure -> {
                     Snackbar.make(

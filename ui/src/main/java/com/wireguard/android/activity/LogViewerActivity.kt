@@ -60,7 +60,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LogViewerActivity : AppCompatActivity() {
-
     private lateinit var binding: LogViewerActivityBinding
     private lateinit var logAdapter: LogEntryAdapter
     private var logLines = arrayListOf<LogLine>()
@@ -161,15 +160,15 @@ class LogViewerActivity : AppCompatActivity() {
         withContext(Dispatchers.IO) {
             try {
                 outputFile = DownloadsFileSaver.save(this@LogViewerActivity, "wireguard-log.txt", "text/plain", true)
-                outputFile?.outputStream.use {
-                    it?.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
-                }
+                outputFile?.outputStream?.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
             } catch (e: Throwable) {
                 outputFile?.delete()
                 exception = e
             }
         }
         saveButton?.isEnabled = true
+        if (outputFile == null)
+            return
         Snackbar.make(findViewById(android.R.id.content),
                 if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
                 else getString(R.string.log_export_error, ErrorMessages[exception]),

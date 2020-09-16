@@ -5,13 +5,9 @@
 package com.wireguard.android.activity
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.MenuItem
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -23,35 +19,11 @@ import com.wireguard.android.util.ModuleLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
-import java.util.Arrays
 
 /**
  * Interface for changing application-global persistent settings.
  */
 class SettingsActivity : ThemeChangeAwareActivity() {
-    private val permissionRequestCallbacks = SparseArray<(permissions: Array<String>, granted: IntArray) -> Unit>()
-    private var permissionRequestCounter = 0
-
-    fun ensurePermissions(permissions: Array<String>, cb: (permissions: Array<String>, granted: IntArray) -> Unit) {
-        val needPermissions: MutableList<String> = ArrayList(permissions.size)
-        permissions.forEach {
-            if (ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED) {
-                needPermissions.add(it)
-            }
-        }
-        if (needPermissions.isEmpty()) {
-            val granted = IntArray(permissions.size)
-            Arrays.fill(granted, PackageManager.PERMISSION_GRANTED)
-            cb.invoke(permissions, granted)
-            return
-        }
-        val idx = permissionRequestCounter++
-        permissionRequestCallbacks.put(idx, cb)
-        ActivityCompat.requestPermissions(this,
-                needPermissions.toTypedArray(), idx)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (supportFragmentManager.findFragmentById(android.R.id.content) == null) {
@@ -67,16 +39,6 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        val f = permissionRequestCallbacks[requestCode]
-        if (f != null) {
-            permissionRequestCallbacks.remove(requestCode)
-            f.invoke(permissions, grantResults)
-        }
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
