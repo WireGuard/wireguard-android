@@ -25,7 +25,7 @@ fun Fragment.requireTargetFragment(): Fragment {
 }
 
 val Preference.activity: SettingsActivity
-    get() = if (this.context is SettingsActivity) this.context as SettingsActivity else throw IllegalStateException("Failed to resolve SettingsActivity")
+    get() = context as? SettingsActivity ?: throw IllegalStateException("Failed to resolve SettingsActivity")
 
 val Preference.lifecycleScope: CoroutineScope
-    get() = this.activity.lifecycleScope
+    get() = activity.lifecycleScope
