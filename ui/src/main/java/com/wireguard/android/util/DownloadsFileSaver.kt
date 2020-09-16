@@ -18,6 +18,8 @@ import java.io.IOException
 import java.io.OutputStream
 
 object DownloadsFileSaver {
+    val needsWriteExternalStoragePermission = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+
     @Throws(Exception::class)
     fun save(context: Context, name: String, mimeType: String?, overwriteExisting: Boolean) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val contentResolver = context.contentResolver

@@ -82,11 +82,16 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
             when (it) {
                 // When we have successful authentication, or when there is no biometric hardware available.
                 is BiometricAuthenticator.Result.Success, is BiometricAuthenticator.Result.HardwareUnavailableOrDisabled -> {
-                    activity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
-                        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                            isEnabled = false
-                            exportZip()
+                    if (DownloadsFileSaver.needsWriteExternalStoragePermission) {
+                        activity.ensurePermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)) { _, grantResults ->
+                            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                isEnabled = false
+                                exportZip()
+                            }
                         }
+                    } else {
+                        isEnabled = false
+                        exportZip()
                     }
                 }
                 is BiometricAuthenticator.Result.Failure -> {
