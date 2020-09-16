@@ -53,7 +53,6 @@ dependencies {
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.collection:collection:$collectionVersion"
     implementation "com.google.code.findbugs:jsr305:$jsr305Version"
-    implementation "net.i2p.crypto:eddsa:$eddsaVersion"
     testImplementation "junit:junit:$junitVersion"
 }
 
