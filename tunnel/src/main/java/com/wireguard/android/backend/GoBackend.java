@@ -34,6 +34,10 @@ import java.util.concurrent.TimeoutException;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
 
+/**
+ * Implementation of {@link Backend} that uses the wireguard-go userspace implementation to provide
+ * WireGuard tunnels.
+ */
 @NonNullForAll
 public final class GoBackend implements Backend {
     private static final String TAG = "WireGuard/GoBackend";
@@ -44,11 +48,22 @@ public final class GoBackend implements Backend {
     @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
 
+    /**
+     * Public constructor for GoBackend.
+     *
+     * @param context An Android {@link Context}
+     */
     public GoBackend(final Context context) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
     }
 
+    /**
+     * Set a {@link AlwaysOnCallback} to be invoked when {@link VpnService} is started by the
+     * system's Always-On VPN mode.
+     *
+     * @param cb Callback to be invoked
+     */
     public static void setAlwaysOnCallback(final AlwaysOnCallback cb) {
         alwaysOnCallback = cb;
     }
@@ -65,6 +80,11 @@ public final class GoBackend implements Backend {
 
     private static native String wgVersion();
 
+    /**
+     * Method to get the names of running tunnels.
+     *
+     * @return A set of string values denoting names of running tunnels.
+     */
     @Override
     public Set<String> getRunningTunnelNames() {
         if (currentTunnel != null) {
@@ -75,11 +95,23 @@ public final class GoBackend implements Backend {
         return Collections.emptySet();
     }
 
+    /**
+     * Get the associated {@link State} for a given {@link Tunnel}.
+     *
+     * @param tunnel The tunnel to examine the state of.
+     * @return {@link State} associated with the given tunnel.
+     */
     @Override
     public State getState(final Tunnel tunnel) {
         return currentTunnel == tunnel ? State.UP : State.DOWN;
     }
 
+    /**
+     * Get the associated {@link Statistics} for a given {@link Tunnel}.
+     *
+     * @param tunnel The tunnel to retrieve statistics for.
+     * @return {@link Statistics} associated with the given tunnel.
+     */
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
         final Statistics stats = new Statistics();
@@ -124,11 +156,26 @@ public final class GoBackend implements Backend {
         return stats;
     }
 
+    /**
+     * Get the version of the underlying wireguard-go library.
+     *
+     * @return {@link String} value of the version of the wireguard-go library.
+     */
     @Override
     public String getVersion() {
         return wgVersion();
     }
 
+    /**
+     * Change the state of a given {@link Tunnel}, optionally applying a given {@link Config}.
+     *
+     * @param tunnel The tunnel to control the state of.
+     * @param state  The new state for this tunnel. Must be {@code UP}, {@code DOWN}, or
+     *               {@code TOGGLE}.
+     * @param config The configuration for this tunnel, may be null if state is {@code DOWN}.
+     * @return {@link State} of the tunnel after state changes are applied.
+     * @throws Exception Exception raised while changing tunnel state.
+     */
     @Override
     public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
         final State originalState = getState(tunnel);
@@ -260,6 +307,10 @@ public final class GoBackend implements Backend {
         context.startService(new Intent(context, VpnService.class));
     }
 
+    /**
+     * Callback for {@link GoBackend} that is invoked when {@link VpnService} is started by the
+     * system's Always-On VPN mode.
+     */
     public interface AlwaysOnCallback {
         void alwaysOnTriggered();
     }
@@ -293,6 +344,9 @@ public final class GoBackend implements Backend {
         }
     }
 
+    /**
+     * {@link android.net.VpnService} implementation for {@link GoBackend}
+     */
     public static class VpnService extends android.net.VpnService {
         @Nullable private GoBackend owner;
 

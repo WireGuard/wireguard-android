@@ -31,6 +31,10 @@ import java.util.Map;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Class that implements the logic for downloading and loading signed, prebuilt modules for
+ * WireGuard into the running kernel.
+ */
 @NonNullForAll
 @SuppressWarnings("MagicNumber")
 public class ModuleLoader {
@@ -43,6 +47,15 @@ public class ModuleLoader {
     private final File tmpDir;
     private final String userAgent;
 
+    /**
+     * Public constructor for ModuleLoader
+     *
+     * @param context   A {@link Context} instance.
+     * @param rootShell A {@link RootShell} instance used to run elevated commands required for module
+     *                  loading.
+     * @param userAgent A {@link String} that represents the User-Agent string used for connections
+     *                  to the upstream server.
+     */
     public ModuleLoader(final Context context, final RootShell rootShell, final String userAgent) {
         moduleDir = new File(context.getCacheDir(), "kmod");
         tmpDir = new File(context.getCacheDir(), "tmp");
@@ -50,10 +63,23 @@ public class ModuleLoader {
         this.userAgent = userAgent;
     }
 
+    /**
+     * Check whether a WireGuard module is already loaded into the kernel.
+     *
+     * @return boolean indicating if WireGuard is already enabled in the kernel.
+     */
     public static boolean isModuleLoaded() {
         return new File("/sys/module/wireguard").exists();
     }
 
+    /**
+     * Download the correct WireGuard module for the device
+     *
+     * @return {@link OsConstants}.EXIT_SUCCESS if everything succeeds, ENOENT otherwise.
+     * @throws IOException              if the remote hash list was not found or empty.
+     * @throws RootShellException       if {@link RootShell} has a failure executing elevated commands.
+     * @throws NoSuchAlgorithmException if SHA256 algorithm is not available in device JDK.
+     */
     public Integer download() throws IOException, RootShellException, NoSuchAlgorithmException {
         final List<String> output = new ArrayList<>();
         rootShell.run(output, "sha256sum /proc/version|cut -d ' ' -f 1");
@@ -113,10 +139,21 @@ public class ModuleLoader {
         return OsConstants.EXIT_SUCCESS;
     }
 
+    /**
+     * Load the downloaded module. ModuleLoader#download must be called before this.
+     *
+     * @throws IOException        if {@link RootShell} has a failure executing elevated commands.
+     * @throws RootShellException if {@link RootShell} has a failure executing elevated commands.
+     */
     public void loadModule() throws IOException, RootShellException {
         rootShell.run(null, String.format("insmod \"%s/wireguard-$(sha256sum /proc/version|cut -d ' ' -f 1).ko\"", moduleDir.getAbsolutePath()));
     }
 
+    /**
+     * Check if the module might already exist in the app's data.
+     *
+     * @return boolean indicating whether downloadable module might exist already.
+     */
     public boolean moduleMightExist() {
         return moduleDir.exists() && moduleDir.isDirectory();
     }
