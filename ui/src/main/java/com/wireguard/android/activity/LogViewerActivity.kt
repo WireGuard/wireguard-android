@@ -147,7 +147,8 @@ class LogViewerActivity : AppCompatActivity() {
                 true
             }
             R.id.save_log -> {
-                lifecycleScope.launch(Dispatchers.IO) { saveLog() }
+                saveButton?.isEnabled = false
+                lifecycleScope.launch { saveLog() }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -155,31 +156,26 @@ class LogViewerActivity : AppCompatActivity() {
     }
 
     private suspend fun saveLog() {
-        withContext(Dispatchers.Main.immediate) {
-            saveButton?.isEnabled = false
-            withContext(Dispatchers.IO) {
-                var exception: Throwable? = null
-                var outputFile: DownloadsFileSaver.DownloadsFile? = null
-                try {
-                    outputFile = DownloadsFileSaver.save(this@LogViewerActivity, "wireguard-log.txt", "text/plain", true)
-                    outputFile.outputStream.use {
-                        it.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
-                    }
-                } catch (e: Throwable) {
-                    outputFile?.delete()
-                    exception = e
+        var exception: Throwable? = null
+        var outputFile: DownloadsFileSaver.DownloadsFile? = null
+        withContext(Dispatchers.IO) {
+            try {
+                outputFile = DownloadsFileSaver.save(this@LogViewerActivity, "wireguard-log.txt", "text/plain", true)
+                outputFile?.outputStream.use {
+                    it?.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
                 }
-                withContext(Dispatchers.Main.immediate) {
-                    saveButton?.isEnabled = true
-                    Snackbar.make(findViewById(android.R.id.content),
-                            if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
-                            else getString(R.string.log_export_error, ErrorMessages[exception]),
-                            if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG)
-                            .setAnchorView(binding.shareFab)
-                            .show()
-                }
+            } catch (e: Throwable) {
+                outputFile?.delete()
+                exception = e
             }
         }
+        saveButton?.isEnabled = true
+        Snackbar.make(findViewById(android.R.id.content),
+                if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
+                else getString(R.string.log_export_error, ErrorMessages[exception]),
+                if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG)
+                .setAnchorView(binding.shareFab)
+                .show()
     }
 
     private suspend fun streamingLog() = withContext(Dispatchers.IO) {
