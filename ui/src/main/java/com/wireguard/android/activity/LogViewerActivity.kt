@@ -193,49 +193,54 @@ class LogViewerActivity : AppCompatActivity() {
     private suspend fun streamingLog() = withContext(Dispatchers.IO) {
         val builder = ProcessBuilder().command("logcat", "-b", "all", "-v", "threadtime", "*:V")
         builder.environment()["LC_ALL"] = "C"
-        val process = try {
-            builder.start()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return@withContext
-        }
-        val stdout = BufferedReader(InputStreamReader(process!!.inputStream, StandardCharsets.UTF_8))
-        var haveScrolled = false
-        val start = System.nanoTime()
-        var startPeriod = start
-        while (true) {
-            val line = stdout.readLine() ?: break
-            rawLogLines.append(line)
-            rawLogLines.append('\n')
-            val logLine = parseLine(line)
-            withContext(Dispatchers.Main.immediate) {
-                if (logLine != null) {
-                    recyclerView?.let {
-                        val shouldScroll = haveScrolled && !it.canScrollVertically(1)
-                        logLines.add(logLine)
-                        if (haveScrolled) logAdapter.notifyDataSetChanged()
-                        if (shouldScroll)
-                            it.scrollToPosition(logLines.size - 1)
-                    }
-                } else {
-                    /* I'd prefer for the next line to be:
+        var process: Process? = null
+        try {
+            process = try {
+                builder.start()
+            } catch (e: IOException) {
+                e.printStackTrace()
+                return@withContext
+            }
+            val stdout = BufferedReader(InputStreamReader(process!!.inputStream, StandardCharsets.UTF_8))
+            var haveScrolled = false
+            val start = System.nanoTime()
+            var startPeriod = start
+            while (true) {
+                val line = stdout.readLine() ?: break
+                rawLogLines.append(line)
+                rawLogLines.append('\n')
+                val logLine = parseLine(line)
+                withContext(Dispatchers.Main.immediate) {
+                    if (logLine != null) {
+                        recyclerView?.let {
+                            val shouldScroll = haveScrolled && !it.canScrollVertically(1)
+                            logLines.add(logLine)
+                            if (haveScrolled) logAdapter.notifyDataSetChanged()
+                            if (shouldScroll)
+                                it.scrollToPosition(logLines.size - 1)
+                        }
+                    } else {
+                        /* I'd prefer for the next line to be:
                      *    logLines.lastOrNull()?.msg += "\n$line"
                      * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
                      */
-                    logLines.lastOrNull()?.apply { msg += "\n$line" }
-                    if (haveScrolled) logAdapter.notifyDataSetChanged()
-                }
-                if (!haveScrolled) {
-                    val end = System.nanoTime()
-                    val scroll = (end - start) > 1000000000L * 2.5 || !stdout.ready()
-                    if (logLines.isNotEmpty() && (scroll || (end - startPeriod) > 1000000000L / 4)) {
-                        logAdapter.notifyDataSetChanged()
-                        recyclerView?.scrollToPosition(logLines.size - 1)
-                        startPeriod = end
+                        logLines.lastOrNull()?.apply { msg += "\n$line" }
+                        if (haveScrolled) logAdapter.notifyDataSetChanged()
                     }
-                    if (scroll) haveScrolled = true
+                    if (!haveScrolled) {
+                        val end = System.nanoTime()
+                        val scroll = (end - start) > 1000000000L * 2.5 || !stdout.ready()
+                        if (logLines.isNotEmpty() && (scroll || (end - startPeriod) > 1000000000L / 4)) {
+                            logAdapter.notifyDataSetChanged()
+                            recyclerView?.scrollToPosition(logLines.size - 1)
+                            startPeriod = end
+                        }
+                        if (scroll) haveScrolled = true
+                    }
                 }
             }
+        } finally {
+            process?.destroy()
         }
     }
 
