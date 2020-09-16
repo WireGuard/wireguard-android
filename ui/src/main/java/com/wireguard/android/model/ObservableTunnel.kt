@@ -73,7 +73,7 @@ class ObservableTunnel internal constructor(
     var config = config
         get() {
             if (field == null)
-                // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
+            // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
                 GlobalScope.launch(Dispatchers.Main.immediate) {
                     try {
                         manager.getTunnelConfig(this@ObservableTunnel)
@@ -109,7 +109,7 @@ class ObservableTunnel internal constructor(
     var statistics: Statistics? = null
         get() {
             if (field == null || field?.isStale != false)
-                // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
+            // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
                 GlobalScope.launch(Dispatchers.Main.immediate) {
                     try {
                         manager.getTunnelStatistics(this@ObservableTunnel)

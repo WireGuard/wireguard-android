@@ -26,6 +26,7 @@ import kotlin.system.exitProcess
 
 class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var state = State.UNKNOWN
+
     init {
         isVisible = false
         lifecycleScope.launch {
@@ -48,7 +49,7 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
         }
         lifecycleScope.launch {
             val observableTunnels = Application.getTunnelManager().getTunnels()
-                val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
+            val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
             try {
                 downings.awaitAll()
                 withContext(Dispatchers.IO) {

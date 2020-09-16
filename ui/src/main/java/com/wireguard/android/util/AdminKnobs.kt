@@ -12,5 +12,6 @@ import com.wireguard.android.Application
 object AdminKnobs {
     private val restrictions: RestrictionsManager? = Application.get().getSystemService()
     val disableConfigExport: Boolean
-        get() = restrictions?.applicationRestrictions?.getBoolean("disable_config_export", false) ?: false
+        get() = restrictions?.applicationRestrictions?.getBoolean("disable_config_export", false)
+                ?: false
 }

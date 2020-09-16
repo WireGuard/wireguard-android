@@ -19,6 +19,7 @@ import com.wireguard.android.R
 
 object BiometricAuthenticator {
     private const val TAG = "WireGuard/BiometricAuthenticator"
+
     // Not all devices support strong biometric auth so we're allowing both device credentials as
     // well as weak biometrics.
     private const val allowedAuthenticators = Authenticators.DEVICE_CREDENTIAL or Authenticators.BIOMETRIC_WEAK

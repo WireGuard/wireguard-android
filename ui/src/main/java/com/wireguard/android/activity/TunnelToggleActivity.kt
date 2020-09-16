@@ -41,6 +41,7 @@ class TunnelToggleActivity : AppCompatActivity() {
             finishAffinity()
         }
     }
+
     companion object {
         private const val TAG = "WireGuard/TunnelToggleActivity"
     }
