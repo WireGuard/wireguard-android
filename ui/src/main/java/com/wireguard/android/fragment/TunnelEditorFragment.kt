@@ -24,7 +24,6 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelEditorFragmentBinding
-import com.wireguard.android.fragment.AppListDialogFragment.AppSelectionListener
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.BiometricAuthenticator
@@ -38,7 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * Fragment for editing a WireGuard configuration.
  */
-class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
+class TunnelEditorFragment : BaseFragment() {
     private var haveShownKeys = false
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
@@ -89,23 +88,6 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         binding = null
         super.onDestroyView()
-    }
-
-    override fun onSelectedAppsSelected(selectedApps: List<String>, isExcluded: Boolean) {
-        requireNotNull(binding) { "Tried to set excluded/included apps while no view was loaded" }
-        if (isExcluded) {
-            binding!!.config!!.`interface`.includedApplications.clear()
-            binding!!.config!!.`interface`.excludedApplications.apply {
-                clear()
-                addAll(selectedApps)
-            }
-        } else {
-            binding!!.config!!.`interface`.excludedApplications.clear()
-            binding!!.config!!.`interface`.includedApplications.apply {
-                clear()
-                addAll(selectedApps)
-            }
-        }
     }
 
     private fun onFinished() {
@@ -183,8 +165,26 @@ class TunnelEditorFragment : BaseFragment(), AppSelectionListener {
                 if (selectedApps.isNotEmpty())
                     isExcluded = false
             }
-            val fragment = AppListDialogFragment.newInstance(selectedApps, isExcluded, this)
-            fragment.show(parentFragmentManager, null)
+            val fragment = AppListDialogFragment.newInstance(selectedApps, isExcluded)
+            childFragmentManager.setFragmentResultListener(AppListDialogFragment.REQUEST_SELECTION, viewLifecycleOwner) { _, bundle ->
+                requireNotNull(binding) { "Tried to set excluded/included apps while no view was loaded" }
+                val newSelections = requireNotNull(bundle.getStringArray(AppListDialogFragment.KEY_SELECTED_APPS))
+                val excluded = requireNotNull(bundle.getBoolean(AppListDialogFragment.KEY_IS_EXCLUDED))
+                if (excluded) {
+                    binding!!.config!!.`interface`.includedApplications.clear()
+                    binding!!.config!!.`interface`.excludedApplications.apply {
+                        clear()
+                        addAll(newSelections)
+                    }
+                } else {
+                    binding!!.config!!.`interface`.excludedApplications.clear()
+                    binding!!.config!!.`interface`.includedApplications.apply {
+                        clear()
+                        addAll(newSelections)
+                    }
+                }
+            }
+            fragment.show(childFragmentManager, null)
         }
     }
 
