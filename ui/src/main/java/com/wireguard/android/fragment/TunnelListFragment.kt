@@ -4,8 +4,6 @@
  */
 package com.wireguard.android.fragment
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
@@ -19,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.integration.android.IntentIntegrator
 import com.wireguard.android.Application
 import com.wireguard.android.R
+import com.wireguard.android.activity.TunnelCreatorActivity
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler
 import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
@@ -61,6 +61,15 @@ class TunnelListFragment : BaseFragment() {
     private val actionModeListener = ActionModeListener()
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
+    private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
+        importTunnel(data)
+    }
+
+    private val qrImportResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
+        qrCode?.contents?.let { importTunnel(it) }
+    }
+
     private fun importTunnel(configText: String) {
         try {
             // Ensure the config text is parseable before proceeding…
@@ -173,33 +182,31 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_IMPORT -> {
-                if (resultCode == Activity.RESULT_OK && data != null) importTunnel(data.data)
-                return
-            }
-            IntentIntegrator.REQUEST_CODE -> {
-                val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-                if (result != null && result.contents != null) {
-                    importTunnel(result.contents)
-                }
-                return
-            }
-            else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelListFragmentBinding.inflate(inflater, container, false)
+        val bottomSheet = AddTunnelsSheet()
         binding?.apply {
             createFab.setOnClickListener {
-                val bottomSheet = AddTunnelsSheet()
-                bottomSheet.setTargetFragment(fragment, REQUEST_TARGET_FRAGMENT)
-                bottomSheet.show(parentFragmentManager, "BOTTOM_SHEET")
+                childFragmentManager.setFragmentResultListener(AddTunnelsSheet.REQUEST_KEY_NEW_TUNNEL, viewLifecycleOwner) { _, bundle ->
+                    when (bundle.getString(AddTunnelsSheet.REQUEST_METHOD)) {
+                        AddTunnelsSheet.REQUEST_CREATE -> {
+                            startActivity(Intent(requireActivity(), TunnelCreatorActivity::class.java))
+                        }
+                        AddTunnelsSheet.REQUEST_IMPORT -> {
+                            tunnelFileImportResultLauncher.launch("*/*")
+                        }
+                        AddTunnelsSheet.REQUEST_SCAN -> {
+                            qrImportResultLauncher.launch(IntentIntegrator(requireActivity())
+                                    .setOrientationLocked(false)
+                                    .setBeepEnabled(false)
+                                    .setPrompt(getString(R.string.qr_code_hint))
+                                    .createScanIntent())
+                        }
+                    }
+                }
+                bottomSheet.show(childFragmentManager, "BOTTOM_SHEET")
             }
             executePendingBindings()
             setUpRoot(root as ViewGroup)
