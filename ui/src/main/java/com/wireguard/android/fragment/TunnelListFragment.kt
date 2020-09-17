@@ -32,9 +32,6 @@ import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.fragment.ConfigNamingDialogFragment.Companion.newInstance
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.widget.EdgeToEdge.setUpFAB
-import com.wireguard.android.widget.EdgeToEdge.setUpRoot
-import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.Config
 import kotlinx.coroutines.Deferred
@@ -209,9 +206,6 @@ class TunnelListFragment : BaseFragment() {
                 bottomSheet.show(childFragmentManager, "BOTTOM_SHEET")
             }
             executePendingBindings()
-            setUpRoot(root as ViewGroup)
-            setUpFAB(createFab)
-            setUpScrollingContent(tunnelList, createFab)
         }
         return binding!!.root
     }

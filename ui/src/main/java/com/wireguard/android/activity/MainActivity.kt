@@ -10,8 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.wireguard.android.R
@@ -59,16 +57,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         isTwoPaneLayout = findViewById<View?>(R.id.master_detail_wrapper) != null
         supportFragmentManager.addOnBackStackChangedListener(this)
         onBackStackChanged()
-        // Dispatch insets on back stack change
-        // This is required to ensure replaced fragments are also able to consume insets
-        findViewById<View>(R.id.main_activity_container).setOnApplyWindowInsetsListener { _, insets ->
-            supportFragmentManager.addOnBackStackChangedListener {
-                supportFragmentManager.fragments.forEach {
-                    ViewCompat.dispatchApplyWindowInsets(it.requireView(), WindowInsetsCompat.toWindowInsetsCompat(insets))
-                }
-            }
-            insets
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -39,9 +39,6 @@ import com.wireguard.android.R
 import com.wireguard.android.databinding.LogViewerActivityBinding
 import com.wireguard.android.util.DownloadsFileSaver
 import com.wireguard.android.util.ErrorMessages
-import com.wireguard.android.widget.EdgeToEdge.setUpFAB
-import com.wireguard.android.widget.EdgeToEdge.setUpRoot
-import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.crypto.KeyPair
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,9 +94,6 @@ class LogViewerActivity : AppCompatActivity() {
         binding = LogViewerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setUpFAB(binding.shareFab)
-        setUpRoot(binding.root)
-        setUpScrollingContent(binding.recyclerView, binding.shareFab)
         logAdapter = LogEntryAdapter()
         binding.recyclerView.apply {
             recyclerView = this

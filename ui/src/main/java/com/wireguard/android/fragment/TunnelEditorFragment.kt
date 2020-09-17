@@ -29,8 +29,6 @@ import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.BiometricAuthenticator
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
-import com.wireguard.android.widget.EdgeToEdge.setUpRoot
-import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import com.wireguard.config.Config
 import kotlinx.coroutines.launch
 
@@ -77,8 +75,6 @@ class TunnelEditorFragment : BaseFragment() {
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false)
         binding?.apply {
             executePendingBindings()
-            setUpRoot(root as ViewGroup)
-            setUpScrollingContent(mainContainer, null)
             privateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateKeyPair() }
         }
         return binding?.root

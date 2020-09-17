@@ -17,8 +17,6 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
-import com.wireguard.android.widget.EdgeToEdge.setUpRoot
-import com.wireguard.android.widget.EdgeToEdge.setUpScrollingContent
 import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
@@ -55,11 +53,7 @@ class TunnelDetailFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelDetailFragmentBinding.inflate(inflater, container, false)
-        binding?.apply {
-            executePendingBindings()
-            setUpRoot(root as ViewGroup)
-            setUpScrollingContent(root as ViewGroup, null)
-        }
+        binding?.executePendingBindings()
         return binding!!.root
     }
 
