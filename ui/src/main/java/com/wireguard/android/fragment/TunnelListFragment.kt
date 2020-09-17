@@ -172,8 +172,8 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null) {
             val checkedItems = savedInstanceState.getIntegerArrayList(CHECKED_ITEMS)
             if (checkedItems != null) {
