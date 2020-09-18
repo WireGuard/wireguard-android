@@ -7,9 +7,7 @@ package com.wireguard.android.fragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
