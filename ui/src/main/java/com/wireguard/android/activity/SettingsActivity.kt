@@ -83,6 +83,15 @@ class SettingsActivity : ThemeChangeAwareActivity() {
             moduleInstaller?.isVisible = false
             if (ModuleLoader.isModuleLoaded()) {
                 moduleInstaller?.parent?.removePreference(moduleInstaller)
+                lifecycleScope.launch {
+                    if (Application.getBackend() !is WgQuickBackend) {
+                        try {
+                            withContext(Dispatchers.IO) { Application.getRootShell().start() }
+                        } catch (_: Throwable) {
+                            kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
+                        }
+                    }
+                }
             } else {
                 kernelModuleDisabler?.parent?.removePreference(kernelModuleDisabler)
                 lifecycleScope.launch {
