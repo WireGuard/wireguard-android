@@ -4,39 +4,30 @@
  */
 package com.wireguard.android.activity
 
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.wireguard.android.Application
+import androidx.lifecycle.lifecycleScope
+import com.wireguard.android.util.UserKnobs
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-abstract class ThemeChangeAwareActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
+abstract class ThemeChangeAwareActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Application.getSharedPreferences().registerOnSharedPreferenceChangeListener(this)
-        }
-    }
-
-    override fun onDestroy() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Application.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this)
-        }
-        super.onDestroy()
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) {
-            "dark_theme" -> {
-                AppCompatDelegate.setDefaultNightMode(if (sharedPreferences.getBoolean(key, false)) {
+            UserKnobs.darkTheme.onEach {
+                val newMode = if (it) {
                     AppCompatDelegate.MODE_NIGHT_YES
                 } else {
                     AppCompatDelegate.MODE_NIGHT_NO
-                })
-                recreate()
-            }
+                }
+                if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                    AppCompatDelegate.setDefaultNightMode(newMode)
+                    recreate()
+                }
+            }.launchIn(lifecycleScope)
         }
     }
 }

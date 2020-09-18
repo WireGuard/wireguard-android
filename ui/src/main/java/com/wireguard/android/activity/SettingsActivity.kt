@@ -14,6 +14,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.preference.PreferencesPreferenceDataStore
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.ModuleLoader
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,7 @@ class SettingsActivity : ThemeChangeAwareActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
+            preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
             preferenceScreen.initialExpandedChildrenCount = 4
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

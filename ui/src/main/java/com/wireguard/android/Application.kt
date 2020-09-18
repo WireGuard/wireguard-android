@@ -6,15 +6,15 @@ package com.wireguard.android
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
+import androidx.datastore.DataStore
+import androidx.datastore.preferences.Preferences
+import androidx.datastore.preferences.createDataStore
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
@@ -23,22 +23,27 @@ import com.wireguard.android.model.TunnelManager
 import com.wireguard.android.util.ModuleLoader
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
+import com.wireguard.android.util.UserKnobs
+import com.wireguard.android.util.applicationScope
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 import java.util.Locale
 
-class Application : android.app.Application(), OnSharedPreferenceChangeListener {
+class Application : android.app.Application() {
     private val futureBackend = CompletableDeferred<Backend>()
     private val coroutineScope = CoroutineScope(Job() + Dispatchers.Main.immediate)
     private var backend: Backend? = null
     private lateinit var moduleLoader: ModuleLoader
     private lateinit var rootShell: RootShell
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var preferencesDataStore: DataStore<Preferences>
     private lateinit var toolsInstaller: ToolsInstaller
     private lateinit var tunnelManager: TunnelManager
 
@@ -58,7 +63,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         }
     }
 
-    private fun determineBackend(): Backend {
+    private suspend fun determineBackend(): Backend {
         var backend: Backend? = null
         var didStartRootShell = false
         if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
@@ -69,19 +74,22 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
             } catch (ignored: Exception) {
             }
         }
-        if (!sharedPreferences.getBoolean("disable_kernel_module", false) && ModuleLoader.isModuleLoaded()) {
+        if (!UserKnobs.disableKernelModule.first() && ModuleLoader.isModuleLoaded()) {
             try {
                 if (!didStartRootShell)
                     rootShell.start()
                 val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
-                wgQuickBackend.setMultipleTunnels(sharedPreferences.getBoolean("multiple_tunnels", false))
+                wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
                 backend = wgQuickBackend
+                UserKnobs.multipleTunnels.onEach {
+                    wgQuickBackend.setMultipleTunnels(it)
+                }.launchIn(coroutineScope)
             } catch (ignored: Exception) {
             }
         }
         if (backend == null) {
             backend = GoBackend(applicationContext)
-            GoBackend.setAlwaysOnCallback { get().tunnelManager.restoreState(true) }
+            GoBackend.setAlwaysOnCallback { get().applicationScope.launch { get().tunnelManager.restoreState(true) } }
         }
         return backend
     }
@@ -92,10 +100,12 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
         moduleLoader = ModuleLoader(applicationContext, rootShell, USER_AGENT)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferencesDataStore = applicationContext.createDataStore(name = "settings")
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            AppCompatDelegate.setDefaultNightMode(
-                    if (sharedPreferences.getBoolean("dark_theme", false)) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+            coroutineScope.launch {
+                AppCompatDelegate.setDefaultNightMode(
+                        if (UserKnobs.darkTheme.first()) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+            }
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
@@ -109,16 +119,9 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
                 Log.e(TAG, Log.getStackTraceString(e))
             }
         }
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if ("multiple_tunnels" == key && backend != null && backend is WgQuickBackend)
-            (backend as WgQuickBackend).setMultipleTunnels(sharedPreferences.getBoolean(key, false))
     }
 
     override fun onTerminate() {
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         coroutineScope.cancel()
         super.onTerminate()
     }
@@ -143,7 +146,7 @@ class Application : android.app.Application(), OnSharedPreferenceChangeListener 
         fun getRootShell() = get().rootShell
 
         @JvmStatic
-        fun getSharedPreferences() = get().sharedPreferences
+        fun getPreferencesDataStore() = get().preferencesDataStore
 
         @JvmStatic
         fun getToolsInstaller() = get().toolsInstaller

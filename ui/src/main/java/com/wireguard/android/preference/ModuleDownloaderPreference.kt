@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.preference
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.system.OsConstants
@@ -15,6 +14,7 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.UserKnobs
 import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,6 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
 
     override fun getTitle() = context.getString(R.string.module_installer_title)
 
-    @SuppressLint("ApplySharedPref")
     override fun onClick() {
         setState(State.WORKING)
         lifecycleScope.launch {
@@ -36,7 +35,7 @@ class ModuleDownloaderPreference(context: Context, attrs: AttributeSet?) : Prefe
                     OsConstants.ENOENT -> setState(State.NOTFOUND)
                     OsConstants.EXIT_SUCCESS -> {
                         setState(State.SUCCESS)
-                        Application.getSharedPreferences().edit().remove("disable_kernel_module").commit()
+                        UserKnobs.setDisableKernelModule(null)
                         withContext(Dispatchers.IO) {
                             val restartIntent = Intent(context, SettingsActivity::class.java)
                             restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.preference
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
@@ -15,6 +14,7 @@ import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.util.UserKnobs
 import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -38,16 +38,15 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
 
     override fun getTitle() = if (state == State.UNKNOWN) "" else context.getString(state.titleResourceId)
 
-    @SuppressLint("ApplySharedPref")
     override fun onClick() {
-        if (state == State.DISABLED) {
-            setState(State.ENABLING)
-            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", false).commit()
-        } else if (state == State.ENABLED) {
-            setState(State.DISABLING)
-            Application.getSharedPreferences().edit().putBoolean("disable_kernel_module", true).commit()
-        }
         lifecycleScope.launch {
+            if (state == State.DISABLED) {
+                setState(State.ENABLING)
+                UserKnobs.setDisableKernelModule(false)
+            } else if (state == State.ENABLED) {
+                setState(State.DISABLING)
+                UserKnobs.setDisableKernelModule(true)
+            }
             val observableTunnels = Application.getTunnelManager().getTunnels()
             val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
             try {

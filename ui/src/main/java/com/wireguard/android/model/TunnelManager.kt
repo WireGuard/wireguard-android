@@ -4,7 +4,6 @@
  */
 package com.wireguard.android.model
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.Application.Companion.get
 import com.wireguard.android.Application.Companion.getBackend
-import com.wireguard.android.Application.Companion.getSharedPreferences
 import com.wireguard.android.Application.Companion.getTunnelManager
 import com.wireguard.android.BR
 import com.wireguard.android.R
@@ -22,6 +20,7 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
+import com.wireguard.android.util.UserKnobs
 import com.wireguard.android.util.applicationScope
 import com.wireguard.config.Config
 import kotlinx.coroutines.CompletableDeferred
@@ -29,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -84,16 +84,12 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     @get:Bindable
-    @SuppressLint("ApplySharedPref")
     var lastUsedTunnel: ObservableTunnel? = null
         private set(value) {
             if (value == field) return
             field = value
             notifyPropertyChanged(BR.lastUsedTunnel)
-            if (value != null)
-                getSharedPreferences().edit().putString(KEY_LAST_USED_TUNNEL, value.name).commit()
-            else
-                getSharedPreferences().edit().remove(KEY_LAST_USED_TUNNEL).commit()
+            applicationScope.launch { UserKnobs.setLastUsedTunnel(value?.name) }
         }
 
     suspend fun getTunnelConfig(tunnel: ObservableTunnel): Config = withContext(Dispatchers.Main.immediate) {
@@ -113,12 +109,14 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     private fun onTunnelsLoaded(present: Iterable<String>, running: Collection<String>) {
         for (name in present)
             addToList(name, null, if (running.contains(name)) Tunnel.State.UP else Tunnel.State.DOWN)
-        val lastUsedName = getSharedPreferences().getString(KEY_LAST_USED_TUNNEL, null)
-        if (lastUsedName != null)
-            lastUsedTunnel = tunnelMap[lastUsedName]
-        haveLoaded = true
-        restoreState(true)
-        tunnels.complete(tunnelMap)
+        applicationScope.launch {
+            val lastUsedName = UserKnobs.lastUsedTunnel.first()
+            if (lastUsedName != null)
+                lastUsedTunnel = tunnelMap[lastUsedName]
+            haveLoaded = true
+            restoreState(true)
+            tunnels.complete(tunnelMap)
+        }
     }
 
     private fun refreshTunnelStates() {
@@ -133,26 +131,22 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         }
     }
 
-    fun restoreState(force: Boolean) {
-        if (!haveLoaded || (!force && !getSharedPreferences().getBoolean(KEY_RESTORE_ON_BOOT, false)))
+    suspend fun restoreState(force: Boolean) {
+        if (!haveLoaded || (!force && !UserKnobs.restoreOnBoot.first()))
             return
-        val previouslyRunning = getSharedPreferences().getStringSet(KEY_RUNNING_TUNNELS, null)
-                ?: return
+        val previouslyRunning = UserKnobs.runningTunnels.first()
         if (previouslyRunning.isEmpty()) return
-        applicationScope.launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }.awaitAll()
-                } catch (e: Throwable) {
-                    Log.e(TAG, Log.getStackTraceString(e))
-                }
+        withContext(Dispatchers.IO) {
+            try {
+                tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(Dispatchers.IO + SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }.awaitAll()
+            } catch (e: Throwable) {
+                Log.e(TAG, Log.getStackTraceString(e))
             }
         }
     }
 
-    @SuppressLint("ApplySharedPref")
-    fun saveState() {
-        getSharedPreferences().edit().putStringSet(KEY_RUNNING_TUNNELS, tunnelMap.filter { it.state == Tunnel.State.UP }.map { it.name }.toSet()).commit()
+    suspend fun saveState() {
+        UserKnobs.setRunningTunnels(tunnelMap.filter { it.state == Tunnel.State.UP }.map { it.name }.toSet())
     }
 
     suspend fun setTunnelConfig(tunnel: ObservableTunnel, config: Config): Config = withContext(Dispatchers.Main.immediate) {
@@ -216,23 +210,23 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     class IntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            val manager = getTunnelManager()
-            if (intent == null) return
-            val action = intent.action ?: return
-            if ("com.wireguard.android.action.REFRESH_TUNNEL_STATES" == action) {
-                manager.refreshTunnelStates()
-                return
-            }
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || !getSharedPreferences().getBoolean("allow_remote_control_intents", false))
-                return
-            val state: Tunnel.State
-            state = when (action) {
-                "com.wireguard.android.action.SET_TUNNEL_UP" -> Tunnel.State.UP
-                "com.wireguard.android.action.SET_TUNNEL_DOWN" -> Tunnel.State.DOWN
-                else -> return
-            }
-            val tunnelName = intent.getStringExtra("tunnel") ?: return
             applicationScope.launch {
+                val manager = getTunnelManager()
+                if (intent == null) return@launch
+                val action = intent.action ?: return@launch
+                if ("com.wireguard.android.action.REFRESH_TUNNEL_STATES" == action) {
+                    manager.refreshTunnelStates()
+                    return@launch
+                }
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || !UserKnobs.allowRemoteControlIntents.first())
+                    return@launch
+                val state: Tunnel.State
+                state = when (action) {
+                    "com.wireguard.android.action.SET_TUNNEL_UP" -> Tunnel.State.UP
+                    "com.wireguard.android.action.SET_TUNNEL_DOWN" -> Tunnel.State.DOWN
+                    else -> return@launch
+                }
+                val tunnelName = intent.getStringExtra("tunnel") ?: return@launch
                 val tunnels = manager.getTunnels()
                 val tunnel = tunnels[tunnelName] ?: return@launch
                 manager.setTunnelState(tunnel, state)
@@ -250,9 +244,5 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     companion object {
         private const val TAG = "WireGuard/TunnelManager"
-
-        private const val KEY_LAST_USED_TUNNEL = "last_used_tunnel"
-        private const val KEY_RESTORE_ON_BOOT = "restore_on_boot"
-        private const val KEY_RUNNING_TUNNELS = "enabled_configs"
     }
 }
