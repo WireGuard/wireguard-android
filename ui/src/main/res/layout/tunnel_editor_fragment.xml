@@ -257,7 +257,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/mtu_label_layout"
-                            app:rippleColor="?attr/colorSecondary" />
+                            app:rippleColor="?attr/colorSecondary"
+                            tools:text="4 excluded applications" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
