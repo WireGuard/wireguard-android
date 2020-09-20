@@ -92,14 +92,14 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
             } catch (e: Throwable) {
                 val error = ErrorMessages[e]
                 val messageResId = if (checked) R.string.error_up else R.string.error_down
-                val message = requireContext().getString(messageResId, error)
+                val message = getString(messageResId, error)
                 val view = view
                 if (view != null)
                     Snackbar.make(view, message, Snackbar.LENGTH_LONG)
                             .setAnchorView(view.findViewById(R.id.create_fab))
                             .show()
                 else
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message, e)
             }
         }
