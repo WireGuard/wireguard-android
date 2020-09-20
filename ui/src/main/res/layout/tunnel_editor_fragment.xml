@@ -76,7 +76,10 @@
                                 android:id="@+id/interface_name_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusDown="@id/private_key_text"
+                                android:nextFocusForward="@id/private_key_text"
                                 android:text="@={name}"
                                 app:filter="@{NameInputFilter.newInstance()}" />
                         </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +101,11 @@
                                 android:id="@+id/private_key_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
                                 android:inputType="textNoSuggestions|textPassword"
+                                android:nextFocusUp="@id/interface_name_text"
+                                android:nextFocusDown="@id/public_key_text"
+                                android:nextFocusForward="@id/public_key_text"
                                 android:onClick="@{fragment::onKeyClick}"
                                 android:text="@={config.interface.privateKey}"
                                 app:filter="@{KeyInputFilter.newInstance()}"
@@ -124,6 +131,10 @@
                                 android:ellipsize="end"
                                 android:focusable="false"
                                 android:hint="@string/hint_generated"
+                                android:imeOptions="actionNext"
+                                android:nextFocusUp="@id/private_key_text"
+                                android:nextFocusDown="@id/addresses_label_text"
+                                android:nextFocusForward="@id/addresses_label_text"
                                 android:onClick="@{ClipboardUtils::copyTextView}"
                                 android:singleLine="true"
                                 android:text="@{config.interface.publicKey}" />
@@ -145,7 +156,11 @@
                                 android:id="@+id/addresses_label_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusUp="@id/public_key_text"
+                                android:nextFocusDown="@id/dns_servers_text"
+                                android:nextFocusForward="@id/listen_port_text"
                                 android:text="@={config.interface.addresses}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,10 +177,15 @@
                             app:layout_constraintTop_toBottomOf="@id/public_key_label_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/listen_port_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_random"
+                                android:imeOptions="actionNext"
                                 android:inputType="number"
+                                android:nextFocusUp="@id/public_key_text"
+                                android:nextFocusDown="@id/mtu_text"
+                                android:nextFocusForward="@id/dns_servers_text"
                                 android:text="@={config.interface.listenPort}"
                                 android:textAlignment="center" />
                         </com.google.android.material.textfield.TextInputLayout>
@@ -187,7 +207,11 @@
                                 android:id="@+id/dns_servers_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusUp="@id/addresses_label_text"
+                                android:nextFocusDown="@id/set_excluded_applications"
+                                android:nextFocusForward="@id/mtu_text"
                                 android:text="@={config.interface.dnsServers}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,7 +232,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_automatic"
+                                android:imeOptions="actionDone"
                                 android:inputType="number"
+                                android:nextFocusUp="@id/listen_port_text"
+                                android:nextFocusDown="@id/set_excluded_applications"
+                                android:nextFocusForward="@id/set_excluded_applications"
                                 android:text="@={config.interface.mtu}"
                                 android:textAlignment="center" />
                         </com.google.android.material.textfield.TextInputLayout>
@@ -219,6 +247,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
+                            android:nextFocusUp="@id/dns_servers_text"
+                            android:nextFocusDown="@id/peers_layout"
+                            android:nextFocusForward="@id/peers_layout"
                             android:onClick="@{fragment::onRequestSetExcludedIncludedApplications}"
                             android:text="@{config.interface.includedApplications.size > 0 ? @plurals/set_included_applications(config.interface.includedApplications.size, config.interface.includedApplications.size) : config.interface.excludedApplications.size > 0 ? @plurals/set_excluded_applications(config.interface.excludedApplications.size, config.interface.excludedApplications.size) : @string/all_applications}"
                             android:textColor="?attr/colorSecondary"
@@ -231,6 +262,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
+                    android:id="@+id/peers_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@null"
@@ -241,6 +273,7 @@
                     tools:ignore="UselessLeaf" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_peer_button"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
