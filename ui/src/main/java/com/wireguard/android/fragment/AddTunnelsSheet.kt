@@ -4,6 +4,7 @@
  */
 package com.wireguard.android.fragment
 
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,7 +40,13 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (savedInstanceState != null) dismiss()
-        return inflater.inflate(R.layout.add_tunnels_bottom_sheet, container, false)
+        val view = inflater.inflate(R.layout.add_tunnels_bottom_sheet, container, false)
+        if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA) != true) {
+            val qrcode = view.findViewById<View>(R.id.create_from_qrcode)
+            qrcode.isEnabled = false
+            qrcode.visibility = View.GONE
+        }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
