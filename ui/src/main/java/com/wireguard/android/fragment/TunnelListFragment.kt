@@ -224,8 +224,8 @@ class TunnelListFragment : BaseFragment() {
         binding ?: return
         lifecycleScope.launch {
             val tunnels = Application.getTunnelManager().getTunnels()
-            if (newTunnel != null) viewForTunnel(newTunnel, tunnels).setSingleSelected(true)
-            if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels).setSingleSelected(false)
+            if (newTunnel != null) viewForTunnel(newTunnel, tunnels)?.setSingleSelected(true)
+            if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels)?.setSingleSelected(false)
         }
     }
 
@@ -296,8 +296,8 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
-    private fun viewForTunnel(tunnel: ObservableTunnel, tunnels: List<*>): MultiselectableRelativeLayout {
-        return binding!!.tunnelList.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))!!.itemView as MultiselectableRelativeLayout
+    private fun viewForTunnel(tunnel: ObservableTunnel, tunnels: List<*>): MultiselectableRelativeLayout? {
+        return binding?.tunnelList?.findViewHolderForAdapterPosition(tunnels.indexOf(tunnel))?.itemView as? MultiselectableRelativeLayout
     }
 
     private inner class ActionModeListener : ActionMode.Callback {
