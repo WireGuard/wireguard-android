@@ -48,7 +48,7 @@ class TunnelEditorFragment : BaseFragment() {
         if (throwable == null) {
             message = getString(R.string.config_save_success, savedTunnel.name)
             Log.d(TAG, message)
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
             onFinished()
         } else {
             val error = ErrorMessages[throwable]
@@ -214,7 +214,7 @@ class TunnelEditorFragment : BaseFragment() {
             tunnel = newTunnel
             message = getString(R.string.tunnel_create_success, tunnel!!.name)
             Log.d(TAG, message)
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
             onFinished()
         } else {
             val error = ErrorMessages[throwable]
