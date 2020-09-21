@@ -56,9 +56,10 @@ public class Statistics {
      * @return a long representing the number of bytes received by this peer.
      */
     public long peerRx(final Key peer) {
-        if (!peerBytes.containsKey(peer))
+        final Pair<Long, Long> rxTx = peerBytes.get(peer);
+        if (rxTx == null)
             return 0;
-        return peerBytes.get(peer).first;
+        return rxTx.first;
     }
 
     /**
@@ -69,9 +70,10 @@ public class Statistics {
      * @return a long representing the number of bytes transmitted by this peer.
      */
     public long peerTx(final Key peer) {
-        if (!peerBytes.containsKey(peer))
+        final Pair<Long, Long> rxTx = peerBytes.get(peer);
+        if (rxTx == null)
             return 0;
-        return peerBytes.get(peer).second;
+        return rxTx.second;
     }
 
     /**
