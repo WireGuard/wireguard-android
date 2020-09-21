@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.Application.Companion.get
@@ -20,6 +21,7 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
+import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.UserKnobs
 import com.wireguard.android.util.applicationScope
 import com.wireguard.config.Config
@@ -229,7 +231,11 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 val tunnelName = intent.getStringExtra("tunnel") ?: return@launch
                 val tunnels = manager.getTunnels()
                 val tunnel = tunnels[tunnelName] ?: return@launch
-                manager.setTunnelState(tunnel, state)
+                try {
+                    manager.setTunnelState(tunnel, state)
+                } catch (e: Throwable) {
+                    Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

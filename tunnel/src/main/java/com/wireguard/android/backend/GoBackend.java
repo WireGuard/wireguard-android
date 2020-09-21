@@ -214,8 +214,10 @@ public final class GoBackend implements Backend {
                 throw new BackendException(Reason.VPN_NOT_AUTHORIZED);
 
             final VpnService service;
-            if (!vpnService.isDone())
-                startVpnService();
+            if (!vpnService.isDone()) {
+                Log.d(TAG, "Requesting to start VpnService");
+                context.startService(new Intent(context, VpnService.class));
+            }
 
             try {
                 service = vpnService.get(2, TimeUnit.SECONDS);
@@ -300,11 +302,6 @@ public final class GoBackend implements Backend {
         }
 
         tunnel.onStateChange(state);
-    }
-
-    private void startVpnService() {
-        Log.d(TAG, "Requesting to start VpnService");
-        context.startService(new Intent(context, VpnService.class));
     }
 
     /**
