@@ -60,13 +60,13 @@ class TvMainActivity : AppCompatActivity() {
         }
     }
 
-    lateinit var binding: TvActivityBinding
+    private lateinit var binding: TvActivityBinding
+    private val isDeleting = ObservableBoolean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = TvActivityBinding.inflate(layoutInflater)
         lifecycleScope.launch { binding.tunnels = Application.getTunnelManager().getTunnels() }
-        val isDeleting = ObservableBoolean()
         binding.isDeleting = isDeleting
         binding.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvTunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TvTunnelListItemBinding, item: ObservableTunnel, position: Int) {
@@ -119,7 +119,7 @@ class TvMainActivity : AppCompatActivity() {
             val listItem = DataBindingUtil.findBinding<TvTunnelListItemBinding>(viewItem) ?: return@forEach
             try {
                 val tunnel = listItem.item!!
-                if (tunnel.state != Tunnel.State.UP) {
+                if (tunnel.state != Tunnel.State.UP || isDeleting.get()) {
                     throw Exception()
                 }
                 val statistics = tunnel.getStatisticsAsync()
