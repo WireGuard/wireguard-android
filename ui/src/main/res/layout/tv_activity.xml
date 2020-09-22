@@ -59,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:visibility="@{tunnels.isEmpty &amp;&amp; !isDeleting ? View.GONE : View.VISIBLE}"
             android:text="@{isDeleting ? &quot;⏎&quot; : &quot;🗑&quot;}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
