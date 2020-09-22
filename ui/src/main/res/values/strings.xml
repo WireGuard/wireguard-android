@@ -102,6 +102,7 @@
     <string name="dark_theme_title">Use dark theme</string>
     <string name="delete">Delete</string>
     <string name="tv_delete">Select tunnel to delete</string>
+    <string name="tv_error">Your TV does not have a file picker</string>
     <string name="disable_config_export_title">Disable config exporting</string>
     <string name="disable_config_export_description">Disabling config exporting makes private keys less accessible</string>
     <string name="dns_servers">DNS servers</string>

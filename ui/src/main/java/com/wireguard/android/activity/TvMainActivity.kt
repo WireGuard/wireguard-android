@@ -5,6 +5,7 @@
 
 package com.wireguard.android.activity
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 
 class TvMainActivity : AppCompatActivity() {
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
+        if (data == null) return@registerForActivityResult
         lifecycleScope.launch {
             TunnelImporter.importTunnel(contentResolver, data) {
                 Toast.makeText(this@TvMainActivity, it, Toast.LENGTH_LONG).show()
@@ -98,7 +100,11 @@ class TvMainActivity : AppCompatActivity() {
             }
         }
         binding.importButton.setOnClickListener {
-            tunnelFileImportResultLauncher.launch("*/*")
+            try {
+                tunnelFileImportResultLauncher.launch("*/*")
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(this@TvMainActivity, getString(R.string.tv_error), Toast.LENGTH_LONG).show()
+            }
         }
         binding.deleteButton.setOnClickListener {
             isDeleting.set(!isDeleting.get())
