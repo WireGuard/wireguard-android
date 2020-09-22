@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <import type="com.wireguard.android.model.ObservableTunnel" />
@@ -52,15 +53,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- TODO: Text should probably be a drawable, right? -->
+        <!-- TODO: ic_action_generate is wrong. this should instead be a "return"/"back" icon -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/delete_button"
-            style="?attr/textAppearanceButton"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:minWidth="0dp"
             android:visibility="@{tunnels.isEmpty &amp;&amp; !isDeleting ? View.GONE : View.VISIBLE}"
-            android:text="@{isDeleting ? &quot;⏎&quot; : &quot;🗑&quot;}"
+            app:icon="@{isDeleting ? @drawable/ic_action_generate : @drawable/ic_action_delete}"
+            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
