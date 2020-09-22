@@ -68,7 +68,13 @@ class TvMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = TvActivityBinding.inflate(layoutInflater)
-        lifecycleScope.launch { binding.tunnels = Application.getTunnelManager().getTunnels() }
+        lifecycleScope.launch {
+            binding.tunnels = Application.getTunnelManager().getTunnels()
+            if (binding.tunnels?.isEmpty() == true)
+                binding.importButton.requestFocus()
+            else
+                binding.tunnelList.requestFocus()
+        }
         binding.isDeleting = isDeleting
         binding.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvTunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TvTunnelListItemBinding, item: ObservableTunnel, position: Int) {
@@ -122,7 +128,8 @@ class TvMainActivity : AppCompatActivity() {
 
     private suspend fun updateStats() {
         binding.tunnelList.forEach { viewItem ->
-            val listItem = DataBindingUtil.findBinding<TvTunnelListItemBinding>(viewItem) ?: return@forEach
+            val listItem = DataBindingUtil.findBinding<TvTunnelListItemBinding>(viewItem)
+                    ?: return@forEach
             try {
                 val tunnel = listItem.item!!
                 if (tunnel.state != Tunnel.State.UP || isDeleting.get()) {
