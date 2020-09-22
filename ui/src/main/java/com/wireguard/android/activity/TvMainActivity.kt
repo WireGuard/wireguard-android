@@ -84,6 +84,8 @@ class TvMainActivity : AppCompatActivity() {
                         if (isDeleting.get()) {
                             try {
                                 item.deleteAsync()
+                                if (this@TvMainActivity.binding.tunnels?.isEmpty() != false)
+                                    isDeleting.set(false)
                             } catch (e: Throwable) {
                                 val error = ErrorMessages[e]
                                 val message = getString(R.string.config_delete_error, error)

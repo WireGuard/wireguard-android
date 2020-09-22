@@ -35,8 +35,8 @@
             android:layout_marginTop="5dp"
             app:cardElevation="2dp"
             app:contentPadding="0dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -54,6 +54,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
+            android:visibility="@{tunnels.isEmpty() ? View.GONE : View.VISIBLE}"
             app:configurationHandler="@{rowConfigurationHandler}"
             app:items="@{tunnels}"
             app:layout="@{@layout/tv_tunnel_list_item}"
@@ -64,6 +65,19 @@
             app:spanCount="3"
             tools:itemCount="10"
             tools:listitem="@layout/tv_tunnel_list_item" />
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Headline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/tv_add_tunnel_get_started"
+            android:visibility="@{tunnels.isEmpty() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/delete_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banner_logo"
+            tools:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/import_button"
