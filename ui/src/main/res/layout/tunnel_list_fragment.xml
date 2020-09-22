@@ -31,7 +31,6 @@
             android:id="@+id/tunnel_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:choiceMode="multipleChoiceModal"
             android:clipToPadding="false"
             android:nextFocusDown="@id/create_fab"
             android:nextFocusForward="@id/create_fab"
