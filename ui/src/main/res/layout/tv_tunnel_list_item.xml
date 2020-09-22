@@ -42,7 +42,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@sample/interface_names.json/names/names/name" />
 
-            <!-- TODO: wire in updates here -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_transfer"
                 android:layout_width="wrap_content"
