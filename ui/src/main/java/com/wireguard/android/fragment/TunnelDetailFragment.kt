@@ -17,6 +17,7 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.databinding.TunnelDetailFragmentBinding
 import com.wireguard.android.databinding.TunnelDetailPeerBinding
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.formatBytes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,16 +28,6 @@ class TunnelDetailFragment : BaseFragment() {
     private var binding: TunnelDetailFragmentBinding? = null
     private var lastState = Tunnel.State.TOGGLE
     private var timerActive = true
-
-    private fun formatBytes(bytes: Long): String {
-        return when {
-            bytes < 1024 -> getString(R.string.transfer_bytes, bytes)
-            bytes < 1024 * 1024 -> getString(R.string.transfer_kibibytes, bytes / 1024.0)
-            bytes < 1024 * 1024 * 1024 -> getString(R.string.transfer_mibibytes, bytes / (1024.0 * 1024.0))
-            bytes < 1024 * 1024 * 1024 * 1024L -> getString(R.string.transfer_gibibytes, bytes / (1024.0 * 1024.0 * 1024.0))
-            else -> getString(R.string.transfer_tibibytes, bytes / (1024.0 * 1024.0 * 1024.0) / 1024.0)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +108,7 @@ class TunnelDetailFragment : BaseFragment() {
                     peer.transferText.visibility = View.GONE
                     continue
                 }
-                peer.transferText.text = getString(R.string.transfer_rx_tx, formatBytes(rx), formatBytes(tx))
+                peer.transferText.text = getString(R.string.transfer_rx_tx, context?.formatBytes(rx), context?.formatBytes(tx))
                 peer.transferLabel.visibility = View.VISIBLE
                 peer.transferText.visibility = View.VISIBLE
             }
