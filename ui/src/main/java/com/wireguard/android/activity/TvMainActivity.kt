@@ -8,14 +8,14 @@ package com.wireguard.android.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
-import com.wireguard.android.R
-import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.Application
+import com.wireguard.android.databinding.TvActivityBinding
 import com.wireguard.android.util.TunnelImporter
 import kotlinx.coroutines.launch
 
-class TvMainActivity : BaseActivity() {
+class TvMainActivity : AppCompatActivity() {
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
         lifecycleScope.launch {
             TunnelImporter.importTunnel(contentResolver, data) {
@@ -24,18 +24,14 @@ class TvMainActivity : BaseActivity() {
         }
     }
 
-    override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.tv_activity)
-        findViewById<MaterialButton>(R.id.import_button).setOnClickListener {
+        val binding = TvActivityBinding.inflate(layoutInflater)
+        lifecycleScope.launch { binding.tunnels = Application.getTunnelManager().getTunnels() }
+        binding.importButton.setOnClickListener {
             tunnelFileImportResultLauncher.launch("*/*")
         }
-    }
-
-    companion object {
-        const val TAG = "WireGuard/TvMainActivity"
+        binding.executePendingBindings()
+        setContentView(binding.root)
     }
 }

@@ -10,21 +10,12 @@
         <import type="com.wireguard.android.backend.Tunnel.State" />
 
         <variable
-            name="collection"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
-
-        <variable
             name="key"
             type="String" />
 
         <variable
             name="item"
             type="com.wireguard.android.model.ObservableTunnel" />
-
-        <!-- Unused on TV but we retain this so the existing Adapter and ViewHolder can be reused -->
-        <variable
-            name="fragment"
-            type="com.wireguard.android.fragment.TunnelListFragment" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
