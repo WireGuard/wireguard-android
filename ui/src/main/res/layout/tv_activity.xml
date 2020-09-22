@@ -26,15 +26,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- TODO: Make into a neat square above the selection squares -->
-        <ImageView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/banner_logo"
-            android:layout_width="240dp"
-            android:layout_height="50dp"
-            android:contentDescription="@string/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            app:cardElevation="2dp"
+            app:contentPadding="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tv_logo_banner" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="320dp"
+                android:layout_height="67dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/tv_logo_banner" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tunnel_list"

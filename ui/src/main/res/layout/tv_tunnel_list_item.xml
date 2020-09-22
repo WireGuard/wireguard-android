@@ -26,8 +26,8 @@
 
     <!-- Rather than changing the background tint to red for deleting mode, it should instead just change the selection color -->
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_width="280dp"
+        android:layout_height="130dp"
         android:layout_margin="8dp"
         android:backgroundTint="@{isDeleting ? @color/error_tag_color : item.state == State.UP ? @color/secondary_dark_color : @color/tv_card_background}"
         android:checkable="true"
