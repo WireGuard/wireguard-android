@@ -55,7 +55,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.TvMainActivity">
+        <activity
+            android:name=".activity.TvMainActivity"
+            android:theme="@style/TvTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />

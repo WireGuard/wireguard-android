@@ -16,6 +16,7 @@ import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.GoBackend
@@ -109,6 +110,7 @@ class TvMainActivity : AppCompatActivity() {
         binding.deleteButton.setOnClickListener {
             isDeleting.set(!isDeleting.get())
         }
+        binding.tunnelList.layoutManager = GridLayoutManager(this, 3)
         binding.executePendingBindings()
         setContentView(binding.root)
 

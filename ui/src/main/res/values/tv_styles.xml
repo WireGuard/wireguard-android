@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="TvTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/tv_primary_color</item>
+        <item name="colorOnPrimary">#fffafafa</item>
+        <item name="colorPrimaryDark">@color/tv_primary_color</item>
+        <item name="colorPrimaryVariant">#ff484848</item>
+        <item name="colorSecondary">#ff4285f4</item>
+        <item name="colorOnSecondary">#ff0059c1</item>
+        <item name="colorSurface">@color/tv_primary_color</item>
+        <item name="colorOnSurface">#fffafafa</item>
+        <item name="colorBackground">@color/tv_primary_color</item>
+        <item name="colorMultiselectActiveBackground">@color/list_multiselect_background</item>
+        <item name="colorControlNormal">#fffafafa</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="android:statusBarColor">@color/tv_primary_color</item>
+        <item name="android:windowBackground">@color/tv_primary_color</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="textInputStyle">@style/TextInputLayoutBase</item>
+        <item name="materialCardViewStyle">@style/TvTheme.MaterialCardView</item>
+    </style>
+
+    <style name="TvTheme.MaterialCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cornerRadius">4dp</item>
+        <item name="cardElevation">8dp</item>
+        <item name="contentPadding">8dp</item>
+        <item name="cardBackgroundColor">?attr/elevationOverlayColor</item>
+    </style>
+</resources>

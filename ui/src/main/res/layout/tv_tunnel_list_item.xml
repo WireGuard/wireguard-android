@@ -28,12 +28,10 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="300dp"
         android:layout_height="150dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="@{isDeleting ? @color/error_tag_color : item.state == State.UP ? @color/secondary_light_color : @color/primary_color}"
+        android:layout_margin="8dp"
+        android:backgroundTint="@{isDeleting ? @color/error_tag_color : item.state == State.UP ? @color/secondary_dark_color : @color/tv_card_background}"
         android:checkable="true"
-        android:focusable="true"
-        app:cardCornerRadius="12dp">
+        android:focusable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -42,15 +40,18 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_name"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.name}"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@sample/interface_names.json/names/names/name" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_transfer"
+                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
@@ -66,7 +67,8 @@
                 android:text="@string/tv_delete"
                 android:visibility="@{isDeleting &amp;&amp; true ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
