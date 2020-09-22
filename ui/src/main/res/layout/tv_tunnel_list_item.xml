@@ -23,7 +23,10 @@
         android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:cardCornerRadius="12dp">
+        app:cardCornerRadius="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:backgroundTint="@{item.state == State.UP ? @color/secondary_light_color : @color/primary_color}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -38,15 +41,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@sample/interface_names.json/names/names/name" />
-
-            <com.wireguard.android.widget.ToggleSwitch
-                android:id="@+id/tunnel_toggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:checked="@{item.state == State.UP}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:checked="@sample/interface_names.json/names/checked/checked" />
 
             <!-- TODO: wire in updates here -->
             <com.google.android.material.textview.MaterialTextView

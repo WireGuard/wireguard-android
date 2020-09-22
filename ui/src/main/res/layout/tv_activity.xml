@@ -10,6 +10,10 @@
         <variable
             name="tunnels"
             type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+
+        <variable
+            name="rowConfigurationHandler"
+            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +26,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
+            app:configurationHandler="@{rowConfigurationHandler}"
             app:items="@{tunnels}"
             app:layout="@{@layout/tv_tunnel_list_item}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
