@@ -120,6 +120,9 @@ class TvMainActivity : AppCompatActivity() {
         }
         binding.deleteButton.setOnClickListener {
             isDeleting.set(!isDeleting.get())
+            runOnUiThread {
+                binding.tunnelList.requestFocus()
+            }
         }
         binding.executePendingBindings()
         setContentView(binding.root)
