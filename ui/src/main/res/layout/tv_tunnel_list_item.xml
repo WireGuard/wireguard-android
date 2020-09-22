@@ -26,7 +26,7 @@
 
     <!-- Rather than changing the background tint to red for deleting mode, it should instead just change the selection color -->
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="260dp"
+        android:layout_width="225dp"
         android:layout_height="110dp"
         android:layout_margin="8dp"
         android:layout_marginTop="4dp"
