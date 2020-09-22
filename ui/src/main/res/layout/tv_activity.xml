@@ -57,13 +57,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/create_from_file"
-            android:textColor="?attr/colorOnPrimary"
+            android:minWidth="0dp"
             android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
+            app:icon="@drawable/ic_action_add_white"
+            app:iconPadding="0dp"
+            app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- TODO: ic_action_generate is wrong. this should instead be a "return"/"back" icon -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/delete_button"
             style="@style/Widget.MaterialComponents.Button"
