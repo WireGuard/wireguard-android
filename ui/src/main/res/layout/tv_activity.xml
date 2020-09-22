@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
         <import type="com.wireguard.android.model.ObservableTunnel" />
+
+        <variable
+            name="isDeleting"
+            type="androidx.databinding.ObservableBoolean" />
 
         <variable
             name="tunnels"
@@ -43,8 +48,20 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="@string/create_from_file"
+            android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- TODO: Text should probably be a drawable, right? -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_button"
+            style="?attr/textAppearanceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@{isDeleting ? &quot;⏎&quot; : &quot;🗑&quot;}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

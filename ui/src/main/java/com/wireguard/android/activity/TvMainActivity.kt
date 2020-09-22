@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.Application
 import com.wireguard.android.R
@@ -65,25 +66,42 @@ class TvMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = TvActivityBinding.inflate(layoutInflater)
         lifecycleScope.launch { binding.tunnels = Application.getTunnelManager().getTunnels() }
+        val isDeleting = ObservableBoolean()
+        binding.isDeleting = isDeleting
         binding.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvTunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TvTunnelListItemBinding, item: ObservableTunnel, position: Int) {
-                binding.root.setOnClickListener() {
+                binding.isDeleting = isDeleting
+                binding.root.setOnClickListener {
                     lifecycleScope.launch {
-                        if (Application.getBackend() is GoBackend) {
-                            val intent = GoBackend.VpnService.prepare(binding.root.context)
-                            if (intent != null) {
-                                pendingTunnel = item
-                                permissionActivityResultLauncher.launch(intent)
-                                return@launch
+                        if (isDeleting.get()) {
+                            try {
+                                item.deleteAsync()
+                            } catch (e: Throwable) {
+                                val error = ErrorMessages[e]
+                                val message = getString(R.string.config_delete_error, error)
+                                Toast.makeText(this@TvMainActivity, message, Toast.LENGTH_LONG).show()
+                                Log.e(TAG, message, e)
                             }
+                        } else {
+                            if (Application.getBackend() is GoBackend) {
+                                val intent = GoBackend.VpnService.prepare(binding.root.context)
+                                if (intent != null) {
+                                    pendingTunnel = item
+                                    permissionActivityResultLauncher.launch(intent)
+                                    return@launch
+                                }
+                            }
+                            setTunnelStateWithPermissionsResult(item)
                         }
-                        setTunnelStateWithPermissionsResult(item)
                     }
                 }
             }
         }
         binding.importButton.setOnClickListener {
             tunnelFileImportResultLauncher.launch("*/*")
+        }
+        binding.deleteButton.setOnClickListener {
+            isDeleting.set(!isDeleting.get())
         }
         binding.executePendingBindings()
         setContentView(binding.root)

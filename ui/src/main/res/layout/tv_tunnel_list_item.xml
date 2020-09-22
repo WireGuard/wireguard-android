@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <import type="com.wireguard.android.model.ObservableTunnel" />
 
         <import type="com.wireguard.android.backend.Tunnel.State" />
+
+        <variable
+            name="isDeleting"
+            type="androidx.databinding.ObservableBoolean" />
 
         <variable
             name="key"
@@ -18,15 +24,16 @@
             type="com.wireguard.android.model.ObservableTunnel" />
     </data>
 
+    <!-- Rather than changing the background tint to red for deleting mode, it should instead just change the selection color -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:cardCornerRadius="12dp"
+        android:backgroundTint="@{isDeleting ? @color/error_tag_color : item.state == State.UP ? @color/secondary_light_color : @color/primary_color}"
         android:checkable="true"
         android:focusable="true"
-        android:backgroundTint="@{item.state == State.UP ? @color/secondary_light_color : @color/primary_color}">
+        app:cardCornerRadius="12dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,9 +53,20 @@
                 android:id="@+id/tunnel_transfer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="rx: 200 MB, tx: 100 MB" />
+
+            <!-- TODO: replace the "&amp;&amp; true" stuff with && isSelected() -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tunnel_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_delete"
+                android:visibility="@{isDeleting &amp;&amp; true ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
