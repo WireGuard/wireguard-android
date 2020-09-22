@@ -57,9 +57,11 @@
             app:configurationHandler="@{rowConfigurationHandler}"
             app:items="@{tunnels}"
             app:layout="@{@layout/tv_tunnel_list_item}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/delete_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/banner_logo"
+            app:spanCount="3"
             tools:itemCount="10"
             tools:listitem="@layout/tv_tunnel_list_item" />
 
