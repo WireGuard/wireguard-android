@@ -21,16 +21,6 @@ fun Context.resolveAttribute(@AttrRes attrRes: Int): Int {
     return typedValue.data
 }
 
-fun Context.formatBytes(bytes: Long): String {
-    return when {
-        bytes < 1024 -> getString(R.string.transfer_bytes, bytes)
-        bytes < 1024 * 1024 -> getString(R.string.transfer_kibibytes, bytes / 1024.0)
-        bytes < 1024 * 1024 * 1024 -> getString(R.string.transfer_mibibytes, bytes / (1024.0 * 1024.0))
-        bytes < 1024 * 1024 * 1024 * 1024L -> getString(R.string.transfer_gibibytes, bytes / (1024.0 * 1024.0 * 1024.0))
-        else -> getString(R.string.transfer_tibibytes, bytes / (1024.0 * 1024.0 * 1024.0) / 1024.0)
-    }
-}
-
 val Any.applicationScope: CoroutineScope
     get() = Application.getCoroutineScope()
 

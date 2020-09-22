@@ -32,6 +32,7 @@ import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.fragment.ConfigNamingDialogFragment.Companion.newInstance
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.TunnelImporter
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import com.wireguard.config.Config
 import kotlinx.coroutines.Deferred
@@ -59,114 +60,15 @@ class TunnelListFragment : BaseFragment() {
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
-        importTunnel(data)
+        lifecycleScope.launch {
+            val contentResolver = activity?.contentResolver ?: return@launch
+            TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
+        }
     }
 
     private val qrImportResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)
-        qrCode?.contents?.let { importTunnel(it) }
-    }
-
-    private fun importTunnel(configText: String) {
-        try {
-            // Ensure the config text is parseable before proceeding…
-            Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
-
-            // Config text is valid, now create the tunnel…
-            newInstance(configText).show(parentFragmentManager, null)
-        } catch (e: Throwable) {
-            onTunnelImportFinished(emptyList(), listOf<Throwable>(e))
-        }
-    }
-
-    private fun importTunnel(uri: Uri?) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val activity = activity
-                if (activity == null || uri == null) {
-                    return@withContext
-                }
-                val contentResolver = activity.contentResolver
-                val futureTunnels = ArrayList<Deferred<ObservableTunnel>>()
-                val throwables = ArrayList<Throwable>()
-                try {
-                    val columns = arrayOf(OpenableColumns.DISPLAY_NAME)
-                    var name = ""
-                    contentResolver.query(uri, columns, null, null, null)?.use { cursor ->
-                        if (cursor.moveToFirst() && !cursor.isNull(0)) {
-                            name = cursor.getString(0)
-                        }
-                    }
-                    if (name.isEmpty()) {
-                        name = Uri.decode(uri.lastPathSegment)
-                    }
-                    var idx = name.lastIndexOf('/')
-                    if (idx >= 0) {
-                        require(idx < name.length - 1) { resources.getString(R.string.illegal_filename_error, name) }
-                        name = name.substring(idx + 1)
-                    }
-                    val isZip = name.toLowerCase(Locale.ROOT).endsWith(".zip")
-                    if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
-                        name = name.substring(0, name.length - ".conf".length)
-                    } else {
-                        require(isZip) { resources.getString(R.string.bad_extension_error) }
-                    }
-
-                    if (isZip) {
-                        ZipInputStream(contentResolver.openInputStream(uri)).use { zip ->
-                            val reader = BufferedReader(InputStreamReader(zip, StandardCharsets.UTF_8))
-                            var entry: ZipEntry?
-                            while (true) {
-                                entry = zip.nextEntry ?: break
-                                name = entry.name
-                                idx = name.lastIndexOf('/')
-                                if (idx >= 0) {
-                                    if (idx >= name.length - 1) {
-                                        continue
-                                    }
-                                    name = name.substring(name.lastIndexOf('/') + 1)
-                                }
-                                if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
-                                    name = name.substring(0, name.length - ".conf".length)
-                                } else {
-                                    continue
-                                }
-                                try {
-                                    Config.parse(reader)
-                                } catch (e: Throwable) {
-                                    throwables.add(e)
-                                    null
-                                }?.let {
-                                    val nameCopy = name
-                                    futureTunnels.add(async(SupervisorJob()) { Application.getTunnelManager().create(nameCopy, it) })
-                                }
-                            }
-                        }
-                    } else {
-                        futureTunnels.add(async(SupervisorJob()) { Application.getTunnelManager().create(name, Config.parse(contentResolver.openInputStream(uri)!!)) })
-                    }
-
-                    if (futureTunnels.isEmpty()) {
-                        if (throwables.size == 1) {
-                            throw throwables[0]
-                        } else {
-                            require(throwables.isNotEmpty()) { resources.getString(R.string.no_configs_error) }
-                        }
-                    }
-                    val tunnels = futureTunnels.mapNotNull {
-                        try {
-                            it.await()
-                        } catch (e: Throwable) {
-                            throwables.add(e)
-                            null
-                        }
-                    }
-                    withContext(Dispatchers.Main.immediate) { onTunnelImportFinished(tunnels, throwables) }
-                } catch (e: Throwable) {
-                    withContext(Dispatchers.Main.immediate) { onTunnelImportFinished(emptyList(), listOf(e)) }
-                }
-            }
-        }
+        val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)?.contents ?: return@registerForActivityResult
+        lifecycleScope.launch { TunnelImporter.importTunnel(parentFragmentManager, qrCode) { showSnackbar(it) } }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -238,26 +140,6 @@ class TunnelListFragment : BaseFragment() {
             message = resources.getQuantityString(R.plurals.delete_error, count, count, error)
             Log.e(TAG, message, throwable)
         }
-        showSnackbar(message)
-    }
-
-    private fun onTunnelImportFinished(tunnels: List<ObservableTunnel>, throwables: Collection<Throwable>) {
-        var message = ""
-        for (throwable in throwables) {
-            val error = ErrorMessages[throwable]
-            message = getString(R.string.import_error, error)
-            Log.e(TAG, message, throwable)
-        }
-        if (tunnels.size == 1 && throwables.isEmpty())
-            message = getString(R.string.import_success, tunnels[0].name)
-        else if (tunnels.isEmpty() && throwables.size == 1)
-        else if (throwables.isEmpty())
-            message = resources.getQuantityString(R.plurals.import_total_success,
-                    tunnels.size, tunnels.size)
-        else if (!throwables.isEmpty())
-            message = resources.getQuantityString(R.plurals.import_partial_success,
-                    tunnels.size + throwables.size,
-                    tunnels.size, tunnels.size + throwables.size)
         showSnackbar(message)
     }
 
@@ -423,8 +305,6 @@ class TunnelListFragment : BaseFragment() {
     }
 
     companion object {
-        const val REQUEST_IMPORT = 1
-        private const val REQUEST_TARGET_FRAGMENT = 2
         private const val CHECKED_ITEMS = "CHECKED_ITEMS"
         private const val TAG = "WireGuard/TunnelListFragment"
     }
