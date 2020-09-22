@@ -79,6 +79,10 @@ class TvMainActivity : AppCompatActivity() {
         binding.rowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvTunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TvTunnelListItemBinding, item: ObservableTunnel, position: Int) {
                 binding.isDeleting = isDeleting
+                binding.isFocused = ObservableBoolean()
+                binding.root.setOnFocusChangeListener { _, focused ->
+                    binding.isFocused?.set(focused)
+                }
                 binding.root.setOnClickListener {
                     lifecycleScope.launch {
                         if (isDeleting.get()) {

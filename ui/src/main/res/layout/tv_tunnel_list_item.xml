@@ -16,6 +16,10 @@
             type="androidx.databinding.ObservableBoolean" />
 
         <variable
+            name="isFocused"
+            type="androidx.databinding.ObservableBoolean" />
+
+        <variable
             name="key"
             type="String" />
 
@@ -24,16 +28,15 @@
             type="com.wireguard.android.model.ObservableTunnel" />
     </data>
 
-    <!-- Rather than changing the background tint to red for deleting mode, it should instead just change the selection color -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="225dp"
         android:layout_height="110dp"
         android:layout_margin="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
-        android:backgroundTint="@{isDeleting ? @color/error_tag_color : item.state == State.UP ? @color/secondary_dark_color : @color/tv_card_background}"
         android:checkable="true"
         android:focusable="true"
+        android:backgroundTint="@{(item.state == State.UP &amp;&amp; !isDeleting) ? @color/secondary_dark_color : (isDeleting &amp;&amp; isFocused) ? @color/tv_card_delete_background : @color/tv_card_background}"
         app:contentPadding="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,13 +64,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="rx: 200 MB, tx: 100 MB" />
 
-            <!-- TODO: replace the "&amp;&amp; true" stuff with && isSelected() -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_delete"
-                android:visibility="@{isDeleting &amp;&amp; true ? View.VISIBLE : View.GONE}"
+                android:visibility="@{(isDeleting &amp;&amp; isFocused) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:visibility="gone" />
