@@ -11,7 +11,6 @@ import androidx.annotation.AttrRes
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import com.wireguard.android.Application
-import com.wireguard.android.R
 import com.wireguard.android.activity.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 

@@ -6,9 +6,7 @@ package com.wireguard.android.fragment
 
 import android.content.Intent
 import android.content.res.Resources
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -29,28 +27,16 @@ import com.wireguard.android.activity.TunnelCreatorActivity
 import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler
 import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
-import com.wireguard.android.fragment.ConfigNamingDialogFragment.Companion.newInstance
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.TunnelImporter
 import com.wireguard.android.widget.MultiselectableRelativeLayout
-import com.wireguard.config.Config
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.ByteArrayInputStream
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.HashSet
-import java.util.Locale
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 
 /**
  * Fragment containing a list of known WireGuard tunnels. It allows creating and deleting tunnels.
@@ -67,7 +53,8 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private val qrImportResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)?.contents ?: return@registerForActivityResult
+        val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)?.contents
+                ?: return@registerForActivityResult
         lifecycleScope.launch { TunnelImporter.importTunnel(parentFragmentManager, qrCode) { showSnackbar(it) } }
     }
 
