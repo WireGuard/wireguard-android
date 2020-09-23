@@ -135,6 +135,13 @@ class TvMainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (isDeleting.get())
+            isDeleting.set(false)
+        else
+            super.onBackPressed()
+    }
+
     private suspend fun updateStats() {
         binding.tunnelList.forEach { viewItem ->
             val listItem = DataBindingUtil.findBinding<TvTunnelListItemBinding>(viewItem)
