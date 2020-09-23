@@ -47,6 +47,7 @@ class TunnelListFragment : BaseFragment() {
     private var binding: TunnelListFragmentBinding? = null
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
         lifecycleScope.launch {
+            if (data == null) return@launch
             val contentResolver = activity?.contentResolver ?: return@launch
             TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
         }
