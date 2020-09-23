@@ -46,6 +46,14 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class TvMainActivity : AppCompatActivity() {
+    private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
+        if (data == null) return@registerForActivityResult
+        lifecycleScope.launch {
+            TunnelImporter.importTunnel(contentResolver, data) {
+                Toast.makeText(this@TvMainActivity, it, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
     private var pendingTunnel: ObservableTunnel? = null
     private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         val tunnel = pendingTunnel
@@ -145,16 +153,22 @@ class TvMainActivity : AppCompatActivity() {
         }
 
         binding.importButton.setOnClickListener {
-            if (filesRoot.get()?.isEmpty() != false) {
-                navigateTo(myComputerFile)
-                runOnUiThread {
-                    binding.filesList.requestFocus()
-                }
-            } else {
-                files.clear()
-                filesRoot.set("")
-                runOnUiThread {
-                    binding.tunnelList.requestFocus()
+            try {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+                    throw Exception()
+                tunnelFileImportResultLauncher.launch("*/*")
+            } catch (_: Throwable) {
+                if (filesRoot.get()?.isEmpty() != false) {
+                    navigateTo(myComputerFile)
+                    runOnUiThread {
+                        binding.filesList.requestFocus()
+                    }
+                } else {
+                    files.clear()
+                    filesRoot.set("")
+                    runOnUiThread {
+                        binding.tunnelList.requestFocus()
+                    }
                 }
             }
         }
