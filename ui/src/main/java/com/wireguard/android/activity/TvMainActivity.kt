@@ -133,10 +133,10 @@ class TvMainActivity : AppCompatActivity() {
         binding.filesRowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvFileListItemBinding, KeyedFile> {
             override fun onConfigureRow(binding: TvFileListItemBinding, item: KeyedFile, position: Int) {
                 binding.root.setOnClickListener {
-                    if (item.isDirectory)
-                        navigateTo(item)
+                    if (item.file.isDirectory)
+                        navigateTo(item.file)
                     else {
-                        val uri = Uri.fromFile(item.canonicalFile)
+                        val uri = Uri.fromFile(item.file)
                         files.clear()
                         filesRoot.set("")
                         lifecycleScope.launch {
@@ -153,13 +153,9 @@ class TvMainActivity : AppCompatActivity() {
         }
 
         binding.importButton.setOnClickListener {
-            try {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-                    throw Exception()
-                tunnelFileImportResultLauncher.launch("*/*")
-            } catch (_: Throwable) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 if (filesRoot.get()?.isEmpty() != false) {
-                    navigateTo(myComputerFile)
+                    navigateTo(File("/"))
                     runOnUiThread {
                         binding.filesList.requestFocus()
                     }
@@ -169,6 +165,12 @@ class TvMainActivity : AppCompatActivity() {
                     runOnUiThread {
                         binding.tunnelList.requestFocus()
                     }
+                }
+            } else {
+                try {
+                    tunnelFileImportResultLauncher.launch("*/*")
+                } catch (_: Throwable) {
+                    Toast.makeText(this@TvMainActivity, getString(R.string.tv_no_file_picker), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -198,26 +200,29 @@ class TvMainActivity : AppCompatActivity() {
         pendingNavigation = null
     }
 
+    private var cachedRoots: Collection<KeyedFile>? = null
+
     private suspend fun makeStorageRoots(): Collection<KeyedFile> = withContext(Dispatchers.IO) {
+        cachedRoots?.let { return@withContext it }
         val list = HashSet<KeyedFile>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val storageManager: StorageManager = getSystemService() ?: return@withContext list
             list.addAll(storageManager.storageVolumes.mapNotNull { volume ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    volume.directory?.let { KeyedFile(it.canonicalPath, volume.getDescription(this@TvMainActivity)) }
+                    volume.directory?.let { KeyedFile(it, volume.getDescription(this@TvMainActivity)) }
                 } else {
-                    KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File).canonicalPath, volume.getDescription(this@TvMainActivity))
+                    KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File), volume.getDescription(this@TvMainActivity))
                 }
             })
         } else {
             @Suppress("DEPRECATION")
-            list.add(KeyedFile(Environment.getExternalStorageDirectory().canonicalPath))
+            list.add(KeyedFile(Environment.getExternalStorageDirectory()))
             try {
                 File("/storage").listFiles()?.forEach {
                     if (!it.isDirectory) return@forEach
                     try {
                         if (Environment.isExternalStorageRemovable(it)) {
-                            list.add(KeyedFile(it.canonicalPath))
+                            list.add(KeyedFile(it))
                         }
                     } catch (_: Throwable) {
                     }
@@ -225,12 +230,22 @@ class TvMainActivity : AppCompatActivity() {
             } catch (_: Throwable) {
             }
         }
+        cachedRoots = list
         list
     }
 
-    private val myComputerFile = File("")
+    private fun isBelowCachedRoots(maybeChild: File): Boolean {
+        val cachedRoots = cachedRoots ?: return true
+        for (root in cachedRoots) {
+            if (maybeChild.canonicalPath.startsWith(root.file.canonicalPath))
+                return false
+        }
+        return true
+    }
 
     private fun navigateTo(directory: File) {
+        require(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             pendingNavigation = directory
             permissionRequestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -238,10 +253,10 @@ class TvMainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            if (directory == myComputerFile) {
+            if (isBelowCachedRoots(directory)) {
                 val roots = makeStorageRoots()
                 if (roots.count() == 1) {
-                    navigateTo(roots.first())
+                    navigateTo(roots.first().file)
                     return@launch
                 }
                 files.clear()
@@ -253,18 +268,18 @@ class TvMainActivity : AppCompatActivity() {
             val newFiles = withContext(Dispatchers.IO) {
                 val newFiles = ArrayList<KeyedFile>()
                 try {
-                    val parent = KeyedFile(directory.canonicalPath + "/..")
-                    if (directory.canonicalPath != "/" && parent.list() != null)
-                        newFiles.add(parent)
+                    directory.parentFile?.let {
+                        newFiles.add(KeyedFile(it, "../"))
+                    }
                     val listing = directory.listFiles() ?: return@withContext null
                     listing.forEach {
                         if (it.extension == "conf" || it.extension == "zip" || it.isDirectory)
-                            newFiles.add(KeyedFile(it.canonicalPath))
+                            newFiles.add(KeyedFile(it))
                     }
                     newFiles.sortWith { a, b ->
-                        if (a.isDirectory && !b.isDirectory) -1
-                        else if (!a.isDirectory && b.isDirectory) 1
-                        else a.compareTo(b)
+                        if (a.file.isDirectory && !b.file.isDirectory) -1
+                        else if (!a.file.isDirectory && b.file.isDirectory) 1
+                        else a.file.compareTo(b.file)
                     }
                 } catch (e: Throwable) {
                     Log.e(TAG, Log.getStackTraceString(e))
@@ -319,9 +334,9 @@ class TvMainActivity : AppCompatActivity() {
         }
     }
 
-    class KeyedFile(pathname: String, private val forcedKey: String? = null) : File(pathname), Keyed<String> {
+    class KeyedFile(val file: File, private val forcedKey: String? = null) : Keyed<String> {
         override val key: String
-            get() = forcedKey ?: if (isDirectory) "$name/" else name
+            get() = forcedKey ?: if (file.isDirectory) "${file.name}/" else file.name
     }
 
     companion object {
