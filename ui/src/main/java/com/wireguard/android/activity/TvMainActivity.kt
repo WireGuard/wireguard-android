@@ -204,9 +204,9 @@ class TvMainActivity : AppCompatActivity() {
             val storageManager: StorageManager = getSystemService() ?: return@withContext list
             list.addAll(storageManager.storageVolumes.mapNotNull { volume ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    volume.directory?.let { KeyedFile(it.canonicalPath) }
+                    volume.directory?.let { KeyedFile(it.canonicalPath, volume.getDescription(this@TvMainActivity)) }
                 } else {
-                    KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File).canonicalPath)
+                    KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File).canonicalPath, volume.getDescription(this@TvMainActivity))
                 }
             })
         } else {
@@ -319,9 +319,9 @@ class TvMainActivity : AppCompatActivity() {
         }
     }
 
-    class KeyedFile(pathname: String) : File(pathname), Keyed<String> {
+    class KeyedFile(pathname: String, private val forcedKey: String? = null) : File(pathname), Keyed<String> {
         override val key: String
-            get() = if (isDirectory) "$name/" else name
+            get() = forcedKey ?: if (isDirectory) "$name/" else name
     }
 
     companion object {
