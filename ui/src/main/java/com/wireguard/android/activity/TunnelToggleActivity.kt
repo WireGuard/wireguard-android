@@ -10,20 +10,23 @@ import android.os.Bundle
 import android.service.quicksettings.TileService
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.Application
 import com.wireguard.android.QuickTileService
 import com.wireguard.android.R
+import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ErrorMessages
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.N)
 class TunnelToggleActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
+
+    private fun toggleTunnelWithPermissionsResult() {
         val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
         lifecycleScope.launch {
             try {
@@ -39,6 +42,20 @@ class TunnelToggleActivity : AppCompatActivity() {
             }
             TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
             finishAffinity()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            if (Application.getBackend() is GoBackend) {
+                val intent = GoBackend.VpnService.prepare(this@TunnelToggleActivity)
+                if (intent != null) {
+                    permissionActivityResultLauncher.launch(intent)
+                    return@launch
+                }
+            }
+            toggleTunnelWithPermissionsResult()
         }
     }
 
