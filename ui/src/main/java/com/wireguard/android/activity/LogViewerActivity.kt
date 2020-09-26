@@ -19,6 +19,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -177,7 +178,7 @@ class LogViewerActivity : AppCompatActivity() {
             process = try {
                 builder.start()
             } catch (e: IOException) {
-                e.printStackTrace()
+                Log.e(TAG, Log.getStackTraceString(e))
                 return@withContext
             }
             val stdout = BufferedReader(InputStreamReader(process!!.inputStream, StandardCharsets.UTF_8))
@@ -251,6 +252,7 @@ class LogViewerActivity : AppCompatActivity() {
          */
         private val THREADTIME_LINE: Pattern = Pattern.compile("^(\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\s+[0-9A-Za-z]+)?\\s+(\\d+)\\s+(\\d+)\\s+([A-Z])\\s+(.+?)\\s*: (.*)$")
         private val LOGS: MutableMap<String, ByteArray> = ConcurrentHashMap()
+        private const val TAG = "WireGuard/LogViewerActivity"
     }
 
     private inner class LogEntryAdapter : RecyclerView.Adapter<LogEntryAdapter.ViewHolder>() {
