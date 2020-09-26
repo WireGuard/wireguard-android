@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
@@ -46,9 +47,10 @@ class TunnelListFragment : BaseFragment() {
     private var actionMode: ActionMode? = null
     private var binding: TunnelListFragmentBinding? = null
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
-        lifecycleScope.launch {
-            if (data == null) return@launch
-            val contentResolver = activity?.contentResolver ?: return@launch
+        if (data == null) return@registerForActivityResult
+        val activity = activity ?: return@registerForActivityResult
+        val contentResolver = activity.contentResolver ?: return@registerForActivityResult
+        activity.lifecycleScope.launch {
             TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
         }
     }
@@ -56,7 +58,9 @@ class TunnelListFragment : BaseFragment() {
     private val qrImportResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val qrCode = IntentIntegrator.parseActivityResult(result.resultCode, result.data)?.contents
                 ?: return@registerForActivityResult
-        lifecycleScope.launch { TunnelImporter.importTunnel(parentFragmentManager, qrCode) { showSnackbar(it) } }
+        val activity = activity ?: return@registerForActivityResult
+        val fragManager = parentFragmentManager
+        activity.lifecycleScope.launch { TunnelImporter.importTunnel(fragManager, qrCode) { showSnackbar(it) } }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,11 +125,12 @@ class TunnelListFragment : BaseFragment() {
 
     private fun onTunnelDeletionFinished(count: Int, throwable: Throwable?) {
         val message: String
+        val ctx = activity ?: Application.get()
         if (throwable == null) {
-            message = resources.getQuantityString(R.plurals.delete_success, count, count)
+            message = ctx.resources.getQuantityString(R.plurals.delete_success, count, count)
         } else {
             val error = ErrorMessages[throwable]
-            message = resources.getQuantityString(R.plurals.delete_error, count, count, error)
+            message = ctx.resources.getQuantityString(R.plurals.delete_error, count, count, error)
             Log.e(TAG, message, throwable)
         }
         showSnackbar(message)
@@ -159,11 +164,13 @@ class TunnelListFragment : BaseFragment() {
     }
 
     private fun showSnackbar(message: CharSequence) {
-        binding?.let {
-            Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG)
-                    .setAnchorView(it.createFab)
+        val binding = binding
+        if (binding != null)
+            Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.createFab)
                     .show()
-        }
+        else
+            Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun viewForTunnel(tunnel: ObservableTunnel, tunnels: List<*>): MultiselectableRelativeLayout? {
@@ -181,13 +188,14 @@ class TunnelListFragment : BaseFragment() {
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.menu_action_delete -> {
+                    val activity = activity ?: return true
                     val copyCheckedItems = HashSet(checkedItems)
                     binding?.createFab?.apply {
                         visibility = View.VISIBLE
                         scaleX = 1f
                         scaleY = 1f
                     }
-                    lifecycleScope.launch {
+                    activity.lifecycleScope.launch {
                         try {
                             val tunnels = Application.getTunnelManager().getTunnels()
                             val tunnelsToDelete = ArrayList<ObservableTunnel>()

@@ -39,24 +39,27 @@ class TunnelEditorFragment : BaseFragment() {
     private var haveShownKeys = false
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
+
     private fun onConfigLoaded(config: Config) {
         binding?.config = ConfigProxy(config)
     }
 
     private fun onConfigSaved(savedTunnel: Tunnel, throwable: Throwable?) {
-        val message: String
+        val ctx = activity ?: Application.get()
         if (throwable == null) {
-            message = getString(R.string.config_save_success, savedTunnel.name)
+            val message = ctx.getString(R.string.config_save_success, savedTunnel.name)
             Log.d(TAG, message)
-            Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
             onFinished()
         } else {
             val error = ErrorMessages[throwable]
-            message = getString(R.string.config_save_error, savedTunnel.name, error)
+            val message = ctx.getString(R.string.config_save_error, savedTunnel.name, error)
             Log.e(TAG, message, throwable)
-            binding?.let {
-                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
-            }
+            val binding = binding
+            if (binding != null)
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            else
+                Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -115,7 +118,8 @@ class TunnelEditorFragment : BaseFragment() {
                 Snackbar.make(binding!!.mainContainer, error, Snackbar.LENGTH_LONG).show()
                 return false
             }
-            lifecycleScope.launch {
+            val activity = requireActivity()
+            activity.lifecycleScope.launch {
                 when {
                     tunnel == null -> {
                         Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
@@ -209,46 +213,48 @@ class TunnelEditorFragment : BaseFragment() {
     }
 
     private fun onTunnelCreated(newTunnel: ObservableTunnel?, throwable: Throwable?) {
-        val message: String
+        val ctx = activity ?: Application.get()
         if (throwable == null) {
             tunnel = newTunnel
-            message = getString(R.string.tunnel_create_success, tunnel!!.name)
+            val message = ctx.getString(R.string.tunnel_create_success, tunnel!!.name)
             Log.d(TAG, message)
-            Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
             onFinished()
         } else {
             val error = ErrorMessages[throwable]
-            message = getString(R.string.tunnel_create_error, error)
+            val message = ctx.getString(R.string.tunnel_create_error, error)
             Log.e(TAG, message, throwable)
-            binding?.let {
-                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
-            }
+            val binding = binding
+            if (binding != null)
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            else
+                Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun onTunnelRenamed(renamedTunnel: ObservableTunnel, newConfig: Config,
-                                throwable: Throwable?) {
-        val message: String
+    private suspend fun onTunnelRenamed(renamedTunnel: ObservableTunnel, newConfig: Config,
+                                        throwable: Throwable?) {
+        val ctx = activity ?: Application.get()
         if (throwable == null) {
-            message = getString(R.string.tunnel_rename_success, renamedTunnel.name)
+            val message = ctx.getString(R.string.tunnel_rename_success, renamedTunnel.name)
             Log.d(TAG, message)
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel!!.name)
-            lifecycleScope.launch {
-                try {
-                    renamedTunnel.setConfigAsync(newConfig)
-                    onConfigSaved(renamedTunnel, null)
-                } catch (e: Throwable) {
-                    onConfigSaved(renamedTunnel, e)
-                }
+            try {
+                renamedTunnel.setConfigAsync(newConfig)
+                onConfigSaved(renamedTunnel, null)
+            } catch (e: Throwable) {
+                onConfigSaved(renamedTunnel, e)
             }
         } else {
             val error = ErrorMessages[throwable]
-            message = getString(R.string.tunnel_rename_error, error)
+            val message = ctx.getString(R.string.tunnel_rename_error, error)
             Log.e(TAG, message, throwable)
-            binding?.let {
-                Snackbar.make(it.mainContainer, message, Snackbar.LENGTH_LONG).show()
-            }
+            val binding = binding
+            if (binding != null)
+                Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG).show()
+            else
+                Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
         }
     }
 

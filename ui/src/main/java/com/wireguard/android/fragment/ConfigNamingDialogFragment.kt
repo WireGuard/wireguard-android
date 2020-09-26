@@ -29,15 +29,15 @@ class ConfigNamingDialogFragment : DialogFragment() {
     private var imm: InputMethodManager? = null
 
     private fun createTunnelAndDismiss() {
-        binding?.let {
-            val name = it.tunnelNameText.text.toString()
-            lifecycleScope.launch {
-                try {
-                    Application.getTunnelManager().create(name, config)
-                    dismiss()
-                } catch (e: Throwable) {
-                    it.tunnelNameTextLayout.error = e.message
-                }
+        val binding = binding ?: return
+        val activity = activity ?: return
+        val name = binding.tunnelNameText.text.toString()
+        activity.lifecycleScope.launch {
+            try {
+                Application.getTunnelManager().create(name, config)
+                dismiss()
+            } catch (e: Throwable) {
+                binding.tunnelNameTextLayout.error = e.message
             }
         }
     }

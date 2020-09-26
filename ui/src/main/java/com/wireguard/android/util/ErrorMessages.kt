@@ -6,7 +6,7 @@ package com.wireguard.android.util
 
 import android.content.res.Resources
 import android.os.RemoteException
-import com.wireguard.android.Application.Companion.get
+import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.BackendException
 import com.wireguard.android.util.RootShell.RootShellException
@@ -63,7 +63,7 @@ object ErrorMessages {
     )
 
     operator fun get(throwable: Throwable?): String {
-        val resources = get().resources
+        val resources = Application.get().resources
         if (throwable == null) return resources.getString(R.string.unknown_error)
         val rootCause = rootCause(throwable)
         return when {

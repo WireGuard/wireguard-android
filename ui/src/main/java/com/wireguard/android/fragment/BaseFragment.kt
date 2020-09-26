@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
  * attached to a `BaseActivity`.
  */
 abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
-    private var baseActivity: BaseActivity? = null
     private var pendingTunnel: ObservableTunnel? = null
     private var pendingTunnelUp: Boolean? = null
     private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -44,24 +43,18 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     protected var selectedTunnel: ObservableTunnel?
-        get() = baseActivity?.selectedTunnel
+        get() = (activity as? BaseActivity)?.selectedTunnel
         protected set(tunnel) {
-            baseActivity?.selectedTunnel = tunnel
+            (activity as? BaseActivity)?.selectedTunnel = tunnel
         }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is BaseActivity) {
-            baseActivity = context
-            baseActivity?.addOnSelectedTunnelChangedListener(this)
-        } else {
-            baseActivity = null
-        }
+        (activity as? BaseActivity)?.addOnSelectedTunnelChangedListener(this)
     }
 
     override fun onDetach() {
-        baseActivity?.removeOnSelectedTunnelChangedListener(this)
-        baseActivity = null
+        (activity as? BaseActivity)?.removeOnSelectedTunnelChangedListener(this)
         super.onDetach()
     }
 
@@ -71,9 +64,10 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
             is TunnelListItemBinding -> binding.item
             else -> return
         } ?: return
-        lifecycleScope.launch {
+        val activity = activity ?: return
+        activity.lifecycleScope.launch {
             if (Application.getBackend() is GoBackend) {
-                val intent = GoBackend.VpnService.prepare(view.context)
+                val intent = GoBackend.VpnService.prepare(activity)
                 if (intent != null) {
                     pendingTunnel = tunnel
                     pendingTunnelUp = checked
@@ -86,20 +80,21 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
     }
 
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
-        lifecycleScope.launch {
+        val activity = activity ?: return
+        activity.lifecycleScope.launch {
             try {
                 tunnel.setStateAsync(Tunnel.State.of(checked))
             } catch (e: Throwable) {
                 val error = ErrorMessages[e]
                 val messageResId = if (checked) R.string.error_up else R.string.error_down
-                val message = getString(messageResId, error)
+                val message = activity.getString(messageResId, error)
                 val view = view
                 if (view != null)
                     Snackbar.make(view, message, Snackbar.LENGTH_LONG)
                             .setAnchorView(view.findViewById(R.id.create_fab))
                             .show()
                 else
-                    Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message, e)
             }
         }
