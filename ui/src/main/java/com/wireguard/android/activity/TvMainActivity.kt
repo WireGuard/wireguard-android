@@ -25,6 +25,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.GoBackend
@@ -94,6 +96,8 @@ class TvMainActivity : AppCompatActivity() {
         binding.isDeleting = isDeleting
         binding.files = files
         binding.filesRoot = filesRoot
+        val gridManager = binding.tunnelList.layoutManager as GridLayoutManager
+        gridManager.spanSizeLookup = SlatedSpanSizeLookup(gridManager)
         binding.tunnelRowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvTunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TvTunnelListItemBinding, item: ObservableTunnel, position: Int) {
                 binding.isDeleting = isDeleting
@@ -337,6 +341,48 @@ class TvMainActivity : AppCompatActivity() {
     class KeyedFile(val file: File, private val forcedKey: String? = null) : Keyed<String> {
         override val key: String
             get() = forcedKey ?: if (file.isDirectory) "${file.name}/" else file.name
+    }
+
+    private class SlatedSpanSizeLookup(private val gridManager: GridLayoutManager) : SpanSizeLookup() {
+        private val originalHeight = gridManager.spanCount
+        private var newWidth = 0
+        private lateinit var sizeMap: Array<IntArray?>
+
+        private fun emptyUnderIndex(index: Int, size: Int): Int {
+            sizeMap[size - 1]?.let { return it[index] }
+            val sizes = IntArray(size)
+            val oh = originalHeight
+            val nw = newWidth
+            var empties = 0
+            for (i in 0 until size) {
+                val ox = (i + empties) / oh
+                val oy = (i + empties) % oh
+                var empty = 0
+                for (j in oy + 1 until oh) {
+                    val ni = nw * j + ox
+                    if (ni < size)
+                        break
+                    empty++
+                }
+                empties += empty
+                sizes[i] = empty
+            }
+            sizeMap[size - 1] = sizes
+            return sizes[index]
+        }
+
+        override fun getSpanSize(position: Int): Int {
+            if (newWidth == 0) {
+                val child = gridManager.getChildAt(0) ?: return 1
+                if (child.width == 0) return 1
+                newWidth = gridManager.width / child.width
+                sizeMap = Array(originalHeight * newWidth - 1) { null }
+            }
+            val total = gridManager.itemCount
+            if (total >= originalHeight * newWidth || total == 0)
+                return 1
+            return emptyUnderIndex(position, total) + 1
+        }
     }
 
     companion object {
