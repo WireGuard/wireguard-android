@@ -78,6 +78,8 @@ public final class GoBackend implements Backend {
 
     private static native int wgTurnOn(String ifName, int tunFd, String settings);
 
+    private static native void wgEnableRoaming(boolean enabled);
+
     private static native String wgVersion();
 
     /**
@@ -253,7 +255,14 @@ public final class GoBackend implements Backend {
                 builder.addDnsServer(addr.getHostAddress());
 
             boolean sawDefaultRoute = false;
+            boolean allowRoaming = false;
             for (final Peer peer : config.getPeers()) {
+                if (!allowRoaming && !peer.getEndpoint().isPresent()) {
+                    // Allow server mode if there is a peer without an endpoint
+                    allowRoaming = true;
+                    Log.d(TAG, "Enabling roaming");
+                    wgEnableRoaming(allowRoaming);
+                }
                 for (final InetNetwork addr : peer.getAllowedIps()) {
                     if (addr.getMask() == 0)
                         sawDefaultRoute = true;

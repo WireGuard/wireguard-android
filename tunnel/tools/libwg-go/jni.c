@@ -6,14 +6,21 @@
 #include <jni.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 struct go_string { const char *str; long n; };
+extern void wgEnableRoaming(bool enabled);
 extern int wgTurnOn(struct go_string ifname, int tun_fd, struct go_string settings);
 extern void wgTurnOff(int handle);
 extern int wgGetSocketV4(int handle);
 extern int wgGetSocketV6(int handle);
 extern char *wgGetConfig(int handle);
 extern char *wgVersion();
+
+JNIEXPORT void JNICALL Java_com_wireguard_android_backend_GoBackend_wgEnableRoaming(JNIEnv *env, jclass c, jboolean enabled)
+{
+    wgEnableRoaming(enabled);
+}
 
 JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgTurnOn(JNIEnv *env, jclass c, jstring ifname, jint tun_fd, jstring settings)
 {

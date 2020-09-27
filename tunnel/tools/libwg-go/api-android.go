@@ -63,6 +63,11 @@ func init() {
 	}()
 }
 
+//export wgEnableRoaming
+func wgEnableRoaming(enabled bool) {
+	device.RoamingDisabled = !enabled
+}
+
 //export wgTurnOn
 func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 	interfaceName := string([]byte(ifnameRef))
