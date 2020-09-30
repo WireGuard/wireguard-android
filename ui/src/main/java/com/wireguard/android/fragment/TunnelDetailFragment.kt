@@ -63,13 +63,17 @@ class TunnelDetailFragment : BaseFragment() {
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
-        binding ?: return
-        binding!!.tunnel = newTunnel
-        if (newTunnel == null) binding!!.config = null else lifecycleScope.launch {
-            try {
-                binding!!.config = newTunnel.getConfigAsync()
-            } catch (_: Throwable) {
-                binding!!.config = null
+        val binding = binding ?: return
+        binding.tunnel = newTunnel
+        if (newTunnel == null) {
+            binding.config = null
+        } else {
+            lifecycleScope.launch {
+                try {
+                    binding.config = newTunnel.getConfigAsync()
+                } catch (_: Throwable) {
+                    binding.config = null
+                }
             }
         }
         lastState = Tunnel.State.TOGGLE
