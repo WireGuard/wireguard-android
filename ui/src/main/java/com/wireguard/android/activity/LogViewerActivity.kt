@@ -147,12 +147,14 @@ class LogViewerActivity : AppCompatActivity() {
         }
     }
 
+    private val downloadsFileSaver = DownloadsFileSaver(this)
+
     private suspend fun saveLog() {
         var exception: Throwable? = null
         var outputFile: DownloadsFileSaver.DownloadsFile? = null
         withContext(Dispatchers.IO) {
             try {
-                outputFile = DownloadsFileSaver.save(this@LogViewerActivity, "wireguard-log.txt", "text/plain", true)
+                outputFile = downloadsFileSaver.save("wireguard-log.txt", "text/plain", true)
                 outputFile?.outputStream?.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
             } catch (e: Throwable) {
                 outputFile?.delete()

@@ -14,6 +14,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.MediaColumns
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.wireguard.android.R
@@ -25,9 +26,18 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-object DownloadsFileSaver {
-    @Throws(Exception::class)
-    suspend fun save(context: ComponentActivity, name: String, mimeType: String?, overwriteExisting: Boolean) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+class DownloadsFileSaver(private val context: ComponentActivity) {
+    private lateinit var activityResult: ActivityResultLauncher<String>
+    private lateinit var futureGrant: CompletableDeferred<Boolean>
+
+    init {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            futureGrant = CompletableDeferred()
+            activityResult = context.registerForActivityResult(ActivityResultContracts.RequestPermission()) { ret -> futureGrant.complete(ret) }
+        }
+    }
+
+    suspend fun save(name: String, mimeType: String?, overwriteExisting: Boolean) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         withContext(Dispatchers.IO) {
             val contentResolver = context.contentResolver
             if (overwriteExisting)
@@ -66,13 +76,12 @@ object DownloadsFileSaver {
     } else {
         withContext(Dispatchers.Main.immediate) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                val futureGrant = CompletableDeferred<Boolean>()
-                val activityResult = context.registerForActivityResult(ActivityResultContracts.RequestPermission(), futureGrant::complete)
                 activityResult.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 val granted = futureGrant.await()
-                activityResult.unregister()
-                if (!granted)
+                if (!granted) {
+                    futureGrant = CompletableDeferred()
                     return@withContext null
+                }
             }
             @Suppress("DEPRECATION") val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             withContext(Dispatchers.IO) {

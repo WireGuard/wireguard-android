@@ -32,6 +32,8 @@ import java.util.zip.ZipOutputStream
  */
 class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var exportedFilePath: String? = null
+    private val downloadsFileSaver = DownloadsFileSaver(activity)
+
     private fun exportZip() {
         lifecycleScope.launch {
             val tunnels = Application.getTunnelManager().getTunnels()
@@ -41,7 +43,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                     if (configs.isEmpty()) {
                         throw IllegalArgumentException(context.getString(R.string.no_tunnels_error))
                     }
-                    val outputFile = DownloadsFileSaver.save(activity, "wireguard-export.zip", "application/zip", true)
+                    val outputFile = downloadsFileSaver.save("wireguard-export.zip", "application/zip", true)
                     if (outputFile == null) {
                         withContext(Dispatchers.Main.immediate) {
                             isEnabled = true
