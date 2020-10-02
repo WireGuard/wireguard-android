@@ -5,7 +5,7 @@ buildscript {
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.2.0'
         bintrayPluginVersion = '1.8.5'
-        biometricVersion = '1.1.0-alpha02'
+        biometricVersion = '1.1.0-beta01'
         collectionVersion = '1.1.0'
         constraintLayoutVersion = '2.0.1'
         coordinatorLayoutVersion = '1.1.0'
