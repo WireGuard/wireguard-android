@@ -46,7 +46,6 @@ type TunnelHandle struct {
 var tunnelHandles map[int32]TunnelHandle
 
 func init() {
-	device.RoamingDisabled = true
 	tunnelHandles = make(map[int32]TunnelHandle)
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
@@ -91,6 +90,7 @@ func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 		logger.Error.Println(setError)
 		return -1
 	}
+	device.DisableSomeRoamingForBrokenMobileSemantics()
 
 	var uapi net.Listener
 
