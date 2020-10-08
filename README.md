@@ -22,12 +22,16 @@ The tunnel library is [on JCenter](https://bintray.com/wireguard/wireguard-andro
 implementation 'com.wireguard.android:tunnel:$wireguardTunnelVersion'
 ```
 
-The library makes use of Java 8 features, so be sure to support those in your gradle configuration:
+The library makes use of Java 8 features, so be sure to support those in your gradle configuration with desugaring:
 
 ```
 compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+    coreLibraryDesugaringEnabled = true
+}
+dependencies {
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.0.10"
 }
 ```
 
