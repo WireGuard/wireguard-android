@@ -17,6 +17,9 @@ import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.createDataStore
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
+import com.wireguard.android.backend.NoopTunnelActionHandler
+import com.wireguard.android.backend.RootTunnelActionHandler
+import com.wireguard.android.backend.TunnelActionHandler
 import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.configStore.FileConfigStore
 import com.wireguard.android.model.TunnelManager
@@ -76,8 +79,10 @@ class Application : android.app.Application() {
         }
         if (!UserKnobs.disableKernelModule.first() && ModuleLoader.isModuleLoaded()) {
             try {
-                if (!didStartRootShell)
+                if (!didStartRootShell) {
                     rootShell.start()
+                    didStartRootShell = true
+                }
                 val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
                 wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
                 backend = wgQuickBackend
@@ -88,7 +93,18 @@ class Application : android.app.Application() {
             }
         }
         if (backend == null) {
-            backend = GoBackend(applicationContext)
+            var tunnelActionHandler: TunnelActionHandler
+            try {
+                if (!didStartRootShell)
+                    rootShell.start()
+                tunnelActionHandler = RootTunnelActionHandler(rootShell)
+                Log.d(TAG, "Using root action handler")
+            } catch (ignored: Exception) {
+                tunnelActionHandler = NoopTunnelActionHandler()
+                Log.d(TAG, "Using NOOP action handler")
+            }
+
+            backend = GoBackend(applicationContext, tunnelActionHandler);
             GoBackend.setAlwaysOnCallback { get().applicationScope.launch { get().tunnelManager.restoreState(true) } }
         }
         return backend
