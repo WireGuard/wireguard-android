@@ -6,6 +6,7 @@
 package com.wireguard.android.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -185,6 +186,10 @@ class TvMainActivity : AppCompatActivity() {
                 binding.tunnelList.requestFocus()
             }
         }
+        binding.menuSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
         binding.executePendingBindings()
         setContentView(binding.root)
 
