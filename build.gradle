@@ -1,7 +1,7 @@
 buildscript {
     ext {
         activityVersion = '1.2.0-beta01'
-        agpVersion = '4.0.2'
+        agpVersion = '4.1.0'
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.2.0'
         bintrayPluginVersion = '1.8.5'
