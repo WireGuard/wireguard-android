@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="delete_error">
+        <item quantity="one">Kan ikke slette %d tunnel %s</item>
+        <item quantity="other">Kan ikke slette %d tunneler %s</item>
+    </plurals>
+    <string name="all_applications">Alle applikasjoner</string>
+    <string name="exclude_from_tunnel">Ekskluder</string>
+    <string name="include_in_tunnel">Inkluder kun</string>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">hvert %d sekund</item>
+        <item quantity="other">hvert %d sekund</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">sekund</item>
+        <item quantity="other">sekunder</item>
+    </plurals>
+    <string name="use_all_applications">Bruk alle apper</string>
+    <string name="add_peer">Legg til peer</string>
+    <string name="addresses">Adresser</string>
+    <string name="applications">Applikasjoner</string>
+    <string name="app_name">WireGuard</string>
+</resources>

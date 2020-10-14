@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="delete_error">
-        <item quantity="one">%d Tunnel konnte nicht gelöscht werden: %s</item>
+        <item quantity="one">%d Tunnel konnten nicht gelöscht werden: %s</item>
         <item quantity="other">%d Tunnel konnten nicht gelöscht werden: %s</item>
     </plurals>
     <plurals name="delete_success">

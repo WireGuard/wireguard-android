@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_activity_title">WireGuard Tüneli Yarat</string>
+    <string name="create_downloads_file_error">İndirilenler klasöründe dosya yaratılamadı</string>
+    <string name="create_empty">Sıfırdan Yaratın</string>
+    <string name="create_from_file">Arşivden geri yükle</string>
+    <string name="create_from_qr_code">QR Kodu Tara</string>
+    <string name="create_output_dir_error">Çıkış klasörü yaratılamadı</string>
+    <string name="create_tunnel">Tünel Yarat</string>
+    <string name="dark_theme_title">Koyu renk Temayı Kullan</string>
+    <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
+    <string name="hint_automatic">(otomatik)</string>
+    <string name="hint_optional">(isteğe bağlı)</string>
+    <string name="hint_optional_discouraged">(İsteğe bağlı-Önerilmez)</string>
+    <string name="hint_random">(Rastgele)</string>
+    <string name="import_from_qr_code">Tüneli içeri QR ile al</string>
+    <string name="interface_title">Arayüz</string>
+    <string name="listen_port">Dinleme portu</string>
+    <string name="log_export_title">Dosyayı Dışarı Aktar</string>
+    <string name="log_saver_activity_label">Günlüğü kaydet</string>
+    <string name="log_viewer_pref_title">Uygulama günlüğüne bak</string>
+    <string name="log_viewer_title">Günlük</string>
+</resources>

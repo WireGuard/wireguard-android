@@ -5,7 +5,7 @@
         <item quantity="other">Impossible de supprimer %d tunnels : %s</item>
     </plurals>
     <plurals name="delete_success">
-        <item quantity="one">Supprimé avec succès %d tunnel</item>
+        <item quantity="one">Suppression réussie du tunnel %d</item>
         <item quantity="other">Supprimé avec succès %d tunnels</item>
     </plurals>
     <plurals name="delete_title">
@@ -191,7 +191,7 @@
     <string name="tools_installer_title">Installer les outils de ligne de commande</string>
     <string name="tools_installer_working">Installation de wg et wg-quick</string>
     <string name="tools_unavailable_error">Outils requis indisponibles</string>
-    <string name="transfer">Transférer</string>
+    <string name="transfer">Données transférées</string>
     <string name="transfer_bytes">%d Octets</string>
     <string name="transfer_gibibytes">%.2f Go</string>
     <string name="transfer_kibibytes">%.2f Ko</string>

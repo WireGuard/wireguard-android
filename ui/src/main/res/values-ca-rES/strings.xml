@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d exclòs</item>
+        <item quantity="other">%d exclosos</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d inclòs</item>
+        <item quantity="other">%d inclosos</item>
+    </plurals>
+    <string name="all_applications">Totes les aplicacions</string>
+    <string name="exclude_from_tunnel">Exclou</string>
+    <string name="include_in_tunnel">Inclou només</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Inclou %d aplicació</item>
+        <item quantity="other">Inclou %d aplicacions</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Exclou %d aplicació</item>
+        <item quantity="other">Exclou %d aplicacions</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">cada segon</item>
+        <item quantity="other">cada %d segons</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">segon</item>
+        <item quantity="other">segons</item>
+    </plurals>
+    <string name="addresses">Adreces</string>
+    <string name="applications">Aplicacions</string>
+    <string name="allowed_ips">IPs permeses</string>
+    <string name="bad_config_explanation_positive_number">: Ha de ser positiu</string>
+    <string name="bad_config_reason_invalid_key">Clau no vàlida</string>
+    <string name="bad_config_reason_invalid_number">Número no vàlid</string>
+    <string name="bad_config_reason_invalid_value">Valor no vàlid</string>
+    <string name="bad_config_reason_syntax_error">Error de sintaxi</string>
+    <string name="bad_config_reason_unknown_attribute">Atribut desconegut</string>
+    <string name="bad_config_reason_unknown_section">Secció desconeguda</string>
+    <string name="cancel">Cancel·la</string>
+    <string name="create_from_qr_code">Escaneja codi QR</string>
+    <string name="delete">Elimina</string>
+    <string name="dns_servers">Servidors DNS</string>
+    <string name="edit">Edita</string>
+    <string name="exclude_private_ips">Exclou IPs privades</string>
+    <string name="generate_new_private_key">Genera nova clau privada</string>
+    <string name="generic_error">Error “%s” desconegut</string>
+    <string name="hint_generated">(generat)</string>
+    <string name="hint_optional">(opcional)</string>
+    <string name="hint_optional_discouraged">(opcional, no recomanat)</string>
+    <string name="hint_random">(aleatori)</string>
+    <string name="import_success">Importat “%s”</string>
+    <string name="interface_title">Interfície</string>
+    <string name="key_length_error">Longitud de clau incorrecta</string>
+    <string name="log_export_success">Guardat a \"%s\"</string>
+    <string name="log_export_title">Exporta el registre</string>
+    <string name="log_saver_activity_label">Guarda registre</string>
+    <string name="log_viewer_title">Registre</string>
+    <string name="name">Nom</string>
+    <string name="parse_error_inet_address">Adreça IP</string>
+    <string name="parse_error_inet_network">Xarxa IP</string>
+    <string name="parse_error_integer">número</string>
+    <string name="private_key">Clau privada</string>
+    <string name="public_key">Clau pública</string>
+    <string name="save">Guarda</string>
+    <string name="select_all">Selecciona-ho tot</string>
+    <string name="settings">Configuració</string>
+    <string name="tunnel_error_invalid_name">Nom no vàlid</string>
+    <string name="zip_export_success">Guardat a \"%s\"</string>
+</resources>
