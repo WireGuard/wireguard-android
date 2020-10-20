@@ -13,7 +13,9 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 
 /**
- * This implementation is based on the ed25519/ref10 implementation in NaCl.
+ * Implementation of Ed25519 signature verification.
+ *
+ * <p>This implementation is based on the ed25519/ref10 implementation in NaCl.</p>
  *
  * <p>It implements this twisted Edwards curve:
  *

@@ -13,7 +13,7 @@ import java.util.Arrays;
 import androidx.annotation.Nullable;
 
 /**
- * Implementation of the Curve25519 elliptic curve algorithm.
+ * Implementation of Curve25519 ECDH.
  * <p>
  * This implementation was imported to WireGuard from noise-java:
  * https://github.com/rweather/noise-java
