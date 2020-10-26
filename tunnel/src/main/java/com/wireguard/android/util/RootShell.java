@@ -43,8 +43,11 @@ public class RootShell {
     public RootShell(final Context context) {
         localBinaryDir = new File(context.getCodeCacheDir(), "bin");
         localTemporaryDir = new File(context.getCacheDir(), "tmp");
-        preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; id -u\n",
-                context.getPackageName(), localBinaryDir, localTemporaryDir);
+        final String packageName = context.getPackageName();
+        if (packageName.contains("'"))
+            throw new RuntimeException("Impossibly invalid package name contains a single quote");
+        preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; magisk --sqlite \"UPDATE policies SET notification=0, logging=0 WHERE package_name='%s'\" >/dev/null 2>&1; id -u\n",
+                packageName, localBinaryDir, localTemporaryDir, packageName);
     }
 
     private static boolean isExecutableInPath(final String name) {
