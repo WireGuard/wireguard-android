@@ -33,6 +33,39 @@ buildscript {
     }
 }
 
+plugins {
+    id "de.undercouch.download" version "4.1.1"
+}
+
+task downloadCrowdin(type: Download) {
+	src 'https://crowdin.com/backend/download/project/wireguard.zip'
+	dest file('build/translations.zip')
+	overwrite true
+}
+
+task cleanCrowdin(type: Delete) {
+	delete 'ui/src/main/res/values-*/strings.xml'
+}
+
+task extractCrowdin(type: Copy, dependsOn: ['downloadCrowdin', 'cleanCrowdin']) {
+	mustRunAfter 'downloadCrowdin'
+	from zipTree(file('build/translations.zip'))
+	into file('build/translations')
+	doFirst {
+		delete 'build/translations'
+	}
+}
+
+task crowdin(type: Copy, dependsOn: ['extractCrowdin']) {
+    mustRunAfter 'extractCrowdin'
+    from 'build/translations/wireguard-android/ui/src/main/res'
+    into 'ui/src/main/res/'
+    doLast {
+        delete 'build/translations'
+        delete 'build/translations.zip'
+    }
+}
+
 allprojects {
     repositories {
         google()
