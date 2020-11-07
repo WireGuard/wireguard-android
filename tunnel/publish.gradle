@@ -1,53 +1,53 @@
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name 'WireGuard Tunnel Library'
-            description 'Embeddable tunnel library for WireGuard for Android'
-            url 'https://www.wireguard.com/'
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = groupName
+                artifactId = 'tunnel'
+                version wireguardVersionName
 
-            packaging 'aar'
-            groupId groupName
-            artifactId 'tunnel'
-            version wireguardVersionName
+                artifact sourcesJar
+                artifact javadocJar
 
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
+                from components.getByName("release")
+
+                pom {
+                    name = 'WireGuard Tunnel Library'
+                    description = 'Embeddable tunnel library for WireGuard for Android'
+                    url = 'https://www.wireguard.com/'
+
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:https://git.zx2c4.com/wireguard-android'
+                        developerConnection = 'scm:git:https://git.zx2c4.com/wireguard-android'
+                        url = 'https://git.zx2c4.com/wireguard-android'
+                    }
+                    developers {
+                        organization {
+                            name = 'WireGuard'
+                            url = 'https://www.wireguard.com/'
+                        }
+                    }
                 }
             }
-            scm {
-                connection 'scm:git:https://git.zx2c4.com/wireguard-android'
-                url 'https://git.zx2c4.com/wireguard-android'
-            }
-            organization {
-                name 'WireGuard'
-                url 'https://www.wireguard.com/'
-            }
         }
-    }
-}
-
-bintray {
-    user = hasProperty('BINTRAY_USER') ? getProperty('BINTRAY_USER') : System.getenv('BINTRAY_USER')
-    key = hasProperty('BINTRAY_KEY') ? getProperty('BINTRAY_KEY') : System.getenv('BINTRAY_KEY')
-
-    configurations = [ 'archives' ]
-
-    pkg {
-        repo = 'wireguard-android'
-        name = 'wireguard-android'
-        userOrg = 'wireguard'
-        licenses = [ 'Apache-2.0' ]
-        vcsUrl = 'https://git.zx2c4.com/wireguard-android'
-        publish = true
-
-        version {
-            name = wireguardVersionName
+        repositories {
+            maven {
+                name = "bintray"
+                url = uri("https://api.bintray.com/maven/wireguard/wireguard-android/wireguard-android/;publish=1;override=0")
+                credentials {
+                    username = hasProperty('BINTRAY_USER') ? getProperty('BINTRAY_USER') : System.getenv('BINTRAY_USER')
+                    password = hasProperty('BINTRAY_KEY') ? getProperty('BINTRAY_KEY') : System.getenv('BINTRAY_KEY')
+                }
+            }
         }
     }
 }
@@ -67,10 +67,6 @@ android.libraryVariants.all { variant ->
         task sourcesJar(type: Jar) {
             archiveClassifier = 'sources'
             from android.sourceSets.main.java.srcDirs
-        }
-        artifacts {
-            archives sourcesJar
-            archives javadocJar
         }
     }
 }
