@@ -41,7 +41,7 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (savedInstanceState != null) dismiss()
         val view = inflater.inflate(R.layout.add_tunnels_bottom_sheet, container, false)
-        if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA) != true) {
+        if (activity?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) != true) {
             val qrcode = view.findViewById<View>(R.id.create_from_qrcode)
             qrcode.isEnabled = false
             qrcode.visibility = View.GONE
