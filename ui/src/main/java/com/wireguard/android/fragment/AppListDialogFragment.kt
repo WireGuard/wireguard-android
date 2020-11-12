@@ -6,7 +6,9 @@ package com.wireguard.android.fragment
 
 import android.app.Dialog
 import android.content.Intent
+import android.net.ConnectivityManager.ACTION_CAPTIVE_PORTAL_SIGN_IN
 import android.os.Bundle
+import android.os.Build
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -43,6 +45,10 @@ class AppListDialogFragment : DialogFragment() {
                     val launcherIntent = Intent(Intent.ACTION_MAIN, null)
                     launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER)
                     val resolveInfos = pm.queryIntentActivities(launcherIntent, 0)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val captiveIntent = Intent(ACTION_CAPTIVE_PORTAL_SIGN_IN)
+                        resolveInfos.addAll(pm.queryIntentActivities(captiveIntent, 0))
+                    }
                     resolveInfos.forEach {
                         val packageName = it.activityInfo.packageName
                         val appData = ApplicationData(it.loadIcon(pm), it.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
