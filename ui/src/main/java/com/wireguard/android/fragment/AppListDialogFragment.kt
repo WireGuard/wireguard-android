@@ -4,8 +4,8 @@
  */
 package com.wireguard.android.fragment
 
+import android.Manifest
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -40,12 +40,11 @@ class AppListDialogFragment : DialogFragment() {
             try {
                 val applicationData: MutableList<ApplicationData> = ArrayList()
                 withContext(Dispatchers.IO) {
-                    val launcherIntent = Intent(Intent.ACTION_MAIN, null)
-                    launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER)
-                    val resolveInfos = pm.queryIntentActivities(launcherIntent, 0)
-                    resolveInfos.forEach {
-                        val packageName = it.activityInfo.packageName
-                        val appData = ApplicationData(it.loadIcon(pm), it.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
+                    val packageInfos = pm.getPackagesHoldingPermissions(arrayOf(Manifest.permission.INTERNET), 0)
+                    packageInfos.forEach {
+                        val packageName = it.packageName
+                        val appInfo = it.applicationInfo
+                        val appData = ApplicationData(appInfo.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
                         applicationData.add(appData)
                         appData.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
