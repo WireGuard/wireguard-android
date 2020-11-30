@@ -4,18 +4,18 @@ buildscript {
         agpVersion = '4.1.0'
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.2.0'
-        biometricVersion = '1.1.0-beta01'
+        biometricVersion = '1.1.0-rc01'
         collectionVersion = '1.1.0'
         constraintLayoutVersion = '2.0.4'
         coordinatorLayoutVersion = '1.1.0'
         coreKtxVersion = '1.3.1'
-        coroutinesVersion = '1.4.1'
-        datastoreVersion = '1.0.0-alpha02'
+        coroutinesVersion = '1.4.2'
+        datastoreVersion = '1.0.0-alpha04'
         desugarVersion = '1.0.10'
         fragmentVersion = '1.3.0-beta01'
         jsr305Version = '3.0.2'
         junitVersion = '4.13.1'
-        kotlinVersion = '1.4.10'
+        kotlinVersion = '1.4.20'
         lifecycleRuntimeKtxVersion = '2.3.0-beta01'
         materialComponentsVersion = '1.3.0-alpha03'
         preferenceVersion = '1.1.1'
@@ -79,9 +79,9 @@ task clean(type: Delete) {
 
 tasks {
     wrapper {
-        gradleVersion = "6.7"
+        gradleVersion = "6.7.1"
         distributionType = Wrapper.DistributionType.ALL
-        distributionSha256Sum = "0080de8491f0918e4f529a6db6820fa0b9e818ee2386117f4394f95feb1d5583"
+        distributionSha256Sum = "22449f5231796abd892c98b2a07c9ceebe4688d192cd2d6763f8e3bf8acbedeb"
     }
 }
 
