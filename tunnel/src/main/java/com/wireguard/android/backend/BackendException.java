@@ -55,6 +55,7 @@ public final class BackendException extends Exception {
         VPN_NOT_AUTHORIZED,
         UNABLE_TO_START_VPN,
         TUN_CREATION_ERROR,
-        GO_ACTIVATION_ERROR_CODE
+        GO_ACTIVATION_ERROR_CODE,
+        RE_RESOLVE_ERROR_CODE
     }
 }

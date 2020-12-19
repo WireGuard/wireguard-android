@@ -78,6 +78,8 @@ public final class GoBackend implements Backend {
 
     private static native int wgTurnOn(String ifName, int tunFd, String settings);
 
+    private static native int wgSet(String ifName, int handle, String settings);
+
     private static native String wgVersion();
 
     /**
@@ -202,6 +204,26 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
+    @Override
+    public void reResolveEndpoints(final Tunnel tunnel) throws Exception {
+        final State state = getState(tunnel);
+
+        if (state != State.UP) {
+            return;
+        }
+
+        if (tunnel != currentTunnel) {
+            return;
+        }
+
+        final Config config = currentConfig;
+        if (config == null) {
+            return;
+        }
+
+        reResolveEndpointsInternal(tunnel.getName(), config);
+    }
+
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
             throws Exception {
         Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
@@ -302,6 +324,15 @@ public final class GoBackend implements Backend {
         }
 
         tunnel.onStateChange(state);
+    }
+
+    private void reResolveEndpointsInternal(final String tunnelName, final Config config) throws Exception {
+        final String goConfig = config.toUpdatePeersWgUserspaceString();
+        final int result = wgSet(tunnelName, currentTunnelHandle, goConfig);
+
+        if (result < 0) {
+            throw new BackendException(Reason.RE_RESOLVE_ERROR_CODE, result);
+        }
     }
 
     /**

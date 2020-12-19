@@ -46,4 +46,42 @@ public class ConfigTest {
         assertEquals("Test config's allowed IPs are 0.0.0.0/0 and ::0/0", config.getPeers().get(0).getAllowedIps(), expectedAllowedIps);
         assertEquals("Test config has one DNS server", 1, config.getInterface().getDnsServers().size());
     }
+
+    @Test
+    public void wg_set_returns_correct() throws IOException {
+        Config config = null;
+        try (final InputStream is = Objects.requireNonNull(getClass().getClassLoader()).getResourceAsStream("working_multiple_peers.conf")) {
+            config = Config.parse(is);
+        } catch (final BadConfigException e) {
+            fail("'working_multiple_peers.conf' should never fail to parse");
+        }
+        assertEquals(
+                "wg set 'tun' peer vBN7qyUTb5lJtWYJ8LhbPio1Z4RcyBPGnqFBGn6O6Qg= endpoint 192.0.2.1:51820 " +
+                        "peer 6IX1oZv4VWPIaa667EhfqQatdkcU8ucXJsXlC2FRlVY= endpoint 192.0.2.2:51820",
+                config.toWgSetEndpointsString("tun")
+        );
+    }
+
+    @Test
+    public void update_peers_userspace_returns_correct() throws IOException {
+        Config config = null;
+        try (final InputStream is = Objects.requireNonNull(getClass().getClassLoader()).getResourceAsStream("working_multiple_peers.conf")) {
+            config = Config.parse(is);
+        } catch (final BadConfigException e) {
+            fail("'working_multiple_peers.conf' should never fail to parse");
+        }
+        assertEquals(
+                "public_key=bc137bab25136f9949b56609f0b85b3e2a3567845cc813c69ea1411a7e8ee908\n" +
+                        "allowed_ip=0.0.0.0/0\n" +
+                        "allowed_ip=0:0:0:0:0:0:0:0/0\n" +
+                        "endpoint=192.0.2.1:51820\n" +
+                        "update_only=true\n" +
+                        "public_key=e885f5a19bf85563c869aebaec485fa906ad764714f2e71726c5e50b61519556\n" +
+                        "allowed_ip=0.0.0.0/0\n" +
+                        "allowed_ip=0:0:0:0:0:0:0:0/0\n" +
+                        "endpoint=192.0.2.2:51820\n" +
+                        "update_only=true\n",
+                config.toUpdatePeersWgUserspaceString()
+        );
+    }
 }

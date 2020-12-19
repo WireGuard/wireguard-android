@@ -162,6 +162,22 @@ public final class WgQuickBackend implements Backend {
         return state;
     }
 
+    @Override
+    public void reResolveEndpoints(final Tunnel tunnel) throws Exception {
+        final State state = getState(tunnel);
+
+        if (state != State.UP) {
+            return;
+        }
+
+        final Config config = runningConfigs.get(tunnel);
+        if (config == null) {
+            return;
+        }
+
+        reResolveEndpointsInternal(tunnel.getName(), config);
+    }
+
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state) throws Exception {
         Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
 
@@ -187,5 +203,20 @@ public final class WgQuickBackend implements Backend {
             runningConfigs.remove(tunnel);
 
         tunnel.onStateChange(state);
+    }
+
+    private void reResolveEndpointsInternal(final String tunnelName, final Config config) throws Exception {
+        final String wgSetCmdLine = config.toWgSetEndpointsString(tunnelName);
+        if (wgSetCmdLine == null) {
+            return;
+        }
+
+        Log.i(TAG, "Re-resolving peer endpoints of " + tunnelName);
+
+        final int result = rootShell.run(null, wgSetCmdLine);
+
+        if (result != 0) {
+            throw new BackendException(Reason.RE_RESOLVE_ERROR_CODE, result);
+        }
     }
 }

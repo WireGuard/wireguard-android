@@ -200,4 +200,29 @@ func wgVersion() *C.char {
 	return C.CString(device.WireGuardGoVersion)
 }
 
+//export wgSet
+func wgSet(ifnameRef string, tunnelHandle int32, settings string) int32 {
+	handle, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return -1
+	}
+
+	interfaceName := string([]byte(ifnameRef))
+
+	logger := &device.Logger{
+		Debug: log.New(&AndroidLogger{level: C.ANDROID_LOG_DEBUG, interfaceName: interfaceName}, "", 0),
+		Info:  log.New(&AndroidLogger{level: C.ANDROID_LOG_INFO, interfaceName: interfaceName}, "", 0),
+		Error: log.New(&AndroidLogger{level: C.ANDROID_LOG_ERROR, interfaceName: interfaceName}, "", 0),
+	}
+
+	setError := handle.device.IpcSetOperation(bufio.NewReader(strings.NewReader(settings)))
+	if setError != nil {
+		logger.Error.Println(setError)
+		return -1
+	}
+
+	logger.Info.Println("Re-resolved peer endpoints successfully")
+	return 0
+}
+
 func main() {}

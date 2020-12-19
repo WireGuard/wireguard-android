@@ -182,6 +182,52 @@ public final class Config {
         return sb.toString();
     }
 
+    /**
+     * Serializes the {@code Config} for use with the WireGuard cross-platform userspace API.
+     * Specifically to be used for updating peer configuration, such as endpoints.
+     *
+     * @return the {@code Config} represented as a series of "key=value" lines
+     */
+    public String toUpdatePeersWgUserspaceString() {
+        final StringBuilder sb = new StringBuilder();
+        for (final Peer peer : peers) {
+            sb.append(peer.toWgUserspaceString());
+            sb.append("update_only=true\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Converts the {@code Config} into a string containing a {@code wg set} command line for updating
+     * peer endpoints.
+     *
+     * @param tunnelName name of the interface
+     * @return a wg set command line for updating peer endpoints, or null if no peer endpoints defined
+     */
+    @Nullable
+    public String toWgSetEndpointsString(final String tunnelName) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("wg ")
+                .append("set ")
+                .append('\'')
+                .append(tunnelName)
+                .append('\'');
+        boolean gotPeers = false;
+        for (final Peer peer : peers) {
+            final String peerString = peer.toWgSetEndpointString();
+            if (peerString != null) {
+                gotPeers = true;
+                sb.append(' ').append(peerString);
+            }
+        }
+
+        if (gotPeers) {
+            return sb.toString();
+        }
+
+        return null;
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     public static final class Builder {
         // Defaults to an empty set.

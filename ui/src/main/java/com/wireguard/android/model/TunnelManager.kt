@@ -210,6 +210,16 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         newState
     }
 
+    suspend fun reResolveEndpoints() {
+        getTunnels().forEach { tunnel ->
+            if (tunnel.name in getBackend().runningTunnelNames) {
+                withContext(Dispatchers.IO) {
+                    getBackend().reResolveEndpoints(tunnel)
+                }
+            }
+        }
+    }
+
     class IntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             applicationScope.launch {

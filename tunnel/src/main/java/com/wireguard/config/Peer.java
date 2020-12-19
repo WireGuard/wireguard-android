@@ -185,6 +185,25 @@ public final class Peer {
     }
 
     /**
+     * Converts the {@code Peer} into a string suitable for inclusion in a {@code wg set}
+     * command line for updating the endpoint.
+     *
+     * @return the {@code Peer} represented as 'peer PUBLIC_KEY endpoint ENDPOINT' or null if no
+     *         endpoint defined
+     */
+    @Nullable
+    public String toWgSetEndpointString() {
+        if (endpoint.isPresent()) {
+            return "peer " +
+                    publicKey.toBase64() +
+                    " endpoint " +
+                    endpoint.get();
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Serializes the {@code Peer} for use with the WireGuard cross-platform userspace API. Note
      * that not all attributes are included in this representation.
      *
