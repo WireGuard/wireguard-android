@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="delete_error">
+        <item quantity="one">No s\'ha pogut esborrar %d túnel: %s</item>
+        <item quantity="other">No s\'han pogut esborrar %d túnels: %s</item>
+    </plurals>
+    <plurals name="delete_title">
+        <item quantity="one">%d túnel seleccionat</item>
+        <item quantity="other">%d túnels seleccionats</item>
+    </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="one">%d exclòs</item>
         <item quantity="other">%d exclosos</item>
@@ -27,6 +35,7 @@
         <item quantity="one">segon</item>
         <item quantity="other">segons</item>
     </plurals>
+    <string name="add_peer">Afegir parell</string>
     <string name="addresses">Adreces</string>
     <string name="applications">Aplicacions</string>
     <string name="allowed_ips">IPs permeses</string>
@@ -38,7 +47,12 @@
     <string name="bad_config_reason_unknown_attribute">Atribut desconegut</string>
     <string name="bad_config_reason_unknown_section">Secció desconeguda</string>
     <string name="cancel">Cancel·la</string>
+    <string name="create_activity_title">Crear túnel WireGuard</string>
+    <string name="create_empty">Crea des de zero</string>
+    <string name="create_from_file">Importa des de fitxer o arxiu</string>
     <string name="create_from_qr_code">Escaneja codi QR</string>
+    <string name="create_tunnel">Crear túnel</string>
+    <string name="dark_theme_title">Utilitza tema fosc</string>
     <string name="delete">Elimina</string>
     <string name="dns_servers">Servidors DNS</string>
     <string name="edit">Edita</string>
@@ -49,22 +63,36 @@
     <string name="hint_optional">(opcional)</string>
     <string name="hint_optional_discouraged">(opcional, no recomanat)</string>
     <string name="hint_random">(aleatori)</string>
+    <string name="import_from_qr_code">Importa túnel desde codi QR</string>
     <string name="import_success">Importat “%s”</string>
     <string name="interface_title">Interfície</string>
     <string name="key_length_error">Longitud de clau incorrecta</string>
     <string name="log_export_success">Guardat a \"%s\"</string>
     <string name="log_export_title">Exporta el registre</string>
     <string name="log_saver_activity_label">Guarda registre</string>
+    <string name="log_viewer_pref_title">Mostra el registre d\'aplicació</string>
     <string name="log_viewer_title">Registre</string>
+    <string name="multiple_tunnels_title">Permet múltiples túnels simultanis</string>
     <string name="name">Nom</string>
+    <string name="no_tunnels_error">No existeixen túnels</string>
     <string name="parse_error_inet_address">Adreça IP</string>
     <string name="parse_error_inet_network">Xarxa IP</string>
     <string name="parse_error_integer">número</string>
+    <string name="peer">Parell</string>
+    <string name="pre_shared_key_enabled">activat</string>
     <string name="private_key">Clau privada</string>
     <string name="public_key">Clau pública</string>
+    <string name="restore_on_boot_title">Restableix a l\'inici</string>
     <string name="save">Guarda</string>
     <string name="select_all">Selecciona-ho tot</string>
     <string name="settings">Configuració</string>
+    <string name="tunnel_error_already_exists">El túnel \"%s\" ja existeix</string>
     <string name="tunnel_error_invalid_name">Nom no vàlid</string>
+    <string name="tunnel_list_placeholder">Afegiu un túnel usant el botó blau</string>
+    <string name="tunnel_name">Nom del túnel</string>
+    <string name="unknown_error">Error desconegut</string>
+    <string name="version_summary_unknown">Versió de %s desconeguda</string>
     <string name="zip_export_success">Guardat a \"%s\"</string>
+    <string name="biometric_auth_error">Error d\'autenticació</string>
+    <string name="biometric_auth_error_reason">Error d\'autenticació: %s</string>
 </resources>

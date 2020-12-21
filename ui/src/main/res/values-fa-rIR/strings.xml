@@ -171,6 +171,7 @@
     <string name="save">ذخیره</string>
     <string name="select_all">انتخاب همه</string>
     <string name="settings">تنظیمات</string>
+    <string name="shell_start_error">آغاز پوسته شکست خورد: %d</string>
     <string name="success_application_will_restart">موفقیت. برنامه اکنون دوباره راه‌اندازی خواهد شد…</string>
     <string name="toggle_all">معکوس کردن همه</string>
     <string name="tools_installer_title">ابزارهای خط فرمان را نصب کنید</string>
