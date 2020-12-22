@@ -13,8 +13,11 @@ final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
     compileSdkVersion 30
-    buildFeatures.dataBinding = true
-    buildFeatures.viewBinding = true
+    buildFeatures {
+        buildConfig = true
+        dataBinding = true
+        viewBinding = true
+    }
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21
