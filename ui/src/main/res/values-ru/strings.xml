@@ -32,7 +32,7 @@
     </plurals>
     <plurals name="set_excluded_applications">
         <item quantity="one">%d Исключенное приложение</item>
-        <item quantity="few">%d Исключенных приложений</item>
+        <item quantity="few">%d Исключенных приложения</item>
         <item quantity="many">%d Исключенных приложений</item>
         <item quantity="other">%d Исключенных приложений</item>
     </plurals>
@@ -56,7 +56,7 @@
     </plurals>
     <string name="all_applications">Все приложения</string>
     <string name="exclude_from_tunnel">Исключить</string>
-    <string name="include_in_tunnel">Только включить</string>
+    <string name="include_in_tunnel">Только включено</string>
     <plurals name="include_n_applications">
         <item quantity="one">Включить %d приложение</item>
         <item quantity="few">Включить %d приложения</item>
@@ -82,12 +82,12 @@
         <item quantity="other">секунд</item>
     </plurals>
     <string name="use_all_applications">Использовать все приложения</string>
-    <string name="add_peer">Добавить пира</string>
+    <string name="add_peer">Добавить пир</string>
     <string name="addresses">IP-адреса</string>
     <string name="applications">Приложения</string>
-    <string name="allow_remote_control_intents_summary_off">Сторонние приложения не могут переключать туннели (рекомендуется)</string>
-    <string name="allow_remote_control_intents_summary_on">Сторонние приложения могут переключать туннели (дополнительно)</string>
-    <string name="allow_remote_control_intents_title">Доступ к другим приложениям</string>
+    <string name="allow_remote_control_intents_summary_off">Внешние приложения не могут переключать туннели (рекомендуется)</string>
+    <string name="allow_remote_control_intents_summary_on">Внешние приложения могут переключать туннели (расширенное)</string>
+    <string name="allow_remote_control_intents_title">Разрешить управление через внешние приложения</string>
     <string name="allowed_ips">Разрешенные IP-адреса</string>
     <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s из %2$s</string>
@@ -153,18 +153,18 @@
     <string name="key_length_explanation_binary">: Ключи WireGuard должны быть 32 байта</string>
     <string name="key_length_explanation_hex">: HEX ключи WireGuard должны содержать 64 символа (32 байта)</string>
     <string name="listen_port">Порт</string>
-    <string name="log_export_error">Не удалось экспортировать логи: %s</string>
-    <string name="log_export_subject">Файл логов WireGuard Android</string>
+    <string name="log_export_error">Не удалось экспортировать журнал: %s</string>
+    <string name="log_export_subject">Файл журнала WireGuard Android</string>
     <string name="log_export_success">Сохранено в “%s”</string>
-    <string name="log_export_title">Экспорт логов в файл</string>
-    <string name="log_saver_activity_label">Сохранить логи</string>
-    <string name="log_viewer_pref_summary">Логи могут помочь с отладкой</string>
-    <string name="log_viewer_pref_title">Просмотр логов приложения</string>
-    <string name="log_viewer_title">Логи</string>
+    <string name="log_export_title">Экспорт журнала в файл</string>
+    <string name="log_saver_activity_label">Сохранить журнал</string>
+    <string name="log_viewer_pref_summary">Журналы могут помочь при отладке</string>
+    <string name="log_viewer_pref_title">Просмотр журналов приложения</string>
+    <string name="log_viewer_title">Журнал</string>
     <string name="logcat_error">Не удалось запустить logcat: </string>
     <string name="module_disabler_disabled_summary">Экспериментальный модуль ядра приоритетнее и улучшает производительность</string>
     <string name="module_disabler_disabled_title">Включить модуль ядра</string>
-    <string name="module_disabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
+    <string name="module_disabler_enabled_summary">Более медленный бэкэнд пользовательского пространства может улучшить стабильность</string>
     <string name="module_disabler_enabled_title">Выключить модуль ядра</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
     <string name="module_installer_initial">Экспериментальный модуль ядра может улучшить производительность</string>
@@ -176,7 +176,7 @@
     <string name="multiple_tunnels_summary_off">Только один туннель, выключит другие</string>
     <string name="multiple_tunnels_summary_on">Могут быть включены несколько туннелей одновременно</string>
     <string name="multiple_tunnels_title">Несколько туннелей</string>
-    <string name="name">Имя</string>
+    <string name="name">Название</string>
     <string name="no_config_error">Попытка поднять туннель без конфигурации</string>
     <string name="no_configs_error">Конфигурации не найдены</string>
     <string name="no_tunnels_error">Туннелей не существует</string>
@@ -229,13 +229,13 @@
     <string name="tunnel_create_error">Не удалось создать туннель: %s</string>
     <string name="tunnel_create_success">Успешно созданный туннель “%s”</string>
     <string name="tunnel_error_already_exists">Туннель “%s” уже существует</string>
-    <string name="tunnel_error_invalid_name">Неправильное имя</string>
+    <string name="tunnel_error_invalid_name">Некорректное название</string>
     <string name="tunnel_list_placeholder">Добавьте туннель с помощью синей кнопки</string>
     <string name="tunnel_name">Название туннеля</string>
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
     <string name="tunnel_rename_error">Не удалось переименовать туннель: %s</string>
     <string name="tunnel_rename_success">Туннель успешно переименован в “%s”</string>
-    <string name="type_name_go_userspace">Пользовательское пространство</string>
+    <string name="type_name_go_userspace">Перейти в пользовательское пространство</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="version_summary">%1$s v%2$s</string>
