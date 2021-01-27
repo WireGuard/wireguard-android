@@ -10,15 +10,12 @@ package main
 import "C"
 
 import (
-	"bufio"
-	"bytes"
-	"log"
+	"fmt"
 	"math"
 	"net"
 	"os"
 	"os/signal"
 	"runtime"
-	"strings"
 	"unsafe"
 
 	"golang.org/x/sys/unix"
@@ -29,13 +26,21 @@ import (
 )
 
 type AndroidLogger struct {
-	level         C.int
-	interfaceName string
+	level C.int
+	tag   *C.char
 }
 
-func (l AndroidLogger) Write(p []byte) (int, error) {
-	C.__android_log_write(l.level, C.CString("WireGuard/GoBackend/"+l.interfaceName), C.CString(string(p)))
-	return len(p), nil
+func cstring(s string) *C.char {
+	b, err := unix.BytePtrFromString(s)
+	if err != nil {
+		b := [1]C.char{}
+		return &b[0]
+	}
+	return (*C.char)(unsafe.Pointer(b))
+}
+
+func (l AndroidLogger) Printf(format string, args ...interface{}) {
+	C.__android_log_write(l.level, l.tag, cstring(fmt.Sprintf(format, args...)))
 }
 
 type TunnelHandle struct {
@@ -55,39 +60,38 @@ func init() {
 			select {
 			case <-signals:
 				n := runtime.Stack(buf, true)
+				if n == len(buf) {
+					n--
+				}
 				buf[n] = 0
-				C.__android_log_write(C.ANDROID_LOG_ERROR, C.CString("WireGuard/GoBackend/Stacktrace"), (*C.char)(unsafe.Pointer(&buf[0])))
+				C.__android_log_write(C.ANDROID_LOG_ERROR, cstring("WireGuard/GoBackend/Stacktrace"), (*C.char)(unsafe.Pointer(&buf[0])))
 			}
 		}
 	}()
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
-	interfaceName := string([]byte(ifnameRef))
-
+func wgTurnOn(interfaceName string, tunFd int32, settings string) int32 {
+	tag := cstring("WireGuard/GoBackend/" + interfaceName)
 	logger := &device.Logger{
-		Debug: log.New(&AndroidLogger{level: C.ANDROID_LOG_DEBUG, interfaceName: interfaceName}, "", 0),
-		Info:  log.New(&AndroidLogger{level: C.ANDROID_LOG_INFO, interfaceName: interfaceName}, "", 0),
-		Error: log.New(&AndroidLogger{level: C.ANDROID_LOG_ERROR, interfaceName: interfaceName}, "", 0),
+		Verbosef: AndroidLogger{level: C.ANDROID_LOG_DEBUG, tag: tag}.Printf,
+		Errorf:   AndroidLogger{level: C.ANDROID_LOG_ERROR, tag: tag}.Printf,
 	}
-
-	logger.Debug.Println("Debug log enabled")
 
 	tun, name, err := tun.CreateUnmonitoredTUNFromFD(int(tunFd))
 	if err != nil {
 		unix.Close(int(tunFd))
-		logger.Error.Println(err)
+		logger.Errorf("CreateUnmonitoredTUNFromFD: %v", err)
 		return -1
 	}
 
-	logger.Info.Println("Attaching to interface", name)
+	logger.Verbosef("Attaching to interface %v", name)
 	device := device.NewDevice(tun, logger)
 
-	setError := device.IpcSetOperation(bufio.NewReader(strings.NewReader(settings)))
-	if setError != nil {
+	err = device.IpcSet(settings)
+	if err != nil {
 		unix.Close(int(tunFd))
-		logger.Error.Println(setError)
+		logger.Errorf("IpcSet: %v", err)
 		return -1
 	}
 	device.DisableSomeRoamingForBrokenMobileSemantics()
@@ -96,12 +100,12 @@ func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 
 	uapiFile, err := ipc.UAPIOpen(name)
 	if err != nil {
-		logger.Error.Println(err)
+		logger.Errorf("UAPIOpen: %v", err)
 	} else {
 		uapi, err = ipc.UAPIListen(name, uapiFile)
 		if err != nil {
 			uapiFile.Close()
-			logger.Error.Println(err)
+			logger.Errorf("UAPIListen: %v", err)
 		} else {
 			go func() {
 				for {
@@ -116,7 +120,7 @@ func wgTurnOn(ifnameRef string, tunFd int32, settings string) int32 {
 	}
 
 	device.Up()
-	logger.Info.Println("Device started")
+	logger.Verbosef("Device started")
 
 	var i int32
 	for i = 0; i < math.MaxInt32; i++ {
@@ -185,14 +189,11 @@ func wgGetConfig(tunnelHandle int32) *C.char {
 	if !ok {
 		return nil
 	}
-	settings := new(bytes.Buffer)
-	writer := bufio.NewWriter(settings)
-	err := handle.device.IpcGetOperation(writer)
+	settings, err := handle.device.IpcGet()
 	if err != nil {
 		return nil
 	}
-	writer.Flush()
-	return C.CString(settings.String())
+	return C.CString(settings)
 }
 
 //export wgVersion
