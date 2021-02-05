@@ -29,7 +29,7 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -69,7 +69,13 @@ task crowdin(type: Copy, dependsOn: ['extractCrowdin']) {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() {
+            content {
+                // https://github.com/journeyapps/zxing-android-embedded/issues/606
+                includeModule("com.journeyapps", "zxing-android-embedded")
+            }
+        }
     }
 }
 
