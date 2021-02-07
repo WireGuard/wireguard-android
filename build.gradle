@@ -74,6 +74,8 @@ allprojects {
             content {
                 // https://github.com/journeyapps/zxing-android-embedded/issues/606
                 includeModule("com.journeyapps", "zxing-android-embedded")
+                // https://youtrack.jetbrains.com/issue/IDEA-261387
+                includeModule("org.jetbrains.trove4j", "trove4j")
             }
         }
     }
