@@ -36,6 +36,10 @@ afterEvaluate {
                             name = 'WireGuard'
                             url = 'https://www.wireguard.com/'
                         }
+                        developer {
+                            name = 'WireGuard'
+                            email = 'team@wireguard.com'
+                        }
                     }
                 }
             }
