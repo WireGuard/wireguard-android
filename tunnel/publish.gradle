@@ -73,5 +73,6 @@ android.libraryVariants.all { variant ->
 }
 
 signing {
+    useGpgCmd()
     sign publishing.publications
 }
