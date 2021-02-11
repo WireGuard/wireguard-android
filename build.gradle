@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        activityVersion = '1.2.0-rc01'
+        activityVersion = '1.2.0'
         agpVersion = '4.1.2'
         annotationsVersion = '1.1.0'
         appcompatVersion = '1.2.0'
@@ -12,11 +12,11 @@ buildscript {
         coroutinesVersion = '1.4.2'
         datastoreVersion = '1.0.0-alpha02'
         desugarVersion = '1.0.10'
-        fragmentVersion = '1.3.0-rc02'
+        fragmentVersion = '1.3.0'
         jsr305Version = '3.0.2'
         junitVersion = '4.13.1'
         kotlinVersion = '1.4.21-2'
-        lifecycleRuntimeKtxVersion = '2.3.0-rc01'
+        lifecycleRuntimeKtxVersion = '2.3.0'
         materialComponentsVersion = '1.3.0-rc01'
         preferenceVersion = '1.1.1'
         zxingEmbeddedVersion = '3.6.0'
