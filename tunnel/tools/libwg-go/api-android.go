@@ -119,7 +119,13 @@ func wgTurnOn(interfaceName string, tunFd int32, settings string) int32 {
 		}
 	}
 
-	device.Up()
+	err = device.Up()
+	if err != nil {
+		logger.Errorf("Unable to bring up device: %v", err)
+		uapiFile.Close()
+		device.Close()
+		return -1
+	}
 	logger.Verbosef("Device started")
 
 	var i int32
@@ -129,7 +135,9 @@ func wgTurnOn(interfaceName string, tunFd int32, settings string) int32 {
 		}
 	}
 	if i == math.MaxInt32 {
-		unix.Close(int(tunFd))
+		logger.Errorf("Unable to find empty handle")
+		uapiFile.Close()
+		device.Close()
 		return -1
 	}
 	tunnelHandles[i] = TunnelHandle{device: device, uapi: uapi}
