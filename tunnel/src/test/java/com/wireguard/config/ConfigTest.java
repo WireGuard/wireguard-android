@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -45,5 +46,9 @@ public class ConfigTest {
         assertEquals("Test config has exactly one peer", 1, config.getPeers().size());
         assertEquals("Test config's allowed IPs are 0.0.0.0/0 and ::0/0", config.getPeers().get(0).getAllowedIps(), expectedAllowedIps);
         assertEquals("Test config has one DNS server", 1, config.getInterface().getDnsServers().size());
+        assertEquals("Test config loads multiple pre up scripts", Arrays.asList("echo \"pre up 1\"", "echo \"pre up 2\""), config.getInterface().getPreUp());
+        assertEquals("Test config loads single post up script", Collections.singletonList("echo \"post up 1\""), config.getInterface().getPostUp());
+        assertEquals("Test config loads single pre down script", Collections.singletonList("echo \"pre down 1\""), config.getInterface().getPreDown());
+        assertEquals("Test config loads single post down scripts", Collections.singletonList("echo \"post down 1\""), config.getInterface().getPostDown());
     }
 }
