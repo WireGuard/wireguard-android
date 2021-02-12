@@ -225,7 +225,7 @@
     <string name="type_name_go_userspace">Spațiu de utilizator Go</string>
     <string name="type_name_kernel_module">Modul nucleu</string>
     <string name="unknown_error">Eroare necunoscută</string>
-    <string name="version_summary">Bibliotecă %1$s v%2$s</string>
+    <string name="version_summary">Bibliotecă %1$s %2$s</string>
     <string name="version_summary_checking">Se verifică versiunea bibliotecii %s</string>
     <string name="version_summary_unknown">Versiune %s necunoscută</string>
     <string name="version_title">WireGuard pentru Android v%s</string>

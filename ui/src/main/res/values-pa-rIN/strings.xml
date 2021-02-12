@@ -212,7 +212,7 @@
     <string name="type_name_go_userspace">ਵਰਤੋਂ-ਸਪੇਸ ਤੇ ਜਾਓ</string>
     <string name="type_name_kernel_module">ਕਰਨਲ ਮੋਡੀਊਲ</string>
     <string name="unknown_error">ਅਣਪਛਾਤੀ ਗਲਤੀ</string>
-    <string name="version_summary">%1$s ਬੈਕਐਂਡ v%2$s</string>
+    <string name="version_summary">%1$s ਬੈਕਐਂਡ %2$s</string>
     <string name="version_summary_checking">%s ਬੈਕਐਂਡ ਵਰਜ਼ਨ ਦੀ ਜਾਂਚ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ</string>
     <string name="version_summary_unknown">ਅਣਪਛਾਤਾ %s ਵਰਜਨ</string>
     <string name="version_title">Android ਲਈ WireGuard v%s</string>

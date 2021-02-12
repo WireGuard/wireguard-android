@@ -199,7 +199,7 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">WireGuard for Android v%s</string>

@@ -203,7 +203,7 @@
     <string name="type_name_go_userspace">userspace पे जाए </string>
     <string name="type_name_kernel_module">कर्नेल मॉड्यूल</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
-    <string name="version_summary">%1$s बैकएंड v%2$s</string>
+    <string name="version_summary">%1$s बैकएंड %2$s</string>
     <string name="version_summary_checking">%s बैकएंड संस्करण की जाँच कर रहा है</string>
     <string name="version_summary_unknown">अज्ञात %s संस्करण</string>
     <string name="version_title">WireGuard for Android v%s</string>

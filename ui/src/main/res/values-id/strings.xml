@@ -199,7 +199,7 @@
     <string name="type_name_go_userspace">Ke userspace</string>
     <string name="type_name_kernel_module">Modul kernel</string>
     <string name="unknown_error">Eror tidak diketahui</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Mengecek versi backend %s</string>
     <string name="version_summary_unknown">Versi %s Tidak diketahui</string>
     <string name="version_title">WireGuard untuk Android v%s</string>

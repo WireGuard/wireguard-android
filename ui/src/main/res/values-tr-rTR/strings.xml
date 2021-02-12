@@ -212,7 +212,7 @@
     <string name="type_name_go_userspace">Kullanıcı alanına git</string>
     <string name="type_name_kernel_module">Çekirdek modülü</string>
     <string name="unknown_error">Bilinmeyen hata</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">%s arka uç sürümü kontrol ediliyor</string>
     <string name="version_summary_unknown">Bilinmeyen %s sürümü</string>
     <string name="version_title">Android için WireGuard v%s</string>

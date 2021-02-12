@@ -199,7 +199,7 @@
     <string name="type_name_go_userspace">Go ユーザースペース</string>
     <string name="type_name_kernel_module">カーネルモジュール</string>
     <string name="unknown_error">未知のエラー</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">%s バックエンドのバージョンを確認中</string>
     <string name="version_summary_unknown">未知の %s バージョン</string>
     <string name="version_title">WireGuard for Android v%s</string>

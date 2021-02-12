@@ -212,7 +212,7 @@
     <string name="type_name_go_userspace">Spazio utente Go</string>
     <string name="type_name_kernel_module">Modulo kernel</string>
     <string name="unknown_error">Errore sconosciuto</string>
-    <string name="version_summary">Backend %1$s v%2$s</string>
+    <string name="version_summary">Backend %1$s %2$s</string>
     <string name="version_summary_checking">Controllo versione backend %s</string>
     <string name="version_summary_unknown">Versione %s sconosciuta</string>
     <string name="version_title">WireGuard per Android v%s</string>

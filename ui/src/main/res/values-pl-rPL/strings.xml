@@ -238,7 +238,7 @@
     <string name="type_name_go_userspace">Przestrzeń użytkownika Go</string>
     <string name="type_name_kernel_module">Moduł jądra</string>
     <string name="unknown_error">Nieznany błąd</string>
-    <string name="version_summary">Implementacja %1$s v%2$s</string>
+    <string name="version_summary">Implementacja %1$s %2$s</string>
     <string name="version_summary_checking">Sprawdzanie wersji %s implementacji</string>
     <string name="version_summary_unknown">Nieznana %s wersja</string>
     <string name="version_title">WireGuard dla systemu Android v%s</string>

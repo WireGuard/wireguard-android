@@ -212,7 +212,7 @@
     <string name="type_name_go_userspace">Nom de l\'espace utilisateur</string>
     <string name="type_name_kernel_module">Module noyau</string>
     <string name="unknown_error">Erreur inconnue</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Vérification de la version %s du backend</string>
     <string name="version_summary_unknown">Version %s inconnue</string>
     <string name="version_title">WireGuard pour Android v%s</string>

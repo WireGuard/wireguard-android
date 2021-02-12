@@ -238,7 +238,7 @@
     <string name="type_name_go_userspace">Перейти в пользовательское пространство</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
-    <string name="version_summary">%1$s v%2$s</string>
+    <string name="version_summary">%1$s %2$s</string>
     <string name="version_summary_checking">Проверка версии %s</string>
     <string name="version_summary_unknown">Неизвестная версия %s</string>
     <string name="version_title">WireGuard для Android v%s</string>

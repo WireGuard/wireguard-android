@@ -163,7 +163,7 @@
     <string name="type_name_go_userspace">Ir al espacio de usuario</string>
     <string name="type_name_kernel_module">Módulo Kernel</string>
     <string name="unknown_error">Error desconocido</string>
-    <string name="version_summary">%1$s backend v%2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Comprobando versión de backend %s</string>
     <string name="version_summary_unknown">Versión %s desconocida</string>
     <string name="version_title">WireGuard para Android -%s</string>
