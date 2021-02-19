@@ -19,7 +19,7 @@
         android:name="android.software.leanback"
         android:required="false" />
     <uses-feature
-        android:name="android.hardware.camera"
+        android:name="android.hardware.camera.any"
         android:required="false" />
 
     <permission
@@ -28,6 +28,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/permission_label"
         android:protectionLevel="dangerous" />
+
+    <!-- This is safe to override, the APIs we use work perfectly fine on Android 6 -->
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <application
         android:name=".Application"
