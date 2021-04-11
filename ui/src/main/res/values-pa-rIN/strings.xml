@@ -97,10 +97,17 @@
     <string name="create_output_dir_error">ਆਉਟਪੁੱਟ ਡਾਇਰੈਕਟਰੀ ਬਣਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ ਹੈ</string>
     <string name="create_temp_dir_error">ਲੋਕਲ ਆਰਜ਼ੀ ਡਾਇਰੈਕਟਰੀ ਬਣਾਈ ਨਹੀਂ ਜਾ ਸਕਦੀ ਹੈ</string>
     <string name="create_tunnel">ਟਨਲ ਬਣਾਓ</string>
+    <string name="copied_to_clipboard">%s ਕਲਿੱਪਬੋਰਡ ਵਿੱਚ ਕਾਪੀ ਕੀਤਾ</string>
     <string name="dark_theme_summary_off">ਇਸ ਵੇਲੇ ਹਲਕਾ (ਦਿਨ) ਥੀਮ ਵਰਤਿਆ ਜਾ ਰਿਹਾ ਹੈ</string>
     <string name="dark_theme_summary_on">ਇਸ ਵੇਲੇ ਗੂੜ੍ਹਾ (ਰਾਤ) ਥੀਮ ਵਰਤਿਆ ਜਾ ਰਿਹਾ ਹੈ</string>
     <string name="dark_theme_title">ਗੂੜ੍ਹਾ ਥੀਮ ਵਰਤੋਂ</string>
     <string name="delete">ਹਟਾਓ</string>
+    <string name="tv_delete">ਹਟਾਉਣ ਲਈ ਟਨਲ ਚੁਣੋ</string>
+    <string name="tv_select_a_storage_drive">ਸਟੋਰੇਜ਼ ਡਰਾਈਵ ਚੁਣੋ</string>
+    <string name="tv_no_file_picker">ਫਾਇਲਾਂ ਬਰਾਊਜ਼ ਕਰਨ ਲਈ ਫਾਇਲ ਪਰਬੰਧਕੀ ਸਹੂਲਤ ਇੰਸਟਾਲ ਕਰੋ</string>
+    <string name="tv_add_tunnel_get_started">ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਟਨਲ ਜੋੜੋ</string>
+    <string name="disable_config_export_title">ਸੰਰਚਨਾ ਐਕਸਪੋਰਟ ਕਰਨ ਨੂੰ ਅਸਮਰੱਥ ਕਰੋ</string>
+    <string name="disable_config_export_description">ਸੰਰਚਨਾ ਐਕਸਪੋਰਟ ਕਰਨ ਉੱਤੇ ਰੋਕ ਲਾਉਣ ਨਾਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਲਈ ਪਹੁੰਚ ਘਟੇਗੀ</string>
     <string name="dns_servers">DNS ਸਰਵਰ</string>
     <string name="edit">ਸੋਧੋ</string>
     <string name="endpoint">ਐਂਡ-ਪੁਆਇੰਟ</string>

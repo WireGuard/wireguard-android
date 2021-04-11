@@ -97,10 +97,17 @@
     <string name="create_output_dir_error">Impossible de créer le répertoire de sortie</string>
     <string name="create_temp_dir_error">Impossible de créer le répertoire temporaire local</string>
     <string name="create_tunnel">Créer un tunnel</string>
+    <string name="copied_to_clipboard">%s copié dans le presse-papier</string>
     <string name="dark_theme_summary_off">Utilisation en cours du thème clair (jour)</string>
     <string name="dark_theme_summary_on">Utilisation en cours du thème sombre (nuit)</string>
     <string name="dark_theme_title">Utilisez le thème sombre</string>
     <string name="delete">Supprimer</string>
+    <string name="tv_delete">Sélectionner le tunnel à supprimer</string>
+    <string name="tv_select_a_storage_drive">Sélectionner un disque de stockage</string>
+    <string name="tv_no_file_picker">Veuillez installer un utilitaire de gestion de fichiers pour parcourir les fichiers</string>
+    <string name="tv_add_tunnel_get_started">Ajouter un tunnel pour commencer</string>
+    <string name="disable_config_export_title">Désactiver l\'export de configuration</string>
+    <string name="disable_config_export_description">La désactivation de l\'export de configuration rend les clés privées moins accessibles</string>
     <string name="dns_servers">Serveurs DNS</string>
     <string name="edit">Modifier</string>
     <string name="endpoint">Point de terminaison</string>

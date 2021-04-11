@@ -123,10 +123,17 @@
     <string name="create_output_dir_error">Nie można utworzyć folderu wyjściowego</string>
     <string name="create_temp_dir_error">Nie można stworzyć tymczasowego folderu lokalnego</string>
     <string name="create_tunnel">Utwórz Tunel</string>
+    <string name="copied_to_clipboard">%s skopiowano do schowka</string>
     <string name="dark_theme_summary_off">Obecnie używasz jasnego (dzień) motywu</string>
     <string name="dark_theme_summary_on">Obecnie używa ciemnego (nocnego) motywu</string>
     <string name="dark_theme_title">Użyj ciemnego motywu</string>
     <string name="delete">Usuń</string>
+    <string name="tv_delete">Wybierz tunel do usunięcia</string>
+    <string name="tv_select_a_storage_drive">Wybierz dysk pamięci</string>
+    <string name="tv_no_file_picker">Zainstaluj narzędzie do zarządzania plikami, aby przeglądać pliki</string>
+    <string name="tv_add_tunnel_get_started">Dodaj tunel, aby rozpocząć</string>
+    <string name="disable_config_export_title">Wyłącz eksportowanie konfiguracji</string>
+    <string name="disable_config_export_description">Wyłączenie eksportowania konfiguracji sprawi, że klucze prywatne będą mniej dostępne</string>
     <string name="dns_servers">Serwery DNS</string>
     <string name="edit">Edytuj</string>
     <string name="endpoint">Punkt końcowy</string>

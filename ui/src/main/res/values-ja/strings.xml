@@ -84,10 +84,17 @@
     <string name="create_output_dir_error">出力ディレクトリを作成できません</string>
     <string name="create_temp_dir_error">ローカルに一時ディレクトリを作成できません</string>
     <string name="create_tunnel">トンネルを作成</string>
+    <string name="copied_to_clipboard">%s をクリップボードにコピーしました</string>
     <string name="dark_theme_summary_off">ライトテーマを使用中</string>
     <string name="dark_theme_summary_on">ダークテーマを使用中</string>
     <string name="dark_theme_title">ダークテーマを使用する</string>
     <string name="delete">削除</string>
+    <string name="tv_delete">削除するトンネルを選択</string>
+    <string name="tv_select_a_storage_drive">ストレージを選択</string>
+    <string name="tv_no_file_picker">ファイルを参照するにはファイル管理アプリをインストールしてください</string>
+    <string name="tv_add_tunnel_get_started">トンネルを追加して開始する</string>
+    <string name="disable_config_export_title">設定のエクスポートを無効にする</string>
+    <string name="disable_config_export_description">設定のエクスポートを無効にすると、秘密鍵にアクセスしにくくなります</string>
     <string name="dns_servers">DNS サーバ</string>
     <string name="edit">編集</string>
     <string name="endpoint">エンドポイント</string>

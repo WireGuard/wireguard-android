@@ -110,10 +110,17 @@
     <string name="create_output_dir_error">Nu se poate crea directorul de ieșire</string>
     <string name="create_temp_dir_error">Nu se poate crea directorul temporar local</string>
     <string name="create_tunnel">Creare tunel</string>
+    <string name="copied_to_clipboard">%s a fost copiat în memoria temporară</string>
     <string name="dark_theme_summary_off">În prezent este utilizată tema luminoasă (zi)</string>
     <string name="dark_theme_summary_on">În prezent este utilizată tema întunecată (noapte)</string>
     <string name="dark_theme_title">Utilizare temă întunecată</string>
     <string name="delete">Ștergere</string>
+    <string name="tv_delete">Selectează tunelul de șters</string>
+    <string name="tv_select_a_storage_drive">Selectează o unitate de stocare</string>
+    <string name="tv_no_file_picker">Instalează un serviciu de administrare a fișierelor pentru a căuta fișiere</string>
+    <string name="tv_add_tunnel_get_started">Adaugă un tunel pentru a începe</string>
+    <string name="disable_config_export_title">Dezactivează exportarea configurației</string>
+    <string name="disable_config_export_description">Dezactivarea exportării configurației face mai puțin accesibile cheile private</string>
     <string name="dns_servers">Servere DNS</string>
     <string name="edit">Editare</string>
     <string name="endpoint">Punct final</string>

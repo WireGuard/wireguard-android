@@ -97,10 +97,17 @@
     <string name="create_output_dir_error">Çıktı klasörü oluşturulamıyor</string>
     <string name="create_temp_dir_error">Yerel geçici dizin oluşturulamıyor</string>
     <string name="create_tunnel">Tünel Oluştur</string>
+    <string name="copied_to_clipboard">%s panoya kopyalandı</string>
     <string name="dark_theme_summary_off">Şu anda açık (gündüz) teması kullanılıyor</string>
     <string name="dark_theme_summary_on">Şu anda karanlık (gece) teması kullanılıyor</string>
     <string name="dark_theme_title">Koyu tema kullan</string>
     <string name="delete">Sil</string>
+    <string name="tv_delete">Silinecek tüneli seçin</string>
+    <string name="tv_select_a_storage_drive">Bir depolama sürücüsü seçin</string>
+    <string name="tv_no_file_picker">Dosyalara göz atmak için lütfen bir dosya yönetim aracı yükleyin</string>
+    <string name="tv_add_tunnel_get_started">Başlamak için bir tünel ekleyin</string>
+    <string name="disable_config_export_title">Ayarları dışa aktarmayı kapa</string>
+    <string name="disable_config_export_description">Ayarları dışa aktarmayı kapamak gizli anahtarları daha az erişilebilir kılar</string>
     <string name="dns_servers">DNS sunucuları</string>
     <string name="edit">Düzenle</string>
     <string name="endpoint">Uç nokta</string>

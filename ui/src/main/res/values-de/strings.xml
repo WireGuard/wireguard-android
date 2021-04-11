@@ -97,10 +97,17 @@
     <string name="create_output_dir_error">Konnte das Ausgabeverzeichnis nicht erstellen</string>
     <string name="create_temp_dir_error">Lokales temporäres Verzeichnis kann nicht erstellt werden</string>
     <string name="create_tunnel">Tunnel erstellen</string>
+    <string name="copied_to_clipboard">%s in die Zwischenanlage kopiert</string>
     <string name="dark_theme_summary_off">Verwende helles Design (Tag)</string>
     <string name="dark_theme_summary_on">Verwende dunkles Design (Nacht)</string>
     <string name="dark_theme_title">Dunkles Design verwenden</string>
     <string name="delete">Entfernen</string>
+    <string name="tv_delete">Wählen Sie den zu löschenden Tunnel aus</string>
+    <string name="tv_select_a_storage_drive">Wählen Sie ein Speicherlaufwerk</string>
+    <string name="tv_no_file_picker">Bitte installieren Sie ein Dateiverwaltungsprogramm, um Dateien zu durchsuchen</string>
+    <string name="tv_add_tunnel_get_started">Fügen Sie einen Tunnel hinzu, um loszulegen</string>
+    <string name="disable_config_export_title">Deaktivieren Sie den Konfigurationsexport</string>
+    <string name="disable_config_export_description">Durch Deaktivieren des Konfigurationsexports werden private Schlüssel weniger zugänglich</string>
     <string name="dns_servers">DNS-Server</string>
     <string name="edit">Bearbeiten</string>
     <string name="endpoint">Endpunkt</string>

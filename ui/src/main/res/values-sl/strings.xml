@@ -127,6 +127,11 @@
     <string name="dark_theme_summary_on">V uporabi temna (nočna) tema</string>
     <string name="dark_theme_title">Uporabi temno temo</string>
     <string name="delete">Izbriši</string>
+    <string name="tv_delete">Izberi tunel za izbris</string>
+    <string name="tv_no_file_picker">Prosim namesti orodje za upravljanje datotek za njihov ogled</string>
+    <string name="tv_add_tunnel_get_started">Za začetek dodaj tunel</string>
+    <string name="disable_config_export_title">Onemogoči izvoz nastavitev</string>
+    <string name="disable_config_export_description">Onemogočavnje nastavitev za izvoz nastavitev naredi tajne kluče manj dostopne</string>
     <string name="dns_servers">Strežniki DNS</string>
     <string name="edit">Uredi</string>
     <string name="endpoint">Končna točka</string>

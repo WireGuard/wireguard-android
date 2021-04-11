@@ -27,7 +27,7 @@
     <plurals name="n_included_applications">
         <item quantity="other">对 %d 个应用生效</item>
     </plurals>
-    <string name="all_applications">全部应用程序</string>
+    <string name="all_applications">应用过滤</string>
     <string name="exclude_from_tunnel">不生效</string>
     <string name="include_in_tunnel">生效</string>
     <plurals name="include_n_applications">
@@ -84,10 +84,17 @@
     <string name="create_output_dir_error">无法创建输出目录</string>
     <string name="create_temp_dir_error">无法创建本地临时目录</string>
     <string name="create_tunnel">创建隧道</string>
+    <string name="copied_to_clipboard">%s 已复制到剪贴板</string>
     <string name="dark_theme_summary_off">正在使用亮色（白昼）主题</string>
     <string name="dark_theme_summary_on">正在使用暗色（黑夜）主题</string>
     <string name="dark_theme_title">使用暗色主题</string>
     <string name="delete">删除</string>
+    <string name="tv_delete">选择要删除的隧道</string>
+    <string name="tv_select_a_storage_drive">选择一个存储驱动器</string>
+    <string name="tv_no_file_picker">请安装一个文件管理工具以浏览文件</string>
+    <string name="tv_add_tunnel_get_started">添加第一个隧道</string>
+    <string name="disable_config_export_title">禁止导出配置</string>
+    <string name="disable_config_export_description">禁止导出配置可降低私钥泄露的风险</string>
     <string name="dns_servers">DNS 服务器</string>
     <string name="edit">编辑</string>
     <string name="endpoint">对端</string>
