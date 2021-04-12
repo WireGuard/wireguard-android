@@ -242,7 +242,7 @@
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
     <string name="tunnel_rename_error">Не удалось переименовать туннель: %s</string>
     <string name="tunnel_rename_success">Туннель успешно переименован в “%s”</string>
-    <string name="type_name_go_userspace">Перейти в пользовательское пространство</string>
+    <string name="type_name_go_userspace">Пользовательское пространство Go</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="version_summary">%1$s бэкэнд %2$s</string>
