@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="WireGuardTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnPrimary">@color/color_control_normal</item>
         <item name="colorPrimaryDark">@color/primary_color</item>
@@ -22,6 +22,8 @@
         <item name="textInputStyle">@style/TextInputLayoutBase</item>
         <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
     </style>
+
+    <style name="AppTheme" parent="WireGuardTheme" />
 
     <style name="AppTheme.MaterialCardView" parent="Widget.MaterialComponents.CardView">
         <item name="cornerRadius">4dp</item>
