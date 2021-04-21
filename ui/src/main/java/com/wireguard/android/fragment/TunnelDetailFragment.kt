@@ -43,7 +43,7 @@ class TunnelDetailFragment : BaseFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelDetailFragmentBinding.inflate(inflater, container, false)
         binding?.executePendingBindings()
-        return binding!!.root
+        return binding?.root
     }
 
     override fun onDestroyView() {
