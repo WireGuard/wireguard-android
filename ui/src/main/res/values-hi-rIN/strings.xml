@@ -175,7 +175,7 @@
     <string name="shell_exit_status_read_error">शेल बाहर निकलने की स्थिति नहीं पढ़ सकता</string>
     <string name="shell_marker_count_error">शेल ने 4 मार्करों की अपेक्षा की, %d प्राप्त किया</string>
     <string name="shell_start_error">शेल शुरू करने में विफल: %d</string>
-    <string name="success_application_will_restart">सफलता। एप्लीकेशन अब पुनः आरंभ होगा...</string>
+    <string name="success_application_will_restart">सफलता। एप्लीकेशन अब पुनः आरंभ होगा…</string>
     <string name="toggle_all">सबको स्विच करे</string>
     <string name="toggle_error">वायरगार्ड टनल टॉगल करने में त्रुटि: %s</string>
     <string name="tools_installer_already">wg और wg-quick पहले से इंस्टॉल हैं</string>

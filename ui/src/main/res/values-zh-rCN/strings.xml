@@ -138,7 +138,7 @@
     <string name="module_installer_initial">使用内核模块可以提升性能（实验性）</string>
     <string name="module_installer_not_found">没有可用于此设备的模块</string>
     <string name="module_installer_title">下载并安装内核模块</string>
-    <string name="module_installer_working">正在下载安装...</string>
+    <string name="module_installer_working">正在下载安装…</string>
     <string name="module_version_error">无法确定内核模块版本</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_summary_off">当前一次只能开启一条隧道</string>
@@ -172,7 +172,7 @@
     <string name="shell_exit_status_read_error">Shell 无法读取退出状态</string>
     <string name="shell_marker_count_error">Shell 应获取 4 个标记，获取到 %d 个</string>
     <string name="shell_start_error">Shell 启动失败：%d</string>
-    <string name="success_application_will_restart">成功，应用即将重启...</string>
+    <string name="success_application_will_restart">成功，应用即将重启…</string>
     <string name="toggle_all">反选</string>
     <string name="toggle_error">切换隧道状态时出错：%s</string>
     <string name="tools_installer_already">wg 与 wg-quick 已安装</string>
@@ -183,7 +183,7 @@
     <string name="tools_installer_success_magisk">wg 与 wg-quick 已安装为 Magisk 模块（重启后生效）</string>
     <string name="tools_installer_success_system">wg 与 wg-quick 已安装至系统分区</string>
     <string name="tools_installer_title">安装命令行工具</string>
-    <string name="tools_installer_working">正在安装 wg 与 wg-quick...</string>
+    <string name="tools_installer_working">正在安装 wg 与 wg-quick…</string>
     <string name="tools_unavailable_error">所需工具不可用</string>
     <string name="transfer">流量</string>
     <string name="transfer_bytes">%d B</string>
