@@ -239,7 +239,7 @@ class TunnelListFragment : BaseFragment() {
             resources = null
             animateFab(binding?.createFab, true)
             checkedItems.clear()
-            binding!!.tunnelList.adapter!!.notifyDataSetChanged()
+            binding?.tunnelList?.adapter?.notifyDataSetChanged()
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
