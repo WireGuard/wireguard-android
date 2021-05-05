@@ -20,7 +20,6 @@ import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var versionSummary: String? = null
@@ -49,12 +48,12 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
     init {
         lifecycleScope.launch {
             val backend = Application.getBackend()
-            versionSummary = getContext().getString(R.string.version_summary_checking, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
+            versionSummary = getContext().getString(R.string.version_summary_checking, getBackendPrettyName(context, backend).lowercase())
             notifyChanged()
             versionSummary = try {
                 getContext().getString(R.string.version_summary, getBackendPrettyName(context, backend), withContext(Dispatchers.IO) { backend.version })
             } catch (_: Throwable) {
-                getContext().getString(R.string.version_summary_unknown, getBackendPrettyName(context, backend).toLowerCase(Locale.ENGLISH))
+                getContext().getString(R.string.version_summary_unknown, getBackendPrettyName(context, backend).lowercase())
             }
             notifyChanged()
         }

@@ -5,8 +5,6 @@
 
 package com.wireguard.android.model
 
-import java.util.Locale
-
 object TunnelComparator : Comparator<String> {
     private class NaturalSortString(originalString: String) {
         class NaturalSortToken(val maybeString: String?, val maybeNumber: Int?) : Comparable<NaturalSortToken> {
@@ -29,7 +27,7 @@ object TunnelComparator : Comparator<String> {
         val tokens: MutableList<NaturalSortToken> = ArrayList()
 
         init {
-            for (s in NATURAL_SORT_DIGIT_FINDER.findAll(originalString.split(WHITESPACE_FINDER).joinToString(" ").toLowerCase(Locale.ENGLISH))) {
+            for (s in NATURAL_SORT_DIGIT_FINDER.findAll(originalString.split(WHITESPACE_FINDER).joinToString(" ").lowercase())) {
                 try {
                     val n = s.value.toInt()
                     tokens.add(NaturalSortToken(null, n))

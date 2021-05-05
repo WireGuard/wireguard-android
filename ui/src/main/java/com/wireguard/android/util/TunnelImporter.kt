@@ -25,7 +25,6 @@ import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.ArrayList
-import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -50,8 +49,8 @@ object TunnelImporter {
                 require(idx < name.length - 1) { context.getString(R.string.illegal_filename_error, name) }
                 name = name.substring(idx + 1)
             }
-            val isZip = name.toLowerCase(Locale.ROOT).endsWith(".zip")
-            if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
+            val isZip = name.lowercase().endsWith(".zip")
+            if (name.lowercase().endsWith(".conf")) {
                 name = name.substring(0, name.length - ".conf".length)
             } else {
                 require(isZip) { context.getString(R.string.bad_extension_error) }
@@ -71,7 +70,7 @@ object TunnelImporter {
                             }
                             name = name.substring(name.lastIndexOf('/') + 1)
                         }
-                        if (name.toLowerCase(Locale.ROOT).endsWith(".conf")) {
+                        if (name.lowercase().endsWith(".conf")) {
                             name = name.substring(0, name.length - ".conf".length)
                         } else {
                             continue
