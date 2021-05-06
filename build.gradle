@@ -10,7 +10,7 @@ buildscript {
         coordinatorLayoutVersion = '1.1.0'
         coreKtxVersion = '1.3.2'
         coroutinesVersion = '1.4.3'
-        datastoreVersion = '1.0.0-alpha02'
+        datastoreVersion = '1.0.0-beta01'
         desugarVersion = '1.0.10'
         fragmentVersion = '1.3.3'
         jsr305Version = '3.0.2'
