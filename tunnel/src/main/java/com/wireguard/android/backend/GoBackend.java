@@ -68,7 +68,7 @@ public final class GoBackend implements Backend {
         alwaysOnCallback = cb;
     }
 
-    private static native String wgGetConfig(int handle);
+    @Nullable private static native String wgGetConfig(int handle);
 
     private static native int wgGetSocketV4(int handle);
 
@@ -115,10 +115,11 @@ public final class GoBackend implements Backend {
     @Override
     public Statistics getStatistics(final Tunnel tunnel) {
         final Statistics stats = new Statistics();
-        if (tunnel != currentTunnel) {
+        if (tunnel != currentTunnel || currentTunnelHandle == -1)
             return stats;
-        }
         final String config = wgGetConfig(currentTunnelHandle);
+        if (config == null)
+            return stats;
         Key key = null;
         long rx = 0;
         long tx = 0;
@@ -294,11 +295,11 @@ public final class GoBackend implements Backend {
                 Log.w(TAG, "Tunnel already down");
                 return;
             }
-
-            wgTurnOff(currentTunnelHandle);
+            int handleToClose = currentTunnelHandle;
             currentTunnel = null;
             currentTunnelHandle = -1;
             currentConfig = null;
+            wgTurnOff(handleToClose);
         }
 
         tunnel.onStateChange(state);
