@@ -202,11 +202,7 @@ class LogViewerActivity : AppCompatActivity() {
                                 it.scrollToPosition(logLines.size - 1)
                         }
                     } else {
-                        /* TODO: I'd prefer for the next line to be:
-                         * logLines.lastOrNull()?.msg += "\n$line"
-                         * However, as of writing, that causes the kotlin compiler to freak out and crash, spewing bytecode.
-                         */
-                        logLines.lastOrNull()?.apply { msg += "\n$line" }
+                        logLines.lastOrNull()?.msg += "\n$line"
                         if (haveScrolled) logAdapter.notifyDataSetChanged()
                     }
                     if (!haveScrolled) {
