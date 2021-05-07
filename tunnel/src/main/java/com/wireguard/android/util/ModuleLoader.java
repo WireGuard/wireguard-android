@@ -94,7 +94,11 @@ public class ModuleLoader {
         final byte[] input = new byte[1024 * 1024 * 3 /* 3MiB */];
         int len;
         try (final InputStream inputStream = connection.getInputStream()) {
-            len = inputStream.read(input);
+            int offset = 0;
+            while (input.length - offset > 0 && (len = inputStream.read(input, offset, input.length - offset)) > 0) {
+                offset += len;
+            }
+            len = offset;
         }
         if (len <= 0)
             throw new IOException("Hash list was empty");
