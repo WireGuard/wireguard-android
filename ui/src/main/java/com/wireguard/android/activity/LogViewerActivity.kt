@@ -114,7 +114,7 @@ class LogViewerActivity : AppCompatActivity() {
             val key = KeyPair().privateKey.toHex()
             LOGS[key] = rawLogLines.toString().toByteArray(Charsets.UTF_8)
             lastUri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.exported-log/$key")
-            val shareIntent = ShareCompat.IntentBuilder.from(this)
+            val shareIntent = ShareCompat.IntentBuilder(this)
                     .setType("text/plain")
                     .setSubject(getString(R.string.log_export_subject))
                     .setStream(lastUri)
