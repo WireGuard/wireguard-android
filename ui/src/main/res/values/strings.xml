@@ -214,6 +214,7 @@
     <string name="tunnel_list_placeholder">Add a tunnel using the blue button</string>
     <string name="tunnel_name">Tunnel Name</string>
     <string name="tunnel_on_error">Unable to turn tunnel on (wgTurnOn returned %d)</string>
+    <string name="tunnel_dns_failure">Unable to resolve DNS hostname: “%s”</string>
     <string name="tunnel_rename_error">Unable to rename tunnel: %s</string>
     <string name="tunnel_rename_success">Successfully renamed tunnel to “%s”</string>
     <string name="type_name_go_userspace">Go userspace</string>

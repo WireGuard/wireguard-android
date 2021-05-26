@@ -16,6 +16,7 @@ import com.wireguard.android.backend.BackendException.Reason;
 import com.wireguard.android.backend.Tunnel.State;
 import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
+import com.wireguard.config.InetEndpoint;
 import com.wireguard.config.InetNetwork;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
@@ -40,6 +41,7 @@ import androidx.collection.ArraySet;
  */
 @NonNullForAll
 public final class GoBackend implements Backend {
+    private static final int DNS_RESOLUTION_RETRIES = 10;
     private static final String TAG = "WireGuard/GoBackend";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
     private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
@@ -232,6 +234,25 @@ public final class GoBackend implements Backend {
             if (currentTunnelHandle != -1) {
                 Log.w(TAG, "Tunnel already up");
                 return;
+            }
+
+
+            dnsRetry: for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
+                // Pre-resolve IPs so they're cached when building the userspace string
+                for (final Peer peer : config.getPeers()) {
+                    final InetEndpoint ep = peer.getEndpoint().orElse(null);
+                    if (ep == null)
+                        continue;
+                    if (ep.getResolved().orElse(null) == null) {
+                        if (i < DNS_RESOLUTION_RETRIES - 1) {
+                            Log.w(TAG, "DNS host \"" + ep.getHost() + "\" failed to resolve; trying again");
+                            Thread.sleep(1000);
+                            continue dnsRetry;
+                        } else
+                            throw new BackendException(Reason.DNS_RESOLUTION_FAILURE, ep.getHost());
+                    }
+                }
+                break;
             }
 
             // Build config
