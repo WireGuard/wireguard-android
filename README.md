@@ -1,6 +1,12 @@
 # Android GUI for [WireGuard](https://www.wireguard.com/)
 
-**[Download from the Play Store](https://play.google.com/store/apps/details?id=com.wireguard.android)**
+
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=com.wireguard.android)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/en/packages/com.wireguard.android/)
 
 This is an Android GUI for [WireGuard](https://www.wireguard.com/). It [opportunistically uses the kernel implementation](https://git.zx2c4.com/android_kernel_wireguard/about/), and falls back to using the non-root [userspace implementation](https://git.zx2c4.com/wireguard-go/about/).
 
