@@ -219,7 +219,11 @@ public final class GoBackend implements Backend {
             final VpnService service;
             if (!vpnService.isDone()) {
                 Log.d(TAG, "Requesting to start VpnService");
-                context.startService(new Intent(context, VpnService.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(new Intent(context, VpnService.class));
+                } else {
+                    context.startService(new Intent(context, VpnService.class));
+                }
             }
 
             try {
