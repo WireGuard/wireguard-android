@@ -1,8 +1,28 @@
 pluginManagement {
+    def agpVersion = "7.0.0"
+    def kotlinVersion = "1.5.21"
     repositories {
         gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    plugins {
+        id("com.android.application") version "$agpVersion"
+        id("com.android.library") version "$agpVersion"
+        id("org.jetbrains.kotlin.android") version "$kotlinVersion"
+        id("org.jetbrains.kotlin.kapt") version "$kotlinVersion"
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
         mavenCentral()
     }
 }
+
+rootProject.name = "wireguard-android"
+
 include ':tunnel'
 include ':ui'
