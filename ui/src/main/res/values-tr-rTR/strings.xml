@@ -63,7 +63,6 @@
     <string name="allow_remote_control_intents_summary_on">Harici uygulamalar tünelleri değiştirebilir (gelişmiş)</string>
     <string name="allow_remote_control_intents_title">Uzaktan kontrol uygulamalarına izin ver</string>
     <string name="allowed_ips">İzin verilen IP\'ler</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s\'in %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%2$s içinde %1$s</string>
@@ -219,7 +218,6 @@
     <string name="type_name_go_userspace">Kullanıcı alanına git</string>
     <string name="type_name_kernel_module">Çekirdek modülü</string>
     <string name="unknown_error">Bilinmeyen hata</string>
-    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">%s arka uç sürümü kontrol ediliyor</string>
     <string name="version_summary_unknown">Bilinmeyen %s sürümü</string>
     <string name="version_title">Android için WireGuard v%s</string>

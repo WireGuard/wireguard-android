@@ -19,7 +19,7 @@
         <item quantity="other">%d Aplikasi Dikecualikan</item>
     </plurals>
     <plurals name="set_included_applications">
-        <item quantity="other">%d Aplikasi Dikecualikan</item>
+        <item quantity="other">%d Aplikasi Disertakan</item>
     </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="other">%d dikecualikan</item>
@@ -46,11 +46,10 @@
     <string name="add_peer">Tambahkan rekan</string>
     <string name="addresses">Alamat</string>
     <string name="applications">Aplikasi</string>
-    <string name="allow_remote_control_intents_summary_off">Apl eksternal tidak dapat mengalihkan tunnel (disarankan)</string>
+    <string name="allow_remote_control_intents_summary_off">Aplikasi eksternal tidak dapat mengalihkan tunnel (disarankan)</string>
     <string name="allow_remote_control_intents_summary_on">Apl eksternal dapat mengalihkan tunnel (lanjutan)</string>
-    <string name="allow_remote_control_intents_title">Izinkan apl kendali jarak jauh</string>
+    <string name="allow_remote_control_intents_title">Izinkan kendali jarak jauh</string>
     <string name="allowed_ips">IP diizinkan</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s di %2$s</string>
@@ -84,10 +83,17 @@
     <string name="create_output_dir_error">Tidak dapat membuat direktori keluaran</string>
     <string name="create_temp_dir_error">Tidak dapat membuat direktori lokal sementara</string>
     <string name="create_tunnel">Buat tunel</string>
+    <string name="copied_to_clipboard">%s Disalin ke Clipboard</string>
     <string name="dark_theme_summary_off">Saat ini menggunakan tema terang (siang)</string>
     <string name="dark_theme_summary_on">Saat ini menggunakan tema gelap (malam)</string>
     <string name="dark_theme_title">Gunakan tema gelap</string>
     <string name="delete">Hapus</string>
+    <string name="tv_delete">Pilih tunnel yang akan dihapus</string>
+    <string name="tv_select_a_storage_drive">Pilih lokasi penyimpanan</string>
+    <string name="tv_no_file_picker">Silakan instal aplikasi file manajer untuk memilih file</string>
+    <string name="tv_add_tunnel_get_started">Tambahkan tunnel untuk memulai</string>
+    <string name="disable_config_export_title">Nonaktifkan ekspor konfigurasi</string>
+    <string name="disable_config_export_description">Menonaktifkan ekspor konfigurasi akan membuat kunci pribadi sulit diakses</string>
     <string name="dns_servers">Server DNS</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
@@ -199,7 +205,6 @@
     <string name="type_name_go_userspace">Ke userspace</string>
     <string name="type_name_kernel_module">Modul kernel</string>
     <string name="unknown_error">Eror tidak diketahui</string>
-    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Mengecek versi backend %s</string>
     <string name="version_summary_unknown">Versi %s Tidak diketahui</string>
     <string name="version_title">WireGuard untuk Android v%s</string>

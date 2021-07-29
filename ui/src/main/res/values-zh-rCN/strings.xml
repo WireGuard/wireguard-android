@@ -50,7 +50,6 @@
     <string name="allow_remote_control_intents_summary_on">外部应用当前能够控制隧道（面向高级用户）</string>
     <string name="allow_remote_control_intents_title">授权外部控制</string>
     <string name="allowed_ips">路由的 IP 地址（段）</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s 的 %2$s 字段</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">在 %2$s发生了%1$s的问题</string>
@@ -206,7 +205,6 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
-    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">WireGuard for Android v%s</string>

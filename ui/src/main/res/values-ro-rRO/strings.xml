@@ -76,7 +76,6 @@
     <string name="allow_remote_control_intents_summary_on">Aplicațiile externe pot comuta tunelurile (avansat)</string>
     <string name="allow_remote_control_intents_title">Permite aplicații de control la distanță</string>
     <string name="allowed_ips">IP-uri permise</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%2$s pentru %1$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s în %2$s</string>
@@ -232,7 +231,6 @@
     <string name="type_name_go_userspace">Spațiu de utilizator Go</string>
     <string name="type_name_kernel_module">Modul nucleu</string>
     <string name="unknown_error">Eroare necunoscută</string>
-    <string name="version_summary">Bibliotecă %1$s %2$s</string>
     <string name="version_summary_checking">Se verifică versiunea bibliotecii %s</string>
     <string name="version_summary_unknown">Versiune %s necunoscută</string>
     <string name="version_title">WireGuard pentru Android v%s</string>

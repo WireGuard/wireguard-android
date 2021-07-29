@@ -63,7 +63,6 @@
     <string name="allow_remote_control_intents_summary_on">ਬਾਹਰੀ ਐਪਾਂ ਟਨਲਾਂ ਨੂੰ ਬਦਲ ਸਕਦੀਆਂ ਹਨ (ਤਕਨੀਕੀ)</string>
     <string name="allow_remote_control_intents_title">ਰਿਮੋਟ ਕੰਟਰੋਲ ਐਪਾਂ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ</string>
     <string name="allowed_ips">ਮਨਜ਼ੂਰ ਕੀਤੇ IP</string>
-    <string name="app_name">ਵਾਇਰਗਾਰਡ</string>
     <string name="bad_config_context">%1$s ਦੇ %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%2$s ਵਿੱਚ %1$s</string>
@@ -219,7 +218,6 @@
     <string name="type_name_go_userspace">ਵਰਤੋਂ-ਸਪੇਸ ਤੇ ਜਾਓ</string>
     <string name="type_name_kernel_module">ਕਰਨਲ ਮੋਡੀਊਲ</string>
     <string name="unknown_error">ਅਣਪਛਾਤੀ ਗਲਤੀ</string>
-    <string name="version_summary">%1$s ਬੈਕਐਂਡ %2$s</string>
     <string name="version_summary_checking">%s ਬੈਕਐਂਡ ਵਰਜ਼ਨ ਦੀ ਜਾਂਚ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ</string>
     <string name="version_summary_unknown">ਅਣਪਛਾਤਾ %s ਵਰਜਨ</string>
     <string name="version_title">Android ਲਈ WireGuard v%s</string>

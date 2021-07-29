@@ -63,7 +63,6 @@
     <string name="allow_remote_control_intents_summary_on">Les applications externes peuvent activer les tunnels (avancés)</string>
     <string name="allow_remote_control_intents_title">Autoriser les applications de contrôle à distance</string>
     <string name="allowed_ips">Adresses IP autorisées</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s de %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s dans %2$s</string>
@@ -219,7 +218,6 @@
     <string name="type_name_go_userspace">Nom de l\'espace utilisateur</string>
     <string name="type_name_kernel_module">Module noyau</string>
     <string name="unknown_error">Erreur inconnue</string>
-    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Vérification de la version %s du backend</string>
     <string name="version_summary_unknown">Version %s inconnue</string>
     <string name="version_title">WireGuard pour Android v%s</string>

@@ -13,7 +13,6 @@
     <string name="addresses">Osoitteet</string>
     <string name="applications">Sovellukset</string>
     <string name="allowed_ips">Sallitut IP-osoitteet</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_reason_invalid_key">Virheellinen avain</string>
     <string name="bad_config_reason_invalid_number">Virheellinen luku</string>

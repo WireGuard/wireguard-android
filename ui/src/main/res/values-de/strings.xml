@@ -56,14 +56,13 @@
         <item quantity="other">Sekunden</item>
     </plurals>
     <string name="use_all_applications">Alle Apps verwenden</string>
-    <string name="add_peer">Teilnehmer hinzufügen</string>
+    <string name="add_peer">Gegenüber hinzufügen</string>
     <string name="addresses">Adressen</string>
     <string name="applications">Anwendungen</string>
     <string name="allow_remote_control_intents_summary_off">Externe Apps dürfen keine Tunnel umschalten (empfohlen)</string>
     <string name="allow_remote_control_intents_summary_on">Externe Apps dürfen Tunnel umschalten (erweitert)</string>
     <string name="allow_remote_control_intents_title">Erlaube Steuerung über externe Apps</string>
     <string name="allowed_ips">Erlaubte IPs</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%2$s des %1$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
@@ -108,7 +107,7 @@
     <string name="tv_add_tunnel_get_started">Fügen Sie einen Tunnel hinzu, um loszulegen</string>
     <string name="disable_config_export_title">Deaktivieren Sie den Konfigurationsexport</string>
     <string name="disable_config_export_description">Durch Deaktivieren des Konfigurationsexports werden private Schlüssel weniger zugänglich</string>
-    <string name="dns_servers">DNS-Server</string>
+    <string name="dns_servers">Nameserver</string>
     <string name="edit">Bearbeiten</string>
     <string name="endpoint">Endpunkt</string>
     <string name="error_down">Fehler beim Abschalten des Tunnels: %s</string>
@@ -119,7 +118,7 @@
     <string name="generate_new_private_key">Neuen privaten Schlüssel generieren</string>
     <string name="generic_error">Unbekannter „%s“ Fehler</string>
     <string name="hint_automatic">(auto)</string>
-    <string name="hint_generated">(generiert)</string>
+    <string name="hint_generated">(erzeugt)</string>
     <string name="hint_optional">(optional)</string>
     <string name="hint_optional_discouraged">(optional, nicht empfohlen)</string>
     <string name="hint_random">(zufällig)</string>
@@ -219,7 +218,6 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernelmodul</string>
     <string name="unknown_error">Unbekannter Fehler</string>
-    <string name="version_summary">%1$s Backend %2$s</string>
     <string name="version_summary_checking">Überprüfe %s Backend-Version</string>
     <string name="version_summary_unknown">Unbekannte %s Version</string>
     <string name="version_title">WireGuard für Android v%s</string>

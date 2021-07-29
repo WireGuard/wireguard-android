@@ -63,7 +63,6 @@
     <string name="allow_remote_control_intents_summary_on">Fjernstyrte apper toggle tunneler (avansert)</string>
     <string name="allow_remote_control_intents_title">Tillat fjernstyrte apper</string>
     <string name="allowed_ips">Tillatte IP-adresser</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s sin %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s i %2$s</string>
@@ -219,7 +218,6 @@
     <string name="type_name_go_userspace">Bruk userspace</string>
     <string name="type_name_kernel_module">Kjernemodul</string>
     <string name="unknown_error">Ukjent feil</string>
-    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Sjekker %s backend versjon</string>
     <string name="version_summary_unknown">Ukjent %s versjon</string>
     <string name="version_title">WireGuard for Android v%s</string>

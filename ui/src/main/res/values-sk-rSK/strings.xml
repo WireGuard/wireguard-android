@@ -9,7 +9,6 @@
     <string name="applications">Aplikácie</string>
     <string name="allow_remote_control_intents_title">Povoliť aplikáciám vzdialenú správu</string>
     <string name="allowed_ips">Povolené IP adresy</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_explanation_pka">: Musí byť kladné a nie väčšie ako 65535</string>
     <string name="bad_config_explanation_positive_number">: Musí byť kladné</string>

@@ -63,7 +63,6 @@
     <string name="allow_remote_control_intents_summary_on">Externa appar kan växla tunnlar (avancerat)</string>
     <string name="allow_remote_control_intents_title">Tillåt fjärrstyrningsappar</string>
     <string name="allowed_ips">Tillåtna IP-adresser</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s i %2$s</string>
     <string name="bad_config_explanation_pka">: Måste vara positivt och högst 65535</string>

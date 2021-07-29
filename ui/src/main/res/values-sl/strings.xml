@@ -89,7 +89,6 @@
     <string name="allow_remote_control_intents_summary_on">Zunanje aplikacije lahko preklapljajo tunele (napredno)</string>
     <string name="allow_remote_control_intents_title">Dovoljeno upravljanje preko zunanjih aplikacij</string>
     <string name="allowed_ips">Dovoljeni naslovi IP</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s-ov %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s v %2$s</string>
@@ -243,7 +242,6 @@
     <string name="type_name_go_userspace">Uporabniški prostor Go</string>
     <string name="type_name_kernel_module">Modul jedra</string>
     <string name="unknown_error">Neznana napaka</string>
-    <string name="version_summary">Zaledje %1$s %2$s</string>
     <string name="version_summary_checking">Preverjam verzijo zaledja %s</string>
     <string name="version_summary_unknown">Neznana verzija %s</string>
     <string name="version_title">WireGuard za Android v%s</string>
