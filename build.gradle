@@ -1,15 +1,15 @@
 buildscript {
     ext {
-        activityVersion = '1.2.4'
+        activityVersion = '1.3.1'
         annotationsVersion = '1.2.0'
         appcompatVersion = '1.3.1'
         biometricVersion = '1.1.0'
         collectionVersion = '1.1.0'
-        constraintLayoutVersion = '2.0.4'
+        constraintLayoutVersion = '2.1.0'
         coordinatorLayoutVersion = '1.1.0'
         coreKtxVersion = '1.6.0'
-        coroutinesVersion = '1.5.1'
-        datastoreVersion = '1.0.0-rc02'
+        coroutinesVersion = '1.5.2'
+        datastoreVersion = '1.0.0'
         desugarVersion = '1.1.5'
         fragmentVersion = '1.3.6'
         jsr305Version = '3.0.2'
@@ -24,7 +24,7 @@ buildscript {
 }
 
 plugins {
-    id "de.undercouch.download" version "4.1.1"
+    id "de.undercouch.download" version "4.1.2"
 }
 
 task downloadCrowdin(type: Download) {
