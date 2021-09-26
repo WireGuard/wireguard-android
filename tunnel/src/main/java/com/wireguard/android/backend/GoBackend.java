@@ -274,6 +274,9 @@ public final class GoBackend implements Backend {
             for (final InetAddress addr : config.getInterface().getDnsServers())
                 builder.addDnsServer(addr.getHostAddress());
 
+            for (final String dnsSearchDomain : config.getInterface().getDnsSearchDomains())
+                builder.addSearchDomain(dnsSearchDomain);
+
             boolean sawDefaultRoute = false;
             for (final Peer peer : config.getPeers()) {
                 for (final InetNetwork addr : peer.getAllowedIps()) {

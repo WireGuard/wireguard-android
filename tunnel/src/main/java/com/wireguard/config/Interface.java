@@ -40,6 +40,7 @@ public final class Interface {
 
     private final Set<InetNetwork> addresses;
     private final Set<InetAddress> dnsServers;
+    private final Set<String> dnsSearchDomains;
     private final Set<String> excludedApplications;
     private final Set<String> includedApplications;
     private final KeyPair keyPair;
@@ -50,6 +51,7 @@ public final class Interface {
         // Defensively copy to ensure immutability even if the Builder is reused.
         addresses = Collections.unmodifiableSet(new LinkedHashSet<>(builder.addresses));
         dnsServers = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsServers));
+        dnsSearchDomains = Collections.unmodifiableSet(new LinkedHashSet<>(builder.dnsSearchDomains));
         excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
         includedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.includedApplications));
         keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
@@ -108,6 +110,7 @@ public final class Interface {
         final Interface other = (Interface) obj;
         return addresses.equals(other.addresses)
                 && dnsServers.equals(other.dnsServers)
+                && dnsSearchDomains.equals(other.dnsSearchDomains)
                 && excludedApplications.equals(other.excludedApplications)
                 && includedApplications.equals(other.includedApplications)
                 && keyPair.equals(other.keyPair)
@@ -133,6 +136,16 @@ public final class Interface {
     public Set<InetAddress> getDnsServers() {
         // The collection is already immutable.
         return dnsServers;
+    }
+
+    /**
+     * Returns the set of DNS search domains associated with the interface.
+     *
+     * @return a set of strings
+     */
+    public Set<String> getDnsSearchDomains() {
+        // The collection is already immutable.
+        return dnsSearchDomains;
     }
 
     /**
@@ -222,6 +235,7 @@ public final class Interface {
             sb.append("Address = ").append(Attribute.join(addresses)).append('\n');
         if (!dnsServers.isEmpty()) {
             final List<String> dnsServerStrings = dnsServers.stream().map(InetAddress::getHostAddress).collect(Collectors.toList());
+            dnsServerStrings.addAll(dnsSearchDomains);
             sb.append("DNS = ").append(Attribute.join(dnsServerStrings)).append('\n');
         }
         if (!excludedApplications.isEmpty())
@@ -254,6 +268,8 @@ public final class Interface {
         // Defaults to an empty set.
         private final Set<InetAddress> dnsServers = new LinkedHashSet<>();
         // Defaults to an empty set.
+        private final Set<String> dnsSearchDomains = new LinkedHashSet<>();
+        // Defaults to an empty set.
         private final Set<String> excludedApplications = new LinkedHashSet<>();
         // Defaults to an empty set.
         private final Set<String> includedApplications = new LinkedHashSet<>();
@@ -281,6 +297,16 @@ public final class Interface {
 
         public Builder addDnsServers(final Collection<? extends InetAddress> dnsServers) {
             this.dnsServers.addAll(dnsServers);
+            return this;
+        }
+
+        public Builder addDnsSearchDomain(final String dnsSearchDomain) {
+            dnsSearchDomains.add(dnsSearchDomain);
+            return this;
+        }
+
+        public Builder addDnsSearchDomains(final Collection<String> dnsSearchDomains) {
+            this.dnsSearchDomains.addAll(dnsSearchDomains);
             return this;
         }
 
@@ -326,8 +352,15 @@ public final class Interface {
 
         public Builder parseDnsServers(final CharSequence dnsServers) throws BadConfigException {
             try {
-                for (final String dnsServer : Attribute.split(dnsServers))
-                    addDnsServer(InetAddresses.parse(dnsServer));
+                for (final String dnsServer : Attribute.split(dnsServers)) {
+                    try {
+                        addDnsServer(InetAddresses.parse(dnsServer));
+                    } catch (final ParseException e) {
+                        if (e.getParsingClass() != InetAddress.class || !InetAddresses.isHostname(dnsServer))
+                            throw e;
+                        addDnsSearchDomain(dnsServer);
+                    }
+                }
                 return this;
             } catch (final ParseException e) {
                 throw new BadConfigException(Section.INTERFACE, Location.DNS, e);

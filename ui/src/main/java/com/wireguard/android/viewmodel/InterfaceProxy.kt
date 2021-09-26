@@ -81,7 +81,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
 
     constructor(other: Interface) {
         addresses = Attribute.join(other.addresses)
-        val dnsServerStrings = other.dnsServers.map { it.hostAddress }
+        val dnsServerStrings = other.dnsServers.map { it.hostAddress }.plus(other.dnsSearchDomains)
         dnsServers = Attribute.join(dnsServerStrings)
         excludedApplications.addAll(other.excludedApplications)
         includedApplications.addAll(other.includedApplications)

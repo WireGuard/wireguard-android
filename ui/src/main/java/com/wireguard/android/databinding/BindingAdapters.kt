@@ -153,6 +153,12 @@ object BindingAdapters {
     }
 
     @JvmStatic
+    @BindingAdapter("android:text")
+    fun setStringSetText(view: TextView, strings: Iterable<String?>?) {
+        view.text = if (strings != null) Attribute.join(strings) else ""
+    }
+
+    @JvmStatic
     fun tryParseInt(s: String?): Int {
         if (s == null)
             return 0
