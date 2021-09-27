@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="delete_error">
+        <item quantity="one">Imposible eliminar %d túnel: %s</item>
+        <item quantity="other">Imposible eliminar %d túnels: %s</item>
+    </plurals>
+    <plurals name="delete_success">
+        <item quantity="one">Túnel eliminado correctamente %d</item>
+        <item quantity="other">Túneles eliminados correctamente %d</item>
+    </plurals>
+    <plurals name="delete_title">
+        <item quantity="one">%d túnel seleccionado</item>
+        <item quantity="other">%d túneles seleccionados</item>
+    </plurals>
+    <plurals name="import_partial_success">
+        <item quantity="one">Importados %1$d de %2$d túneles</item>
+        <item quantity="other">Importados %1$d de %2$d túneles</item>
+    </plurals>
+    <plurals name="import_total_success">
+        <item quantity="one">%d túnel importado</item>
+        <item quantity="other">%d túneles importados</item>
+    </plurals>
+    <plurals name="set_excluded_applications">
+        <item quantity="one">%d aplicación excluida</item>
+        <item quantity="other">%d aplicaciones excluidas</item>
+    </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d aplicación incluída</item>
+        <item quantity="other">%d aplicaciones incluidas</item>
+    </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="one">%d excluido</item>
         <item quantity="other">%d excluidos</item>
     </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d incluído</item>
+        <item quantity="other">%d incluidos</item>
+    </plurals>
     <string name="all_applications">Todas las Aplicaciones</string>
     <string name="exclude_from_tunnel">Excluir</string>
     <string name="include_in_tunnel">Sólo inclusión</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Incluir %d aplicación</item>
+        <item quantity="other">Incluir %d aplicaciones</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Excluir %d aplicación</item>
+        <item quantity="other">Excluir %d aplicaciones</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">cada segundo</item>
+        <item quantity="other">cada  %d segundos</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">segundo</item>
+        <item quantity="other">segundos</item>
+    </plurals>
     <string name="use_all_applications">Usar todas las aplicaciones</string>
     <string name="add_peer">Añadir par</string>
     <string name="addresses">Direcciones</string>
@@ -48,10 +96,17 @@
     <string name="create_output_dir_error">No se puede crear el directorio de salida</string>
     <string name="create_temp_dir_error">No se puede crear la carpeta temporal</string>
     <string name="create_tunnel">Crear túnel</string>
+    <string name="copied_to_clipboard">%s copiado al portapapeles</string>
     <string name="dark_theme_summary_off">Actualmente usando tema claro (día)</string>
     <string name="dark_theme_summary_on">Actualmente usando tema oscuro (noche)</string>
     <string name="dark_theme_title">Usar tema oscuro</string>
     <string name="delete">Eliminar</string>
+    <string name="tv_delete">Seleccione el túnel para eliminar</string>
+    <string name="tv_select_a_storage_drive">Selecciones un dispositivo de almacenamiento</string>
+    <string name="tv_no_file_picker">Por favor, instale una herramienta de gestión de archivos para navegar por archivos</string>
+    <string name="tv_add_tunnel_get_started">Agregue un túnel para empezar</string>
+    <string name="disable_config_export_title">Deshabilitar la exportación de configuración</string>
+    <string name="disable_config_export_description">Desactivar la exportación de configuración hace que las claves privadas sean menos accesibles</string>
     <string name="dns_servers">Servidores DNS</string>
     <string name="edit">Editar</string>
     <string name="endpoint">Punto final</string>
@@ -158,11 +213,13 @@
     <string name="tunnel_list_placeholder">Añadir un túnel usando el botón azul</string>
     <string name="tunnel_name">Nombre del túnel</string>
     <string name="tunnel_on_error">No se puede activar el túnel (wgTurnOn devolvió %d)</string>
+    <string name="tunnel_dns_failure">No se puede resolver el nombre de host DNS: “%s”</string>
     <string name="tunnel_rename_error">No se puede renombrar túnel: %s</string>
     <string name="tunnel_rename_success">Túnel renombrado con éxito a “%s”</string>
     <string name="type_name_go_userspace">Ir al espacio de usuario</string>
     <string name="type_name_kernel_module">Módulo Kernel</string>
     <string name="unknown_error">Error desconocido</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Comprobando versión de backend %s</string>
     <string name="version_summary_unknown">Versión %s desconocida</string>
     <string name="version_title">WireGuard para Android -%s</string>

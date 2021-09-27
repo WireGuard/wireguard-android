@@ -4,16 +4,16 @@
         <item quantity="other">无法删除 %d 项：%s</item>
     </plurals>
     <plurals name="delete_success">
-        <item quantity="other">删除了 %d 项</item>
+        <item quantity="other">成功删除了 %d 项</item>
     </plurals>
     <plurals name="delete_title">
-        <item quantity="other">已选择 %d 项</item>
+        <item quantity="other">已选择 %d 个隧道</item>
     </plurals>
     <plurals name="import_partial_success">
         <item quantity="other">导入了 %2$d 项中的 %1$d 项</item>
     </plurals>
     <plurals name="import_total_success">
-        <item quantity="other">导入了 %d 项</item>
+        <item quantity="other">导入了 %d 个隧道</item>
     </plurals>
     <plurals name="set_excluded_applications">
         <item quantity="other">对 %d 个应用不生效</item>
@@ -200,11 +200,13 @@
     <string name="tunnel_list_placeholder">点击下方按钮添加隧道</string>
     <string name="tunnel_name">隧道名称</string>
     <string name="tunnel_on_error">无法开启隧道（wgTurnOn returned %d）</string>
+    <string name="tunnel_dns_failure">无法解析 DNS 主机名：“%s”</string>
     <string name="tunnel_rename_error">无法重命名隧道：%s</string>
     <string name="tunnel_rename_success">隧道已重命名为 “%s”</string>
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
+    <string name="version_summary">%1$s 后端 %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">WireGuard for Android v%s</string>

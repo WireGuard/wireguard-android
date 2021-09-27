@@ -239,6 +239,7 @@
     <string name="tunnel_list_placeholder">Dodaj tunel za pomocą niebieskiego przycisku</string>
     <string name="tunnel_name">Nazwa tunelu</string>
     <string name="tunnel_on_error">Nie można włączyć tunelu (wgTurnOn zwróciło %d)</string>
+    <string name="tunnel_dns_failure">Nie można odnaleźć nazwy hosta DNS: “%s”</string>
     <string name="tunnel_rename_error">Nie można zmienić nazwy tunelu: %s</string>
     <string name="tunnel_rename_success">Pomyślnie zmieniono nazwę tunelu na „%s”</string>
     <string name="type_name_go_userspace">Przestrzeń użytkownika Go</string>

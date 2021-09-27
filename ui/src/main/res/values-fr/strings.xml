@@ -213,11 +213,13 @@
     <string name="tunnel_list_placeholder">Ajouter un tunnel en utilisant le bouton bleu</string>
     <string name="tunnel_name">Nom du tunnel</string>
     <string name="tunnel_on_error">Impossible d\'activer le tunnel (wgTurnOn a retourné %d)</string>
+    <string name="tunnel_dns_failure">Impossible de résoudre le nom d\'hôte DNS: “%s”</string>
     <string name="tunnel_rename_error">Impossible de renommer le tunnel : %s</string>
     <string name="tunnel_rename_success">Tunnel renommé avec succès en «%s »</string>
     <string name="type_name_go_userspace">Nom de l\'espace utilisateur</string>
     <string name="type_name_kernel_module">Module noyau</string>
     <string name="unknown_error">Erreur inconnue</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Vérification de la version %s du backend</string>
     <string name="version_summary_unknown">Version %s inconnue</string>
     <string name="version_title">WireGuard pour Android v%s</string>

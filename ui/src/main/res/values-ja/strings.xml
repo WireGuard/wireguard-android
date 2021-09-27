@@ -93,7 +93,7 @@
     <string name="tv_no_file_picker">ファイルを参照するにはファイル管理アプリをインストールしてください</string>
     <string name="tv_add_tunnel_get_started">トンネルを追加して開始する</string>
     <string name="disable_config_export_title">設定のエクスポートを無効にする</string>
-    <string name="disable_config_export_description">設定のエクスポートを無効にすると、秘密鍵にアクセスしにくくなります</string>
+    <string name="disable_config_export_description">設定のエクスポートを無効にすると、秘密鍵にアクセスされにくくなります</string>
     <string name="dns_servers">DNS サーバ</string>
     <string name="edit">編集</string>
     <string name="endpoint">エンドポイント</string>
@@ -200,11 +200,13 @@
     <string name="tunnel_list_placeholder">青ボタンでトンネルを追加</string>
     <string name="tunnel_name">トンネル名</string>
     <string name="tunnel_on_error">トンネルを有効にできません (wgTurnOn が %d を返却)</string>
+    <string name="tunnel_dns_failure">DNSホスト名を解決できませんでした: “%s”</string>
     <string name="tunnel_rename_error">トンネル名を変更できません: %s</string>
     <string name="tunnel_rename_success">トンネル名を “%s” に変更しました</string>
     <string name="type_name_go_userspace">Go ユーザースペース</string>
     <string name="type_name_kernel_module">カーネルモジュール</string>
     <string name="unknown_error">未知のエラー</string>
+    <string name="version_summary">%1$s バックエンド %2$s</string>
     <string name="version_summary_checking">%s バックエンドのバージョンを確認中</string>
     <string name="version_summary_unknown">未知の %s バージョン</string>
     <string name="version_title">WireGuard for Android v%s</string>

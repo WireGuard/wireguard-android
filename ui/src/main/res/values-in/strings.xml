@@ -200,11 +200,13 @@
     <string name="tunnel_list_placeholder">Tambahkan tunel menggunakan tombol +</string>
     <string name="tunnel_name">Nama tunel</string>
     <string name="tunnel_on_error">Tidak dapat mengaktifkan tunel (wgTurnOn %d dikembalikan)</string>
+    <string name="tunnel_dns_failure">Tidak bisa mencari nama host DNS \"%s\"</string>
     <string name="tunnel_rename_error">Nama tunel %s tidak bisa diganti</string>
     <string name="tunnel_rename_success">Berhasil mengganti nama tunnel ke “%s”</string>
     <string name="type_name_go_userspace">Ke userspace</string>
     <string name="type_name_kernel_module">Modul kernel</string>
     <string name="unknown_error">Eror tidak diketahui</string>
+    <string name="version_summary">%1$s dengan v%2$s</string>
     <string name="version_summary_checking">Mengecek versi backend %s</string>
     <string name="version_summary_unknown">Versi %s Tidak diketahui</string>
     <string name="version_title">WireGuard untuk Android v%s</string>

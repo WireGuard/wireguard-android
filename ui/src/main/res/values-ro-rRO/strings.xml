@@ -226,11 +226,13 @@
     <string name="tunnel_list_placeholder">Adaugă un tunel folosind butonul albastru</string>
     <string name="tunnel_name">Numele tunelului</string>
     <string name="tunnel_on_error">Tunelul nu poate fi pornit (wgTurnOn a returnat %d)</string>
+    <string name="tunnel_dns_failure">Nu se poate rezolva numele gazdei DNS: „%s”</string>
     <string name="tunnel_rename_error">Tunelul nu poate fi redenumit: %s</string>
     <string name="tunnel_rename_success">Tunelul a fost redenumit ca „%s”</string>
     <string name="type_name_go_userspace">Spațiu de utilizator Go</string>
     <string name="type_name_kernel_module">Modul nucleu</string>
     <string name="unknown_error">Eroare necunoscută</string>
+    <string name="version_summary">Bibliotecă %1$s %2$s</string>
     <string name="version_summary_checking">Se verifică versiunea bibliotecii %s</string>
     <string name="version_summary_unknown">Versiune %s necunoscută</string>
     <string name="version_title">WireGuard pentru Android v%s</string>

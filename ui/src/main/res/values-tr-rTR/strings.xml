@@ -213,11 +213,13 @@
     <string name="tunnel_list_placeholder">Mavi düğmeyi kullanarak bir tünel ekleyin</string>
     <string name="tunnel_name">Tünel İsmi</string>
     <string name="tunnel_on_error">Tünel aktif edilemiyor (wgTornOn döndürdü: %d)</string>
+    <string name="tunnel_dns_failure">DNS adı çözülemedi: \"%s\"</string>
     <string name="tunnel_rename_error">Tünel yeniden adlandırılamıyor: %s</string>
     <string name="tunnel_rename_success">Tünel başarıyla yeniden adlandırıldı “%s”</string>
     <string name="type_name_go_userspace">Kullanıcı alanına git</string>
     <string name="type_name_kernel_module">Çekirdek modülü</string>
     <string name="unknown_error">Bilinmeyen hata</string>
+    <string name="version_summary">%1$s arka uç %2$s</string>
     <string name="version_summary_checking">%s arka uç sürümü kontrol ediliyor</string>
     <string name="version_summary_unknown">Bilinmeyen %s sürümü</string>
     <string name="version_title">Android için WireGuard v%s</string>
