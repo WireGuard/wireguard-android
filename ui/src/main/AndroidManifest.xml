@@ -29,9 +29,6 @@
         android:label="@string/permission_label"
         android:protectionLevel="dangerous" />
 
-    <!-- This is safe to override, the APIs we use work perfectly fine on Android 6 -->
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
-
     <application
         android:name=".Application"
         android:allowBackup="false"
