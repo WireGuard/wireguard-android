@@ -57,6 +57,8 @@ android {
     }
     lintOptions {
         disable('LongLogTag')
+        warning('MissingTranslation')
+        warning('ImpliedQuantity')
     }
 }
 
