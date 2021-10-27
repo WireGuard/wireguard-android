@@ -52,7 +52,7 @@ android {
 dependencies {
     implementation "androidx.annotation:annotation:$annotationsVersion"
     implementation "androidx.collection:collection:$collectionVersion"
-    implementation "com.google.code.findbugs:jsr305:$jsr305Version"
+    compileOnly "com.google.code.findbugs:jsr305:$jsr305Version"
     testImplementation "junit:junit:$junitVersion"
 }
 
