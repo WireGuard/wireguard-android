@@ -126,9 +126,9 @@ class LogViewerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.log_viewer, menu)
-        saveButton = menu?.findItem(R.id.save_log)
+        saveButton = menu.findItem(R.id.save_log)
         return true
     }
 
