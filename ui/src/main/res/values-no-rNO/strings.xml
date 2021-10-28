@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">Vis programlogg</string>
     <string name="log_viewer_title">Logg</string>
     <string name="logcat_error">Kan ikke kjøre logcat: </string>
-    <string name="module_disabler_disabled_summary">Den eksperimentelle kjernemodulen kan gi bedre ytelse</string>
-    <string name="module_disabler_disabled_title">Aktiver backend for kjerne-modul</string>
-    <string name="module_disabler_enabled_summary">Backend i userspace er litt tregere men kan gi bedre stabilitet</string>
-    <string name="module_disabler_enabled_title">Deaktiver backend for kjerne-modul</string>
+    <string name="module_enabler_disabled_summary">Den eksperimentelle kjernemodulen kan gi bedre ytelse</string>
+    <string name="module_enabler_disabled_title">Aktiver backend for kjerne-modul</string>
+    <string name="module_enabler_enabled_summary">Backend i userspace er litt tregere men kan gi bedre stabilitet</string>
+    <string name="module_enabler_enabled_title">Deaktiver backend for kjerne-modul</string>
     <string name="module_installer_error">Noe gikk galt. Vennligst prøv igjen</string>
     <string name="module_installer_initial">Den eksperimentelle kjernemodulen kan gi bedre ytelse</string>
     <string name="module_installer_not_found">Ingen moduler er tilgjengelige for din enhet</string>

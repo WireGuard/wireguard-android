@@ -14,18 +14,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 object UserKnobs {
-    private val DISABLE_KERNEL_MODULE = booleanPreferencesKey("disable_kernel_module")
-    val disableKernelModule: Flow<Boolean>
+    private val ENABLE_KERNEL_MODULE = booleanPreferencesKey("enable_kernel_module")
+    val enableKernelModule: Flow<Boolean>
         get() = Application.getPreferencesDataStore().data.map {
-            it[DISABLE_KERNEL_MODULE] ?: false
+            it[ENABLE_KERNEL_MODULE] ?: false
         }
 
-    suspend fun setDisableKernelModule(disable: Boolean?) {
+    suspend fun setEnableKernelModule(enable: Boolean?) {
         Application.getPreferencesDataStore().edit {
-            if (disable == null)
-                it.remove(DISABLE_KERNEL_MODULE)
+            if (enable == null)
+                it.remove(ENABLE_KERNEL_MODULE)
             else
-                it[DISABLE_KERNEL_MODULE] = disable
+                it[ENABLE_KERNEL_MODULE] = enable
         }
     }
 

@@ -129,8 +129,8 @@
     <string name="log_viewer_pref_title">檢視應用程式日誌</string>
     <string name="log_viewer_title">日誌</string>
     <string name="logcat_error">無法執行 logcat: </string>
-    <string name="module_disabler_disabled_summary">使用還在實驗階段的 kernel module 以便改善效能</string>
-    <string name="module_disabler_disabled_title">啟用 kernel module</string>
+    <string name="module_enabler_disabled_summary">使用還在實驗階段的 kernel module 以便改善效能</string>
+    <string name="module_enabler_disabled_title">啟用 kernel module</string>
     <string name="save">儲存</string>
     <string name="select_all">全選</string>
     <string name="toggle_all">切換全部</string>

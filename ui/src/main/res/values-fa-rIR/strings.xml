@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">نمایش گزارش رویداد برنامه</string>
     <string name="log_viewer_title">گزارش رویداد</string>
     <string name="logcat_error">نمی‌توان logcat را اجرا کرد: </string>
-    <string name="module_disabler_disabled_summary">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
-    <string name="module_disabler_disabled_title">فعال‌سازی ماژول کرنل ِبک اند</string>
-    <string name="module_disabler_enabled_summary">فضای کاربری کند ممکن است پایداری را بهبود ببخشد</string>
-    <string name="module_disabler_enabled_title">غیرفعال‌سازی پس‌زمینه واحد هسته</string>
+    <string name="module_enabler_disabled_summary">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
+    <string name="module_enabler_disabled_title">فعال‌سازی ماژول کرنل ِبک اند</string>
+    <string name="module_enabler_enabled_summary">فضای کاربری کند ممکن است پایداری را بهبود ببخشد</string>
+    <string name="module_enabler_enabled_title">غیرفعال‌سازی پس‌زمینه واحد هسته</string>
     <string name="module_installer_error">مشکلی پیش آمد. لطفا دوباره تلاش کنید</string>
     <string name="module_installer_initial">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
     <string name="module_installer_not_found">هیچ واحدی برای دستگاه شما در دسترس نیست</string>

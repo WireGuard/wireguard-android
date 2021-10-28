@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">Afficher le journal de l\'application</string>
     <string name="log_viewer_title">Journal</string>
     <string name="logcat_error">Impossible d\'exécuter logcat : </string>
-    <string name="module_disabler_disabled_summary">Le module expérimental du noyau peut améliorer les performances</string>
-    <string name="module_disabler_disabled_title">Activer le backend du module du noyau</string>
-    <string name="module_disabler_enabled_summary">Le backend plus lent de l\'espace utilisateur peut améliorer la stabilité</string>
-    <string name="module_disabler_enabled_title">Désactiver le backend du module du noyau</string>
+    <string name="module_enabler_disabled_summary">Le module expérimental du noyau peut améliorer les performances</string>
+    <string name="module_enabler_disabled_title">Activer le backend du module du noyau</string>
+    <string name="module_enabler_enabled_summary">Le backend plus lent de l\'espace utilisateur peut améliorer la stabilité</string>
+    <string name="module_enabler_enabled_title">Désactiver le backend du module du noyau</string>
     <string name="module_installer_error">Une erreur est survenue. Veuillez réessayer</string>
     <string name="module_installer_initial">Le module expérimental du noyau peut améliorer les performances</string>
     <string name="module_installer_not_found">Aucun module n\'est disponible pour votre appareil</string>

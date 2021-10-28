@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
 
-class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
+class KernelModuleEnablerPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     private var state = State.UNKNOWN
 
     init {
@@ -44,10 +44,10 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
         activity.lifecycleScope.launch {
             if (state == State.DISABLED) {
                 setState(State.ENABLING)
-                UserKnobs.setDisableKernelModule(false)
+                UserKnobs.setEnableKernelModule(true)
             } else if (state == State.ENABLED) {
                 setState(State.DISABLING)
-                UserKnobs.setDisableKernelModule(true)
+                UserKnobs.setEnableKernelModule(false)
             }
             val observableTunnels = Application.getTunnelManager().getTunnels()
             val downings = observableTunnels.map { async(SupervisorJob()) { it.setStateAsync(Tunnel.State.DOWN) } }
@@ -76,13 +76,13 @@ class KernelModuleDisablerPreference(context: Context, attrs: AttributeSet?) : P
 
     private enum class State(val titleResourceId: Int, val summaryResourceId: Int, val shouldEnableView: Boolean, val visible: Boolean) {
         UNKNOWN(0, 0, false, false),
-        ENABLED(R.string.module_disabler_enabled_title, R.string.module_disabler_enabled_summary, true, true),
-        DISABLED(R.string.module_disabler_disabled_title, R.string.module_disabler_disabled_summary, true, true),
-        ENABLING(R.string.module_disabler_disabled_title, R.string.success_application_will_restart, false, true),
-        DISABLING(R.string.module_disabler_enabled_title, R.string.success_application_will_restart, false, true);
+        ENABLED(R.string.module_enabler_enabled_title, R.string.module_enabler_enabled_summary, true, true),
+        DISABLED(R.string.module_enabler_disabled_title, R.string.module_enabler_disabled_summary, true, true),
+        ENABLING(R.string.module_enabler_disabled_title, R.string.success_application_will_restart, false, true),
+        DISABLING(R.string.module_enabler_enabled_title, R.string.success_application_will_restart, false, true);
     }
 
     companion object {
-        private const val TAG = "WireGuard/KernelModuleDisablerPreference"
+        private const val TAG = "WireGuard/KernelModuleEnablerPreference"
     }
 }

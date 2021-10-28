@@ -27,9 +27,8 @@
         android:summaryOff="@string/multiple_tunnels_summary_off"
         android:summaryOn="@string/multiple_tunnels_summary_on"
         android:title="@string/multiple_tunnels_title" />
-    <com.wireguard.android.preference.ModuleDownloaderPreference android:key="module_downloader" />
     <com.wireguard.android.preference.ToolsInstallerPreference android:key="tools_installer" />
-    <com.wireguard.android.preference.KernelModuleDisablerPreference android:key="kernel_module_disabler" />
+    <com.wireguard.android.preference.KernelModuleEnablerPreference android:key="kernel_module_enabler" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="allow_remote_control_intents"

@@ -168,10 +168,10 @@
     <string name="log_viewer_pref_title">Wyświetl log aplikacji</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Nie można uruchomić narzędzia logcat: </string>
-    <string name="module_disabler_disabled_summary">Eksperymentalny moduł jądra może poprawić wydajność</string>
-    <string name="module_disabler_disabled_title">Włącz moduł jądra</string>
-    <string name="module_disabler_enabled_summary">Wolniejsza implementacja w przestrzeni użytkownika może poprawić stabilność</string>
-    <string name="module_disabler_enabled_title">Wyłącz moduł jądra</string>
+    <string name="module_enabler_disabled_summary">Eksperymentalny moduł jądra może poprawić wydajność</string>
+    <string name="module_enabler_disabled_title">Włącz moduł jądra</string>
+    <string name="module_enabler_enabled_summary">Wolniejsza implementacja w przestrzeni użytkownika może poprawić stabilność</string>
+    <string name="module_enabler_enabled_title">Wyłącz moduł jądra</string>
     <string name="module_installer_error">Coś poszło nie tak. Proszę spróbować ponownie</string>
     <string name="module_installer_initial">Eksperymentalny moduł jądra może poprawić wydajność</string>
     <string name="module_installer_not_found">Brak dostępnych modułów dla tego urządzenia</string>

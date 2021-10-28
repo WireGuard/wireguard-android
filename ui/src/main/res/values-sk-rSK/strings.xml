@@ -77,7 +77,7 @@
     <string name="log_saver_activity_label">Uložiť denník udalostí</string>
     <string name="log_viewer_pref_summary">Denník udalosti môžu byt nápomocné pri ladení aplikácie</string>
     <string name="log_viewer_pref_title">Zobraziť denník udalostí aplikácie</string>
-    <string name="module_disabler_enabled_summary">Pomalšie užívatelské prostredie môže zlepšiť stabilitu</string>
+    <string name="module_enabler_enabled_summary">Pomalšie užívatelské prostredie môže zlepšiť stabilitu</string>
     <string name="module_installer_error">Niečo sa pokazilo. Prosím, skúste znova</string>
     <string name="module_installer_not_found">Pre vaše zariadenie nie sú k dispozícii žiadne moduly</string>
     <string name="module_installer_title">Stiahni a nainštaluj kernel modul</string>

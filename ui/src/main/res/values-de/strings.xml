@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">Anwendungs-Protokoll anzeigen</string>
     <string name="log_viewer_title">Protokoll</string>
     <string name="logcat_error">Konnte logcat nicht ausführen: </string>
-    <string name="module_disabler_disabled_summary">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
-    <string name="module_disabler_disabled_title">Kernelmodul-Backend aktivieren</string>
-    <string name="module_disabler_enabled_summary">Das langsamere Userspace-Backend kann die Stabilität verbessern</string>
-    <string name="module_disabler_enabled_title">Kernelmodul-Backend deaktivieren</string>
+    <string name="module_enabler_disabled_summary">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
+    <string name="module_enabler_disabled_title">Kernelmodul-Backend aktivieren</string>
+    <string name="module_enabler_enabled_summary">Das langsamere Userspace-Backend kann die Stabilität verbessern</string>
+    <string name="module_enabler_enabled_title">Kernelmodul-Backend deaktivieren</string>
     <string name="module_installer_error">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut</string>
     <string name="module_installer_initial">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
     <string name="module_installer_not_found">Für Ihr Gerät sind keine Module verfügbar</string>

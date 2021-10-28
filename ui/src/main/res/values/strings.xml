@@ -144,10 +144,10 @@
     <string name="log_viewer_pref_title">View application log</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Unable to run logcat: </string>
-    <string name="module_disabler_disabled_summary">The experimental kernel module can improve performance</string>
-    <string name="module_disabler_disabled_title">Enable kernel module backend</string>
-    <string name="module_disabler_enabled_summary">The slower userspace backend may improve stability</string>
-    <string name="module_disabler_enabled_title">Disable kernel module backend</string>
+    <string name="module_enabler_disabled_summary">The experimental kernel module can improve performance</string>
+    <string name="module_enabler_disabled_title">Enable kernel module backend</string>
+    <string name="module_enabler_enabled_summary">The slower userspace backend may improve stability</string>
+    <string name="module_enabler_enabled_title">Disable kernel module backend</string>
     <string name="module_installer_error">Something went wrong. Please try again</string>
     <string name="module_installer_initial">The experimental kernel module can improve performance</string>
     <string name="module_installer_not_found">No modules are available for your device</string>

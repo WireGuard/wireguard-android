@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">ਐਪਲੀਕੇਸ਼ਨ ਲਾਗ ਵੇਖੋ</string>
     <string name="log_viewer_title">ਲਾਗ</string>
     <string name="logcat_error">logcat ਚਲਾਉਣ ਲਈ ਅਸਮਰੱਥ: </string>
-    <string name="module_disabler_disabled_summary">ਤਜਰਬੇ ਅਧੀਨ ਕਰਨਲ ਮੋਡੀਊਲ ਕਾਰਗੁਜ਼ਾਰੀ ਸੁਧਾਰ ਸਕਦਾ ਹੈ</string>
-    <string name="module_disabler_disabled_title">ਕਰਨਲ ਮੋਡੀਊਲ ਬੈਕਐਂਡ ਸਮਰੱਥ ਕਰੋ</string>
-    <string name="module_disabler_enabled_summary">ਹੌਲੀ ਵਰਤੋਂਕਾਰ-ਸਪੇਸ ਬੈਂਕਡ ਸਥਿਰਤਾ ਸੁਧਾਰ ਕਰ ਸਕਦਾ ਹੈ</string>
-    <string name="module_disabler_enabled_title">ਕਰਨਲ ਮੋਡੀਊਲ ਬੈਕਐਂਡ ਅਸਮਰੱਥ ਕਰੋ</string>
+    <string name="module_enabler_disabled_summary">ਤਜਰਬੇ ਅਧੀਨ ਕਰਨਲ ਮੋਡੀਊਲ ਕਾਰਗੁਜ਼ਾਰੀ ਸੁਧਾਰ ਸਕਦਾ ਹੈ</string>
+    <string name="module_enabler_disabled_title">ਕਰਨਲ ਮੋਡੀਊਲ ਬੈਕਐਂਡ ਸਮਰੱਥ ਕਰੋ</string>
+    <string name="module_enabler_enabled_summary">ਹੌਲੀ ਵਰਤੋਂਕਾਰ-ਸਪੇਸ ਬੈਂਕਡ ਸਥਿਰਤਾ ਸੁਧਾਰ ਕਰ ਸਕਦਾ ਹੈ</string>
+    <string name="module_enabler_enabled_title">ਕਰਨਲ ਮੋਡੀਊਲ ਬੈਕਐਂਡ ਅਸਮਰੱਥ ਕਰੋ</string>
     <string name="module_installer_error">ਕੁਝ ਗਲਤ ਵਾਪਰ ਗਿਆ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
     <string name="module_installer_initial">ਤਜਰਬੇ ਅਧੀਨ ਕਰਨਲ ਮੋਡੀਊਲ ਕਾਰਗੁਜ਼ਾਰੀ ਸੁਧਾਰ ਸਕਦਾ ਹੈ</string>
     <string name="module_installer_not_found">ਤੁਹਾਡੇ ਡਿਵਾਈਸ ਲਈ ਕੋਈ ਮੋਡੀਊਲ ਮੌਜੂਦ ਨਹੀਂ ਹਨ</string>

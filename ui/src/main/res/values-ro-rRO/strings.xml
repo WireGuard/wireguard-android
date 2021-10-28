@@ -155,10 +155,10 @@
     <string name="log_viewer_pref_title">Vizualizare jurnal aplicație</string>
     <string name="log_viewer_title">Jurnal</string>
     <string name="logcat_error">Programul logcat nu poate fi executat: </string>
-    <string name="module_disabler_disabled_summary">Modulul experimental de nucleu poate îmbunătăți performanța</string>
-    <string name="module_disabler_disabled_title">Activează biblioteca modulului de nucleu</string>
-    <string name="module_disabler_enabled_summary">Biblioteca mai lentă a spațiului utilizatorului poate îmbunătăți stabilitatea</string>
-    <string name="module_disabler_enabled_title">Dezactivează biblioteca modulului de nucleu</string>
+    <string name="module_enabler_disabled_summary">Modulul experimental de nucleu poate îmbunătăți performanța</string>
+    <string name="module_enabler_disabled_title">Activează biblioteca modulului de nucleu</string>
+    <string name="module_enabler_enabled_summary">Biblioteca mai lentă a spațiului utilizatorului poate îmbunătăți stabilitatea</string>
+    <string name="module_enabler_enabled_title">Dezactivează biblioteca modulului de nucleu</string>
     <string name="module_installer_error">A apărut o eroare. Încearcă din nou</string>
     <string name="module_installer_initial">Modulul experimental de nucleu poate îmbunătăți performanța</string>
     <string name="module_installer_not_found">Nu sunt disponibile module pentru dispozitivul tău</string>

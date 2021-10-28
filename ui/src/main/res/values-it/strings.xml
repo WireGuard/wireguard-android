@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">Visualizza log dell\'applicazione</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Impossibile eseguire logcat: </string>
-    <string name="module_disabler_disabled_summary">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
-    <string name="module_disabler_disabled_title">Abilita il backend del modulo del kernel</string>
-    <string name="module_disabler_enabled_summary">Il backend in userspace più lento potrebbe migliorare la stabilità</string>
-    <string name="module_disabler_enabled_title">Disabilita il backend del modulo del kernel</string>
+    <string name="module_enabler_disabled_summary">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
+    <string name="module_enabler_disabled_title">Abilita il backend del modulo del kernel</string>
+    <string name="module_enabler_enabled_summary">Il backend in userspace più lento potrebbe migliorare la stabilità</string>
+    <string name="module_enabler_enabled_title">Disabilita il backend del modulo del kernel</string>
     <string name="module_installer_error">Qualcosa non ha funzionato. Riprova</string>
     <string name="module_installer_initial">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
     <string name="module_installer_not_found">Nessun modulo disponibile per il tuo dispositivo</string>

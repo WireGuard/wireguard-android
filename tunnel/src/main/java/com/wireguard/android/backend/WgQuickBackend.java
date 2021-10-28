@@ -53,6 +53,10 @@ public final class WgQuickBackend implements Backend {
         this.toolsInstaller = toolsInstaller;
     }
 
+    public static boolean hasKernelSupport() {
+        return new File("/sys/module/wireguard").exists();
+    }
+
     @Override
     public Set<String> getRunningTunnelNames() {
         final List<String> output = new ArrayList<>();

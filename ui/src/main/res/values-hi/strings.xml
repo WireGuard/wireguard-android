@@ -96,10 +96,10 @@
     <string name="module_installer_title">कर्नेल मॉड्यूल डाउनलोड और इंस्टॉल करें</string>
     <string name="module_installer_working">डाउनलोड कर रहा है और स्थापित कर रहा है…</string>
     <string name="module_installer_error">कुछ गलत हो गया। कृपया पुन: प्रयास करें</string>
-    <string name="module_disabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
-    <string name="module_disabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
-    <string name="module_disabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
-    <string name="module_disabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
+    <string name="module_enabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
+    <string name="module_enabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
+    <string name="module_enabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
+    <string name="module_enabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
     <string name="mtu">MTU</string>
     <string name="multiple_tunnels_title">एक साथ कई टनलस को अनुमति दें</string>
     <string name="multiple_tunnels_summary_on">एक साथ कई टनलस को चालू किया जा सकता है</string>
