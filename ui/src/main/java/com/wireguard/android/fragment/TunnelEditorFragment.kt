@@ -297,6 +297,7 @@ class TunnelEditorFragment : BaseFragment() {
                                 Snackbar.LENGTH_SHORT
                         ).show()
                     }
+                    is BiometricAuthenticator.Result.Cancelled -> {}
                 }
             }
         } else {

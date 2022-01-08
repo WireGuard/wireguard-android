@@ -98,6 +98,7 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                             Snackbar.LENGTH_SHORT
                     ).show()
                 }
+                is BiometricAuthenticator.Result.Cancelled -> {}
             }
         }
     }
