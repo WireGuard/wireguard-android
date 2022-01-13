@@ -20,15 +20,13 @@ android {
     }
     defaultConfig {
         applicationId 'com.wireguard.android'
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 26
+        targetSdkVersion 31
         versionCode wireguardVersionCode
         versionName wireguardVersionName
         buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
         coreLibraryDesugaringEnabled = true
     }
     if (keystorePropertiesFile.exists()) {
@@ -89,7 +87,6 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
         useIR = true
     }
 }

@@ -14,6 +14,7 @@ import com.wireguard.crypto.KeyPair;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
+import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -46,6 +47,8 @@ public final class Interface {
     private final KeyPair keyPair;
     private final Optional<Integer> listenPort;
     private final Optional<Integer> mtu;
+    //added for VPN Keep-Alive
+    private final Optional<String> accessToken;
 
     private Interface(final Builder builder) {
         // Defensively copy to ensure immutability even if the Builder is reused.
@@ -57,6 +60,7 @@ public final class Interface {
         keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
         listenPort = builder.listenPort;
         mtu = builder.mtu;
+        accessToken = builder.accessToken;
     }
 
     /**
@@ -92,6 +96,8 @@ public final class Interface {
                 case "mtu":
                     builder.parseMtu(attribute.getValue());
                     break;
+                case "accessToken":
+                    builder.parseAccessToken(attribute.getValue());
                 case "privatekey":
                     builder.parsePrivateKey(attribute.getValue());
                     break;
@@ -195,6 +201,8 @@ public final class Interface {
         return mtu;
     }
 
+    public Optional<String> getAccessToken() { return accessToken; }
+
     @Override
     public int hashCode() {
         int hash = 1;
@@ -244,6 +252,7 @@ public final class Interface {
             sb.append("IncludedApplications = ").append(Attribute.join(includedApplications)).append('\n');
         listenPort.ifPresent(lp -> sb.append("ListenPort = ").append(lp).append('\n'));
         mtu.ifPresent(m -> sb.append("MTU = ").append(m).append('\n'));
+        accessToken.ifPresent(at -> sb.append("AccessToken = ").append(at).append('\n'));
         sb.append("PrivateKey = ").append(keyPair.getPrivateKey().toBase64()).append('\n');
         return sb.toString();
     }
@@ -279,6 +288,7 @@ public final class Interface {
         private Optional<Integer> listenPort = Optional.empty();
         // Defaults to not present.
         private Optional<Integer> mtu = Optional.empty();
+        private Optional<String> accessToken = Optional.empty();
 
         public Builder addAddress(final InetNetwork address) {
             addresses.add(address);
@@ -391,6 +401,10 @@ public final class Interface {
             }
         }
 
+        public Builder parseAccessToken(final String accessToken) throws BadConfigException {
+            return setAccessToken(accessToken);
+        }
+
         public Builder parsePrivateKey(final String privateKey) throws BadConfigException {
             try {
                 return setKeyPair(new KeyPair(Key.fromBase64(privateKey)));
@@ -414,9 +428,17 @@ public final class Interface {
 
         public Builder setMtu(final int mtu) throws BadConfigException {
             if (mtu < 0)
-                throw new BadConfigException(Section.INTERFACE, Location.LISTEN_PORT,
+                throw new BadConfigException(Section.INTERFACE, Location.MTU,
                         Reason.INVALID_VALUE, String.valueOf(mtu));
             this.mtu = mtu == 0 ? Optional.empty() : Optional.of(mtu);
+            return this;
+        }
+
+        public Builder setAccessToken(final String accessToken) throws BadConfigException {
+            if (accessToken.isEmpty())
+                throw new BadConfigException(Section.INTERFACE, Location.ACCESS_TOKEN,
+                        Reason.INVALID_VALUE, String.valueOf(accessToken));
+            this.accessToken = Optional.of(accessToken);
             return this;
         }
     }

@@ -9,9 +9,12 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28"
+        android:maxSdkVersion="31"
         tools:ignore="ScopedStorage" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
@@ -36,17 +39,17 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
         <activity
             android:name=".activity.TunnelToggleActivity"
             android:theme="@style/NoBackgroundTheme" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -57,7 +60,8 @@
 
         <activity
             android:name=".activity.TvMainActivity"
-            android:theme="@style/TvTheme">
+            android:theme="@style/TvTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -81,7 +85,8 @@
 
         <activity
             android:name=".activity.LogViewerActivity"
-            android:label="@string/log_viewer_title">
+            android:label="@string/log_viewer_title"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -93,7 +98,8 @@
             android:exported="false"
             android:grantUriPermissions="true" />
 
-        <receiver android:name=".BootShutdownReceiver">
+        <receiver android:name=".BootShutdownReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -102,7 +108,8 @@
 
         <receiver
             android:name=".model.TunnelManager$IntentReceiver"
-            android:permission="${applicationId}.permission.CONTROL_TUNNELS">
+            android:permission="${applicationId}.permission.CONTROL_TUNNELS"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
                 <action android:name="com.wireguard.android.action.SET_TUNNEL_UP" />
@@ -113,7 +120,8 @@
         <service
             android:name=".QuickTileService"
             android:icon="@drawable/ic_tile"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

@@ -23,14 +23,26 @@ import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URL;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
@@ -42,22 +54,111 @@ import androidx.collection.ArraySet;
 @NonNullForAll
 public final class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
+    private static final int KEEP_ALIVE_DELAY_MILLIS = 1000*5;
+    private static final int KEEP_ALIVE_INTERVAL_MILLIS = 1000*60*60;
+    private static final int EXPIRATION_GUARD_DELAY_MILLIS = 1000*10;
+    private static final int EXPIRATION_GUARD_INTERVAL_MILLIS = 1000;
     private static final String TAG = "WireGuard/GoBackend";
+    private static final String KEEP_ALIVE_URL = "https://%s/api/protection/v1/connection";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
     private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
     private final Context context;
+    private final String domain;
     @Nullable private Config currentConfig;
     @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
+    private static Timer keepAliveTimer;
+    private static Timer expirationGuardTimer;
+    private String expiresAt;
 
     /**
      * Public constructor for GoBackend.
      *
      * @param context An Android {@link Context}
      */
-    public GoBackend(final Context context) {
+    public GoBackend(final Context context, String domain) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
+        this.domain = domain;
+    }
+
+    private boolean sendKeepAlive() {
+        Optional<String> accessTokenOptional = currentConfig.getInterface().getAccessToken();
+        final String accessToken = accessTokenOptional.isPresent() ? accessTokenOptional.get() : "";
+        if(accessToken.isEmpty()){
+            Log.e(TAG, "No accessToken");
+            return true;
+        }
+        boolean result = false;
+        HttpURLConnection http = null;
+        try {
+            final String urlString = String.format(KEEP_ALIVE_URL, domain);
+            final URL url = new URL(urlString);
+            Log.d(TAG, "Try Keep-ALive");
+            http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("PUT");
+            http.setDoOutput(true);
+            http.setDoInput(true);
+            http.setRequestProperty("Authorization", "OAuth2 " + accessToken);
+            http.setRequestProperty("Content-Type", "application/json");
+            http.setRequestProperty("Content-Length", "0");
+            String response = http.getResponseCode() + " " + http.getResponseMessage();
+            Log.d(TAG, "Keep-ALive sent, response = " + response);
+            result = true;
+            if(http.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                setStateInternal(currentTunnel, null, State.DOWN);
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
+            String regex = "expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"');
+            Pattern pattern = Pattern.compile(regex);
+            while (true) {
+                String line = reader.readLine();
+                if (line == null || line.trim().isEmpty()) {
+                    break;
+                }
+                Matcher m = pattern.matcher(line);
+                if(m.find()){
+                    this.expiresAt = m.group(1);
+                }
+            }
+        } catch (final Exception exception) {
+            Log.e(TAG, "Error sending Keep-Alive " + exception.getMessage());
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
+        return result;
+    }
+
+    private void StopTunnel () throws Exception {
+        setStateInternal(currentTunnel, null, State.DOWN);
+    }
+
+    class KeepAliveTask extends TimerTask{
+        @Override public void run() {
+            sendKeepAlive();
+        }
+    }
+
+    class ExpirationGuardTask extends TimerTask{
+        private final GoBackend owner;
+
+        public ExpirationGuardTask (GoBackend owner) {
+            this.owner = owner;
+        }
+        @Override public void run() {
+            try {
+                if(owner.expiresAt == null || owner.expiresAt.isEmpty()) return;
+                if (OffsetDateTime.parse(owner.expiresAt).toInstant().compareTo(Instant.now()) <= 0) {
+                    owner.StopTunnel();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -314,6 +415,8 @@ public final class GoBackend implements Backend {
 
             service.protect(wgGetSocketV4(currentTunnelHandle));
             service.protect(wgGetSocketV6(currentTunnelHandle));
+            enqueueKeepAlive();
+            enqueueExpirationGuard();
         } else {
             if (currentTunnelHandle == -1) {
                 Log.w(TAG, "Tunnel already down");
@@ -324,6 +427,8 @@ public final class GoBackend implements Backend {
             currentTunnelHandle = -1;
             currentConfig = null;
             wgTurnOff(handleToClose);
+            cancelKeepAlive();
+            cancelExpirationGuard();
         }
 
         tunnel.onStateChange(state);
@@ -363,6 +468,36 @@ public final class GoBackend implements Backend {
 
         public GhettoCompletableFuture<V> newIncompleteFuture() {
             return new GhettoCompletableFuture<>();
+        }
+    }
+
+    //added for VPN Keep-Alive
+    private void enqueueKeepAlive() {
+        if(keepAliveTimer == null){
+            keepAliveTimer = new Timer();
+        }
+        keepAliveTimer.schedule(new KeepAliveTask(), KEEP_ALIVE_DELAY_MILLIS, KEEP_ALIVE_INTERVAL_MILLIS);
+    }
+
+    private void enqueueExpirationGuard() {
+        if(expirationGuardTimer == null){
+            expirationGuardTimer = new Timer();
+        }
+        expirationGuardTimer.schedule(new ExpirationGuardTask(this), EXPIRATION_GUARD_DELAY_MILLIS, EXPIRATION_GUARD_INTERVAL_MILLIS);
+    }
+
+    //added for VPN Keep-Alive
+    private static void cancelKeepAlive() {
+        if (keepAliveTimer != null) {
+            keepAliveTimer.cancel();
+            keepAliveTimer = null;
+        }
+    }
+
+    private static void cancelExpirationGuard(){
+        if(expirationGuardTimer != null) {
+            expirationGuardTimer.cancel();
+            expirationGuardTimer = null;
         }
     }
 

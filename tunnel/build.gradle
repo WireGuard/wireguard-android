@@ -6,14 +6,10 @@ version wireguardVersionName
 group groupName
 
 android {
-    compileSdkVersion 30
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+    compileSdkVersion 31
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 26
+        targetSdkVersion 31
         versionCode wireguardVersionCode
         versionName wireguardVersionName
     }
@@ -54,6 +50,8 @@ dependencies {
     implementation "androidx.collection:collection:$collectionVersion"
     compileOnly "com.google.code.findbugs:jsr305:$jsr305Version"
     testImplementation "junit:junit:$junitVersion"
+    implementation "androidx.work:work-runtime:2.6.0"
 }
+
 
 apply from: "publish.gradle"
