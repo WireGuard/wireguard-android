@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.fragment.app.FragmentManager
 import com.wireguard.android.Application
 import com.wireguard.android.R
+import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.fragment.ConfigNamingDialogFragment
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.config.Config
@@ -52,6 +53,13 @@ object TunnelImporter {
             val isZip = name.lowercase().endsWith(".zip")
             if (name.lowercase().endsWith(".conf")) {
                 name = name.substring(0, name.length - ".conf".length)
+                if(Tunnel.isNameInvalid(name)) {
+                    val matcher = Tunnel.NAME_PATTERN.matcher(name)
+                    if(matcher.find()){
+                        name = matcher.group();
+                    }
+                }
+
             } else {
                 require(isZip) { context.getString(R.string.bad_extension_error) }
             }
