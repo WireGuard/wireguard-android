@@ -59,7 +59,6 @@ object TunnelImporter {
                         name = matcher.group();
                     }
                 }
-
             } else {
                 require(isZip) { context.getString(R.string.bad_extension_error) }
             }
