@@ -96,8 +96,9 @@ public final class Interface {
                 case "mtu":
                     builder.parseMtu(attribute.getValue());
                     break;
-                case "accessToken":
+                case "accesstoken":
                     builder.parseAccessToken(attribute.getValue());
+                    break;
                 case "privatekey":
                     builder.parsePrivateKey(attribute.getValue());
                     break;
