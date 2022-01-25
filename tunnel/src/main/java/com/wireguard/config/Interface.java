@@ -49,6 +49,7 @@ public final class Interface {
     private final Optional<Integer> mtu;
     //added for VPN Keep-Alive
     private final Optional<String> accessToken;
+    private final Optional<String> keepAliveDomain;
 
     private Interface(final Builder builder) {
         // Defensively copy to ensure immutability even if the Builder is reused.
@@ -61,6 +62,7 @@ public final class Interface {
         listenPort = builder.listenPort;
         mtu = builder.mtu;
         accessToken = builder.accessToken;
+        keepAliveDomain = builder.keepAliveDomain;
     }
 
     /**
@@ -98,6 +100,9 @@ public final class Interface {
                     break;
                 case "accesstoken":
                     builder.parseAccessToken(attribute.getValue());
+                    break;
+                case "keepalivedomain":
+                    builder.parseKeepAliveDomain(attribute.getValue());
                     break;
                 case "privatekey":
                     builder.parsePrivateKey(attribute.getValue());
@@ -204,6 +209,8 @@ public final class Interface {
 
     public Optional<String> getAccessToken() { return accessToken; }
 
+    public Optional<String> getKeepAliveDomain() { return keepAliveDomain; }
+
     @Override
     public int hashCode() {
         int hash = 1;
@@ -254,6 +261,7 @@ public final class Interface {
         listenPort.ifPresent(lp -> sb.append("ListenPort = ").append(lp).append('\n'));
         mtu.ifPresent(m -> sb.append("MTU = ").append(m).append('\n'));
         accessToken.ifPresent(at -> sb.append("AccessToken = ").append(at).append('\n'));
+        keepAliveDomain.ifPresent(kad -> sb.append("KeepAliveDomain = ").append(kad).append('\n'));
         sb.append("PrivateKey = ").append(keyPair.getPrivateKey().toBase64()).append('\n');
         return sb.toString();
     }
@@ -290,6 +298,7 @@ public final class Interface {
         // Defaults to not present.
         private Optional<Integer> mtu = Optional.empty();
         private Optional<String> accessToken = Optional.empty();
+        private Optional<String> keepAliveDomain = Optional.empty();
 
         public Builder addAddress(final InetNetwork address) {
             addresses.add(address);
@@ -406,6 +415,10 @@ public final class Interface {
             return setAccessToken(accessToken);
         }
 
+        public Builder parseKeepAliveDomain(final String keepAliveDomain) throws BadConfigException {
+            return setKeepAliveDomain(keepAliveDomain);
+        }
+
         public Builder parsePrivateKey(final String privateKey) throws BadConfigException {
             try {
                 return setKeyPair(new KeyPair(Key.fromBase64(privateKey)));
@@ -440,6 +453,14 @@ public final class Interface {
                 throw new BadConfigException(Section.INTERFACE, Location.ACCESS_TOKEN,
                         Reason.INVALID_VALUE, String.valueOf(accessToken));
             this.accessToken = Optional.of(accessToken);
+            return this;
+        }
+
+        public Builder setKeepAliveDomain(final String keepAliveDomain) throws BadConfigException {
+            if (keepAliveDomain.isEmpty())
+                throw new BadConfigException(Section.INTERFACE, Location.KEEP_ALIVE_DOMAIN,
+                        Reason.INVALID_VALUE, String.valueOf(keepAliveDomain));
+            this.keepAliveDomain = Optional.of(keepAliveDomain);
             return this;
         }
     }

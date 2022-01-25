@@ -79,7 +79,8 @@ public class BadConfigException extends Exception {
         PRE_SHARED_KEY("PresharedKey"),
         PRIVATE_KEY("PrivateKey"),
         PUBLIC_KEY("PublicKey"),
-        ACCESS_TOKEN("AccessToken");
+        ACCESS_TOKEN("AccessToken"),
+        KEEP_ALIVE_DOMAIN("KeepAliveDomain");
 
         private final String name;
 
