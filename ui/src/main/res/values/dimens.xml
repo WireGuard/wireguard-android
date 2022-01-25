@@ -6,4 +6,5 @@
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
     <dimen name="bottom_sheet_icon_padding">16dp</dimen>
+    <dimen name="tunnel_list_placeholder_margin">16dp</dimen>
 </resources>

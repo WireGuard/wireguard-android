@@ -145,7 +145,7 @@ public final class ToolsInstaller {
 
         script.append("trap 'rm -rf /data/adb/modules/wireguard' INT TERM EXIT; ");
         script.append(String.format("rm -rf /data/adb/modules/wireguard/; mkdir -p /data/adb/modules/wireguard%s; ", INSTALL_DIR));
-        script.append("printf 'name=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /data/adb/modules/wireguard/module.prop; ");
+        script.append("printf 'id=wireguard\nname=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /data/adb/modules/wireguard/module.prop; ");
         script.append("touch /data/adb/modules/wireguard/auto_mount; ");
         for (final String name : EXECUTABLES) {
             final File destination = new File("/data/adb/modules/wireguard" + INSTALL_DIR, name);

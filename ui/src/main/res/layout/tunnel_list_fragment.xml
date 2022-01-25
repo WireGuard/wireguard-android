@@ -60,6 +60,8 @@
                 android:src="@mipmap/ic_launcher" />
 
             <TextView
+                android:layout_marginStart="@dimen/tunnel_list_placeholder_margin"
+                android:layout_marginEnd="@dimen/tunnel_list_placeholder_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
