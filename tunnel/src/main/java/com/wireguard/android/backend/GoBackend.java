@@ -63,7 +63,6 @@ public final class GoBackend implements Backend {
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
     private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
     private final Context context;
-    private final String domain;
     @Nullable private Config currentConfig;
     @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
@@ -76,10 +75,9 @@ public final class GoBackend implements Backend {
      *
      * @param context An Android {@link Context}
      */
-    public GoBackend(final Context context, String domain) {
+    public GoBackend(final Context context) {
         SharedLibraryLoader.loadSharedLibrary(context, "wg-go");
         this.context = context;
-        this.domain = domain;
     }
 
     private boolean sendKeepAlive() {
@@ -89,10 +87,13 @@ public final class GoBackend implements Backend {
             Log.e(TAG, "No accessToken");
             return true;
         }
+        Optional<String> keepAliveDomainOptional = currentConfig.getInterface().getKeepAliveDomain();
+        final String keepAliveDomain = keepAliveDomainOptional.isPresent() ? keepAliveDomainOptional.get() : "www.os33.net";
+
         boolean result = false;
         HttpURLConnection http = null;
         try {
-            final String urlString = String.format(KEEP_ALIVE_URL, domain);
+            final String urlString = String.format(KEEP_ALIVE_URL, keepAliveDomain);
             final URL url = new URL(urlString);
             Log.d(TAG, "Try Keep-ALive");
             http = (HttpURLConnection) url.openConnection();
