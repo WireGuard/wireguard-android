@@ -14,7 +14,7 @@ buildscript {
         fragmentVersion = '1.4.1'
         jsr305Version = '3.0.2'
         junitVersion = '4.13.2'
-        lifecycleRuntimeKtxVersion = '2.4.0'
+        lifecycleRuntimeKtxVersion = '2.4.1'
         materialComponentsVersion = '1.5.0'
         preferenceVersion = '1.2.0'
         zxingEmbeddedVersion = '4.3.0'
@@ -24,7 +24,7 @@ buildscript {
 }
 
 plugins {
-    id "de.undercouch.download" version "4.1.2"
+    id "de.undercouch.download" version "5.0.1"
 }
 
 task downloadCrowdin(type: Download) {
