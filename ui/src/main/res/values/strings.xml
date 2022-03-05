@@ -80,6 +80,8 @@
     <string name="bad_config_reason_unknown_section">Unknown section</string>
     <string name="bad_config_reason_value_out_of_range">Value out of range</string>
     <string name="bad_extension_error">File must be .conf or .zip</string>
+    <string name="error_no_qr_found">Barcode was not found in the image</string>
+    <string name="error_qr_checksum">Barcode checksum verification failed</string>
     <string name="cancel">Cancel</string>
     <string name="config_delete_error">Cannot delete configuration file %s</string>
     <string name="config_exists_error">Configuration for “%s” already exists</string>

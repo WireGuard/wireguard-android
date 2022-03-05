@@ -6,6 +6,8 @@ package com.wireguard.android.util
 
 import android.content.res.Resources
 import android.os.RemoteException
+import com.google.zxing.ChecksumException
+import com.google.zxing.NotFoundException
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.BackendException
@@ -83,6 +85,12 @@ object ErrorMessages {
             }
             rootCause is RootShellException -> {
                 resources.getString(RSE_REASON_MAP.getValue(rootCause.reason), *rootCause.format)
+            }
+            rootCause is NotFoundException -> {
+                resources.getString(R.string.error_no_qr_found)
+            }
+            rootCause is ChecksumException -> {
+                resources.getString(R.string.error_qr_checksum)
             }
             rootCause.message != null -> {
                 rootCause.message!!
