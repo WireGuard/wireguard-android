@@ -54,9 +54,9 @@ class TunnelListFragment : BaseFragment() {
         val activity = activity ?: return@registerForActivityResult
         val contentResolver = activity.contentResolver ?: return@registerForActivityResult
         activity.lifecycleScope.launch {
-            val qrCodeFromFileScanner = QrCodeFromFileScanner(contentResolver, QRCodeReader())
-            if (qrCodeFromFileScanner.validContentType(data)) {
+            if (QrCodeFromFileScanner.validContentType(contentResolver, data)) {
                 try {
+                    val qrCodeFromFileScanner = QrCodeFromFileScanner(contentResolver, QRCodeReader())
                     val result = qrCodeFromFileScanner.scan(data)
                     TunnelImporter.importTunnel(parentFragmentManager, result.text) { showSnackbar(it) }
                 } catch (e: Exception) {

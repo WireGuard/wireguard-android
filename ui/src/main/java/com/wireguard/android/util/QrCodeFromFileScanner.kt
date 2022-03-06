@@ -96,15 +96,15 @@ class QrCodeFromFileScanner(
      */
     suspend fun scan(data: Uri) = withContext(Dispatchers.Default) { doScan(data) }
 
-    /**
-     * Given a reference to a file, check if this file could be parsed by this class
-     * @return true if the file can be parsed, false if not
-     */
-    fun validContentType(data: Uri): Boolean {
-        return contentResolver.getType(data)?.startsWith("image/") == true
-    }
-
     companion object {
         private const val TAG = "QrCodeFromFileScanner"
+
+        /**
+         * Given a reference to a file, check if this file could be parsed by this class
+         * @return true if the file can be parsed, false if not
+         */
+        fun validContentType(contentResolver: ContentResolver, data: Uri): Boolean {
+            return contentResolver.getType(data)?.startsWith("image/") == true
+        }
     }
 }
