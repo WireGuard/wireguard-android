@@ -44,7 +44,8 @@
 
         <activity
             android:name=".activity.TunnelToggleActivity"
-            android:theme="@style/NoBackgroundTheme" />
+            android:theme="@style/NoBackgroundTheme"
+            android:excludeFromRecents="true"/>
 
         <activity android:name=".activity.MainActivity"
             android:exported="true">

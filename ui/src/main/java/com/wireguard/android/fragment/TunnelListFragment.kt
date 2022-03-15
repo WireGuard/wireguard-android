@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.google.zxing.qrcode.QRCodeReader
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import com.wireguard.android.Application
@@ -31,6 +32,7 @@ import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.QrCodeFromFileScanner
 import com.wireguard.android.util.TunnelImporter
 import com.wireguard.android.widget.MultiselectableRelativeLayout
 import kotlinx.coroutines.SupervisorJob
@@ -52,7 +54,20 @@ class TunnelListFragment : BaseFragment() {
         val activity = activity ?: return@registerForActivityResult
         val contentResolver = activity.contentResolver ?: return@registerForActivityResult
         activity.lifecycleScope.launch {
-            TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
+            if (QrCodeFromFileScanner.validContentType(contentResolver, data)) {
+                try {
+                    val qrCodeFromFileScanner = QrCodeFromFileScanner(contentResolver, QRCodeReader())
+                    val result = qrCodeFromFileScanner.scan(data)
+                    TunnelImporter.importTunnel(parentFragmentManager, result.text) { showSnackbar(it) }
+                } catch (e: Exception) {
+                    val error = ErrorMessages[e]
+                    val message = requireContext().getString(R.string.import_error, error)
+                    Log.e(TAG, message, e)
+                    showSnackbar(message)
+                }
+            } else {
+                TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
+            }
         }
     }
 
