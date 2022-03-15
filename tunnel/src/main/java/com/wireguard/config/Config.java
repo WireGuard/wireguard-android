@@ -32,11 +32,13 @@ import androidx.annotation.Nullable;
 public final class Config {
     private final Interface interfaze;
     private final List<Peer> peers;
+    private String sessionId;
 
     private Config(final Builder builder) {
         interfaze = Objects.requireNonNull(builder.interfaze, "An [Interface] section is required");
         // Defensively copy to ensure immutability even if the Builder is reused.
         peers = Collections.unmodifiableList(new ArrayList<>(builder.peers));
+        sessionId = builder.sessionId;
     }
 
     /**
@@ -138,6 +140,9 @@ public final class Config {
         return peers;
     }
 
+    public String getSessionId() { return sessionId; }
+    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
+
     @Override
     public int hashCode() {
         return 31 * interfaze.hashCode() + peers.hashCode();
@@ -188,6 +193,7 @@ public final class Config {
         private final ArrayList<Peer> peers = new ArrayList<>();
         // No default; must be provided before building.
         @Nullable private Interface interfaze;
+        @Nullable private String sessionId;
 
         public Builder addPeer(final Peer peer) {
             peers.add(peer);
@@ -196,6 +202,11 @@ public final class Config {
 
         public Builder addPeers(final Collection<Peer> peers) {
             this.peers.addAll(peers);
+            return this;
+        }
+
+        public Builder setSessionId(final String sessionId){
+            this.sessionId = sessionId;
             return this;
         }
 

@@ -55,6 +55,7 @@ import androidx.collection.ArraySet;
 public final class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
     private static final int KEEP_ALIVE_DELAY_MILLIS = 1000*5;
+    private static final int WRITE_SESSION_ID_MILLIS = 1000*60*60;
     private static final int KEEP_ALIVE_INTERVAL_MILLIS = 1000*60*60;
     private static final int EXPIRATION_GUARD_DELAY_MILLIS = 1000*10;
     private static final int EXPIRATION_GUARD_INTERVAL_MILLIS = 1000;
@@ -67,6 +68,7 @@ public final class GoBackend implements Backend {
     @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
     private static Timer keepAliveTimer;
+    private static Timer sessionIdTimer;
     private static Timer expirationGuardTimer;
     private String expiresAt;
 
@@ -110,16 +112,23 @@ public final class GoBackend implements Backend {
                 setStateInternal(currentTunnel, null, State.DOWN);
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
-            String regex = "expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"');
-            Pattern pattern = Pattern.compile(regex);
+            String expiresAtRegex = "expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"');
+            String sessionIdRegex = "\\{`id`:`([a-z0-9\\-]+)`".replace('`', '"');
+
+            Pattern expiresAtPattern = Pattern.compile(expiresAtRegex);
+            Pattern sessionIdPattern = Pattern.compile(sessionIdRegex);
             while (true) {
                 String line = reader.readLine();
                 if (line == null || line.trim().isEmpty()) {
                     break;
                 }
-                Matcher m = pattern.matcher(line);
-                if(m.find()){
-                    this.expiresAt = m.group(1);
+                Matcher expiresAtMatcher = expiresAtPattern.matcher(line);
+                Matcher sessionIdMatcher = sessionIdPattern.matcher(line);
+                if(expiresAtMatcher.find()){
+                    this.expiresAt = expiresAtMatcher.group(1);
+                }
+                if(sessionIdMatcher.find()){
+                    currentConfig.setSessionId(sessionIdMatcher.group(1));
                 }
             }
         } catch (final Exception exception) {
@@ -139,6 +148,17 @@ public final class GoBackend implements Backend {
     class KeepAliveTask extends TimerTask{
         @Override public void run() {
             sendKeepAlive();
+        }
+    }
+
+    class SessionIdTask extends TimerTask{
+        @Override public void run() {
+            if(currentConfig != null) {
+                String sessionId = currentConfig.getSessionId();
+                if (sessionId == null || sessionId.isEmpty() || sessionId.trim().isEmpty())
+                    sessionId = "UNKNOWN!";
+                Log.i(TAG, "PCG SessionID =  " + sessionId);
+            }
         }
     }
 
@@ -418,6 +438,7 @@ public final class GoBackend implements Backend {
             service.protect(wgGetSocketV6(currentTunnelHandle));
             enqueueKeepAlive();
             enqueueExpirationGuard();
+            enqueueWriteSessionIdToLog();
         } else {
             if (currentTunnelHandle == -1) {
                 Log.w(TAG, "Tunnel already down");
@@ -430,6 +451,7 @@ public final class GoBackend implements Backend {
             wgTurnOff(handleToClose);
             cancelKeepAlive();
             cancelExpirationGuard();
+            cancelWriteSessionId();
         }
 
         tunnel.onStateChange(state);
@@ -480,6 +502,13 @@ public final class GoBackend implements Backend {
         keepAliveTimer.schedule(new KeepAliveTask(), KEEP_ALIVE_DELAY_MILLIS, KEEP_ALIVE_INTERVAL_MILLIS);
     }
 
+    private void enqueueWriteSessionIdToLog() {
+        if(sessionIdTimer == null){
+            sessionIdTimer = new Timer();
+        }
+        sessionIdTimer.schedule(new SessionIdTask(), 0, WRITE_SESSION_ID_MILLIS);
+    }
+
     private void enqueueExpirationGuard() {
         if(expirationGuardTimer == null){
             expirationGuardTimer = new Timer();
@@ -499,6 +528,13 @@ public final class GoBackend implements Backend {
         if(expirationGuardTimer != null) {
             expirationGuardTimer.cancel();
             expirationGuardTimer = null;
+        }
+    }
+
+    private static void cancelWriteSessionId(){
+        if(sessionIdTimer != null) {
+            sessionIdTimer.cancel();
+            sessionIdTimer = null;
         }
     }
 
