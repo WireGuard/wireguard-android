@@ -5,18 +5,23 @@
 package com.wireguard.android.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.R
 import com.wireguard.android.fragment.TunnelDetailFragment
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.util.TunnelImporter
+import kotlinx.coroutines.launch
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -54,10 +59,27 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        if (Intent.ACTION_VIEW == intent.action) {
+            handleConfFile(intent.data);
+        } else if (Intent.ACTION_SEND == intent.action) {
+            handleConfFile(intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        }
+
         actionBar = supportActionBar
         isTwoPaneLayout = findViewById<View?>(R.id.master_detail_wrapper) != null
         supportFragmentManager.addOnBackStackChangedListener(this)
         onBackStackChanged()
+    }
+
+    private fun handleConfFile(uri: Uri?) {
+        if (uri != null) {
+            lifecycleScope.launch {
+                TunnelImporter.importTunnel(contentResolver, uri) {
+                    Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
