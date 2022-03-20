@@ -7,23 +7,27 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="restore_on_boot"
+        android:singleLineTitle="false"
         android:summaryOff="@string/restore_on_boot_summary_off"
         android:summaryOn="@string/restore_on_boot_summary_on"
         android:title="@string/restore_on_boot_title" />
     <com.wireguard.android.preference.ZipExporterPreference android:key="zip_exporter" />
     <Preference
         android:key="log_viewer"
+        android:singleLineTitle="false"
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"
+        android:singleLineTitle="false"
         android:summaryOff="@string/dark_theme_summary_off"
         android:summaryOn="@string/dark_theme_summary_on"
         android:title="@string/dark_theme_title" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="multiple_tunnels"
+        android:singleLineTitle="false"
         android:summaryOff="@string/multiple_tunnels_summary_off"
         android:summaryOn="@string/multiple_tunnels_summary_on"
         android:title="@string/multiple_tunnels_title" />
@@ -32,6 +36,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="allow_remote_control_intents"
+        android:singleLineTitle="false"
         android:summaryOff="@string/allow_remote_control_intents_summary_off"
         android:summaryOn="@string/allow_remote_control_intents_summary_on"
         android:title="@string/allow_remote_control_intents_title" />
