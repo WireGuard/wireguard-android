@@ -10,5 +10,5 @@
         android:key="disable_config_export"
         android:restrictionType="bool"
         android:title="@string/disable_config_export_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
 </restrictions>

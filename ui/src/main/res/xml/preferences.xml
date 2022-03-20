@@ -10,27 +10,27 @@
         android:summaryOff="@string/restore_on_boot_summary_off"
         android:summaryOn="@string/restore_on_boot_summary_on"
         android:title="@string/restore_on_boot_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
     <com.wireguard.android.preference.ZipExporterPreference android:key="zip_exporter" />
     <Preference
         android:key="log_viewer"
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="dark_theme"
         android:summaryOff="@string/dark_theme_summary_off"
         android:summaryOn="@string/dark_theme_summary_on"
         android:title="@string/dark_theme_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="multiple_tunnels"
         android:summaryOff="@string/multiple_tunnels_summary_off"
         android:summaryOn="@string/multiple_tunnels_summary_on"
         android:title="@string/multiple_tunnels_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
     <com.wireguard.android.preference.ToolsInstallerPreference android:key="tools_installer" />
     <com.wireguard.android.preference.KernelModuleEnablerPreference android:key="kernel_module_enabler" />
     <CheckBoxPreference
@@ -39,5 +39,5 @@
         android:summaryOff="@string/allow_remote_control_intents_summary_off"
         android:summaryOn="@string/allow_remote_control_intents_summary_on"
         android:title="@string/allow_remote_control_intents_title"
-		android:singleLineTitle="false" />
+        android:singleLineTitle="false" />
 </androidx.preference.PreferenceScreen>
