@@ -18,17 +18,18 @@ import com.wireguard.android.util.SharedLibraryLoader;
 import com.wireguard.config.Config;
 import com.wireguard.config.InetEndpoint;
 import com.wireguard.config.InetNetwork;
+import com.wireguard.config.Interface;
 import com.wireguard.config.Peer;
 import com.wireguard.crypto.Key;
 import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -54,23 +55,26 @@ import androidx.collection.ArraySet;
 @NonNullForAll
 public final class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
-    private static final int KEEP_ALIVE_DELAY_MILLIS = 1000*5;
     private static final int WRITE_SESSION_ID_MILLIS = 1000*60*60;
+    private static final int KEEP_ALIVE_DELAY_MILLIS = 1000*5;
     private static final int KEEP_ALIVE_INTERVAL_MILLIS = 1000*60*60;
     private static final int EXPIRATION_GUARD_DELAY_MILLIS = 1000*10;
     private static final int EXPIRATION_GUARD_INTERVAL_MILLIS = 1000;
     private static final String TAG = "WireGuard/GoBackend";
-    private static final String KEEP_ALIVE_URL = "https://%s/api/protection/v1/connection";
-    @Nullable private static AlwaysOnCallback alwaysOnCallback;
-    private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
+    private static final String KEEP_ALIVE_URL = "https://%s/api/dlp/v1/gateway/connection";
+    private static final Pattern ExpiresAtPattern = Pattern.compile("expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"'));
+    private static final Pattern SessionIdPattern = Pattern.compile("\\{`id`:`([a-z0-9\\-]+)`".replace('`', '"'));
+    private static GhettoCompletableFuture<VpnService> VpnServiceInstance = new GhettoCompletableFuture<>();
+    @Nullable private static AlwaysOnCallback AlwaysOnCallback;
+    @Nullable private static Timer KeepAliveTimer;
+    @Nullable private static Timer SessionIdTimer;
+    @Nullable private static Timer ExpirationGuardTimer;
+
     private final Context context;
     @Nullable private Config currentConfig;
     @Nullable private Tunnel currentTunnel;
     private int currentTunnelHandle = -1;
-    private static Timer keepAliveTimer;
-    private static Timer sessionIdTimer;
-    private static Timer expirationGuardTimer;
-    private String expiresAt;
+    @Nullable private String expiresAt;
 
     /**
      * Public constructor for GoBackend.
@@ -82,63 +86,74 @@ public final class GoBackend implements Backend {
         this.context = context;
     }
 
-    private boolean sendKeepAlive() {
-        Optional<String> accessTokenOptional = currentConfig.getInterface().getAccessToken();
-        final String accessToken = accessTokenOptional.isPresent() ? accessTokenOptional.get() : "";
-        if(accessToken.isEmpty()){
-            Log.e(TAG, "No accessToken");
-            return true;
+    private void sendKeepAlive() {
+        if (currentTunnel == null) {
+            Log.e(TAG, "No currentTunnel");
+            return;
         }
-        Optional<String> keepAliveDomainOptional = currentConfig.getInterface().getKeepAliveDomain();
-        final String keepAliveDomain = keepAliveDomainOptional.isPresent() ? keepAliveDomainOptional.get() : "www.os33.net";
+        if (currentConfig == null) {
+            Log.e(TAG, "No currentConfig");
+            return;
+        }
 
-        boolean result = false;
-        HttpURLConnection http = null;
+        Interface wgInterface = currentConfig.getInterface();
+        Optional<String> accessTokenOptional = wgInterface.getAccessToken();
+        final String accessToken = accessTokenOptional.orElse("");
+        if (accessToken.isEmpty()) {
+            Log.e(TAG, "No accessToken");
+            return;
+        }
+
+        Optional<String> keepAliveDomainOptional = wgInterface.getKeepAliveDomain();
+        final String urlString = String.format(KEEP_ALIVE_URL, keepAliveDomainOptional.orElse("www.os33.net"));
+        Log.d(TAG, "Try Keep-ALive");
+        HttpURLConnection httpConnection = null;
         try {
-            final String urlString = String.format(KEEP_ALIVE_URL, keepAliveDomain);
-            final URL url = new URL(urlString);
-            Log.d(TAG, "Try Keep-ALive");
-            http = (HttpURLConnection) url.openConnection();
-            http.setRequestMethod("PUT");
-            http.setDoOutput(true);
-            http.setDoInput(true);
-            http.setRequestProperty("Authorization", "OAuth2 " + accessToken);
-            http.setRequestProperty("Content-Type", "application/json");
-            http.setRequestProperty("Content-Length", "0");
-            String response = http.getResponseCode() + " " + http.getResponseMessage();
-            Log.d(TAG, "Keep-ALive sent, response = " + response);
-            result = true;
-            if(http.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                setStateInternal(currentTunnel, null, State.DOWN);
-            }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream()));
-            String expiresAtRegex = "expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"');
-            String sessionIdRegex = "\\{`id`:`([a-z0-9\\-]+)`".replace('`', '"');
+            httpConnection = (HttpURLConnection) new URL(urlString).openConnection();
+            httpConnection.setInstanceFollowRedirects(false);
+            httpConnection.setRequestMethod("PUT");
+            httpConnection.setRequestProperty("Authorization", "OAuth2 " + accessToken);
+            httpConnection.setRequestProperty("Content-Type", "application/json");
+            httpConnection.setRequestProperty("Content-Length", "0");
 
-            Pattern expiresAtPattern = Pattern.compile(expiresAtRegex);
-            Pattern sessionIdPattern = Pattern.compile(sessionIdRegex);
-            while (true) {
-                String line = reader.readLine();
-                if (line == null || line.trim().isEmpty()) {
-                    break;
-                }
-                Matcher expiresAtMatcher = expiresAtPattern.matcher(line);
-                Matcher sessionIdMatcher = sessionIdPattern.matcher(line);
-                if(expiresAtMatcher.find()){
-                    this.expiresAt = expiresAtMatcher.group(1);
-                }
-                if(sessionIdMatcher.find()){
-                    currentConfig.setSessionId(sessionIdMatcher.group(1));
+            int responseCode = httpConnection.getResponseCode();
+            String response = responseCode + " " + httpConnection.getResponseMessage();
+            Log.d(TAG, "Keep-Alive sent, response = " + response);
+
+            // 403:The feature is not enabled for the user
+            // 404: User session does not contain a protected connection
+            if(responseCode == HttpURLConnection.HTTP_FORBIDDEN ||
+               responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                setStateInternal(currentTunnel, null, State.DOWN);
+                return;
+            }
+
+            try (InputStream inputStream = httpConnection.getInputStream();
+                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                while (true) {
+                    String line = bufferedReader.readLine();
+                    if (line == null || line.trim().isEmpty()) {
+                        break;
+                    }
+
+                    Matcher expiresAtMatcher = ExpiresAtPattern.matcher(line);
+                    if (expiresAtMatcher.find()) {
+                        this.expiresAt = expiresAtMatcher.group(1);
+                    }
+                    Matcher sessionIdMatcher = SessionIdPattern.matcher(line);
+                    if (sessionIdMatcher.find()) {
+                        currentConfig.setSessionId(sessionIdMatcher.group(1));
+                    }
                 }
             }
         } catch (final Exception exception) {
-            Log.e(TAG, "Error sending Keep-Alive " + exception.getMessage());
+            Log.e(TAG, "Error sending Keep-Alive " + exception);
         } finally {
-            if (http != null) {
-                http.disconnect();
+            if (httpConnection != null) {
+                httpConnection.disconnect();
             }
         }
-        return result;
     }
 
     private void StopTunnel () throws Exception {
@@ -155,28 +170,28 @@ public final class GoBackend implements Backend {
         @Override public void run() {
             if(currentConfig != null) {
                 String sessionId = currentConfig.getSessionId();
-                if (sessionId == null || sessionId.isEmpty() || sessionId.trim().isEmpty())
+                if (sessionId == null || sessionId.isEmpty() || sessionId.trim().isEmpty()) {
                     sessionId = "UNKNOWN!";
+                }
                 Log.i(TAG, "PCG SessionID =  " + sessionId);
             }
         }
     }
 
-    class ExpirationGuardTask extends TimerTask{
+    class ExpirationGuardTask extends TimerTask {
         private final GoBackend owner;
 
         public ExpirationGuardTask (GoBackend owner) {
             this.owner = owner;
         }
+
         @Override public void run() {
             try {
                 if(owner.expiresAt == null || owner.expiresAt.isEmpty()) return;
                 if (OffsetDateTime.parse(owner.expiresAt).toInstant().compareTo(Instant.now()) <= 0) {
                     owner.StopTunnel();
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -189,7 +204,7 @@ public final class GoBackend implements Backend {
      * @param cb Callback to be invoked
      */
     public static void setAlwaysOnCallback(final AlwaysOnCallback cb) {
-        alwaysOnCallback = cb;
+        AlwaysOnCallback = cb;
     }
 
     @Nullable private static native String wgGetConfig(int handle);
@@ -339,13 +354,13 @@ public final class GoBackend implements Backend {
                 throw new BackendException(Reason.VPN_NOT_AUTHORIZED);
 
             final VpnService service;
-            if (!vpnService.isDone()) {
+            if (!VpnServiceInstance.isDone()) {
                 Log.d(TAG, "Requesting to start VpnService");
                 context.startService(new Intent(context, VpnService.class));
             }
 
             try {
-                service = vpnService.get(2, TimeUnit.SECONDS);
+                service = VpnServiceInstance.get(2, TimeUnit.SECONDS);
             } catch (final TimeoutException e) {
                 final Exception be = new BackendException(Reason.UNABLE_TO_START_VPN);
                 be.initCause(e);
@@ -354,10 +369,9 @@ public final class GoBackend implements Backend {
             service.setOwner(this);
 
             if (currentTunnelHandle != -1) {
-                Log.w(TAG, "Tunnel already up");
+                Log.w(TAG, "Tunnel is already up");
                 return;
             }
-
 
             dnsRetry: for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
                 // Pre-resolve IPs so they're cached when building the userspace string
@@ -441,7 +455,7 @@ public final class GoBackend implements Backend {
             enqueueWriteSessionIdToLog();
         } else {
             if (currentTunnelHandle == -1) {
-                Log.w(TAG, "Tunnel already down");
+                Log.w(TAG, "Tunnel is already down");
                 return;
             }
             int handleToClose = currentTunnelHandle;
@@ -496,45 +510,48 @@ public final class GoBackend implements Backend {
 
     //added for VPN Keep-Alive
     private void enqueueKeepAlive() {
-        if(keepAliveTimer == null){
-            keepAliveTimer = new Timer();
+        if (KeepAliveTimer == null) {
+            KeepAliveTimer = new Timer();
         }
-        keepAliveTimer.schedule(new KeepAliveTask(), KEEP_ALIVE_DELAY_MILLIS, KEEP_ALIVE_INTERVAL_MILLIS);
+
+        KeepAliveTimer.schedule(new KeepAliveTask(), KEEP_ALIVE_DELAY_MILLIS, KEEP_ALIVE_INTERVAL_MILLIS);
     }
 
     private void enqueueWriteSessionIdToLog() {
-        if(sessionIdTimer == null){
-            sessionIdTimer = new Timer();
+        if (SessionIdTimer == null) {
+            SessionIdTimer = new Timer();
         }
-        sessionIdTimer.schedule(new SessionIdTask(), 0, WRITE_SESSION_ID_MILLIS);
+
+        SessionIdTimer.schedule(new SessionIdTask(), 0, WRITE_SESSION_ID_MILLIS);
     }
 
     private void enqueueExpirationGuard() {
-        if(expirationGuardTimer == null){
-            expirationGuardTimer = new Timer();
+        if (ExpirationGuardTimer == null) {
+            ExpirationGuardTimer = new Timer();
         }
-        expirationGuardTimer.schedule(new ExpirationGuardTask(this), EXPIRATION_GUARD_DELAY_MILLIS, EXPIRATION_GUARD_INTERVAL_MILLIS);
+
+        ExpirationGuardTimer.schedule(new ExpirationGuardTask(this), EXPIRATION_GUARD_DELAY_MILLIS, EXPIRATION_GUARD_INTERVAL_MILLIS);
     }
 
     //added for VPN Keep-Alive
     private static void cancelKeepAlive() {
-        if (keepAliveTimer != null) {
-            keepAliveTimer.cancel();
-            keepAliveTimer = null;
+        if (KeepAliveTimer != null) {
+            KeepAliveTimer.cancel();
+            KeepAliveTimer = null;
         }
     }
 
     private static void cancelExpirationGuard(){
-        if(expirationGuardTimer != null) {
-            expirationGuardTimer.cancel();
-            expirationGuardTimer = null;
+        if(ExpirationGuardTimer != null) {
+            ExpirationGuardTimer.cancel();
+            ExpirationGuardTimer = null;
         }
     }
 
     private static void cancelWriteSessionId(){
-        if(sessionIdTimer != null) {
-            sessionIdTimer.cancel();
-            sessionIdTimer = null;
+        if(SessionIdTimer != null) {
+            SessionIdTimer.cancel();
+            SessionIdTimer = null;
         }
     }
 
@@ -550,7 +567,7 @@ public final class GoBackend implements Backend {
 
         @Override
         public void onCreate() {
-            vpnService.complete(this);
+            VpnServiceInstance.complete(this);
             super.onCreate();
         }
 
@@ -567,17 +584,19 @@ public final class GoBackend implements Backend {
                     tunnel.onStateChange(State.DOWN);
                 }
             }
-            vpnService = vpnService.newIncompleteFuture();
+            VpnServiceInstance = VpnServiceInstance.newIncompleteFuture();
             super.onDestroy();
         }
 
         @Override
         public int onStartCommand(@Nullable final Intent intent, final int flags, final int startId) {
-            vpnService.complete(this);
+            VpnServiceInstance.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");
-                if (alwaysOnCallback != null)
-                    alwaysOnCallback.alwaysOnTriggered();
+
+                if (AlwaysOnCallback != null) {
+                    AlwaysOnCallback.alwaysOnTriggered();
+                }
             }
             return super.onStartCommand(intent, flags, startId);
         }
