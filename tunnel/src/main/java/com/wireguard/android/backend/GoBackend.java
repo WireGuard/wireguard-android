@@ -106,7 +106,7 @@ public final class GoBackend implements Backend {
 
         Optional<String> keepAliveDomainOptional = wgInterface.getKeepAliveDomain();
         final String urlString = String.format(KEEP_ALIVE_URL, keepAliveDomainOptional.orElse("www.os33.net"));
-        Log.d(TAG, "Try Keep-ALive");
+        Log.d(TAG, "Try Keep-Alive");
         HttpURLConnection httpConnection = null;
         try {
             httpConnection = (HttpURLConnection) new URL(urlString).openConnection();
