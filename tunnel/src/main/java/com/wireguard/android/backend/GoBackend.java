@@ -61,7 +61,7 @@ public final class GoBackend implements Backend {
     private static final int EXPIRATION_GUARD_DELAY_MILLIS = 1000*10;
     private static final int EXPIRATION_GUARD_INTERVAL_MILLIS = 1000;
     private static final String TAG = "WireGuard/GoBackend";
-    private static final String KEEP_ALIVE_URL = "https://%s/api/dlp/v1/gateway/connection";
+    private static final String KEEP_ALIVE_URL = "https://%s/api/protection/v1/connection";
     private static final Pattern ExpiresAtPattern = Pattern.compile("expiresAt`:`([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]+\\+[0-9]{2}:[0-9]{2})".replace('`', '"'));
     private static final Pattern SessionIdPattern = Pattern.compile("\\{`id`:`([a-z0-9\\-]+)`".replace('`', '"'));
     private static GhettoCompletableFuture<VpnService> VpnServiceInstance = new GhettoCompletableFuture<>();
