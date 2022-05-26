@@ -64,11 +64,9 @@ class Application : android.app.Application() {
 
     private suspend fun determineBackend(): Backend {
         var backend: Backend? = null
-        var didStartRootShell = false
         if (UserKnobs.enableKernelModule.first() && WgQuickBackend.hasKernelSupport()) {
             try {
-                if (!didStartRootShell)
-                    rootShell.start()
+                rootShell.start()
                 val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
                 wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
                 backend = wgQuickBackend
