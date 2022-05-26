@@ -16,10 +16,24 @@
         <item name="elevationOverlayEnabled">false</item>
         <item name="android:statusBarColor">@color/tv_primary_color</item>
         <item name="android:windowBackground">@color/tv_primary_color</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="alertDialogTheme">@style/TvTheme.Dialog</item>
+        <item name="materialAlertDialogTheme">@style/TvTheme.Dialog</item>
         <item name="textInputStyle">@style/TextInputLayoutBase</item>
         <item name="materialCardViewStyle">@style/TvTheme.MaterialCardView</item>
+    </style>
+
+    <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">?attr/colorSecondary</item>
+        <item name="hintTextColor">?attr/colorOnPrimary</item>
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox
+        </item>
+    </style>
+
+    <style name="TvTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="colorPrimary">@color/secondary_color</item>
+        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="android:windowBackground">?attr/colorBackground</item>
     </style>
 
     <style name="TvTheme.MaterialCardView" parent="Widget.MaterialComponents.CardView">

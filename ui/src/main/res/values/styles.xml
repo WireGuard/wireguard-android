@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="WireGuardTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="WireGuardTheme" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnPrimary">@color/color_control_normal</item>
         <item name="colorPrimaryDark">@color/primary_color</item>
@@ -17,9 +17,6 @@
         <item name="elevationOverlayEnabled">true</item>
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="android:windowBackground">@color/primary_color</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="textInputStyle">@style/TextInputLayoutBase</item>
         <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
     </style>
 
@@ -30,12 +27,6 @@
         <item name="cardElevation">4dp</item>
         <item name="contentPadding">8dp</item>
         <item name="cardBackgroundColor">?attr/elevationOverlayColor</item>
-    </style>
-
-    <style name="AppTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorPrimary">@color/secondary_color</item>
-        <item name="colorSecondary">@color/secondary_color</item>
-        <item name="android:windowBackground">?attr/colorBackground</item>
     </style>
 
     <style name="BottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
@@ -69,13 +60,5 @@
 
     <style name="ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="colorControlActivated">@color/color_control_normal</item>
-    </style>
-
-    <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">?attr/colorSecondary</item>
-        <item name="hintTextColor">?attr/colorOnPrimary</item>
-        <item name="materialThemeOverlay">
-            @style/ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox
-        </item>
     </style>
 </resources>

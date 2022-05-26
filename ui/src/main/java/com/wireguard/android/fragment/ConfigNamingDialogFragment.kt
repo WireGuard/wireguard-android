@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.wireguard.android.Application
 import com.wireguard.android.R
@@ -64,7 +65,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val activity = requireActivity()
         imm = activity.getSystemService()
-        val alertDialogBuilder = AlertDialog.Builder(activity)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
         alertDialogBuilder.setTitle(R.string.import_from_qr_code)
         binding = ConfigNamingDialogFragmentBinding.inflate(activity.layoutInflater, null, false)
         binding?.apply {
