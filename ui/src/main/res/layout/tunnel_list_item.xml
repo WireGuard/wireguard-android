@@ -55,7 +55,7 @@
             android:layout_alignBaseline="@+id/tunnel_name"
             android:layout_toStartOf="@id/tunnel_switch"
             android:button="@drawable/ic_action_shortcut"
-            app:buttonTint="?attr/colorOnPrimary"
+            app:buttonTint="?attr/colorSecondary"
             android:checked="@{item.hasShortcut == true}"
             android:onCheckedChanged="@{fragment::setShortcutState}"
             android:nextFocusRight="@+id/tunnel_switch"
