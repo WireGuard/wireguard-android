@@ -1,0 +1,16 @@
+<!--
+  ~ Copyright © 2017-2022 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="24" android:viewportWidth="24"
+    android:tint="#000000" >
+    <path
+        android:name="star"
+        android:fillColor="@android:color/white"
+        android:pathData="@string/vdpath_star_border"/>
+</vector>
