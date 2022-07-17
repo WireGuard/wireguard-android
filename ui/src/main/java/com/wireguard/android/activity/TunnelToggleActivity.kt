@@ -27,10 +27,20 @@ class TunnelToggleActivity : AppCompatActivity() {
     private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
 
     private fun toggleTunnelWithPermissionsResult() {
-        val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
         lifecycleScope.launch {
+            val tunnelAction = when(intent.action) {
+                "com.wireguard.android.action.SET_TUNNEL_UP" -> Tunnel.State.UP
+                "com.wireguard.android.action.SET_TUNNEL_DOWN" -> Tunnel.State.DOWN
+                else -> Tunnel.State.TOGGLE // Implicit toggle to keep previous behaviour
+            }
+
+            val tunnel = when(val tunnelName = intent.getStringExtra("tunnel")) {
+                null -> Application.getTunnelManager().lastUsedTunnel
+                else -> Application.getTunnelManager().getTunnels().find { it.name == tunnelName }
+            } ?: return@launch // If we failed to identify the tunnel, just return
+
             try {
-                tunnel.setStateAsync(Tunnel.State.TOGGLE)
+                tunnel.setStateAsync(tunnelAction)
             } catch (e: Throwable) {
                 TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
                 val error = ErrorMessages[e]
