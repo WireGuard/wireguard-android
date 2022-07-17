@@ -22,7 +22,6 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ErrorMessages
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.N)
 class TunnelToggleActivity : AppCompatActivity() {
     private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
 
@@ -42,7 +41,7 @@ class TunnelToggleActivity : AppCompatActivity() {
             try {
                 tunnel.setStateAsync(tunnelAction)
             } catch (e: Throwable) {
-                TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
+                updateTileService()
                 val error = ErrorMessages[e]
                 val message = getString(R.string.toggle_error, error)
                 Log.e(TAG, message, e)
@@ -50,8 +49,18 @@ class TunnelToggleActivity : AppCompatActivity() {
                 finishAffinity()
                 return@launch
             }
-            TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
+            updateTileService()
             finishAffinity()
+        }
+    }
+
+    /**
+     * TileService is only available for API 24+, if it's available it'll be updated,
+     * otherwise it's ignored.
+     */
+    private fun updateTileService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
         }
     }
 
