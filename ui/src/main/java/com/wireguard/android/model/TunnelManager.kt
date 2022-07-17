@@ -41,6 +41,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     private val tunnels = CompletableDeferred<ObservableSortedKeyedArrayList<String, ObservableTunnel>>()
     private val context: Context = get()
     private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(TunnelComparator)
+    private val shortcutManager = ShortcutManager(context)
     private var haveLoaded = false
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel {
@@ -65,6 +66,10 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         // Make sure nothing touches the tunnel.
         if (wasLastUsed)
             lastUsedTunnel = null
+        // Make sure we also remove any existing shortcuts.
+        if (shortcutManager.hasShortcut(tunnel.name)) {
+            shortcutManager.removeShortcuts(tunnel.name)
+        }
         tunnelMap.remove(tunnel)
         try {
             if (originalState == Tunnel.State.UP)
@@ -170,6 +175,11 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         // Make sure nothing touches the tunnel.
         if (wasLastUsed)
             lastUsedTunnel = null
+        // Make sure we also remove any existing shortcuts. We will add them back with the new name.
+        val hadShortcuts = shortcutManager.hasShortcut(tunnel.name)
+        if (hadShortcuts) {
+            shortcutManager.removeShortcuts(tunnel.name)
+        }
         tunnelMap.remove(tunnel)
         var throwable: Throwable? = null
         var newName: String? = null
@@ -189,6 +199,10 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         tunnelMap.add(tunnel)
         if (wasLastUsed)
             lastUsedTunnel = tunnel
+        // Add back previous shortcuts with the new name (if any).
+        if (hadShortcuts) {
+            shortcutManager.addShortcuts(tunnel.name)
+        }
         if (throwable != null)
             throw throwable
         newName!!
@@ -209,6 +223,18 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         if (throwable != null)
             throw throwable
         newState
+    }
+
+    suspend fun setShortcuts(tunnel: ObservableTunnel, hasShortcuts: Boolean) = withContext(Dispatchers.Main.immediate) {
+        if (hasShortcuts) {
+            shortcutManager.addShortcuts(tunnel.name)
+        } else {
+            shortcutManager.removeShortcuts(tunnel.name)
+        }
+    }
+
+    suspend fun hasShortcut(tunnel: ObservableTunnel) = withContext(Dispatchers.Main.immediate) {
+        return@withContext shortcutManager.hasShortcut(tunnel.name)
     }
 
     class IntentReceiver : BroadcastReceiver() {
