@@ -28,6 +28,19 @@
         { "checked":  true },
         { "checked":  false },
         { "checked":  true }
+      ],
+      "shortcut": [
+        { "shortcut":  true },
+        { "shortcut":  false },
+        { "shortcut":  false },
+        { "shortcut":  false },
+        { "shortcut":  false },
+        { "shortcut":  false },
+        { "shortcut":  true },
+        { "shortcut":  true },
+        { "shortcut":  true },
+        { "shortcut":  false },
+        { "shortcut":  false }
       ]
     }
   ]
