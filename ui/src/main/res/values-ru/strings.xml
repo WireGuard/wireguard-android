@@ -49,7 +49,7 @@
         <item quantity="other">%d исключено</item>
     </plurals>
     <plurals name="n_included_applications">
-        <item quantity="one">%d влючено</item>
+        <item quantity="one">%d включено</item>
         <item quantity="few">%d включено</item>
         <item quantity="many">%d включено</item>
         <item quantity="other">%d включено</item>
@@ -129,7 +129,7 @@
     <string name="delete">Удалить</string>
     <string name="tv_delete">Выберите туннель для удаления</string>
     <string name="tv_select_a_storage_drive">Выберите накопитель</string>
-    <string name="tv_no_file_picker">Пожалуйста установите утилиту управления файлами для их просмотра</string>
+    <string name="tv_no_file_picker">Пожалуйста, установите утилиту управления файлами для их просмотра</string>
     <string name="tv_add_tunnel_get_started">Добавьте туннель, чтобы начать</string>
     <string name="disable_config_export_title">Отключить экспорт конфигурации</string>
     <string name="disable_config_export_description">Отключение экспорта конфигурации делает приватные ключи менее доступными</string>
