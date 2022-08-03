@@ -29,8 +29,8 @@ task clean(type: Delete) {
 
 tasks {
     wrapper {
-        gradleVersion = "7.4.2"
-        distributionSha256Sum = "29e49b10984e585d8118b7d0bc452f944e386458df27371b49b4ac1dec4b7fda"
+        gradleVersion = "7.5"
+        distributionSha256Sum = "cb87f222c5585bd46838ad4db78463a5c5f3d336e5e2b98dc7c0c586527351c2"
     }
 }
 
