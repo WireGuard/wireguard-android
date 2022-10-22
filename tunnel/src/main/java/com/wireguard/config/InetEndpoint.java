@@ -8,12 +8,14 @@ package com.wireguard.config;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -103,7 +105,16 @@ public final class InetEndpoint {
                             break;
                         }
                     }
-                    resolved = new InetEndpoint(address.getHostAddress(), true, port);
+                    if (address instanceof Inet6Address) {
+                        byte[] v6 = address.getAddress();
+                        if ((v6[0] == 0x20) && (v6[1] == 0x01) && (v6[2] == 0x00) && (v6[3] == 0x00)) {
+                            InetAddress v4 = InetAddress.getByAddress(Arrays.copyOfRange(v6, 12, 16));
+                            int p = ((v6[10] & 0xFF) << 8) | (v6[11] & 0xFF);
+                            resolved = new InetEndpoint(v4.getHostAddress(), true, p);
+                        }
+                    }
+                    if (resolved == null)
+                        resolved = new InetEndpoint(address.getHostAddress(), true, port);
                     lastResolution = Instant.now();
                 } catch (final UnknownHostException e) {
                     resolved = null;
