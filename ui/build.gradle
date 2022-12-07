@@ -13,6 +13,7 @@ final def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 android {
     compileSdk 33
+    ndkVersion "21.4.7075529"
     buildFeatures {
         buildConfig = true
         dataBinding = true
