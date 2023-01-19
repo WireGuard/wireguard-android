@@ -21,6 +21,9 @@
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <permission
         android:name="${applicationId}.permission.CONTROL_TUNNELS"
@@ -44,7 +47,7 @@
             android:theme="@style/NoBackgroundTheme"
             android:excludeFromRecents="true"/>
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +61,8 @@
 
         <activity
             android:name=".activity.TvMainActivity"
-            android:theme="@style/TvTheme">
+            android:theme="@style/TvTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -82,7 +86,8 @@
 
         <activity
             android:name=".activity.LogViewerActivity"
-            android:label="@string/log_viewer_title">
+            android:label="@string/log_viewer_title"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -94,7 +99,7 @@
             android:exported="false"
             android:grantUriPermissions="true" />
 
-        <receiver android:name=".BootShutdownReceiver">
+        <receiver android:name=".BootShutdownReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -103,7 +108,8 @@
 
         <receiver
             android:name=".model.TunnelManager$IntentReceiver"
-            android:permission="${applicationId}.permission.CONTROL_TUNNELS">
+            android:permission="${applicationId}.permission.CONTROL_TUNNELS"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
                 <action android:name="com.wireguard.android.action.SET_TUNNEL_UP" />
@@ -114,7 +120,8 @@
         <service
             android:name=".QuickTileService"
             android:icon="@drawable/ic_tile"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
