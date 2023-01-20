@@ -18,6 +18,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    namespace = 'com.wireguard.android'
     defaultConfig {
         applicationId 'com.wireguard.android'
         minSdkVersion 21

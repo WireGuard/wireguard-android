@@ -12,6 +12,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.wireguard.android.tunnel'
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 31
