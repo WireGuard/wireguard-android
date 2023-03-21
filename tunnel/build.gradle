@@ -45,9 +45,8 @@ android {
             }
         }
     }
-    lintOptions {
-        disable('LongLogTag')
-        disable('NewApi') // Desugaring!
+    lint {
+        disable 'LongLogTag', 'NewApi'
     }
 }
 

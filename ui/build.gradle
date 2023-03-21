@@ -56,10 +56,9 @@ android {
             versionNameSuffix "-debug"
         }
     }
-    lintOptions {
-        disable('LongLogTag')
-        warning('MissingTranslation')
-        warning('ImpliedQuantity')
+    lint {
+        disable 'LongLogTag'
+        warning 'MissingTranslation', 'ImpliedQuantity'
     }
 }
 
