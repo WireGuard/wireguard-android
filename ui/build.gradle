@@ -71,6 +71,7 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
     implementation "androidx.biometric:biometric:$biometricVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.core:core-google-shortcuts:$shortcutsVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtxVersion"
