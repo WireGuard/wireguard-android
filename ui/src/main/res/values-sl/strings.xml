@@ -166,10 +166,10 @@
     <string name="log_viewer_pref_title">Prikaži dnevnik aplikacije</string>
     <string name="log_viewer_title">Dnevnik</string>
     <string name="logcat_error">Ukaza logcat ni bilo mogoče izvesti: </string>
-    <string name="module_enabler_disabled_summary">Eksperimentalni modul jedra lahko izboljša zmogljivost</string>
-    <string name="module_enabler_disabled_title">Omogoči zaledje za modul jedra</string>
-    <string name="module_enabler_enabled_summary">Počasnejše uporabniško zaledje lahko izboljša stabilnost</string>
-    <string name="module_enabler_enabled_title">Onemogoči zaledje za modul jedra</string>
+    <string name="module_disabler_disabled_summary">Eksperimentalni modul jedra lahko izboljša zmogljivost</string>
+    <string name="module_disabler_disabled_title">Omogoči zaledje za modul jedra</string>
+    <string name="module_disabler_enabled_summary">Počasnejše uporabniško zaledje lahko izboljša stabilnost</string>
+    <string name="module_disabler_enabled_title">Onemogoči zaledje za modul jedra</string>
     <string name="module_installer_error">Nekaj je šlo narobe, prosimo poskusite znova</string>
     <string name="module_installer_initial">Eksperimentalni modul jedra lahko izboljša zmogljivost</string>
     <string name="module_installer_not_found">Za vašo napravo ni razpoložljivih modulov</string>

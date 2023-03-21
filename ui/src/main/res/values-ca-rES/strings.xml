@@ -142,9 +142,9 @@
     <string name="log_viewer_pref_title">Mostra el registre d\'aplicació</string>
     <string name="log_viewer_title">Registre</string>
     <string name="logcat_error">No es pot executar logcat: </string>
-    <string name="module_enabler_disabled_summary">El mòdul experimental del kernel pot millorar el rendiment</string>
-    <string name="module_enabler_disabled_title">Activa el backend del mòdul del kernel</string>
-    <string name="module_enabler_enabled_title">Desactiva el backend del mòdul del kernel</string>
+    <string name="module_disabler_disabled_summary">El mòdul experimental del kernel pot millorar el rendiment</string>
+    <string name="module_disabler_disabled_title">Activa el backend del mòdul del kernel</string>
+    <string name="module_disabler_enabled_title">Desactiva el backend del mòdul del kernel</string>
     <string name="module_installer_error">Alguna cosa ha anat malament. Si us plau, prova de nou</string>
     <string name="module_installer_not_found">El vostre dispositiu no té mòduls disponibles</string>
     <string name="module_installer_title">Descàrega i instala el mòdul kernel</string>

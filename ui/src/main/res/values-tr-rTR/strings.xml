@@ -142,10 +142,10 @@
     <string name="log_viewer_pref_title">Uygulama günlüğünü görüntüle</string>
     <string name="log_viewer_title">Günlük</string>
     <string name="logcat_error">Logcat çalıştırılamıyor: </string>
-    <string name="module_enabler_disabled_summary">Deneysel çekirdek modülü performansı artırabilir</string>
-    <string name="module_enabler_disabled_title">Çekirdek modülü arka ucunu etkinleştir</string>
-    <string name="module_enabler_enabled_summary">Daha yavaş kullanıcı alanı arka ucu kararlılığı artırabilir</string>
-    <string name="module_enabler_enabled_title">Çekirdek modülü arka ucunu devre dışı bırak</string>
+    <string name="module_disabler_disabled_summary">Deneysel çekirdek modülü performansı artırabilir</string>
+    <string name="module_disabler_disabled_title">Çekirdek modülü arka ucunu etkinleştir</string>
+    <string name="module_disabler_enabled_summary">Daha yavaş kullanıcı alanı arka ucu kararlılığı artırabilir</string>
+    <string name="module_disabler_enabled_title">Çekirdek modülü arka ucunu devre dışı bırak</string>
     <string name="module_installer_error">Bir şeyler yanlış gitti. Lütfen tekrar deneyin</string>
     <string name="module_installer_initial">Deneysel çekirdek modülü performansı artırabilir</string>
     <string name="module_installer_not_found">Cihazınız için uygun modül yok</string>

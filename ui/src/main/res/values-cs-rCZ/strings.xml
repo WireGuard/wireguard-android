@@ -119,9 +119,9 @@
     <string name="log_viewer_pref_title">Zobrazit log aplikace</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Nelze spustit logcat: </string>
-    <string name="module_enabler_disabled_summary">Experimentální kernel modul může zlepšit výkon</string>
-    <string name="module_enabler_disabled_title">Povolit backend kernel modulu</string>
-    <string name="module_enabler_enabled_title">Vypnout backend kernel modulu</string>
+    <string name="module_disabler_disabled_summary">Experimentální kernel modul může zlepšit výkon</string>
+    <string name="module_disabler_disabled_title">Povolit backend kernel modulu</string>
+    <string name="module_disabler_enabled_title">Vypnout backend kernel modulu</string>
     <string name="module_installer_error">Něco se pokazilo. Zkuste to prosím znovu</string>
     <string name="module_installer_initial">Experimentální kernel modul může zlepšit výkon</string>
     <string name="module_installer_not_found">Pro toto zařízení nejsou dostupné žádné moduly</string>

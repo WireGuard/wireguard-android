@@ -132,10 +132,10 @@
     <string name="log_viewer_pref_title">एप्लिकेशन लॉग देखें</string>
     <string name="log_viewer_title">लॉग</string>
     <string name="logcat_error">लॉगकैट चलाने में असमर्थ: </string>
-    <string name="module_enabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
-    <string name="module_enabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
-    <string name="module_enabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
-    <string name="module_enabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
+    <string name="module_disabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
+    <string name="module_disabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
+    <string name="module_disabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
+    <string name="module_disabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
     <string name="module_installer_error">कुछ गलत हो गया। कृपया पुन: प्रयास करें</string>
     <string name="module_installer_initial">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
     <string name="module_installer_not_found">आपके डिवाइस के लिए कोई मॉड्यूल उपलब्ध नहीं हैं</string>

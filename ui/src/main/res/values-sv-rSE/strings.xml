@@ -114,10 +114,10 @@
     <string name="log_viewer_pref_title">Visa applikationslogg</string>
     <string name="log_viewer_title">Logg</string>
     <string name="logcat_error">Kunde inte köra logcat: </string>
-    <string name="module_enabler_disabled_summary">Den experimentella kärnmodulen kan förbättra prestanda</string>
-    <string name="module_enabler_disabled_title">Aktivera backend för kärnmodul</string>
-    <string name="module_enabler_enabled_summary">Den långsammare backend för användarrymden kan förbättra stabiliteten</string>
-    <string name="module_enabler_enabled_title">Inaktivera backend för kärnmodul</string>
+    <string name="module_disabler_disabled_summary">Den experimentella kärnmodulen kan förbättra prestanda</string>
+    <string name="module_disabler_disabled_title">Aktivera backend för kärnmodul</string>
+    <string name="module_disabler_enabled_summary">Den långsammare backend för användarrymden kan förbättra stabiliteten</string>
+    <string name="module_disabler_enabled_title">Inaktivera backend för kärnmodul</string>
     <string name="module_installer_error">Något gick fel. Vänligen försök igen</string>
     <string name="module_installer_initial">Den experimentella kärnmodulen kan förbättra prestanda</string>
     <string name="module_installer_not_found">Inga moduler finns tillgängliga för din enhet</string>

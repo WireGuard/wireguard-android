@@ -168,10 +168,10 @@
     <string name="log_viewer_pref_title">Просмотр журналов приложения</string>
     <string name="log_viewer_title">Журнал</string>
     <string name="logcat_error">Не удалось запустить logcat: </string>
-    <string name="module_enabler_disabled_summary">Экспериментальный модуль ядра может улучшить производительность</string>
-    <string name="module_enabler_disabled_title">Включить бэкэнд модуля ядра</string>
-    <string name="module_enabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
-    <string name="module_enabler_enabled_title">Отключить бэкэнд модуля ядра</string>
+    <string name="module_disabler_disabled_summary">Экспериментальный модуль ядра может улучшить производительность</string>
+    <string name="module_disabler_disabled_title">Включить бэкэнд модуля ядра</string>
+    <string name="module_disabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
+    <string name="module_disabler_enabled_title">Отключить бэкэнд модуля ядра</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
     <string name="module_installer_initial">Экспериментальный модуль ядра может улучшить производительность</string>
     <string name="module_installer_not_found">Для вашего устройства нет доступных модулей</string>

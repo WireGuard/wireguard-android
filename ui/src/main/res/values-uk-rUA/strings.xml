@@ -168,10 +168,10 @@
     <string name="log_viewer_pref_title">Переглянути журнал програми</string>
     <string name="log_viewer_title">Журнал</string>
     <string name="logcat_error">Не вдалося запустити logcat: </string>
-    <string name="module_enabler_disabled_summary">Експериментальний модуль ядра може підвищити продуктивність</string>
-    <string name="module_enabler_disabled_title">Увімкнути модуль ядра</string>
-    <string name="module_enabler_enabled_summary">Користувацький простір повільніший, проте може покращити стабільність</string>
-    <string name="module_enabler_enabled_title">Вимкнути модуль ядра</string>
+    <string name="module_disabler_disabled_summary">Експериментальний модуль ядра може підвищити продуктивність</string>
+    <string name="module_disabler_disabled_title">Увімкнути модуль ядра</string>
+    <string name="module_disabler_enabled_summary">Користувацький простір повільніший, проте може покращити стабільність</string>
+    <string name="module_disabler_enabled_title">Вимкнути модуль ядра</string>
     <string name="module_installer_error">Щось пішло не так. Спробуйте ще раз</string>
     <string name="module_installer_initial">Експериментальний модуль ядра може підвищити продуктивність</string>
     <string name="module_installer_not_found">Немає доступних модулів для вашого пристрою</string>

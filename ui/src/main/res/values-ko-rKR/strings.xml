@@ -129,10 +129,10 @@
     <string name="log_viewer_pref_title">앱 로그 보기</string>
     <string name="log_viewer_title">로그</string>
     <string name="logcat_error">logcat을 실행할 수 없음: </string>
-    <string name="module_enabler_disabled_summary">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
-    <string name="module_enabler_disabled_title">커널 모듈 백엔드 활성화하기</string>
-    <string name="module_enabler_enabled_summary">사용자공간 백엔드를 사용하면 느리지만 안정성이 좋아짐</string>
-    <string name="module_enabler_enabled_title">커널 모듈 백엔드를 비활성화하기</string>
+    <string name="module_disabler_disabled_summary">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
+    <string name="module_disabler_disabled_title">커널 모듈 백엔드 활성화하기</string>
+    <string name="module_disabler_enabled_summary">사용자공간 백엔드를 사용하면 느리지만 안정성이 좋아짐</string>
+    <string name="module_disabler_enabled_title">커널 모듈 백엔드를 비활성화하기</string>
     <string name="module_installer_error">문제가 발생했습니다. 다시 시도하십시오</string>
     <string name="module_installer_initial">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
     <string name="module_installer_not_found">이 기기에서 사용가능한 모듈이 없음</string>
