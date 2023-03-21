@@ -1,6 +1,6 @@
 /*
  * Copyright © 2018 The Android Open Source Project
- * Copyright © 2017-2021 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.wireguard.android.widget
