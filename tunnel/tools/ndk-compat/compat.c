@@ -6,7 +6,7 @@
 
 #define FILE_IS_EMPTY
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ < 18
+#if defined(__ANDROID_MIN_SDK_VERSION__) && __ANDROID_MIN_SDK_VERSION__ < 18
 #undef FILE_IS_EMPTY
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,7 +58,7 @@ ssize_t getline(char **buf, size_t *bufsiz, FILE *fp)
 }
 #endif
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ < 24
+#if defined(__ANDROID_MIN_SDK_VERSION__) && __ANDROID_MIN_SDK_VERSION__ < 24
 #undef FILE_IS_EMPTY
 #include <string.h>
 
