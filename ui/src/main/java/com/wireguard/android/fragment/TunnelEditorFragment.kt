@@ -5,6 +5,7 @@
 package com.wireguard.android.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -265,7 +266,12 @@ class TunnelEditorFragment : BaseFragment() {
             onSelectedTunnelChanged(null, selectedTunnel)
         } else {
             tunnel = selectedTunnel
-            val config: ConfigProxy = savedInstanceState.getParcelable(KEY_LOCAL_CONFIG)!!
+            val config: ConfigProxy = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                savedInstanceState.getParcelable(KEY_LOCAL_CONFIG, ConfigProxy::class.java)!!
+            } else {
+                @Suppress("DEPRECATION")
+                savedInstanceState.getParcelable(KEY_LOCAL_CONFIG)!!
+            }
             val originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME)
             if (tunnel != null && tunnel!!.name != originalName) onSelectedTunnelChanged(null, tunnel) else binding!!.config = config
         }

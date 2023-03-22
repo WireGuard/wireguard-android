@@ -18,7 +18,7 @@ class ConfigProxy : Parcelable {
     val peers: ObservableList<PeerProxy> = ObservableArrayList()
 
     private constructor(parcel: Parcel) {
-        `interface` = parcel.readParcelable(InterfaceProxy::class.java.classLoader)!!
+        `interface` = InterfaceProxy.CREATOR.createFromParcel(parcel)
         parcel.readTypedList(peers, PeerProxy.CREATOR)
         peers.forEach { it.bind(this) }
     }
