@@ -19,6 +19,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.Application
@@ -36,7 +38,7 @@ import kotlinx.coroutines.launch
 /**
  * Fragment for editing a WireGuard configuration.
  */
-class TunnelEditorFragment : BaseFragment() {
+class TunnelEditorFragment : BaseFragment(), MenuProvider {
     private var haveShownKeys = false
     private var binding: TunnelEditorFragmentBinding? = null
     private var tunnel: ObservableTunnel? = null
@@ -66,11 +68,10 @@ class TunnelEditorFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.config_editor, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.config_editor, menu)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -82,6 +83,11 @@ class TunnelEditorFragment : BaseFragment() {
             privateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateKeyPair() }
         }
         return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onDestroyView() {
@@ -106,8 +112,8 @@ class TunnelEditorFragment : BaseFragment() {
             selectedTunnel = tunnel
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_action_save) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        if (menuItem.itemId == R.id.menu_action_save) {
             binding ?: return false
             val newConfig = try {
                 binding!!.config!!.resolve()
@@ -153,7 +159,7 @@ class TunnelEditorFragment : BaseFragment() {
             }
             return true
         }
-        return super.onOptionsItemSelected(item)
+        return false
     }
 
     @Suppress("UNUSED_PARAMETER")
