@@ -14,7 +14,7 @@ android {
     namespace 'com.wireguard.android.tunnel'
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode wireguardVersionCode
         versionName wireguardVersionName
     }
