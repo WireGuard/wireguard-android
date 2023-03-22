@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -82,13 +84,11 @@ dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugarVersion"
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:unchecked'
     options.deprecation = true
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
-    }
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8
 }
