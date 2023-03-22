@@ -6,6 +6,10 @@ package com.wireguard.android.fragment
 
 import android.Manifest
 import android.app.Dialog
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -41,7 +45,7 @@ class AppListDialogFragment : DialogFragment() {
             try {
                 val applicationData: MutableList<ApplicationData> = ArrayList()
                 withContext(Dispatchers.IO) {
-                    val packageInfos = pm.getPackagesHoldingPermissions(arrayOf(Manifest.permission.INTERNET), 0)
+                    val packageInfos = getPackagesHoldingPermissions(pm, arrayOf(Manifest.permission.INTERNET))
                     packageInfos.forEach {
                         val packageName = it.packageName
                         val appInfo = it.applicationInfo
@@ -76,6 +80,15 @@ class AppListDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         currentlySelectedApps = (arguments?.getStringArrayList(KEY_SELECTED_APPS) ?: emptyList())
         initiallyExcluded = arguments?.getBoolean(KEY_IS_EXCLUDED) ?: true
+    }
+
+    private fun getPackagesHoldingPermissions(pm: PackageManager, permissions: Array<String>): List<PackageInfo> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            pm.getPackagesHoldingPermissions(permissions, PackageInfoFlags.of(0L))
+        } else {
+            @Suppress("DEPRECATION")
+            pm.getPackagesHoldingPermissions(permissions, 0)
+        }
     }
 
     private fun setButtonText() {
