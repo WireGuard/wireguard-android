@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.wireguard.android.widget.NameInputFilter" />
     </data>
 
@@ -24,7 +23,9 @@
                 android:hint="@string/tunnel_name"
                 android:imeOptions="actionDone"
                 android:inputType="textNoSuggestions|textVisiblePassword"
-                app:filter="@{NameInputFilter.newInstance()}" />
+                app:filter="@{NameInputFilter.newInstance()}">
+                <requestFocus/>
+            </com.google.android.material.textfield.TextInputEditText>
 
         </com.google.android.material.textfield.TextInputLayout>
 
