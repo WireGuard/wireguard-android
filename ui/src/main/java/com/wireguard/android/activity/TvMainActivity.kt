@@ -16,12 +16,14 @@ import android.os.storage.StorageVolume
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.forEach
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.lifecycleScope
@@ -185,6 +187,17 @@ class TvMainActivity : AppCompatActivity() {
                 binding.tunnelList.requestFocus()
             }
         }
+
+        val backPressedCallback = onBackPressedDispatcher.addCallback(this) { handleBackPressed() }
+        val updateBackPressedCallback = object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                backPressedCallback.isEnabled = isDeleting.get() || filesRoot.get()?.isNotEmpty() == true
+            }
+        }
+        isDeleting.addOnPropertyChangedCallback(updateBackPressedCallback)
+        filesRoot.addOnPropertyChangedCallback(updateBackPressedCallback)
+        backPressedCallback.isEnabled = false
+
         binding.executePendingBindings()
         setContentView(binding.root)
 
@@ -298,7 +311,7 @@ class TvMainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
+    private fun handleBackPressed() {
         when {
             isDeleting.get() -> {
                 isDeleting.set(false)
@@ -313,7 +326,6 @@ class TvMainActivity : AppCompatActivity() {
                     binding.tunnelList.requestFocus()
                 }
             }
-            else -> super.onBackPressed()
         }
     }
 
