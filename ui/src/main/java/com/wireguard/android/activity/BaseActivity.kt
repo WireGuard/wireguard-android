@@ -7,9 +7,7 @@ package com.wireguard.android.activity
 import android.os.Bundle
 import androidx.databinding.CallbackRegistry
 import androidx.databinding.CallbackRegistry.NotifierCallback
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.wireguard.android.Application
 import com.wireguard.android.model.ObservableTunnel
 import kotlinx.coroutines.launch
@@ -33,6 +31,8 @@ abstract class BaseActivity : ThemeChangeAwareActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         // Restore the saved tunnel if there is one; otherwise grab it from the arguments.
         val savedTunnelName = when {
             savedInstanceState != null -> savedInstanceState.getString(KEY_SELECTED_TUNNEL)
@@ -41,13 +41,8 @@ abstract class BaseActivity : ThemeChangeAwareActivity() {
         }
         if (savedTunnelName != null)
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    selectedTunnel = Application.getTunnelManager().getTunnels()[savedTunnelName]
-                }
+                selectedTunnel = Application.getTunnelManager().getTunnels()[savedTunnelName]
             }
-
-        // The selected tunnel must be set before the superclass method recreates fragments.
-        super.onCreate(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
