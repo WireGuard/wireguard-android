@@ -92,6 +92,8 @@
     <string name="bad_config_reason_unknown_section">Secțiune necunoscută</string>
     <string name="bad_config_reason_value_out_of_range">Valoare în afara intervalului</string>
     <string name="bad_extension_error">Fișierul trebuie să fie .conf sau .zip</string>
+    <string name="error_no_qr_found">Codul QR nu a fost găsit în imagine</string>
+    <string name="error_qr_checksum">Nu a putut fi efectuată verificarea sumei de control pentru codul QR</string>
     <string name="cancel">Anulare</string>
     <string name="config_delete_error">Fișierul de configurare %s nu poate fi șters</string>
     <string name="config_exists_error">Configurația pentru „%s” există deja</string>
@@ -121,6 +123,7 @@
     <string name="disable_config_export_title">Dezactivează exportarea configurației</string>
     <string name="disable_config_export_description">Dezactivarea exportării configurației face mai puțin accesibile cheile private</string>
     <string name="dns_servers">Servere DNS</string>
+    <string name="dns_search_domains">Domenii de căutare</string>
     <string name="edit">Editare</string>
     <string name="endpoint">Punct final</string>
     <string name="error_down">Eroare la oprirea tunelului: %s</string>
@@ -155,10 +158,10 @@
     <string name="log_viewer_pref_title">Vizualizare jurnal aplicație</string>
     <string name="log_viewer_title">Jurnal</string>
     <string name="logcat_error">Programul logcat nu poate fi executat: </string>
-    <string name="module_disabler_disabled_summary">Modulul experimental de nucleu poate îmbunătăți performanța</string>
-    <string name="module_disabler_disabled_title">Activează biblioteca modulului de nucleu</string>
-    <string name="module_disabler_enabled_summary">Biblioteca mai lentă a spațiului utilizatorului poate îmbunătăți stabilitatea</string>
-    <string name="module_disabler_enabled_title">Dezactivează biblioteca modulului de nucleu</string>
+    <string name="module_enabler_disabled_summary">Modulul experimental de nucleu poate îmbunătăți performanța</string>
+    <string name="module_enabler_disabled_title">Activează biblioteca modulului de nucleu</string>
+    <string name="module_enabler_enabled_summary">Biblioteca mai lentă a spațiului utilizatorului poate îmbunătăți stabilitatea</string>
+    <string name="module_enabler_enabled_title">Dezactivează biblioteca modulului de nucleu</string>
     <string name="module_installer_error">A apărut o eroare. Încearcă din nou</string>
     <string name="module_installer_initial">Modulul experimental de nucleu poate îmbunătăți performanța</string>
     <string name="module_installer_not_found">Nu sunt disponibile module pentru dispozitivul tău</string>

@@ -53,7 +53,7 @@
     </plurals>
     <plurals name="persistent_keepalive_seconds_suffix">
         <item quantity="one">Sekunde</item>
-        <item quantity="other">Sekunden</item>
+        <item quantity="other">seconds</item>
     </plurals>
     <string name="use_all_applications">Alle Apps verwenden</string>
     <string name="add_peer">Gegenüber hinzufügen</string>
@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Unbekannter Abschnitt</string>
     <string name="bad_config_reason_value_out_of_range">Wert ist außerhalb des gültigen Bereichs</string>
     <string name="bad_extension_error">Dateiendung muss .conf oder .zip sein</string>
+    <string name="error_no_qr_found">Es wurde kein QR-Code im Bild gefunden</string>
+    <string name="error_qr_checksum">Die QR-Code Prüfsummenkontrolle ist fehlgeschlagen</string>
     <string name="cancel">Abbrechen</string>
     <string name="config_delete_error">Konfigurationsdatei %s kann nicht gelöscht werden</string>
     <string name="config_exists_error">Konfiguration für „%s“ existiert bereits</string>
@@ -108,6 +110,7 @@
     <string name="disable_config_export_title">Deaktivieren Sie den Konfigurationsexport</string>
     <string name="disable_config_export_description">Durch Deaktivieren des Konfigurationsexports werden private Schlüssel weniger zugänglich</string>
     <string name="dns_servers">Nameserver</string>
+    <string name="dns_search_domains">Suchdomäne</string>
     <string name="edit">Bearbeiten</string>
     <string name="endpoint">Endpunkt</string>
     <string name="error_down">Fehler beim Abschalten des Tunnels: %s</string>
@@ -142,10 +145,10 @@
     <string name="log_viewer_pref_title">Anwendungs-Protokoll anzeigen</string>
     <string name="log_viewer_title">Protokoll</string>
     <string name="logcat_error">Konnte logcat nicht ausführen: </string>
-    <string name="module_disabler_disabled_summary">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
-    <string name="module_disabler_disabled_title">Kernelmodul-Backend aktivieren</string>
-    <string name="module_disabler_enabled_summary">Das langsamere Userspace-Backend kann die Stabilität verbessern</string>
-    <string name="module_disabler_enabled_title">Kernelmodul-Backend deaktivieren</string>
+    <string name="module_enabler_disabled_summary">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
+    <string name="module_enabler_disabled_title">Kernelmodul-Backend aktivieren</string>
+    <string name="module_enabler_enabled_summary">Das langsamere Userspace-Backend kann die Stabilität verbessern</string>
+    <string name="module_enabler_enabled_title">Kernelmodul-Backend deaktivieren</string>
     <string name="module_installer_error">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut</string>
     <string name="module_installer_initial">Das experimentelle Kernelmodul kann die Leistung verbessern</string>
     <string name="module_installer_not_found">Für Ihr Gerät sind keine Module verfügbar</string>
@@ -219,6 +222,7 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernelmodul</string>
     <string name="unknown_error">Unbekannter Fehler</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Überprüfe %s Backend-Version</string>
     <string name="version_summary_unknown">Unbekannte %s Version</string>
     <string name="version_title">WireGuard für Android v%s</string>

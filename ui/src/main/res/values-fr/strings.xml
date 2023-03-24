@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Section inconnue</string>
     <string name="bad_config_reason_value_out_of_range">Valeur hors limite</string>
     <string name="bad_extension_error">Le fichier doit être .conf ou .zip</string>
+    <string name="error_no_qr_found">Le code QR est introuvable dans l’image</string>
+    <string name="error_qr_checksum">La vérification de la somme de contrôle du QR code a échoué</string>
     <string name="cancel">Annuler</string>
     <string name="config_delete_error">Impossible de supprimer le fichier de configuration %s</string>
     <string name="config_exists_error">La configuration de « %s » existe déjà</string>
@@ -108,6 +110,7 @@
     <string name="disable_config_export_title">Désactiver l\'export de configuration</string>
     <string name="disable_config_export_description">La désactivation de l\'export de configuration rend les clés privées moins accessibles</string>
     <string name="dns_servers">Serveurs DNS</string>
+    <string name="dns_search_domains">Domaines de recherche DNS</string>
     <string name="edit">Modifier</string>
     <string name="endpoint">Point de terminaison</string>
     <string name="error_down">Erreur lors de la désactivation du tunnel : %s</string>
@@ -142,10 +145,10 @@
     <string name="log_viewer_pref_title">Afficher le journal de l\'application</string>
     <string name="log_viewer_title">Journal</string>
     <string name="logcat_error">Impossible d\'exécuter logcat : </string>
-    <string name="module_disabler_disabled_summary">Le module expérimental du noyau peut améliorer les performances</string>
-    <string name="module_disabler_disabled_title">Activer le backend du module du noyau</string>
-    <string name="module_disabler_enabled_summary">Le backend plus lent de l\'espace utilisateur peut améliorer la stabilité</string>
-    <string name="module_disabler_enabled_title">Désactiver le backend du module du noyau</string>
+    <string name="module_enabler_disabled_summary">Le module expérimental du noyau peut améliorer les performances</string>
+    <string name="module_enabler_disabled_title">Activer le backend du module du noyau</string>
+    <string name="module_enabler_enabled_summary">Le backend plus lent de l\'espace utilisateur peut améliorer la stabilité</string>
+    <string name="module_enabler_enabled_title">Désactiver le backend du module du noyau</string>
     <string name="module_installer_error">Une erreur est survenue. Veuillez réessayer</string>
     <string name="module_installer_initial">Le module expérimental du noyau peut améliorer les performances</string>
     <string name="module_installer_not_found">Aucun module n\'est disponible pour votre appareil</string>
@@ -216,7 +219,7 @@
     <string name="tunnel_dns_failure">Impossible de résoudre le nom d\'hôte DNS: “%s”</string>
     <string name="tunnel_rename_error">Impossible de renommer le tunnel : %s</string>
     <string name="tunnel_rename_success">Tunnel renommé avec succès en «%s »</string>
-    <string name="type_name_go_userspace">Nom de l\'espace utilisateur</string>
+    <string name="type_name_go_userspace">Implémentation Go en espace utilisateur</string>
     <string name="type_name_kernel_module">Module noyau</string>
     <string name="unknown_error">Erreur inconnue</string>
     <string name="version_summary">%1$s backend %2$s</string>

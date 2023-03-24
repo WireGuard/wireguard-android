@@ -6,7 +6,7 @@
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">%d تونل با موقیت حذف شد</item>
-        <item quantity="other">%d تونل‌ها با موقیت حذف شدند</item>
+        <item quantity="other">%d تونل‌ با موفقیت حذف شد</item>
     </plurals>
     <plurals name="delete_title">
         <item quantity="one">%d تونل انتخاب شد</item>
@@ -80,6 +80,8 @@
     <string name="bad_config_reason_unknown_section">بخش نامعلوم</string>
     <string name="bad_config_reason_value_out_of_range">مقدار خارج از محدوده</string>
     <string name="bad_extension_error">پرونده باید .conf یا .zip باشد</string>
+    <string name="error_no_qr_found">کد QR در تصویر یافت نشد</string>
+    <string name="error_qr_checksum">بررسی checksum کد QR ناموفق بود</string>
     <string name="cancel">لغو</string>
     <string name="config_delete_error">نمی‌توان پرونده پیکربندی %s را حذف کرد</string>
     <string name="config_exists_error">پیکربندی برای ”%s” در حال حاضر وجود دارد</string>
@@ -109,6 +111,7 @@
     <string name="disable_config_export_title">غیرفعال سازی خروجی گرفتن از کانفیگ ها</string>
     <string name="disable_config_export_description">غیرفعال سازی خروجی گرفتن، دسترسی کلیدهای خصوصی را کم می کند</string>
     <string name="dns_servers">سرورهای DNS</string>
+    <string name="dns_search_domains">جست‌وجوی دامنه‌ها</string>
     <string name="edit">ویرایش</string>
     <string name="endpoint">نقطه پایان</string>
     <string name="error_down">خطا هنگام بستن تونل: %s</string>
@@ -143,10 +146,10 @@
     <string name="log_viewer_pref_title">نمایش گزارش رویداد برنامه</string>
     <string name="log_viewer_title">گزارش رویداد</string>
     <string name="logcat_error">نمی‌توان logcat را اجرا کرد: </string>
-    <string name="module_disabler_disabled_summary">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
-    <string name="module_disabler_disabled_title">فعال‌سازی ماژول کرنل ِبک اند</string>
-    <string name="module_disabler_enabled_summary">فضای کاربری کند ممکن است پایداری را بهبود ببخشد</string>
-    <string name="module_disabler_enabled_title">غیرفعال‌سازی پس‌زمینه واحد هسته</string>
+    <string name="module_enabler_disabled_summary">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
+    <string name="module_enabler_disabled_title">فعال‌سازی ماژول کرنل ِبک اند</string>
+    <string name="module_enabler_enabled_summary">فضای کاربری کند ممکن است پایداری را بهبود ببخشد</string>
+    <string name="module_enabler_enabled_title">غیرفعال‌سازی پس‌زمینه واحد هسته</string>
     <string name="module_installer_error">مشکلی پیش آمد. لطفا دوباره تلاش کنید</string>
     <string name="module_installer_initial">ماژول آزمایشی‌ِ کرنل می تواند کارایی را افزایش دهد</string>
     <string name="module_installer_not_found">هیچ واحدی برای دستگاه شما در دسترس نیست</string>
@@ -215,11 +218,13 @@
     <string name="tunnel_list_placeholder">به‌وسیله دکمه آبی یک تونل بیفزایید</string>
     <string name="tunnel_name">نام تونل</string>
     <string name="tunnel_on_error">روشن کردن تونل امکان پذیر نیست (wgTurnOn برگشت %d )</string>
+    <string name="tunnel_dns_failure">ناتوان در یافتن DNS نام میزبان: \"%s\"</string>
     <string name="tunnel_rename_error">ناتوان در تغییر نام تونل: %s</string>
     <string name="tunnel_rename_success">نام تونل با موفقیت تغییر یافت به “%s”</string>
     <string name="type_name_go_userspace">رفتن به فضای کاربر</string>
     <string name="type_name_kernel_module">واحد هسته</string>
     <string name="unknown_error">خطای نامشخص</string>
+    <string name="version_summary">%1$s بک اند %2$s</string>
     <string name="version_summary_checking">در حال بررسی نگارش پس‌زمینه %s</string>
     <string name="version_summary_unknown">نگارش %s ناشناخته</string>
     <string name="version_title">WireGuard برای اندروید نگارش %s</string>

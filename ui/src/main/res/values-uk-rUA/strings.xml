@@ -105,6 +105,8 @@
     <string name="bad_config_reason_unknown_section">Невідома секція</string>
     <string name="bad_config_reason_value_out_of_range">Значення поза діапазоном</string>
     <string name="bad_extension_error">Файл повинен мати розширення .conf або .zip</string>
+    <string name="error_no_qr_found">QR-код не знайдено на зображенні</string>
+    <string name="error_qr_checksum">Не вдалося перевірити контрольну суму QR-коду</string>
     <string name="cancel">Скасувати</string>
     <string name="config_delete_error">Не вдалося видалити файл конфігурації %s</string>
     <string name="config_exists_error">Конфігурація для \"%s\" вже існує</string>
@@ -134,6 +136,7 @@
     <string name="disable_config_export_title">Вимкнути експорт конфігурації</string>
     <string name="disable_config_export_description">Вимкнення експорту налаштувань робить приватні ключі менш доступними</string>
     <string name="dns_servers">DNS-сервери</string>
+    <string name="dns_search_domains">Пошук доменів</string>
     <string name="edit">Редагувати</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Помилка вимкнення тунелю: %s</string>
@@ -168,10 +171,10 @@
     <string name="log_viewer_pref_title">Переглянути журнал програми</string>
     <string name="log_viewer_title">Журнал</string>
     <string name="logcat_error">Не вдалося запустити logcat: </string>
-    <string name="module_disabler_disabled_summary">Експериментальний модуль ядра може підвищити продуктивність</string>
-    <string name="module_disabler_disabled_title">Увімкнути модуль ядра</string>
-    <string name="module_disabler_enabled_summary">Користувацький простір повільніший, проте може покращити стабільність</string>
-    <string name="module_disabler_enabled_title">Вимкнути модуль ядра</string>
+    <string name="module_enabler_disabled_summary">Експериментальний модуль ядра може підвищити продуктивність</string>
+    <string name="module_enabler_disabled_title">Увімкнути модуль ядра</string>
+    <string name="module_enabler_enabled_summary">Користувацький простір повільніший, проте може покращити стабільність</string>
+    <string name="module_enabler_enabled_title">Вимкнути модуль ядра</string>
     <string name="module_installer_error">Щось пішло не так. Спробуйте ще раз</string>
     <string name="module_installer_initial">Експериментальний модуль ядра може підвищити продуктивність</string>
     <string name="module_installer_not_found">Немає доступних модулів для вашого пристрою</string>

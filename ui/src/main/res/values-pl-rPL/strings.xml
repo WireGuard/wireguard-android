@@ -105,6 +105,8 @@
     <string name="bad_config_reason_unknown_section">Nieznana sekcja</string>
     <string name="bad_config_reason_value_out_of_range">Wartość poza zakresem</string>
     <string name="bad_extension_error">Plik musi posiadać rozszerzenie CONF lub ZIP</string>
+    <string name="error_no_qr_found">Kod QR nie został znaleziony w obrazie</string>
+    <string name="error_qr_checksum">Weryfikacja sumy kontrolnej kodu QR nie powiodła się</string>
     <string name="cancel">Anuluj</string>
     <string name="config_delete_error">Nie można usunąć pliku konfiguracyjnego „%s”</string>
     <string name="config_exists_error">Konfiguracja dla „%s” już istnieje</string>
@@ -134,6 +136,7 @@
     <string name="disable_config_export_title">Wyłącz eksportowanie konfiguracji</string>
     <string name="disable_config_export_description">Wyłączenie eksportowania konfiguracji sprawi, że klucze prywatne będą mniej dostępne</string>
     <string name="dns_servers">Serwery DNS</string>
+    <string name="dns_search_domains">Sufiksy DNS</string>
     <string name="edit">Edytuj</string>
     <string name="endpoint">Punkt końcowy</string>
     <string name="error_down">Błąd podczas zamykania tunelu: %s</string>
@@ -168,10 +171,10 @@
     <string name="log_viewer_pref_title">Wyświetl log aplikacji</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Nie można uruchomić narzędzia logcat: </string>
-    <string name="module_disabler_disabled_summary">Eksperymentalny moduł jądra może poprawić wydajność</string>
-    <string name="module_disabler_disabled_title">Włącz moduł jądra</string>
-    <string name="module_disabler_enabled_summary">Wolniejsza implementacja w przestrzeni użytkownika może poprawić stabilność</string>
-    <string name="module_disabler_enabled_title">Wyłącz moduł jądra</string>
+    <string name="module_enabler_disabled_summary">Eksperymentalny moduł jądra może poprawić wydajność</string>
+    <string name="module_enabler_disabled_title">Włącz moduł jądra</string>
+    <string name="module_enabler_enabled_summary">Wolniejsza implementacja w przestrzeni użytkownika może poprawić stabilność</string>
+    <string name="module_enabler_enabled_title">Wyłącz moduł jądra</string>
     <string name="module_installer_error">Coś poszło nie tak. Proszę spróbować ponownie</string>
     <string name="module_installer_initial">Eksperymentalny moduł jądra może poprawić wydajność</string>
     <string name="module_installer_not_found">Brak dostępnych modułów dla tego urządzenia</string>
@@ -245,6 +248,7 @@
     <string name="type_name_go_userspace">Przestrzeń użytkownika Go</string>
     <string name="type_name_kernel_module">Moduł jądra</string>
     <string name="unknown_error">Nieznany błąd</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Sprawdzanie wersji implementacji: %s</string>
     <string name="version_summary_unknown">Nieznana wersja %s</string>
     <string name="version_title">WireGuard dla systemu Android v%s</string>

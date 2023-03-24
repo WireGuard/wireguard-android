@@ -66,6 +66,8 @@
     <string name="bad_config_reason_unknown_section">Bagian tak diketahui</string>
     <string name="bad_config_reason_value_out_of_range">Nilai di luar rentang</string>
     <string name="bad_extension_error">Berkas harus .conf atau .zip</string>
+    <string name="error_no_qr_found">Kode QR tidak ditemukan dalam gambar</string>
+    <string name="error_qr_checksum">Verifikasi ceksum kode QR gagal</string>
     <string name="cancel">Batalkan</string>
     <string name="config_delete_error">Tidak dapat menghapus berkas konfigurasi %s</string>
     <string name="config_exists_error">Sudah ada konfigurasi untuk “%s”</string>
@@ -95,6 +97,7 @@
     <string name="disable_config_export_title">Nonaktifkan ekspor konfigurasi</string>
     <string name="disable_config_export_description">Menonaktifkan ekspor konfigurasi akan membuat kunci pribadi sulit diakses</string>
     <string name="dns_servers">Server DNS</string>
+    <string name="dns_search_domains">Cari domain</string>
     <string name="edit">Edit</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Kesalahan pada tunel: %s</string>
@@ -129,10 +132,10 @@
     <string name="log_viewer_pref_title">Lihat log aplikasi</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Tidak bisa menjalankan logcat: </string>
-    <string name="module_disabler_disabled_summary">Modul kernel eksperimental dapat meningkatkan kinerja</string>
-    <string name="module_disabler_disabled_title">Aktifkan backend modul kernel</string>
-    <string name="module_disabler_enabled_summary">Backend userspace yang lebih lambat dapat meningkatkan stabilitas</string>
-    <string name="module_disabler_enabled_title">Nonaktifkan backend modul kernel</string>
+    <string name="module_enabler_disabled_summary">Modul kernel eksperimental dapat meningkatkan kinerja</string>
+    <string name="module_enabler_disabled_title">Aktifkan backend modul kernel</string>
+    <string name="module_enabler_enabled_summary">Backend userspace yang lebih lambat dapat meningkatkan stabilitas</string>
+    <string name="module_enabler_enabled_title">Nonaktifkan backend modul kernel</string>
     <string name="module_installer_error">Ada yang salah. Silakan coba lagi</string>
     <string name="module_installer_initial">Modul kernel eksperimental dapat meningkatkan kinerja</string>
     <string name="module_installer_not_found">Tidak tersedia modul untuk perangkat anda</string>

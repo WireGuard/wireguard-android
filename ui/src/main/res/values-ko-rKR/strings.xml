@@ -66,6 +66,8 @@
     <string name="bad_config_reason_unknown_section">알수 없는 섹션</string>
     <string name="bad_config_reason_value_out_of_range">범위를 벗어난 값</string>
     <string name="bad_extension_error">.conf 또는 .zip 파일이어야 함</string>
+    <string name="error_no_qr_found">이미지에서 QR 코드를 찾을 수 없습니다</string>
+    <string name="error_qr_checksum">QR 코드 체크섬 검증 실패</string>
     <string name="cancel">취소</string>
     <string name="config_delete_error">설정파일 %s를 삭제할 수 없음</string>
     <string name="config_exists_error">\"%s\"에 대한 설정이 이미 존재함</string>
@@ -95,6 +97,7 @@
     <string name="disable_config_export_title">설정 내보내기 기능을 중지</string>
     <string name="disable_config_export_description">설정 내보내기 기능을 중지하면 개인키 유출을 줄일 수 있음</string>
     <string name="dns_servers">DNS 서버</string>
+    <string name="dns_search_domains">Dns 도메인 검색</string>
     <string name="edit"> 수정</string>
     <string name="endpoint">엔드포인트</string>
     <string name="error_down">터널 중단 시 오류 발생: %s</string>
@@ -129,10 +132,10 @@
     <string name="log_viewer_pref_title">앱 로그 보기</string>
     <string name="log_viewer_title">로그</string>
     <string name="logcat_error">logcat을 실행할 수 없음: </string>
-    <string name="module_disabler_disabled_summary">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
-    <string name="module_disabler_disabled_title">커널 모듈 백엔드 활성화하기</string>
-    <string name="module_disabler_enabled_summary">사용자공간 백엔드를 사용하면 느리지만 안정성이 좋아짐</string>
-    <string name="module_disabler_enabled_title">커널 모듈 백엔드를 비활성화하기</string>
+    <string name="module_enabler_disabled_summary">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
+    <string name="module_enabler_disabled_title">커널 모듈 백엔드 활성화하기</string>
+    <string name="module_enabler_enabled_summary">사용자공간 백엔드를 사용하면 느리지만 안정성이 좋아짐</string>
+    <string name="module_enabler_enabled_title">커널 모듈 백엔드를 비활성화하기</string>
     <string name="module_installer_error">문제가 발생했습니다. 다시 시도하십시오</string>
     <string name="module_installer_initial">아직 실험중이 커널 모듈을 사용하면 성능이 향상될 수 있음</string>
     <string name="module_installer_not_found">이 기기에서 사용가능한 모듈이 없음</string>

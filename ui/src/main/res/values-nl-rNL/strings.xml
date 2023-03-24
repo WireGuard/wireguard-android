@@ -4,4 +4,12 @@
         <item quantity="one">Kan %d tunnel niet verwijderen: %s</item>
         <item quantity="other">Kan %d tunnels niet verwijderen: %s</item>
     </plurals>
+    <plurals name="delete_title">
+        <item quantity="one">%d tunnel geselecteerd</item>
+        <item quantity="other">%d tunnels geselecteerd</item>
+    </plurals>
+    <plurals name="import_partial_success">
+        <item quantity="one">%1$d van %2$d tunnels geïmporteerd</item>
+        <item quantity="other">%1$d van de %2$d tunnels geïmporteerd</item>
+    </plurals>
 </resources>

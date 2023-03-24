@@ -21,12 +21,12 @@
         <item quantity="other">%d túneles importados</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="one">%d aplicación excluida</item>
-        <item quantity="other">%d aplicaciones excluidas</item>
+        <item quantity="one">%d Aplicación Excluida</item>
+        <item quantity="other">%d Aplicaciones Excluidas</item>
     </plurals>
     <plurals name="set_included_applications">
-        <item quantity="one">%d aplicación incluída</item>
-        <item quantity="other">%d aplicaciones incluidas</item>
+        <item quantity="one">%d Aplicación Incluida</item>
+        <item quantity="other">%d Aplicaciones Incluidas</item>
     </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="one">%d excluido</item>
@@ -59,9 +59,9 @@
     <string name="add_peer">Añadir par</string>
     <string name="addresses">Direcciones</string>
     <string name="applications">Aplicaciones</string>
-    <string name="allow_remote_control_intents_summary_off">Las aplicaciones externas no pueden cambiar túneles (recomendado)</string>
-    <string name="allow_remote_control_intents_summary_on">Las aplicaciones externas pueden cambiar túneles (avanzado)</string>
-    <string name="allow_remote_control_intents_title">Permitir aplicaciones de mando remoto</string>
+    <string name="allow_remote_control_intents_summary_off">Las aplicaciones externas no pueden cambiar el estado de los túneles (recomendado)</string>
+    <string name="allow_remote_control_intents_summary_on">Las aplicaciones externas pueden cambiar el estado de los túneles (avanzado)</string>
+    <string name="allow_remote_control_intents_title">Permitir aplicaciones de control remoto</string>
     <string name="allowed_ips">IPs permitidas</string>
     <string name="bad_config_context">%1$s de %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Sección desconocida</string>
     <string name="bad_config_reason_value_out_of_range">Valor fuera de rango</string>
     <string name="bad_extension_error">El archivo debe ser .conf o .zip</string>
+    <string name="error_no_qr_found">Código QR no encontrado en la imagen</string>
+    <string name="error_qr_checksum">Falló la verificación de la suma de comprobación del código QR</string>
     <string name="cancel">Cancelar</string>
     <string name="config_delete_error">No se puede eliminar el archivo de configuración %s</string>
     <string name="config_exists_error">La configuración para “%s” ya existe</string>
@@ -105,11 +107,12 @@
     <string name="tv_select_a_storage_drive">Selecciones un dispositivo de almacenamiento</string>
     <string name="tv_no_file_picker">Por favor, instale una herramienta de gestión de archivos para navegar por archivos</string>
     <string name="tv_add_tunnel_get_started">Agregue un túnel para empezar</string>
-    <string name="disable_config_export_title">Deshabilitar la exportación de configuración</string>
+    <string name="disable_config_export_title">Inhabilitar la exportación de configuración</string>
     <string name="disable_config_export_description">Desactivar la exportación de configuración hace que las claves privadas sean menos accesibles</string>
     <string name="dns_servers">Servidores DNS</string>
+    <string name="dns_search_domains">Buscar dominios</string>
     <string name="edit">Editar</string>
-    <string name="endpoint">Punto final</string>
+    <string name="endpoint">Endpoint</string>
     <string name="error_down">Error al bajar el túnel: %s</string>
     <string name="error_fetching_apps">Error al obtener la lista de aplicaciones: %s</string>
     <string name="error_root">Por favor, obtén acceso root y vuelve a intentarlo</string>
@@ -139,13 +142,13 @@
     <string name="log_export_title">Exportar archivo de registro</string>
     <string name="log_saver_activity_label">Guardar registro</string>
     <string name="log_viewer_pref_summary">Los registros pueden ayudar con la depuración</string>
-    <string name="log_viewer_pref_title">Ver registro de aplicación</string>
+    <string name="log_viewer_pref_title">Ver registro de la aplicación</string>
     <string name="log_viewer_title">Registro</string>
     <string name="logcat_error">No se puede ejecutar logcat: </string>
-    <string name="module_disabler_disabled_summary">El módulo experimental del kernel puede mejorar el rendimiento</string>
-    <string name="module_disabler_disabled_title">Habilitar backend del módulo del kernel</string>
-    <string name="module_disabler_enabled_summary">El backend más lento del espacio de usuario puede mejorar la estabilidad</string>
-    <string name="module_disabler_enabled_title">Desactivar backend del módulo del kernel</string>
+    <string name="module_enabler_disabled_summary">El módulo experimental del kernel puede mejorar el rendimiento</string>
+    <string name="module_enabler_disabled_title">Habilitar backend del módulo del kernel</string>
+    <string name="module_enabler_enabled_summary">El backend más lento del espacio de usuario puede mejorar la estabilidad</string>
+    <string name="module_enabler_enabled_title">Desactivar backend del módulo del kernel</string>
     <string name="module_installer_error">Ocurrió un error. Intente de nuevo</string>
     <string name="module_installer_initial">El módulo experimental del kernel puede mejorar el rendimiento</string>
     <string name="module_installer_not_found">No hay módulos disponibles para tu dispositivo</string>
@@ -162,14 +165,14 @@
     <string name="no_tunnels_error">No existen túneles</string>
     <string name="parse_error_generic">cadena</string>
     <string name="parse_error_inet_address">Dirección IP</string>
-    <string name="parse_error_inet_endpoint">punto final</string>
+    <string name="parse_error_inet_endpoint">Endpoint</string>
     <string name="parse_error_inet_network">Red IP</string>
     <string name="parse_error_integer">número</string>
     <string name="parse_error_reason">No se puede analizar %1$s “%2$s”</string>
     <string name="peer">Pares</string>
     <string name="permission_description">controlar túneles de WireGuard, habilitando y desactivando túneles a su antojo, lo que podría conducir mal al tráfico de Internet</string>
     <string name="permission_label">controlar túneles de WireGuard</string>
-    <string name="persistent_keepalive">Mantenimiento persistente</string>
+    <string name="persistent_keepalive">Keepalive persistente</string>
     <string name="pre_shared_key">Clave precompartida</string>
     <string name="pre_shared_key_enabled">activado</string>
     <string name="private_key">Clave privada</string>
@@ -181,7 +184,7 @@
     <string name="save">Guardar</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="settings">Preferencias</string>
-    <string name="shell_exit_status_read_error">Shell no puede leer estado de salida</string>
+    <string name="shell_exit_status_read_error">Shell no puede leer el estado de salida</string>
     <string name="shell_marker_count_error">Shell esperaba 4 marcadores, recibió %d</string>
     <string name="shell_start_error">No se pudo iniciar Shell: %d</string>
     <string name="success_application_will_restart">Éxito. La aplicación se reiniciará ahora…</string>

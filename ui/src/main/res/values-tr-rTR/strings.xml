@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Bilinmeyen bölüm</string>
     <string name="bad_config_reason_value_out_of_range">Aralık dışı değer</string>
     <string name="bad_extension_error">Dosya .conf veya .zip olmalıdır</string>
+    <string name="error_no_qr_found">Görselde QR kod bulunamadı</string>
+    <string name="error_qr_checksum">QR kod doğrulaması başarısız</string>
     <string name="cancel">İptal</string>
     <string name="config_delete_error">%s konfigürasyon dosyası silinemiyor</string>
     <string name="config_exists_error">“%s” için konfigürasyon zaten var</string>
@@ -92,7 +94,7 @@
     <string name="create_downloads_file_error">İndirilenler klasöründe dosya oluşturulamadı</string>
     <string name="create_empty">Sıfırdan oluştur</string>
     <string name="create_from_file">Dosya veya arşivden ekle</string>
-    <string name="create_from_qr_code">QR kodundan ekle</string>
+    <string name="create_from_qr_code">QR Kodu Tara</string>
     <string name="create_output_dir_error">Çıktı klasörü oluşturulamıyor</string>
     <string name="create_temp_dir_error">Yerel geçici dizin oluşturulamıyor</string>
     <string name="create_tunnel">Tünel Oluştur</string>
@@ -108,6 +110,7 @@
     <string name="disable_config_export_title">Ayarları dışa aktarmayı kapa</string>
     <string name="disable_config_export_description">Ayarları dışa aktarmayı kapamak gizli anahtarları daha az erişilebilir kılar</string>
     <string name="dns_servers">DNS sunucuları</string>
+    <string name="dns_search_domains">Alan adı ara</string>
     <string name="edit">Düzenle</string>
     <string name="endpoint">Uç nokta</string>
     <string name="error_down">Tünel kapatılırken hata oluştu: %s</string>
@@ -142,10 +145,10 @@
     <string name="log_viewer_pref_title">Uygulama günlüğünü görüntüle</string>
     <string name="log_viewer_title">Günlük</string>
     <string name="logcat_error">Logcat çalıştırılamıyor: </string>
-    <string name="module_disabler_disabled_summary">Deneysel çekirdek modülü performansı artırabilir</string>
-    <string name="module_disabler_disabled_title">Çekirdek modülü arka ucunu etkinleştir</string>
-    <string name="module_disabler_enabled_summary">Daha yavaş kullanıcı alanı arka ucu kararlılığı artırabilir</string>
-    <string name="module_disabler_enabled_title">Çekirdek modülü arka ucunu devre dışı bırak</string>
+    <string name="module_enabler_disabled_summary">Deneysel çekirdek modülü performansı artırabilir</string>
+    <string name="module_enabler_disabled_title">Çekirdek modülü arka ucunu etkinleştir</string>
+    <string name="module_enabler_enabled_summary">Daha yavaş kullanıcı alanı arka ucu kararlılığı artırabilir</string>
+    <string name="module_enabler_enabled_title">Çekirdek modülü arka ucunu devre dışı bırak</string>
     <string name="module_installer_error">Bir şeyler yanlış gitti. Lütfen tekrar deneyin</string>
     <string name="module_installer_initial">Deneysel çekirdek modülü performansı artırabilir</string>
     <string name="module_installer_not_found">Cihazınız için uygun modül yok</string>

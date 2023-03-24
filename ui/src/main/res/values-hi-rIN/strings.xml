@@ -76,6 +76,7 @@
     <string name="bad_config_reason_unknown_section">अज्ञात एट्रिब्यूट </string>
     <string name="bad_config_reason_value_out_of_range">मूल्य सीमा से बाहर</string>
     <string name="bad_extension_error">फ़ाइल .conf या .zip होनी चाहिए</string>
+    <string name="error_no_qr_found">छवि में क्यूआर कोड नहीं मिला</string>
     <string name="cancel">रद्द</string>
     <string name="config_delete_error">कॉन्फ़िगरेशन फ़ाइल %s को नहीं हटा सकता</string>
     <string name="config_exists_error">“%s” के लिए कॉन्फ़िगरेशन पहले से मौजूद है</string>
@@ -132,10 +133,10 @@
     <string name="log_viewer_pref_title">एप्लिकेशन लॉग देखें</string>
     <string name="log_viewer_title">लॉग</string>
     <string name="logcat_error">लॉगकैट चलाने में असमर्थ: </string>
-    <string name="module_disabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
-    <string name="module_disabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
-    <string name="module_disabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
-    <string name="module_disabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
+    <string name="module_enabler_disabled_summary">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
+    <string name="module_enabler_disabled_title">कर्नेल मॉड्यूल बैकएंड सक्षम करें</string>
+    <string name="module_enabler_enabled_summary">धीमे यूजरस्पेस बैकएंड में स्थिरता में सुधार हो सकता है</string>
+    <string name="module_enabler_enabled_title">कर्नेल मॉड्यूल बैकएंड को अक्षम करें</string>
     <string name="module_installer_error">कुछ गलत हो गया। कृपया पुन: प्रयास करें</string>
     <string name="module_installer_initial">प्रयोगात्मक कर्नेल मॉड्यूल प्रदर्शन में सुधार कर सकता है</string>
     <string name="module_installer_not_found">आपके डिवाइस के लिए कोई मॉड्यूल उपलब्ध नहीं हैं</string>
@@ -202,6 +203,7 @@
     <string name="type_name_go_userspace">userspace पे जाए </string>
     <string name="type_name_kernel_module">कर्नेल मॉड्यूल</string>
     <string name="unknown_error">अज्ञात त्रुटि</string>
+    <string name="version_summary">%1$s बैकएंड %2$s</string>
     <string name="version_summary_checking">%s बैकएंड संस्करण की जाँच कर रहा है</string>
     <string name="version_summary_unknown">अज्ञात %s संस्करण</string>
     <string name="version_title">WireGuard for Android v%s</string>

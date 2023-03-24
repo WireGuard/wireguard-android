@@ -25,7 +25,7 @@
         <item quantity="other">%d applicazioni escluse</item>
     </plurals>
     <plurals name="set_included_applications">
-        <item quantity="one">%d applicazione esclusa</item>
+        <item quantity="one">%d applicazione inclusa</item>
         <item quantity="other">%d applicazioni incluse</item>
     </plurals>
     <plurals name="n_excluded_applications">
@@ -33,7 +33,7 @@
         <item quantity="other">%d escluse</item>
     </plurals>
     <plurals name="n_included_applications">
-        <item quantity="one">%d escluse</item>
+        <item quantity="one">%d inclusa</item>
         <item quantity="other">%d incluse</item>
     </plurals>
     <string name="all_applications">Tutte le applicazioni</string>
@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Sezione sconosciuta</string>
     <string name="bad_config_reason_value_out_of_range">Valore fuori scala</string>
     <string name="bad_extension_error">Il file deve essere .conf o .zip</string>
+    <string name="error_no_qr_found">Codice QR non trovato nell\'immagine</string>
+    <string name="error_qr_checksum">Verifica checksum del codice QR fallita</string>
     <string name="cancel">Annulla</string>
     <string name="config_delete_error">Impossibile eliminare il file di configurazione %s</string>
     <string name="config_exists_error">La configurazione per “%s” esiste già</string>
@@ -108,6 +110,7 @@
     <string name="disable_config_export_title">Disattiva esportazione config</string>
     <string name="disable_config_export_description">Disabilitare l\'esportazione della configurazione rende le chiavi private meno accessibili</string>
     <string name="dns_servers">Server DNS</string>
+    <string name="dns_search_domains">Domini di ricerca DNS</string>
     <string name="edit">Modifica</string>
     <string name="endpoint">Endpoint</string>
     <string name="error_down">Errore di disattivazione del tunnel: %s</string>
@@ -142,10 +145,10 @@
     <string name="log_viewer_pref_title">Visualizza log dell\'applicazione</string>
     <string name="log_viewer_title">Log</string>
     <string name="logcat_error">Impossibile eseguire logcat: </string>
-    <string name="module_disabler_disabled_summary">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
-    <string name="module_disabler_disabled_title">Abilita il backend del modulo del kernel</string>
-    <string name="module_disabler_enabled_summary">Il backend in userspace più lento potrebbe migliorare la stabilità</string>
-    <string name="module_disabler_enabled_title">Disabilita il backend del modulo del kernel</string>
+    <string name="module_enabler_disabled_summary">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
+    <string name="module_enabler_disabled_title">Abilita il backend del modulo del kernel</string>
+    <string name="module_enabler_enabled_summary">Il backend in userspace più lento potrebbe migliorare la stabilità</string>
+    <string name="module_enabler_enabled_title">Disabilita il backend del modulo del kernel</string>
     <string name="module_installer_error">Qualcosa non ha funzionato. Riprova</string>
     <string name="module_installer_initial">Il modulo sperimentale del kernel può migliorare le prestazioni</string>
     <string name="module_installer_not_found">Nessun modulo disponibile per il tuo dispositivo</string>

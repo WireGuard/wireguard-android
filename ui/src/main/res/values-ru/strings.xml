@@ -31,10 +31,10 @@
         <item quantity="other">Импортировано %d туннелей</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="one">%d Исключенное приложение</item>
-        <item quantity="few">%d Исключенных приложения</item>
-        <item quantity="many">%d Исключенных приложений</item>
-        <item quantity="other">%d Исключенных приложений</item>
+        <item quantity="one">%d исключенное приложение</item>
+        <item quantity="few">%d исключенных приложения</item>
+        <item quantity="many">%d исключенных приложений</item>
+        <item quantity="other">%d исключенных приложений</item>
     </plurals>
     <plurals name="set_included_applications">
         <item quantity="one">%d включенное приложение</item>
@@ -49,7 +49,7 @@
         <item quantity="other">%d исключено</item>
     </plurals>
     <plurals name="n_included_applications">
-        <item quantity="one">%d влючено</item>
+        <item quantity="one">%d включено</item>
         <item quantity="few">%d включено</item>
         <item quantity="many">%d включено</item>
         <item quantity="other">%d включено</item>
@@ -105,6 +105,8 @@
     <string name="bad_config_reason_unknown_section">Неизвестный раздел</string>
     <string name="bad_config_reason_value_out_of_range">Значение вне диапазона</string>
     <string name="bad_extension_error">Файл должен иметь формат .conf или .zip</string>
+    <string name="error_no_qr_found">QR-код не найден на изображении</string>
+    <string name="error_qr_checksum">Ошибка проверки контрольной суммы QR-кода</string>
     <string name="cancel">Отмена</string>
     <string name="config_delete_error">Не удалось удалить файл конфигурации %s</string>
     <string name="config_exists_error">Конфигурация для “%s” уже существует</string>
@@ -129,11 +131,12 @@
     <string name="delete">Удалить</string>
     <string name="tv_delete">Выберите туннель для удаления</string>
     <string name="tv_select_a_storage_drive">Выберите накопитель</string>
-    <string name="tv_no_file_picker">Пожалуйста установите утилиту управления файлами для их просмотра</string>
+    <string name="tv_no_file_picker">Пожалуйста, установите утилиту управления файлами для их просмотра</string>
     <string name="tv_add_tunnel_get_started">Добавьте туннель, чтобы начать</string>
     <string name="disable_config_export_title">Отключить экспорт конфигурации</string>
     <string name="disable_config_export_description">Отключение экспорта конфигурации делает приватные ключи менее доступными</string>
     <string name="dns_servers">DNS-серверы</string>
+    <string name="dns_search_domains">Домены поиска</string>
     <string name="edit">Изменить</string>
     <string name="endpoint">Конечная точка</string>
     <string name="error_down">Ошибка при выходе из туннеля: %s</string>
@@ -142,7 +145,7 @@
     <string name="error_up">Ошибка при запуске туннеля: %s</string>
     <string name="exclude_private_ips">Исключить частные IP-адреса</string>
     <string name="generate_new_private_key">Сгенерировать новый приватный ключ</string>
-    <string name="generic_error">Неизвестная “%s” ошибка</string>
+    <string name="generic_error">Неизвестная ошибка “%s”</string>
     <string name="hint_automatic">(авто)</string>
     <string name="hint_generated">(сгенерирован)</string>
     <string name="hint_optional">(опционально)</string>
@@ -157,7 +160,7 @@
     <string name="key_length_error">Неправильная длина ключа</string>
     <string name="key_length_explanation_base64">: ключи WireGuard base64 должны содержать 44 символа (32 байта)</string>
     <string name="key_length_explanation_binary">: ключи WireGuard должны быть 32 байта</string>
-    <string name="key_length_explanation_hex">: HEX ключи WireGuard должны содержать 64 символа (32 байта)</string>
+    <string name="key_length_explanation_hex">: HEX-ключи WireGuard должны содержать 64 символа (32 байта)</string>
     <string name="listen_port">Порт</string>
     <string name="log_export_error">Не удалось экспортировать журнал: %s</string>
     <string name="log_export_subject">Файл журнала WireGuard Android</string>
@@ -168,10 +171,10 @@
     <string name="log_viewer_pref_title">Просмотр журналов приложения</string>
     <string name="log_viewer_title">Журнал</string>
     <string name="logcat_error">Не удалось запустить logcat: </string>
-    <string name="module_disabler_disabled_summary">Экспериментальный модуль ядра может улучшить производительность</string>
-    <string name="module_disabler_disabled_title">Включить бэкэнд модуля ядра</string>
-    <string name="module_disabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
-    <string name="module_disabler_enabled_title">Отключить бэкэнд модуля ядра</string>
+    <string name="module_enabler_disabled_summary">Экспериментальный модуль ядра может улучшить производительность</string>
+    <string name="module_enabler_disabled_title">Включить бэкэнд модуля ядра</string>
+    <string name="module_enabler_enabled_summary">Пользовательское пространство немного медленнее и улучшает стабильность</string>
+    <string name="module_enabler_enabled_title">Отключить бэкэнд модуля ядра</string>
     <string name="module_installer_error">Что-то пошло не так. Пожалуйста, попробуйте еще раз</string>
     <string name="module_installer_initial">Экспериментальный модуль ядра может улучшить производительность</string>
     <string name="module_installer_not_found">Для вашего устройства нет доступных модулей</string>
@@ -191,7 +194,7 @@
     <string name="parse_error_inet_endpoint">конечная точка</string>
     <string name="parse_error_inet_network">IP-сеть</string>
     <string name="parse_error_integer">число</string>
-    <string name="parse_error_reason">Не удается спарсить %1$s “%2$s”</string>
+    <string name="parse_error_reason">Невозможно разобрать %1$s “%2$s”</string>
     <string name="peer">Пир</string>
     <string name="permission_description">управлять туннелями WireGuard, включая и отключая туннели по желанию, потенциально перенаправляя интернет-трафик</string>
     <string name="permission_label">управлять туннелями WireGuard</string>
@@ -200,7 +203,7 @@
     <string name="pre_shared_key_enabled">включено</string>
     <string name="private_key">Приватный ключ</string>
     <string name="public_key">Публичный ключ</string>
-    <string name="qr_code_hint">Совет: генерировать с `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="qr_code_hint">Совет: генерировать с “qrencode -t ansiutf8 &lt; tunnel.conf”.</string>
     <string name="restore_on_boot_summary_off">Не поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_title">Восстановить при загрузке</string>
@@ -235,15 +238,17 @@
     <string name="tunnel_create_error">Не удалось создать туннель: %s</string>
     <string name="tunnel_create_success">Успешно создан туннель “%s”</string>
     <string name="tunnel_error_already_exists">Туннель “%s” уже существует</string>
-    <string name="tunnel_error_invalid_name">Некорректное название</string>
+    <string name="tunnel_error_invalid_name">Неправильное имя</string>
     <string name="tunnel_list_placeholder">Добавьте туннель с помощью синей кнопки</string>
     <string name="tunnel_name">Название туннеля</string>
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
+    <string name="tunnel_dns_failure">Не удалось определить DNS имя: “%s”</string>
     <string name="tunnel_rename_error">Не удалось переименовать туннель: %s</string>
     <string name="tunnel_rename_success">Туннель успешно переименован в “%s”</string>
     <string name="type_name_go_userspace">Пользовательское пространство Go</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="version_summary">%1$s бэкенд %2$s</string>
     <string name="version_summary_checking">Проверка версии бэкэнда %s</string>
     <string name="version_summary_unknown">Неизвестная версия %s</string>
     <string name="version_title">WireGuard для Android v%s</string>
@@ -254,7 +259,7 @@
     <string name="zip_export_summary">Zip-файл будет сохранен в папке загрузок</string>
     <string name="zip_export_title">Экспорт туннелей в zip-файл</string>
     <string name="biometric_prompt_zip_exporter_title">Аутентификация для экспорта туннелей</string>
-    <string name="biometric_prompt_private_key_title">Аутентификация для просмотра закрытого ключа</string>
+    <string name="biometric_prompt_private_key_title">Аутентификация для просмотра приватного ключа</string>
     <string name="biometric_auth_error">Ошибка аутентификации</string>
     <string name="biometric_auth_error_reason">Ошибка аутентификации: %s</string>
 </resources>
