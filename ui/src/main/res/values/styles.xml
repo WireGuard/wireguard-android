@@ -18,6 +18,11 @@
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="android:windowBackground">@color/primary_color</item>
         <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
+        <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
+    </style>
+
+    <style name="WireGuardTheme.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">?attr/colorBackground</item>
     </style>
 
     <style name="AppTheme" parent="WireGuardTheme" />
