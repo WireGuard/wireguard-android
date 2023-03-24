@@ -8,9 +8,9 @@ package com.wireguard.android.widget
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.Switch
+import com.google.android.material.switchmaterial.SwitchMaterial
 
-class ToggleSwitch @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null) : Switch(context, attrs) {
+class ToggleSwitch @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : SwitchMaterial(context, attrs) {
     private var isRestoringState = false
     private var listener: OnBeforeCheckedChangeListener? = null
     override fun onRestoreInstanceState(state: Parcelable) {
