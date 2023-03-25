@@ -34,7 +34,8 @@
         android:descendantFocusability="beforeDescendants"
         android:focusable="true"
         android:nextFocusRight="@+id/tunnel_switch"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
 
         <TextView
             android:id="@+id/tunnel_name"
@@ -42,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{key}"
@@ -52,7 +53,7 @@
             android:id="@+id/tunnel_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tunnel_name"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:nextFocusLeft="@+id/tunnel_list_item"
             app:checked="@{item.state == State.UP}"
