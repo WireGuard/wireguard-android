@@ -19,6 +19,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.os.BundleCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -272,12 +273,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
             onSelectedTunnelChanged(null, selectedTunnel)
         } else {
             tunnel = selectedTunnel
-            val config: ConfigProxy = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                savedInstanceState.getParcelable(KEY_LOCAL_CONFIG, ConfigProxy::class.java)!!
-            } else {
-                @Suppress("DEPRECATION")
-                savedInstanceState.getParcelable(KEY_LOCAL_CONFIG)!!
-            }
+            val config = BundleCompat.getParcelable(savedInstanceState, KEY_LOCAL_CONFIG, ConfigProxy::class.java)!!
             val originalName = savedInstanceState.getString(KEY_ORIGINAL_NAME)
             if (tunnel != null && tunnel!!.name != originalName) onSelectedTunnelChanged(null, tunnel) else binding!!.config = config
         }
