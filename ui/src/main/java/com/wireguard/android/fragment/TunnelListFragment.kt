@@ -16,6 +16,8 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
@@ -46,6 +48,7 @@ import kotlinx.coroutines.launch
 class TunnelListFragment : BaseFragment() {
     private val actionModeListener = ActionModeListener()
     private var actionMode: ActionMode? = null
+    private var backPressedCallback: OnBackPressedCallback? = null
     private var binding: TunnelListFragmentBinding? = null
     private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
         if (data == null) return@registerForActivityResult
@@ -114,6 +117,9 @@ class TunnelListFragment : BaseFragment() {
             }
             executePendingBindings()
         }
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) { actionMode?.finish() }
+        backPressedCallback?.isEnabled = false
+
         return binding?.root
     }
 
@@ -238,6 +244,7 @@ class TunnelListFragment : BaseFragment() {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             actionMode = mode
+            backPressedCallback?.isEnabled = true
             if (activity != null) {
                 resources = activity!!.resources
             }
@@ -249,6 +256,7 @@ class TunnelListFragment : BaseFragment() {
 
         override fun onDestroyActionMode(mode: ActionMode) {
             actionMode = null
+            backPressedCallback?.isEnabled = false
             resources = null
             animateFab(binding?.createFab, true)
             checkedItems.clear()
