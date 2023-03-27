@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceBodySmall"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Fri Mar 13 10:17:37 GMT+05:30 2020" />
