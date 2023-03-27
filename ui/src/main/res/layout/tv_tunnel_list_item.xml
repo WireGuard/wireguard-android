@@ -45,10 +45,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_name"
-                style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.name}"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -56,9 +56,9 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tunnel_transfer"
-                style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

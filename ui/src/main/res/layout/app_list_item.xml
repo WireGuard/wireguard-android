@@ -39,7 +39,6 @@
 
         <TextView
             android:id="@+id/app_name"
-            style="?android:attr/textAppearanceMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -48,6 +47,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{key}"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="@tools:sample/full_names" />
 
         <CheckBox

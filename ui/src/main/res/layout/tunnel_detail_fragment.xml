@@ -50,10 +50,10 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/interface_title"
-                        style="@style/SectionText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/interface_title"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,7 +81,6 @@
 
                     <TextView
                         android:id="@+id/interface_name_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/name"
@@ -90,6 +89,7 @@
                         android:nextFocusForward="@id/public_key_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{tunnel.name}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/interface_name_label"
                         tools:text="wg0" />
@@ -106,7 +106,6 @@
 
                     <TextView
                         android:id="@+id/public_key_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/public_key"
@@ -118,6 +117,7 @@
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:singleLine="true"
                         android:text="@{config.interface.keyPair.publicKey.toBase64}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/public_key_label"
                         tools:text="wOs2eguFEohqIZxlSJ1CAT9584tc6ejj9hfGFsoBVkA=" />
@@ -135,7 +135,6 @@
 
                     <TextView
                         android:id="@+id/addresses_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/addresses"
@@ -144,6 +143,7 @@
                         android:nextFocusForward="@id/dns_servers_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.addresses}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{config.interface.addresses.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/addresses_label"
@@ -162,7 +162,6 @@
 
                     <TextView
                         android:id="@+id/dns_servers_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/dns_servers"
@@ -171,6 +170,7 @@
                         android:nextFocusForward="@id/dns_search_domains_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.dnsServers}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{config.interface.dnsServers.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/dns_servers_label"
@@ -189,7 +189,6 @@
 
                     <TextView
                         android:id="@+id/dns_search_domains_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/dns_search_domains"
@@ -198,6 +197,7 @@
                         android:nextFocusForward="@id/listen_port_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.dnsSearchDomains}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{config.interface.dnsSearchDomains.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/dns_search_domains_label"
@@ -218,7 +218,6 @@
 
                     <TextView
                         android:id="@+id/listen_port_text"
-                        style="@style/DetailText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/listen_port"
@@ -228,6 +227,7 @@
                         android:nextFocusForward="@id/mtu_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.listenPort}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{!config.interface.listenPort.isPresent() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintEnd_toStartOf="@id/mtu_label"
                         app:layout_constraintHorizontal_weight="0.5"
@@ -251,7 +251,6 @@
 
                     <TextView
                         android:id="@+id/mtu_text"
-                        style="@style/DetailText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/mtu"
@@ -260,6 +259,7 @@
                         android:nextFocusForward="@id/applications_text"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.mtu}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{!config.interface.mtu.isPresent() ? android.view.View.GONE : android.view.View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="0.5"
@@ -283,12 +283,11 @@
                         android:labelFor="@+id/applications_text"
                         android:text="@string/applications"
                         android:visibility="@{config.interface.includedApplications.isEmpty() &amp;&amp; config.interface.excludedApplications.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@+id/listen_port_mtu_barrier"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/listen_port_mtu_barrier" />
 
                     <TextView
                         android:id="@+id/applications_text"
-                        style="@style/DetailText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/applications"
@@ -297,9 +296,10 @@
                         android:nextFocusForward="@id/peers_layout"
                         android:onClick="@{ClipboardUtils::copyTextView}"
                         android:text="@{config.interface.includedApplications.isEmpty() ? @plurals/n_excluded_applications(config.interface.excludedApplications.size(), config.interface.excludedApplications.size()) : @plurals/n_included_applications(config.interface.includedApplications.size(), config.interface.includedApplications.size())}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         android:visibility="@{config.interface.includedApplications.isEmpty() &amp;&amp; config.interface.excludedApplications.isEmpty() ? android.view.View.GONE : android.view.View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@+id/applications_label"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/applications_label"
                         tools:text="8 excluded" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

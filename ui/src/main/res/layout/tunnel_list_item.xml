@@ -39,7 +39,6 @@
 
         <TextView
             android:id="@+id/tunnel_name"
-            style="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -47,14 +46,15 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{key}"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="@sample/interface_names.json/names/names/name" />
 
         <com.wireguard.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:nextFocusLeft="@+id/tunnel_list_item"
             app:checked="@{item.state == State.UP}"
             app:onBeforeCheckedChanged="@{fragment::setTunnelState}"
