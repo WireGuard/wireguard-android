@@ -39,8 +39,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import java.util.ArrayList
-import java.util.HashSet
 
 /**
  * Fragment containing a list of known WireGuard tunnels. It allows creating and deleting tunnels.
@@ -270,7 +268,7 @@ class TunnelListFragment : BaseFragment() {
             }
             val adapter = if (binding == null) null else binding!!.tunnelList.adapter
             if (actionMode == null && !checkedItems.isEmpty() && activity != null) {
-                (activity as AppCompatActivity?)!!.startSupportActionMode(this)
+                (activity as AppCompatActivity).startSupportActionMode(this)
             } else if (actionMode != null && checkedItems.isEmpty()) {
                 actionMode!!.finish()
             }
