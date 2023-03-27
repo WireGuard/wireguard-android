@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="AppTheme" parent="WireGuardTheme">
-        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
-        <item name="android:windowLightNavigationBar">@bool/light_navigation_bar</item>
-        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
-    </style>
-</resources>

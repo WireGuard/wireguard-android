@@ -34,10 +34,10 @@
         android:layout_margin="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
-        android:backgroundTint="@{(item.state == State.UP &amp;&amp; !isDeleting) ? @color/secondary_dark_color : (isDeleting &amp;&amp; isFocused) ? @color/tv_card_delete_background : @color/tv_card_background}"
         android:checkable="true"
         android:focusable="true"
-        app:contentPadding="8dp">
+        app:contentPadding="8dp"
+        android:backgroundTint="@{(item.state == State.UP &amp;&amp; !isDeleting) ? @color/tv_secondary_dark_color : (isDeleting &amp;&amp; isFocused) ? @color/tv_card_delete_background : @color/tv_card_background}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

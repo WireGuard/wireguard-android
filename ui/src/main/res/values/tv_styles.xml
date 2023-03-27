@@ -10,7 +10,6 @@
         <item name="colorOnSecondary">#ff0059c1</item>
         <item name="colorSurface">@color/tv_primary_color</item>
         <item name="colorOnSurface">#fffafafa</item>
-        <item name="colorBackground">@color/tv_primary_color</item>
         <item name="colorMultiselectActiveBackground">@color/list_multiselect_background</item>
         <item name="colorControlNormal">#fffafafa</item>
         <item name="elevationOverlayEnabled">false</item>
@@ -25,15 +24,10 @@
     <style name="TextInputLayoutBase" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">?attr/colorSecondary</item>
         <item name="hintTextColor">?attr/colorOnPrimary</item>
-        <item name="materialThemeOverlay">
-            @style/ThemeOverlay.AppTheme.TextInputEditText.OutlinedBox
-        </item>
     </style>
 
     <style name="TvTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="colorPrimary">@color/secondary_color</item>
-        <item name="colorSecondary">@color/secondary_color</item>
-        <item name="android:windowBackground">?attr/colorBackground</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
     <style name="TvTheme.MaterialCardView" parent="Widget.MaterialComponents.CardView">

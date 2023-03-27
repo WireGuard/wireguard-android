@@ -24,7 +24,7 @@
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorBackground"
+        android:background="?attr/colorSurface"
         android:clipChildren="false">
 
         <androidx.recyclerview.widget.RecyclerView

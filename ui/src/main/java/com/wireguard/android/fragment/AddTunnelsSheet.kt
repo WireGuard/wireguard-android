@@ -34,10 +34,6 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
         }
     }
 
-    override fun getTheme(): Int {
-        return R.style.BottomSheetDialogTheme
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (savedInstanceState != null) dismiss()
         val view = inflater.inflate(R.layout.add_tunnels_bottom_sheet, container, false)
@@ -76,7 +72,7 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
             }
         })
         val gradientDrawable = GradientDrawable().apply {
-            setColor(requireContext().resolveAttribute(R.attr.colorBackground))
+            setColor(requireContext().resolveAttribute(com.google.android.material.R.attr.colorSurface))
         }
         view.background = gradientDrawable
     }

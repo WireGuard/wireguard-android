@@ -28,7 +28,7 @@
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorBackground">
+        android:background="?attr/colorSurface">
 
         <ScrollView
             android:layout_width="match_parent"

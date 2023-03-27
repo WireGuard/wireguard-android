@@ -40,6 +40,7 @@ import com.wireguard.android.R
 import com.wireguard.android.databinding.LogViewerActivityBinding
 import com.wireguard.android.util.DownloadsFileSaver
 import com.wireguard.android.util.ErrorMessages
+import com.wireguard.android.util.resolveAttribute
 import com.wireguard.crypto.KeyPair
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,7 +71,7 @@ class LogViewerActivity : AppCompatActivity() {
         yearFormatter.format(Date())
     }
 
-    private val defaultColor by lazy { ResourcesCompat.getColor(resources, R.color.primary_text_color, theme) }
+    private val defaultColor by lazy { ResourcesCompat.getColor(resources, resolveAttribute(com.google.android.material.R.attr.colorOnSurface), theme) }
 
     private val debugColor by lazy { ResourcesCompat.getColor(resources, R.color.debug_tag_color, theme) }
 
