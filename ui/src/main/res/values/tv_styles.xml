@@ -10,7 +10,7 @@
         <item name="colorOnSecondary">#ff0059c1</item>
         <item name="colorSurface">@color/tv_primary_color</item>
         <item name="colorOnSurface">#fffafafa</item>
-        <item name="colorMultiselectActiveBackground">@color/list_multiselect_background</item>
+        <item name="colorMultiselectActiveBackground">@color/tv_list_multiselect_background</item>
         <item name="colorControlNormal">#fffafafa</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="android:statusBarColor">@color/tv_primary_color</item>

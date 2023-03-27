@@ -61,8 +61,6 @@
     <color name="md_theme_dark_outlineVariant">#44474F</color>
     <color name="md_theme_dark_scrim">#000000</color>
 
-    <color name="list_multiselect_background">#ffeeeeee</color>
-
     <!-- Log viewer tag colors -->
     <color name="debug_tag_color">#444444</color>
     <color name="error_tag_color">#aa0000</color>
