@@ -71,7 +71,7 @@ class LogViewerActivity : AppCompatActivity() {
         yearFormatter.format(Date())
     }
 
-    private val defaultColor by lazy { ResourcesCompat.getColor(resources, resolveAttribute(com.google.android.material.R.attr.colorOnSurface), theme) }
+    private val defaultColor by lazy { resolveAttribute(com.google.android.material.R.attr.colorOnSurface) }
 
     private val debugColor by lazy { ResourcesCompat.getColor(resources, R.color.debug_tag_color, theme) }
 
