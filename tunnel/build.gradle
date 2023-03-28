@@ -47,6 +47,11 @@ android {
     lint {
         disable 'LongLogTag', 'NewApi'
     }
+    publishing {
+        multipleVariants("release") {
+            allVariants()
+        }
+    }
 }
 
 dependencies {
