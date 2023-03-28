@@ -107,6 +107,9 @@
     <string name="tv_select_a_storage_drive">Wählen Sie ein Speicherlaufwerk</string>
     <string name="tv_no_file_picker">Bitte installieren Sie ein Dateiverwaltungsprogramm, um Dateien zu durchsuchen</string>
     <string name="tv_add_tunnel_get_started">Fügen Sie einen Tunnel hinzu, um loszulegen</string>
+    <string name="donate_title">♥ Spende an das WireGuard Projekt</string>
+    <string name="donate_summary">Jeder Beitrag hilft</string>
+    <string name="donate_google_play_disappointment">Vielen Dank für Ihre Unterstützung des WireGuard-Projekts!\n\nLeider ist es uns aufgrund der Google-Richtlinien nicht gestattet, einen Link zu dem Teil der Projekt-Webseite zu setzen, auf dem Sie eine Spende tätigen können. Hoffentlich finden Sie das heraus!\n\nNochmals vielen Dank für Ihren Beitrag.</string>
     <string name="disable_config_export_title">Deaktivieren Sie den Konfigurationsexport</string>
     <string name="disable_config_export_description">Durch Deaktivieren des Konfigurationsexports werden private Schlüssel weniger zugänglich</string>
     <string name="dns_servers">Nameserver</string>

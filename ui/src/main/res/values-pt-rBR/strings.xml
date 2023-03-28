@@ -29,8 +29,8 @@
     <string name="include_in_tunnel">Incluir somente</string>
     <string name="use_all_applications">Usar todas aplicações</string>
     <string name="add_peer">Adicionar Par</string>
-    <string name="addresses">Endereços</string>
-    <string name="applications">Aplicações</string>
+    <string name="addresses">Endereço:</string>
+    <string name="applications">Aplicativo</string>
     <string name="allow_remote_control_intents_summary_off">Aplicativos externos podem não alternar túneis (recomendado)</string>
     <string name="allow_remote_control_intents_summary_on">Aplicativos externos podem alternar túneis (avançado)</string>
     <string name="allow_remote_control_intents_title">Permitir controle remoto de apps</string>
