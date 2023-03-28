@@ -260,7 +260,7 @@ class LogViewerActivity : AppCompatActivity() {
 
         private fun levelToColor(level: String): Int {
             return when (level) {
-                "D" -> debugColor
+                "V", "D" -> debugColor
                 "E" -> errorColor
                 "I" -> infoColor
                 "W" -> warningColor
