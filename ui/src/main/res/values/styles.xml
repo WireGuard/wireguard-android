@@ -10,12 +10,12 @@
         <item name="android:navigationBarColor">?android:colorBackground</item>
         <item name="android:windowLightNavigationBar">@bool/light_navigation_bar</item>
         <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
-        <item name="materialCardViewStyle">@style/AppTheme.MaterialCardView</item>
+        <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
         <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
         <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
     </style>
 
-    <style name="AppTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
+    <style name="WireGuardTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
         <item name="cornerRadius">4dp</item>
         <item name="contentPadding">8dp</item>
     </style>
