@@ -1,0 +1,6 @@
+<resources>
+    <color name="debug_tag_color">#aaaaaa</color>
+    <color name="error_tag_color">#ff0000</color>
+    <color name="info_tag_color">#00ff00</color>
+    <color name="warning_tag_color">#ffff00</color>
+</resources>

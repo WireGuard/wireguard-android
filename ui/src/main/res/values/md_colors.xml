@@ -60,10 +60,4 @@
     <color name="md_theme_dark_surfaceTint">#ADC7FF</color>
     <color name="md_theme_dark_outlineVariant">#44474F</color>
     <color name="md_theme_dark_scrim">#000000</color>
-
-    <!-- Log viewer tag colors -->
-    <color name="debug_tag_color">#444444</color>
-    <color name="error_tag_color">#aa0000</color>
-    <color name="info_tag_color">#00aa00</color>
-    <color name="warning_tag_color">#aaaa00</color>
 </resources>
