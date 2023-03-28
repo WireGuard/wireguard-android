@@ -185,36 +185,47 @@ class LogViewerActivity : AppCompatActivity() {
                 return@withContext
             }
             val stdout = BufferedReader(InputStreamReader(process!!.inputStream, StandardCharsets.UTF_8))
-            var haveScrolled = false
-            val start = System.nanoTime()
-            var startPeriod = start
+
+            var posStart = 0
+            var timeLastNotify = System.nanoTime()
+            var priorModified = false
+            val bufferedLogLines = arrayListOf<LogLine>()
+            var timeout = 1000000000L / 2 // The timeout is initially small so that the view gets populated immediately.
+
             while (true) {
                 val line = stdout.readLine() ?: break
                 rawLogLines.append(line)
                 rawLogLines.append('\n')
                 val logLine = parseLine(line)
-                withContext(Dispatchers.Main.immediate) {
-                    if (logLine != null) {
-                        recyclerView?.let {
-                            val shouldScroll = haveScrolled && !it.canScrollVertically(1)
-                            logLines.add(logLine)
-                            if (haveScrolled) logAdapter.notifyDataSetChanged()
-                            if (shouldScroll)
-                                it.scrollToPosition(logLines.size - 1)
-                        }
-                    } else {
-                        logLines.lastOrNull()?.msg += "\n$line"
-                        if (haveScrolled) logAdapter.notifyDataSetChanged()
+                if (logLine != null) {
+                    bufferedLogLines.add(logLine)
+                } else {
+                    if (bufferedLogLines.isNotEmpty()) {
+                        bufferedLogLines.last().msg += "\n$line"
+                    } else if (logLines.isNotEmpty()) {
+                        logLines.last().msg += "\n$line"
+                        priorModified = true
                     }
-                    if (!haveScrolled) {
-                        val end = System.nanoTime()
-                        val scroll = (end - start) > 1000000000L * 2.5 || !stdout.ready()
-                        if (logLines.isNotEmpty() && (scroll || (end - startPeriod) > 1000000000L / 4)) {
-                            logAdapter.notifyDataSetChanged()
-                            recyclerView?.scrollToPosition(logLines.size - 1)
-                            startPeriod = end
-                        }
-                        if (scroll) haveScrolled = true
+                }
+                val timeNow = System.nanoTime()
+                if ((timeNow - timeLastNotify) < timeout && stdout.ready())
+                    continue
+                timeout = 1000000000L * 5 / 2 // Increase the timeout after the initial view has something in it.
+                timeLastNotify = timeNow
+
+                withContext(Dispatchers.Main.immediate) {
+                    val isScrolledToBottomAlready = recyclerView?.canScrollVertically(1) == false
+                    if (priorModified) {
+                        logAdapter.notifyItemChanged(posStart - 1)
+                        priorModified = false
+                    }
+                    logLines.addAll(bufferedLogLines)
+                    bufferedLogLines.clear()
+                    logAdapter.notifyItemRangeInserted(posStart, logLines.size - posStart)
+                    posStart = logLines.size
+
+                    if (isScrolledToBottomAlready) {
+                        recyclerView?.scrollToPosition(logLines.size - 1)
                     }
                 }
             }
