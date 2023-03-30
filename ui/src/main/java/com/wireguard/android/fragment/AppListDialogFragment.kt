@@ -154,6 +154,7 @@ class AppListDialogFragment : DialogFragment() {
         const val KEY_SELECTED_APPS = "selected_apps"
         const val KEY_IS_EXCLUDED = "is_excluded"
         const val REQUEST_SELECTION = "request_selection"
+
         fun newInstance(selectedApps: ArrayList<String?>?, isExcluded: Boolean): AppListDialogFragment {
             val extras = Bundle()
             extras.putStringArrayList(KEY_SELECTED_APPS, selectedApps)

@@ -125,27 +125,20 @@ class Application : android.app.Application() {
         private const val TAG = "WireGuard/Application"
         private lateinit var weakSelf: WeakReference<Application>
 
-        @JvmStatic
         fun get(): Application {
             return weakSelf.get()!!
         }
 
-        @JvmStatic
         suspend fun getBackend() = get().futureBackend.await()
 
-        @JvmStatic
         fun getRootShell() = get().rootShell
 
-        @JvmStatic
         fun getPreferencesDataStore() = get().preferencesDataStore
 
-        @JvmStatic
         fun getToolsInstaller() = get().toolsInstaller
 
-        @JvmStatic
         fun getTunnelManager() = get().tunnelManager
 
-        @JvmStatic
         fun getCoroutineScope() = get().coroutineScope
     }
 

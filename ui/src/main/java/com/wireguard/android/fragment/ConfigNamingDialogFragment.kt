@@ -70,7 +70,6 @@ class ConfigNamingDialogFragment : DialogFragment() {
     companion object {
         private const val KEY_CONFIG_TEXT = "config_text"
 
-        @JvmStatic
         fun newInstance(configText: String?): ConfigNamingDialogFragment {
             val extras = Bundle()
             extras.putString(KEY_CONFIG_TEXT, configText)
