@@ -62,7 +62,7 @@ class TunnelListFragment : BaseFragment() {
                     TunnelImporter.importTunnel(parentFragmentManager, result.text) { showSnackbar(it) }
                 } catch (e: Exception) {
                     val error = ErrorMessages[e]
-                    val message = requireContext().getString(R.string.import_error, error)
+                    val message = Application.get().resources.getString(R.string.import_error, error)
                     Log.e(TAG, message, e)
                     showSnackbar(message)
                 }
