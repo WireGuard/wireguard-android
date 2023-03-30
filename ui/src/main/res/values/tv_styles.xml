@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="TvTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="TvTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/tv_primary_color</item>
         <item name="colorOnPrimary">#fffafafa</item>
         <item name="colorPrimaryDark">@color/tv_primary_color</item>
@@ -20,7 +20,7 @@
         <item name="materialCardViewStyle">@style/TvTheme.MaterialCardView</item>
     </style>
 
-    <style name="TvTheme.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+    <style name="TvTheme.Dialog" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="android:windowBackground">?attr/colorSurface</item>
     </style>
 
