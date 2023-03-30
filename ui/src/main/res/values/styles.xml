@@ -5,15 +5,14 @@
         <item name="android:background">?attr/colorSurface</item>
     </style>
 
-    <style name="AppTheme" parent="WireGuardTheme">
-        <item name="android:statusBarColor">?android:colorBackground</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:windowLightNavigationBar">@bool/light_navigation_bar</item>
-        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
+    <style name="AppThemeBase" parent="WireGuardTheme">
         <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
         <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
         <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
     </style>
+
+    <!-- Various additional API-specific features in values-v*/styles.xml -->
+    <style name="AppTheme" parent="AppThemeBase"/>
 
     <style name="WireGuardTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
         <item name="cornerRadius">4dp</item>
