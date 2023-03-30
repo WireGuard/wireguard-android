@@ -239,7 +239,6 @@
     <string name="tunnel_create_success">Тунель успішно створено “%s”</string>
     <string name="tunnel_error_already_exists">Тунель \"%s\" вже існує</string>
     <string name="tunnel_error_invalid_name">Неприпустиме ім\'я</string>
-    <string name="tunnel_list_placeholder">Додайте тунель за допомогою синьої кнопки</string>
     <string name="tunnel_name">Назва тунелю</string>
     <string name="tunnel_on_error">Неможливо ввімкнути тунель (wgTurnon returned %d)</string>
     <string name="tunnel_dns_failure">Не вдалося знайти DNS хост: “%s</string>

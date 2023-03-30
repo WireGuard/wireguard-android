@@ -237,7 +237,6 @@
     <string name="tunnel_create_success">Tunel „%s“ uspešno ustvarjen</string>
     <string name="tunnel_error_already_exists">Tunel „%s“ že obstaja</string>
     <string name="tunnel_error_invalid_name">Neveljavno ime</string>
-    <string name="tunnel_list_placeholder">Dodaj tunel s klikom na modri gumb</string>
     <string name="tunnel_name">Ime tunela</string>
     <string name="tunnel_on_error">Tunela ni bilo mogoče vključiti (wgTurnOn je vrnil %d)</string>
     <string name="tunnel_dns_failure">Imena DNS gostitelja ni bilo mogoče razrešiti: \"%s\"</string>

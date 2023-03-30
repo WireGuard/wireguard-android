@@ -213,7 +213,6 @@
     <string name="tunnel_create_success">Lyckades skapa tunnel “%s”</string>
     <string name="tunnel_error_already_exists">Tunnel ”%s” finns redan</string>
     <string name="tunnel_error_invalid_name">Ogiltigt namn</string>
-    <string name="tunnel_list_placeholder">Lägg till en tunnel via blåa knappen</string>
     <string name="tunnel_name">Tunnelns namn</string>
     <string name="tunnel_on_error">Kunde inte aktivera tunneln (wgTurnOn returnerade %d)</string>
     <string name="tunnel_dns_failure">Det går inte att lösa DNS-värdnamn: ”%s”</string>

@@ -179,7 +179,6 @@
     <string name="tunnel_create_success">උමග \"%s\" සාර්ථකව නිර්මාණය කරන ලදී</string>
     <string name="tunnel_error_already_exists">උමං \"%s\" දැනටමත් පවතී</string>
     <string name="tunnel_error_invalid_name">වලංගු නොවන නමකි</string>
-    <string name="tunnel_list_placeholder">නිල් බොත්තම භාවිතයෙන් උමගක් එක් කරන්න</string>
     <string name="tunnel_name">උමං නම</string>
     <string name="tunnel_on_error">උමග ක්‍රියාත්මක කළ නොහැක (wgTurnOn %dආපසු ලබා දෙන ලදී)</string>
     <string name="tunnel_dns_failure">DNS සත්කාරක නාමය විසඳිය නොහැක: \"%s\"</string>

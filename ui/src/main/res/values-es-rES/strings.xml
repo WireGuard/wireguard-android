@@ -213,7 +213,6 @@
     <string name="tunnel_create_success">Túnel creado con éxito “%s”</string>
     <string name="tunnel_error_already_exists">Túnel “%s” ya existe</string>
     <string name="tunnel_error_invalid_name">Nombre inválido</string>
-    <string name="tunnel_list_placeholder">Añadir un túnel usando el botón azul</string>
     <string name="tunnel_name">Nombre del túnel</string>
     <string name="tunnel_on_error">No se puede activar el túnel (wgTurnOn devolvió %d)</string>
     <string name="tunnel_dns_failure">No se puede resolver el nombre de host DNS: “%s”</string>

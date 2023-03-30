@@ -204,7 +204,6 @@
     <string name="tunnel_create_success">El túnel \"%s\" s\'ha creat correctament</string>
     <string name="tunnel_error_already_exists">El túnel \"%s\" ja existeix</string>
     <string name="tunnel_error_invalid_name">Nom no vàlid</string>
-    <string name="tunnel_list_placeholder">Afegiu un túnel usant el botó blau</string>
     <string name="tunnel_name">Nom del túnel</string>
     <string name="tunnel_on_error">No s\'ha estat capaç d\'activar el túnel (wgTurnOn ha retornat %d)</string>
     <string name="tunnel_dns_failure">Impossible resoldre el nom del domini \"%s\"</string>

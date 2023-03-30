@@ -239,7 +239,6 @@
     <string name="tunnel_create_success">Успешно создан туннель “%s”</string>
     <string name="tunnel_error_already_exists">Туннель “%s” уже существует</string>
     <string name="tunnel_error_invalid_name">Неправильное имя</string>
-    <string name="tunnel_list_placeholder">Добавьте туннель с помощью синей кнопки</string>
     <string name="tunnel_name">Название туннеля</string>
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
     <string name="tunnel_dns_failure">Не удалось определить DNS имя: “%s”</string>

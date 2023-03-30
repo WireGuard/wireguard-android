@@ -200,7 +200,6 @@
     <string name="tunnel_create_success">Tunel “%s” Berhasil dibuat</string>
     <string name="tunnel_error_already_exists">Tunel “%s” sudah ada</string>
     <string name="tunnel_error_invalid_name">Nama tidak valid</string>
-    <string name="tunnel_list_placeholder">Tambahkan tunel menggunakan tombol +</string>
     <string name="tunnel_name">Nama tunel</string>
     <string name="tunnel_on_error">Tidak dapat mengaktifkan tunel (wgTurnOn %d dikembalikan)</string>
     <string name="tunnel_dns_failure">Tidak bisa mencari nama host DNS \"%s\"</string>

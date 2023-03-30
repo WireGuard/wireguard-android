@@ -213,7 +213,6 @@
     <string name="tunnel_create_success">Tünel başarıyla oluşturuldu “%s”</string>
     <string name="tunnel_error_already_exists">“%s” tüneli zaten mevcut</string>
     <string name="tunnel_error_invalid_name">Geçersiz isim</string>
-    <string name="tunnel_list_placeholder">Mavi düğmeyi kullanarak bir tünel ekleyin</string>
     <string name="tunnel_name">Tünel İsmi</string>
     <string name="tunnel_on_error">Tünel aktif edilemiyor (wgTornOn döndürdü: %d)</string>
     <string name="tunnel_dns_failure">DNS adı çözülemedi: \"%s\"</string>

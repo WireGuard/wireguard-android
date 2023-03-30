@@ -138,7 +138,6 @@
     <string name="tunnel_create_success">Úspešne vytvorený tunel “%s”</string>
     <string name="tunnel_error_already_exists">Tunel “%s” už existuje</string>
     <string name="tunnel_error_invalid_name">Neplatný názov</string>
-    <string name="tunnel_list_placeholder">Pridajte tunel pomocou modrého tlačidla</string>
     <string name="tunnel_name">Meno tunelu</string>
     <string name="tunnel_rename_error">Nepodarilo sa premenovať tunel: %s</string>
     <string name="tunnel_rename_success">Úspešne premenovaný tunel na “%s”</string>

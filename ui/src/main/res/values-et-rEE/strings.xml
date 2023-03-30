@@ -213,7 +213,6 @@
     <string name="tunnel_create_success">Tunnel \"%s\" lisatud</string>
     <string name="tunnel_error_already_exists">Tunnel \"%s\" on juba olemas</string>
     <string name="tunnel_error_invalid_name">Sobimatu nimi</string>
-    <string name="tunnel_list_placeholder">Lisa tunnel sinise nupu kaudu</string>
     <string name="tunnel_name">Tunneli nimi</string>
     <string name="tunnel_on_error">Tunneli sisselülitamine ebaõnnestus (wgTurnOn tagastas %d)</string>
     <string name="tunnel_dns_failure">Ei saa lahendada DNS hostinime: \"%s\"</string>

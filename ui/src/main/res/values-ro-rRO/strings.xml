@@ -226,7 +226,6 @@
     <string name="tunnel_create_success">Tunelul „%s” a fost creat</string>
     <string name="tunnel_error_already_exists">Tunelul „%s” există deja</string>
     <string name="tunnel_error_invalid_name">Nume invalid</string>
-    <string name="tunnel_list_placeholder">Adaugă un tunel folosind butonul albastru</string>
     <string name="tunnel_name">Numele tunelului</string>
     <string name="tunnel_on_error">Tunelul nu poate fi pornit (wgTurnOn a returnat %d)</string>
     <string name="tunnel_dns_failure">Nu se poate rezolva numele gazdei DNS: „%s”</string>

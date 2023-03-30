@@ -198,7 +198,6 @@
     <string name="tunnel_create_success">トンネル \"%s\" を作成しました</string>
     <string name="tunnel_error_already_exists">トンネル “%s” はすでに存在します</string>
     <string name="tunnel_error_invalid_name">不正な名前</string>
-    <string name="tunnel_list_placeholder">青ボタンでトンネルを追加</string>
     <string name="tunnel_name">トンネル名</string>
     <string name="tunnel_on_error">トンネルを有効にできません (wgTurnOn が %d を返却)</string>
     <string name="tunnel_dns_failure">DNSホスト名を解決できませんでした: “%s”</string>

@@ -215,7 +215,6 @@
     <string name="tunnel_create_success">تم إنشاء نفق \"%s\" بنجاح</string>
     <string name="tunnel_error_already_exists">النفق \"%s\" موجود بالفعل</string>
     <string name="tunnel_error_invalid_name">إسم غير صالح</string>
-    <string name="tunnel_list_placeholder">إضافة نفق باستخدام الزر الأزرق</string>
     <string name="tunnel_name">إسم النفق</string>
     <string name="tunnel_on_error">غير قادر على تشغيل النفق (wgTurnOn أعاد %d)</string>
     <string name="tunnel_dns_failure">غير قادر على حل اسم مضيف نظام أسماء النطاقات (DNS hostname): \"%s\"</string>

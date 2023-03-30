@@ -154,7 +154,6 @@
     <string name="tunnel_create_success">सफलतापूर्वक बनाया गया टनल “%s”</string>
     <string name="tunnel_error_already_exists">टनल “%s” पहले से मौजूद है</string>
     <string name="tunnel_error_invalid_name">गलत नाम</string>
-    <string name="tunnel_list_placeholder">नीले बटन का उपयोग करके एक टनल को जोड़ें</string>
     <string name="tunnel_name">टनल का नाम</string>
     <string name="tunnel_on_error">टनल चालू करने में असमर्थ (wgTurnOn लौटा %d)</string>
     <string name="tunnel_rename_error">टनल का नाम बदलने में असमर्थ: %s</string>

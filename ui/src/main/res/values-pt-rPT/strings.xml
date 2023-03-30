@@ -210,7 +210,6 @@
     <string name="tunnel_create_success">Túnel criado com sucesso “%s”</string>
     <string name="tunnel_error_already_exists">O túnel “%s” já existe</string>
     <string name="tunnel_error_invalid_name">Nome inválido</string>
-    <string name="tunnel_list_placeholder">Adicionar um túnel com o botão azul</string>
     <string name="tunnel_name">Nome do túnel</string>
     <string name="tunnel_on_error">Não foi possível ligar o túnel (wgTurnOn retornou %d)</string>
     <string name="tunnel_rename_error">Não foi possível renomear o túnel: %s</string>

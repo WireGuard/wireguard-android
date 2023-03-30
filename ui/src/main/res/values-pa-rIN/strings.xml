@@ -210,7 +210,6 @@
     <string name="tunnel_create_success">“%s” ਟਨਲ ਕਾਮਯਾਬੀ ਨਾਲ ਬਣਾਈ</string>
     <string name="tunnel_error_already_exists">ਟਨਲ “%s” ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ</string>
     <string name="tunnel_error_invalid_name">ਅਯੋਗ ਨਾਂ</string>
-    <string name="tunnel_list_placeholder">ਨੀਲੇ ਬਟਨ ਨੂੰ ਵਰਤ ਕੇ ਟਨਲ ਬਣਾਓ</string>
     <string name="tunnel_name">ਟਨਲ ਦਾ ਨਾਂ</string>
     <string name="tunnel_on_error">ਟਨਲ ਚਾਲੂ ਕਰਨ ਲਈ ਅਸਮਰੱਥ (wgTurnOn ਨੇ %d ਵਾਪਸ ਕੀਤਾ)</string>
     <string name="tunnel_rename_error">ਟਨਲ ਨਾਂ-ਬਦਲਣ ਲਈ ਅਸਮਰੱਥ: %s</string>

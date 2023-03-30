@@ -215,7 +215,6 @@
     <string name="tunnel_create_success">تونل “%s” با موفقیت ساخته شد</string>
     <string name="tunnel_error_already_exists">تونل “%s” از قبل وجود دارد</string>
     <string name="tunnel_error_invalid_name">نام نامعتبر</string>
-    <string name="tunnel_list_placeholder">به‌وسیله دکمه آبی یک تونل بیفزایید</string>
     <string name="tunnel_name">نام تونل</string>
     <string name="tunnel_on_error">روشن کردن تونل امکان پذیر نیست (wgTurnOn برگشت %d )</string>
     <string name="tunnel_dns_failure">ناتوان در یافتن DNS نام میزبان: \"%s\"</string>

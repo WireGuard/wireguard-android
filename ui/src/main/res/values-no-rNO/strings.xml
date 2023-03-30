@@ -210,7 +210,6 @@
     <string name="tunnel_create_success">Opprettet tunnelen «%s»</string>
     <string name="tunnel_error_already_exists">Tunnel «%s» finnes allerede</string>
     <string name="tunnel_error_invalid_name">Ugyldig navn</string>
-    <string name="tunnel_list_placeholder">Opprett ny tunnel med den blå knappen</string>
     <string name="tunnel_name">Tunnelnavn</string>
     <string name="tunnel_on_error">Kan ikke slå på tunnel (wgTurnOn returnerte %d)</string>
     <string name="tunnel_rename_error">Kan ikke endre navn på tunnel: %s</string>
