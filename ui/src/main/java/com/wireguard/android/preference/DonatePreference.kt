@@ -6,11 +6,11 @@
 package com.wireguard.android.preference
 
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.AttributeSet
+import android.widget.Toast
 import androidx.preference.Preference
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
@@ -32,7 +32,8 @@ class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(cont
         intent.data = Uri.parse("https://www.wireguard.com/donations/")
         try {
             context.startActivity(intent)
-        } catch (ignored: ActivityNotFoundException) {
+        } catch (e: Throwable) {
+            Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }
