@@ -17,13 +17,16 @@ import kotlinx.coroutines.launch
  */
 abstract class BaseActivity : ThemeChangeAwareActivity() {
     private val selectionChangeRegistry = SelectionChangeRegistry()
+    private var created = false
     var selectedTunnel: ObservableTunnel? = null
         set(value) {
             val oldTunnel = field
             if (oldTunnel == value) return
             field = value
-            onSelectedTunnelChanged(oldTunnel, value)
-            selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, value)
+            if (created) {
+                onSelectedTunnelChanged(oldTunnel, value)
+                selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, value)
+            }
         }
 
     fun addOnSelectedTunnelChangedListener(listener: OnSelectedTunnelChangedListener) {
@@ -39,10 +42,17 @@ abstract class BaseActivity : ThemeChangeAwareActivity() {
             intent != null -> intent.getStringExtra(KEY_SELECTED_TUNNEL)
             else -> null
         }
-        if (savedTunnelName != null)
+        if (savedTunnelName != null) {
             lifecycleScope.launch {
-                selectedTunnel = Application.getTunnelManager().getTunnels()[savedTunnelName]
+                val tunnel = Application.getTunnelManager().getTunnels()[savedTunnelName]
+                if (tunnel == null)
+                    created = true
+                selectedTunnel = tunnel
+                created = true
             }
+        } else {
+            created = true
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
