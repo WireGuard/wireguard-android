@@ -115,7 +115,7 @@ class TunnelListFragment : BaseFragment() {
                         }
                     }
                 }
-                bottomSheet.show(childFragmentManager, "BOTTOM_SHEET")
+                bottomSheet.showNow(childFragmentManager, "BOTTOM_SHEET")
             }
             executePendingBindings()
         }
