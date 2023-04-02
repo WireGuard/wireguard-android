@@ -4,22 +4,27 @@
  */
 package com.wireguard.android.viewmodel
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.core.os.ParcelCompat
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import com.wireguard.config.Peer
-import java.util.ArrayList
 
 class ConfigProxy : Parcelable {
     val `interface`: InterfaceProxy
     val peers: ObservableList<PeerProxy> = ObservableArrayList()
 
     private constructor(parcel: Parcel) {
-        `interface` = InterfaceProxy.CREATOR.createFromParcel(parcel)
-        parcel.readTypedList(peers, PeerProxy.CREATOR)
+        `interface` = ParcelCompat.readParcelable(parcel, InterfaceProxy::class.java.classLoader, InterfaceProxy::class.java) ?: InterfaceProxy()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ParcelCompat.readParcelableList(parcel, peers, PeerProxy::class.java.classLoader, PeerProxy::class.java)
+        } else {
+            parcel.readTypedList(peers, PeerProxy.CREATOR)
+        }
         peers.forEach { it.bind(this) }
     }
 
@@ -57,7 +62,11 @@ class ConfigProxy : Parcelable {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeParcelable(`interface`, flags)
-        dest.writeTypedList(peers)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dest.writeParcelableList(peers, flags)
+        } else {
+            dest.writeTypedList(peers)
+        }
     }
 
     private class ConfigProxyCreator : Parcelable.Creator<ConfigProxy> {
