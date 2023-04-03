@@ -120,6 +120,7 @@
     <string name="error_down">Error bringing down tunnel: %s</string>
     <string name="error_fetching_apps">Error fetching apps list: %s</string>
     <string name="error_root">Please obtain root access and try again</string>
+    <string name="error_prepare">Error preparing tunnel: %s</string>
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="exclude_private_ips">Exclude private IPs</string>
     <string name="generate_new_private_key">Generate new private key</string>

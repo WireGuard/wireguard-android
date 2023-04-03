@@ -67,12 +67,20 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         val activity = activity ?: return
         activity.lifecycleScope.launch {
             if (Application.getBackend() is GoBackend) {
-                val intent = GoBackend.VpnService.prepare(activity)
-                if (intent != null) {
-                    pendingTunnel = tunnel
-                    pendingTunnelUp = checked
-                    permissionActivityResultLauncher.launch(intent)
-                    return@launch
+                try {
+                    val intent = GoBackend.VpnService.prepare(activity)
+                    if (intent != null) {
+                        pendingTunnel = tunnel
+                        pendingTunnelUp = checked
+                        permissionActivityResultLauncher.launch(intent)
+                        return@launch
+                    }
+                } catch (e: Throwable) {
+                    val message = activity.getString(R.string.error_prepare, ErrorMessages[e])
+                    Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+                        .setAnchorView(view.findViewById(R.id.create_fab))
+                        .show()
+                    Log.e(TAG, message, e)
                 }
             }
             setTunnelStateWithPermissionsResult(tunnel, checked)
