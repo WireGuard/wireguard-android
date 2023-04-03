@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.collection.CircularArray
 import androidx.core.app.ShareCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
@@ -62,8 +63,8 @@ import java.util.regex.Pattern
 class LogViewerActivity : AppCompatActivity() {
     private lateinit var binding: LogViewerActivityBinding
     private lateinit var logAdapter: LogEntryAdapter
-    private var logLines = arrayListOf<LogLine>()
-    private var rawLogLines = StringBuffer()
+    private var logLines = CircularArray<LogLine>()
+    private var rawLogLines = CircularArray<String>()
     private var recyclerView: RecyclerView? = null
     private var saveButton: MenuItem? = null
     private val year by lazy {
@@ -113,7 +114,7 @@ class LogViewerActivity : AppCompatActivity() {
         binding.shareFab.setOnClickListener {
             revokeLastUri()
             val key = KeyPair().privateKey.toHex()
-            LOGS[key] = rawLogLines.toString().toByteArray(Charsets.UTF_8)
+            LOGS[key] = rawLogBytes()
             lastUri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.exported-log/$key")
             val shareIntent = ShareCompat.IntentBuilder(this)
                     .setType("text/plain")
@@ -150,13 +151,24 @@ class LogViewerActivity : AppCompatActivity() {
 
     private val downloadsFileSaver = DownloadsFileSaver(this)
 
+    private fun rawLogBytes() : ByteArray {
+        val builder = StringBuilder()
+        for (i in 0 until rawLogLines.size()) {
+            builder.append(rawLogLines[i])
+            builder.append('\n')
+        }
+        val ret = builder.toString().toByteArray(Charsets.UTF_8)
+        builder.clear()
+        return ret
+    }
+
     private suspend fun saveLog() {
         var exception: Throwable? = null
         var outputFile: DownloadsFileSaver.DownloadsFile? = null
         withContext(Dispatchers.IO) {
             try {
                 outputFile = downloadsFileSaver.save("wireguard-log.txt", "text/plain", true)
-                outputFile?.outputStream?.write(rawLogLines.toString().toByteArray(Charsets.UTF_8))
+                outputFile?.outputStream?.write(rawLogBytes())
             } catch (e: Throwable) {
                 outputFile?.delete()
                 exception = e
@@ -191,24 +203,27 @@ class LogViewerActivity : AppCompatActivity() {
             var priorModified = false
             val bufferedLogLines = arrayListOf<LogLine>()
             var timeout = 1000000000L / 2 // The timeout is initially small so that the view gets populated immediately.
+            val MAX_LINES = (1 shl 17) - 1
+            val MAX_BUFFERED_LINES = (1 shl 14) - 1
 
             while (true) {
                 val line = stdout.readLine() ?: break
-                rawLogLines.append(line)
-                rawLogLines.append('\n')
+                if (rawLogLines.size() >= MAX_LINES)
+                    rawLogLines.popFirst()
+                rawLogLines.addLast(line)
                 val logLine = parseLine(line)
                 if (logLine != null) {
                     bufferedLogLines.add(logLine)
                 } else {
                     if (bufferedLogLines.isNotEmpty()) {
                         bufferedLogLines.last().msg += "\n$line"
-                    } else if (logLines.isNotEmpty()) {
-                        logLines.last().msg += "\n$line"
+                    } else if (!logLines.isEmpty) {
+                        logLines[logLines.size() - 1].msg += "\n$line"
                         priorModified = true
                     }
                 }
                 val timeNow = System.nanoTime()
-                if ((timeNow - timeLastNotify) < timeout && stdout.ready())
+                if (bufferedLogLines.size < MAX_BUFFERED_LINES && (timeNow - timeLastNotify) < timeout && stdout.ready())
                     continue
                 timeout = 1000000000L * 5 / 2 // Increase the timeout after the initial view has something in it.
                 timeLastNotify = timeNow
@@ -219,13 +234,23 @@ class LogViewerActivity : AppCompatActivity() {
                         logAdapter.notifyItemChanged(posStart - 1)
                         priorModified = false
                     }
-                    logLines.addAll(bufferedLogLines)
+                    val fullLen = logLines.size() + bufferedLogLines.size
+                    if (fullLen >= MAX_LINES) {
+                        val numToRemove = fullLen - MAX_LINES + 1
+                        logLines.removeFromStart(numToRemove)
+                        logAdapter.notifyItemRangeRemoved(0, numToRemove)
+                        posStart -= numToRemove
+
+                    }
+                    for (bufferedLine in bufferedLogLines) {
+                        logLines.addLast(bufferedLine)
+                    }
                     bufferedLogLines.clear()
-                    logAdapter.notifyItemRangeInserted(posStart, logLines.size - posStart)
-                    posStart = logLines.size
+                    logAdapter.notifyItemRangeInserted(posStart, logLines.size() - posStart)
+                    posStart = logLines.size()
 
                     if (isScrolledToBottomAlready) {
-                        recyclerView?.scrollToPosition(logLines.size - 1)
+                        recyclerView?.scrollToPosition(logLines.size() - 1)
                     }
                 }
             }
@@ -279,7 +304,7 @@ class LogViewerActivity : AppCompatActivity() {
             }
         }
 
-        override fun getItemCount() = logLines.size
+        override fun getItemCount() = logLines.size()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
