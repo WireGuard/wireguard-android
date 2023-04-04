@@ -32,6 +32,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.backend.GoBackend
@@ -199,7 +200,12 @@ class TvMainActivity : AppCompatActivity() {
                 try {
                     tunnelFileImportResultLauncher.launch("*/*")
                 } catch (_: Throwable) {
-                    Toast.makeText(this@TvMainActivity, getString(R.string.tv_no_file_picker), Toast.LENGTH_LONG).show()
+                    MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false).setPositiveButton(android.R.string.ok) { _, _ ->
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://webstoreredirect")))
+                        } catch (_: Throwable) {
+                        }
+                    }.show()
                 }
             }
         }
