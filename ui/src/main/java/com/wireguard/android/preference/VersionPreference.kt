@@ -16,6 +16,7 @@ import com.wireguard.android.R
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.GoBackend
 import com.wireguard.android.backend.WgQuickBackend
+import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
         try {
             context.startActivity(intent)
         } catch (e: Throwable) {
-            Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
         }
     }
 

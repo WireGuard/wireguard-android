@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.preference.Preference
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.util.ErrorMessages
 
 class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     override fun getSummary() = context.getString(R.string.donate_summary)
@@ -33,7 +34,7 @@ class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(cont
         try {
             context.startActivity(intent)
         } catch (e: Throwable) {
-            Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
         }
     }
 }
