@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item                               app:state_isUp="true"   app:state_isDeleting="false"    android:color="?attr/colorPrimaryInverse" />
+    <item android:state_focused="true"                          app:state_isDeleting="true"     android:color="?attr/colorErrorContainer" />
+    <item                                                                                       android:color="?attr/colorOnSurfaceInverse" />
+</selector>

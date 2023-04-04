@@ -4,4 +4,8 @@
         <attr name="state_multiselected" format="boolean" />
         <attr name="colorMultiselectActiveBackground" format="reference|color" />
     </declare-styleable>
+    <declare-styleable name="TvCardView">
+        <attr name="state_isUp" format="boolean" />
+        <attr name="state_isDeleting" format="boolean" />
+    </declare-styleable>
 </resources>

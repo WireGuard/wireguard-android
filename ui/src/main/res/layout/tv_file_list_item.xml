@@ -21,7 +21,6 @@
         android:layout_margin="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
-        android:backgroundTint="@color/tv_card_background"
         android:checkable="true"
         android:focusable="true"
         app:contentPadding="8dp">
@@ -35,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:text="@{key}"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
-                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

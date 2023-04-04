@@ -135,7 +135,6 @@
             android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
             app:icon="@{filesRoot.isEmpty ? @drawable/ic_action_add_white : @drawable/ic_arrow_back}"
             app:iconPadding="0dp"
-            app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -149,7 +148,6 @@
             android:visibility="@{((tunnels.isEmpty &amp;&amp; !isDeleting) || !filesRoot.isEmpty) ? View.GONE : View.VISIBLE}"
             app:icon="@{isDeleting ? @drawable/ic_arrow_back : @drawable/ic_action_delete}"
             app:iconPadding="0dp"
-            app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@
     </style>
 
     <!-- Various additional API-specific features in values-v*/styles.xml -->
-    <style name="AppTheme" parent="AppThemeBase"/>
+    <style name="AppTheme" parent="AppThemeBase" />
 
     <style name="WireGuardTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
         <item name="cornerRadius">4dp</item>
@@ -35,5 +35,10 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="TvTheme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

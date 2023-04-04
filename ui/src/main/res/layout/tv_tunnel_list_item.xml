@@ -28,16 +28,18 @@
             type="com.wireguard.android.model.ObservableTunnel" />
     </data>
 
-    <com.google.android.material.card.MaterialCardView
+    <com.wireguard.android.widget.TvCardView
         android:layout_width="225dp"
         android:layout_height="110dp"
         android:layout_margin="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
+        android:backgroundTint="@color/tv_list_item_tint"
         android:checkable="true"
         android:focusable="true"
         app:contentPadding="8dp"
-        android:backgroundTint="@{(item.state == State.UP &amp;&amp; !isDeleting) ? @color/tv_secondary_dark_color : (isDeleting &amp;&amp; isFocused) ? @color/tv_card_delete_background : @color/tv_card_background}">
+        app:isDeleting="@{isDeleting}"
+        app:isUp="@{item.state == State.UP}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -49,7 +51,6 @@
                 android:layout_height="wrap_content"
                 android:text="@{item.name}"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
-                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@sample/interface_names.json/names/names/name" />
@@ -76,6 +77,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </com.wireguard.android.widget.TvCardView>
 
 </layout>
