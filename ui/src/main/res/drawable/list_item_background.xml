@@ -6,7 +6,7 @@
             <item
                 android:state_activated="true"
                 app:state_multiselected="true">
-                <color android:color="?attr/colorMultiselectActiveBackground" />
+                <color android:color="?attr/colorSurfaceVariant" />
             </item>
             <item
                 android:state_activated="true">
