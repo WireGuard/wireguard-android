@@ -107,6 +107,9 @@
     <string name="tv_select_a_storage_drive">Bir depolama sürücüsü seçin</string>
     <string name="tv_no_file_picker">Dosyalara göz atmak için lütfen bir dosya yönetim aracı yükleyin</string>
     <string name="tv_add_tunnel_get_started">Başlamak için bir tünel ekleyin</string>
+    <string name="donate_title">♥ WireGuard Projesine Bağış Yapın</string>
+    <string name="donate_summary">Her katkı yardımcı olur</string>
+    <string name="donate_google_play_disappointment">WireGuard Projesini desteklediğiniz için teşekkür ederiz!\n\nNe yazık ki, Google\'ın politikaları nedeniyle, proje web sayfasının bağış yapabileceğiniz bölümüne bağlantı vermemize izin verilmiyor. Umarım bunu çözebilirsin!\n\nKatkılarınız için tekrar teşekkürler.</string>
     <string name="disable_config_export_title">Ayarları dışa aktarmayı kapa</string>
     <string name="disable_config_export_description">Ayarları dışa aktarmayı kapamak gizli anahtarları daha az erişilebilir kılar</string>
     <string name="dns_servers">DNS sunucuları</string>
@@ -213,6 +216,7 @@
     <string name="tunnel_create_success">Tünel başarıyla oluşturuldu “%s”</string>
     <string name="tunnel_error_already_exists">“%s” tüneli zaten mevcut</string>
     <string name="tunnel_error_invalid_name">Geçersiz isim</string>
+    <string name="tunnel_list_placeholder">Aşağıdaki düğmeyi kullanarak bir tünel ekleyin</string>
     <string name="tunnel_name">Tünel İsmi</string>
     <string name="tunnel_on_error">Tünel aktif edilemiyor (wgTornOn döndürdü: %d)</string>
     <string name="tunnel_dns_failure">DNS adı çözülemedi: \"%s\"</string>

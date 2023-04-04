@@ -107,6 +107,8 @@
     <string name="tv_select_a_storage_drive">Sélectionner un disque de stockage</string>
     <string name="tv_no_file_picker">Veuillez installer un utilitaire de gestion de fichiers pour parcourir les fichiers</string>
     <string name="tv_add_tunnel_get_started">Ajouter un tunnel pour commencer</string>
+    <string name="donate_title">♥ Faire un don au projet WireGuard</string>
+    <string name="donate_summary">Chaque contribution aide</string>
     <string name="disable_config_export_title">Désactiver l\'export de configuration</string>
     <string name="disable_config_export_description">La désactivation de l\'export de configuration rend les clés privées moins accessibles</string>
     <string name="dns_servers">Serveurs DNS</string>
@@ -213,6 +215,7 @@
     <string name="tunnel_create_success">Tunnel «%s » créé avec succès</string>
     <string name="tunnel_error_already_exists">Le tunnel « %s » existe déjà</string>
     <string name="tunnel_error_invalid_name">Nom invalide</string>
+    <string name="tunnel_list_placeholder">Ajoutez un tunnel en utilisant le bouton ci-dessous</string>
     <string name="tunnel_name">Nom du tunnel</string>
     <string name="tunnel_on_error">Impossible d\'activer le tunnel (wgTurnOn a retourné %d)</string>
     <string name="tunnel_dns_failure">Impossible de résoudre le nom d\'hôte DNS: “%s”</string>

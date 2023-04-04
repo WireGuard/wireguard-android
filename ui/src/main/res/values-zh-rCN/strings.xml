@@ -94,6 +94,9 @@
     <string name="tv_select_a_storage_drive">选择一个存储驱动器</string>
     <string name="tv_no_file_picker">请安装一个文件管理工具以浏览文件</string>
     <string name="tv_add_tunnel_get_started">添加第一条网络隧道</string>
+    <string name="donate_title">♥ 为 WireGuard 捐赠</string>
+    <string name="donate_summary">无论多寡，聚沙成塔</string>
+    <string name="donate_google_play_disappointment">感谢您对 WireGuard 项目的支持！\n\n只可惜，受谷歌的政策所限，我们不能在此展示项目捐赠页面的链接，还望您自行访问捐赠页面！\n\n再次感谢您的贡献。</string>
     <string name="disable_config_export_title">禁止导出配置</string>
     <string name="disable_config_export_description">禁止导出配置可降低私钥泄露的风险</string>
     <string name="dns_servers">DNS 服务器</string>
@@ -132,7 +135,7 @@
     <string name="log_viewer_pref_title">查看应用日志</string>
     <string name="log_viewer_title">日志</string>
     <string name="logcat_error">无法运行 logcat： </string>
-    <string name="module_enabler_disabled_summary">WireGuard-Andorid 的内核模块尚处于实验阶段。它能够增强性能，但存在潜在的不稳定因素，请谨慎开启</string>
+    <string name="module_enabler_disabled_summary">内核模块（实验性）能够增强性能，启用时需谨慎</string>
     <string name="module_enabler_disabled_title">启用内核模块</string>
     <string name="module_enabler_enabled_summary">用户空间的模块性能较弱，但稳定性更好</string>
     <string name="module_enabler_enabled_title">停用内核模块</string>
@@ -200,6 +203,7 @@
     <string name="tunnel_create_success">成功创建隧道 “%s”</string>
     <string name="tunnel_error_already_exists">名称 “%s” 已存在</string>
     <string name="tunnel_error_invalid_name">名称无效</string>
+    <string name="tunnel_list_placeholder">点击下方按钮添加隧道</string>
     <string name="tunnel_name">隧道名称</string>
     <string name="tunnel_on_error">无法开启隧道（wgTurnOn returned %d）</string>
     <string name="tunnel_dns_failure">无法解析 DNS 主机名：“%s”</string>
@@ -208,7 +212,7 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
-    <string name="version_summary">%1$s 后端 %2$s</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>
     <string name="version_title">WireGuard for Android v%s</string>
