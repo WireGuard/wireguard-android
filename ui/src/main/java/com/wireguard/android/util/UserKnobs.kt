@@ -41,6 +41,12 @@ object UserKnobs {
             it[DARK_THEME] ?: false
         }
 
+    suspend fun setDarkTheme(on: Boolean) {
+        Application.getPreferencesDataStore().edit {
+            it[DARK_THEME] = on
+        }
+    }
+
     private val ALLOW_REMOTE_CONTROL_INTENTS = booleanPreferencesKey("allow_remote_control_intents")
     val allowRemoteControlIntents: Flow<Boolean>
         get() = Application.getPreferencesDataStore().data.map {
