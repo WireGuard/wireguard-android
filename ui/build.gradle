@@ -48,9 +48,6 @@ android {
         }
     }
     buildTypes {
-        all {
-            buildConfigField('boolean', 'IS_GOOGLE_PLAY', (findProperty('build.google_play') == 'true').toString())
-        }
         release {
             if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
             minifyEnabled true
