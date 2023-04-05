@@ -29,19 +29,25 @@ android {
         }
     }
     buildTypes {
-        release {
+        all {
             externalNativeBuild {
                 cmake {
                     targets 'libwg-go.so', 'libwg.so', 'libwg-quick.so'
-                    arguments "-DANDROID_PACKAGE_NAME=${groupName}", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
+                    arguments "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
+                }
+            }
+        }
+        release {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_PACKAGE_NAME=${groupName}"
                 }
             }
         }
         debug {
             externalNativeBuild {
                 cmake {
-                    targets 'libwg-go.so', 'libwg.so', 'libwg-quick.so'
-                    arguments "-DANDROID_PACKAGE_NAME=${groupName}.debug", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
+                    arguments "-DANDROID_PACKAGE_NAME=${groupName}.debug"
                 }
             }
         }
