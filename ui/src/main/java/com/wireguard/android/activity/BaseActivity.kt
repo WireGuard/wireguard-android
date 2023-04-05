@@ -25,8 +25,11 @@ abstract class BaseActivity : AppCompatActivity() {
             if (oldTunnel == value) return
             field = value
             if (created) {
-                onSelectedTunnelChanged(oldTunnel, value)
-                selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, value)
+                if (!onSelectedTunnelChanged(oldTunnel, value)) {
+                    field = oldTunnel
+                } else {
+                    selectionChangeRegistry.notifyCallbacks(oldTunnel, 0, value)
+                }
             }
         }
 
@@ -61,7 +64,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    protected abstract fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?)
+    protected abstract fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?): Boolean
 
     fun removeOnSelectedTunnelChangedListener(
             listener: OnSelectedTunnelChangedListener) {

@@ -96,13 +96,17 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?,
-                                         newTunnel: ObservableTunnel?) {
+                                         newTunnel: ObservableTunnel?): Boolean {
         val fragmentManager = supportFragmentManager
+        if (fragmentManager.isStateSaved) {
+            return false
+        }
+
         val backStackEntries = fragmentManager.backStackEntryCount
         if (newTunnel == null) {
             // Clear everything off the back stack (all editors and detail fragments).
             fragmentManager.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            return
+            return true
         }
         if (backStackEntries == 2) {
             // Pop the editor off the back stack to reveal the detail fragment. Use the immediate
@@ -116,5 +120,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
                 addToBackStack(null)
             }
         }
+        return true
     }
 }

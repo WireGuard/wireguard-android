@@ -22,7 +22,8 @@ class TunnelCreatorActivity : BaseActivity() {
         }
     }
 
-    override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
+    override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?): Boolean {
         finish()
+        return true
     }
 }
