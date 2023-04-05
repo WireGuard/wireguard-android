@@ -5,6 +5,7 @@
 package com.wireguard.android.activity
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.CallbackRegistry
 import androidx.databinding.CallbackRegistry.NotifierCallback
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 /**
  * Base class for activities that need to remember the currently-selected tunnel.
  */
-abstract class BaseActivity : ThemeChangeAwareActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     private val selectionChangeRegistry = SelectionChangeRegistry()
     private var created = false
     var selectedTunnel: ObservableTunnel? = null

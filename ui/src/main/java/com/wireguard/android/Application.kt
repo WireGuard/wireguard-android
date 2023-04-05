@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 import java.util.Locale
 
@@ -92,10 +93,19 @@ class Application : android.app.Application() {
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
         preferencesDataStore = PreferenceDataStoreFactory.create { applicationContext.preferencesDataStoreFile("settings") }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            coroutineScope.launch {
-                AppCompatDelegate.setDefaultNightMode(
-                        if (UserKnobs.darkTheme.first()) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+            runBlocking {
+                AppCompatDelegate.setDefaultNightMode(if (UserKnobs.darkTheme.first()) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
             }
+            UserKnobs.darkTheme.onEach {
+                val newMode = if (it) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+                if (AppCompatDelegate.getDefaultNightMode() != newMode) {
+                    AppCompatDelegate.setDefaultNightMode(newMode)
+                }
+            }.launchIn(coroutineScope)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }

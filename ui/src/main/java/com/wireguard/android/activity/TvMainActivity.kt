@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -48,13 +49,14 @@ import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.QuantityFormatter
 import com.wireguard.android.util.TunnelImporter
 import com.wireguard.android.util.UserKnobs
+import com.wireguard.android.util.applicationScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class TvMainActivity : ThemeChangeAwareActivity() {
+class TvMainActivity : AppCompatActivity() {
     private val tunnelFileImportResultLauncher = registerForActivityResult(object : ActivityResultContracts.GetContent() {
         override fun createIntent(context: Context, input: String): Intent {
             val intent = super.createIntent(context, input)
@@ -112,11 +114,9 @@ class TvMainActivity : ThemeChangeAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-            /* First set it this way to prevent a white flash. */
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                /* Then update the preference, which triggers the recreation. */
-                lifecycleScope.launch {
+                applicationScope.launch {
                     UserKnobs.setDarkTheme(true)
                 }
             }
