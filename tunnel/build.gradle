@@ -32,6 +32,7 @@ android {
         release {
             externalNativeBuild {
                 cmake {
+                    targets 'libwg-go.so', 'libwg.so', 'libwg-quick.so'
                     arguments "-DANDROID_PACKAGE_NAME=${groupName}", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
                 }
             }
@@ -39,6 +40,7 @@ android {
         debug {
             externalNativeBuild {
                 cmake {
+                    targets 'libwg-go.so', 'libwg.so', 'libwg-quick.so'
                     arguments "-DANDROID_PACKAGE_NAME=${groupName}.debug", "-DGRADLE_USER_HOME=${project.gradle.gradleUserHomeDir}"
                 }
             }
