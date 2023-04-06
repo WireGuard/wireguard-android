@@ -14,5 +14,5 @@ build/
 *.dex
 *.iml
 *.jks
-keystore.properties
 gradlew.bat
+maint/

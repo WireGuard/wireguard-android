@@ -9,10 +9,6 @@ plugins {
 version wireguardVersionName
 group groupName
 
-// Create a variable called keystorePropertiesFile, and initialize it to your
-// keystore.properties file, in the rootProject folder.
-final def keystorePropertiesFile = rootProject.file("keystore.properties")
-
 android {
     compileSdk 33
     buildFeatures {
@@ -34,22 +30,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         coreLibraryDesugaringEnabled = true
     }
-    if (keystorePropertiesFile.exists()) {
-        final def keystoreProperties = new Properties()
-        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-        signingConfigs {
-            release {
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-                storeFile rootProject.file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-            }
-        }
-    }
     buildTypes {
         release {
-            if (keystorePropertiesFile.exists()) signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles "proguard-android-optimize.txt", "proguard-rules.pro"
             packagingOptions {
