@@ -63,8 +63,8 @@ class AppListDialogFragment : DialogFragment() {
                 withContext(Dispatchers.Main.immediate) {
                     appData.clear()
                     appData.addAll(applicationData)
+                    setButtonText()
                 }
-                setButtonText()
             } catch (e: Throwable) {
                 withContext(Dispatchers.Main.immediate) {
                     val error = ErrorMessages[e]
