@@ -92,8 +92,8 @@ object ErrorMessages {
             rootCause is ChecksumException -> {
                 resources.getString(R.string.error_qr_checksum)
             }
-            rootCause.message != null -> {
-                rootCause.message!!
+            rootCause.localizedMessage != null -> {
+                rootCause.localizedMessage!!
             }
             else -> {
                 val errorType = rootCause.javaClass.simpleName
@@ -109,7 +109,7 @@ object ErrorMessages {
             if (kfe!!.type == KeyFormatException.Type.LENGTH) return resources.getString(KFE_FORMAT_MAP.getValue(kfe.format))
         } else if (bce.cause is ParseException) {
             val pe = bce.cause as ParseException?
-            if (pe!!.message != null) return ": ${pe.message}"
+            if (pe!!.localizedMessage != null) return ": ${pe.localizedMessage}"
         } else if (bce.location == BadConfigException.Location.LISTEN_PORT) {
             return resources.getString(R.string.bad_config_explanation_udp_port)
         } else if (bce.location == BadConfigException.Location.MTU) {
