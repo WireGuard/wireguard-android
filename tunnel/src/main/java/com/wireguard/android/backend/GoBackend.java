@@ -324,6 +324,9 @@ public final class GoBackend implements Backend {
             currentTunnelHandle = -1;
             currentConfig = null;
             wgTurnOff(handleToClose);
+            try {
+                vpnService.get(0, TimeUnit.NANOSECONDS).stopSelf();
+            } catch (final TimeoutException ignored) { }
         }
 
         tunnel.onStateChange(state);
