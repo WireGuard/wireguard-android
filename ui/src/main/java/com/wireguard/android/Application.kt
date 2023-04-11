@@ -58,10 +58,6 @@ class Application : android.app.Application() {
             startActivity(intent)
             System.exit(0)
         }
-        if (BuildConfig.DEBUG) {
-            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
-            StrictMode.setThreadPolicy(ThreadPolicy.Builder().detectAll().penaltyLog().build())
-        }
     }
 
     private suspend fun determineBackend(): Backend {
@@ -118,6 +114,11 @@ class Application : android.app.Application() {
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
+        }
+
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
+            StrictMode.setThreadPolicy(ThreadPolicy.Builder().detectAll().penaltyLog().build())
         }
     }
 
