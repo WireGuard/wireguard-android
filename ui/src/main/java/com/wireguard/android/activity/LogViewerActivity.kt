@@ -158,7 +158,6 @@ class LogViewerActivity : AppCompatActivity() {
             builder.append('\n')
         }
         val ret = builder.toString().toByteArray(Charsets.UTF_8)
-        builder.clear()
         return ret
     }
 
@@ -203,7 +202,7 @@ class LogViewerActivity : AppCompatActivity() {
             var priorModified = false
             val bufferedLogLines = arrayListOf<LogLine>()
             var timeout = 1000000000L / 2 // The timeout is initially small so that the view gets populated immediately.
-            val MAX_LINES = (1 shl 17) - 1
+            val MAX_LINES = (1 shl 16) - 1
             val MAX_BUFFERED_LINES = (1 shl 14) - 1
 
             while (true) {
