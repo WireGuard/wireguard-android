@@ -54,6 +54,9 @@ android {
             matchingFallbacks += "release"
         }
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
     lint {
         disable += "LongLogTag"
         warning += "MissingTranslation"
