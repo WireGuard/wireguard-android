@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="extra_margin">12dp</dimen>
     <dimen name="bottom_sheet_item_height">56dp</dimen>
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
