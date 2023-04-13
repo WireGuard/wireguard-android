@@ -111,6 +111,8 @@
     <string name="tv_select_a_storage_drive">تحديد محرك تخزين</string>
     <string name="tv_no_file_picker">الرجاء تثبيت مدير ملفات لتتمكن من تصفح الملفات</string>
     <string name="tv_add_tunnel_get_started">أضف نفقاً لتبدأ</string>
+    <string name="donate_title">♥️ تبرع لمشروع وايرجارد</string>
+    <string name="donate_summary">كل مساهمة تساعد</string>
     <string name="disable_config_export_title">تعطيل تصدير التكوين</string>
     <string name="disable_config_export_description">تعطيل تصدير الإعدادات يجعل المفاتيح الخاصة غير متاحة</string>
     <string name="dns_servers">خوادم DNS</string>
@@ -120,6 +122,7 @@
     <string name="error_down">خطأ في فصل النفق:%s</string>
     <string name="error_fetching_apps">خطأ في جلب قائمة التطبيقات: %s</string>
     <string name="error_root">الرجاء الحصول على صلاحيات الروت وحاول مرة أخرى</string>
+    <string name="error_prepare">خطأ في تحضير النفق: %s</string>
     <string name="error_up">خطأ خلال إنشاء النفق: %s</string>
     <string name="exclude_private_ips">استبعاد عناوين بروتوكول الإنترنت (IP) الخاصة</string>
     <string name="generate_new_private_key">توليد مفتاح خاص جديد</string>
@@ -215,6 +218,7 @@
     <string name="tunnel_create_success">تم إنشاء نفق \"%s\" بنجاح</string>
     <string name="tunnel_error_already_exists">النفق \"%s\" موجود بالفعل</string>
     <string name="tunnel_error_invalid_name">إسم غير صالح</string>
+    <string name="tunnel_list_placeholder">أضف نفق باستخدام الزر أدناه</string>
     <string name="tunnel_name">إسم النفق</string>
     <string name="tunnel_on_error">غير قادر على تشغيل النفق (wgTurnOn أعاد %d)</string>
     <string name="tunnel_dns_failure">غير قادر على حل اسم مضيف نظام أسماء النطاقات (DNS hostname): \"%s\"</string>

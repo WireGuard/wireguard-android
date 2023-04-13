@@ -133,6 +133,9 @@
     <string name="tv_select_a_storage_drive">Выберите накопитель</string>
     <string name="tv_no_file_picker">Пожалуйста, установите утилиту управления файлами для их просмотра</string>
     <string name="tv_add_tunnel_get_started">Добавьте туннель, чтобы начать</string>
+    <string name="donate_title">♥ Пожертвовать проекту WireGuard</string>
+    <string name="donate_summary">Каждое пожертвование помогает</string>
+    <string name="donate_google_play_disappointment">Спасибо за поддержку проекта WireGuard!\n\nК сожалению, из-за политики Google, нельзя размещать ссылку на тот раздел сайта проекта, где можно сделать пожертвование. Надеемся, вы сможете разобраться самостоятельно!\n\nЕщё раз спасибо за ваш вклад.</string>
     <string name="disable_config_export_title">Отключить экспорт конфигурации</string>
     <string name="disable_config_export_description">Отключение экспорта конфигурации делает приватные ключи менее доступными</string>
     <string name="dns_servers">DNS-серверы</string>
@@ -142,6 +145,7 @@
     <string name="error_down">Ошибка при выходе из туннеля: %s</string>
     <string name="error_fetching_apps">Ошибка при получении списка приложений: %s</string>
     <string name="error_root">Пожалуйста, получите root-доступ и попробуйте снова</string>
+    <string name="error_prepare">Ошибка при подготовке туннеля: %s</string>
     <string name="error_up">Ошибка при запуске туннеля: %s</string>
     <string name="exclude_private_ips">Исключить частные IP-адреса</string>
     <string name="generate_new_private_key">Сгенерировать новый приватный ключ</string>
@@ -239,6 +243,7 @@
     <string name="tunnel_create_success">Успешно создан туннель “%s”</string>
     <string name="tunnel_error_already_exists">Туннель “%s” уже существует</string>
     <string name="tunnel_error_invalid_name">Неправильное имя</string>
+    <string name="tunnel_list_placeholder">Добавьте туннель с помощью кнопки ниже</string>
     <string name="tunnel_name">Название туннеля</string>
     <string name="tunnel_on_error">Не удалось включить туннель (wgTurnOn вернул %d)</string>
     <string name="tunnel_dns_failure">Не удалось определить DNS имя: “%s”</string>

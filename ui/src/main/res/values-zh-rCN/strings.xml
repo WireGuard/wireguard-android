@@ -106,6 +106,7 @@
     <string name="error_down">断开连接时出错：%s</string>
     <string name="error_fetching_apps">获取应用列表时出错：%s</string>
     <string name="error_root">请获取 root 权限并重试</string>
+    <string name="error_prepare">准备连接时出错：%s</string>
     <string name="error_up">建立连接时出错：%s</string>
     <string name="exclude_private_ips">排除局域网</string>
     <string name="generate_new_private_key">生成新的私钥</string>
