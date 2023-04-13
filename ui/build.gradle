@@ -49,6 +49,9 @@ android {
         disable 'LongLogTag'
         warning 'MissingTranslation', 'ImpliedQuantity'
     }
+    androidResources {
+        generateLocaleConfig true
+    }
 }
 
 dependencies {
