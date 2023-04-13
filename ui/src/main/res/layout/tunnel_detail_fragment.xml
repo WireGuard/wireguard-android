@@ -71,7 +71,7 @@
 
                     <TextView
                         android:id="@+id/interface_name_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/interface_name_text"
@@ -81,7 +81,7 @@
 
                     <TextView
                         android:id="@+id/interface_name_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/name"
                         android:nextFocusUp="@id/tunnel_switch"
@@ -96,7 +96,7 @@
 
                     <TextView
                         android:id="@+id/public_key_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/public_key_text"
@@ -106,7 +106,7 @@
 
                     <TextView
                         android:id="@+id/public_key_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/public_key"
                         android:ellipsize="end"
@@ -124,7 +124,7 @@
 
                     <TextView
                         android:id="@+id/addresses_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/addresses_text"
@@ -135,7 +135,7 @@
 
                     <TextView
                         android:id="@+id/addresses_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/addresses"
                         android:nextFocusUp="@id/public_key_text"
@@ -151,7 +151,7 @@
 
                     <TextView
                         android:id="@+id/dns_servers_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/dns_servers_text"
@@ -162,7 +162,7 @@
 
                     <TextView
                         android:id="@+id/dns_servers_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/dns_servers"
                         android:nextFocusUp="@id/addresses_text"
@@ -178,7 +178,7 @@
 
                     <TextView
                         android:id="@+id/dns_search_domains_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/dns_search_domain_text"
@@ -189,7 +189,7 @@
 
                     <TextView
                         android:id="@+id/dns_search_domains_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/dns_search_domains"
                         android:nextFocusUp="@id/dns_servers_text"
@@ -277,7 +277,7 @@
 
                     <TextView
                         android:id="@+id/applications_label"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:labelFor="@+id/applications_text"
@@ -288,7 +288,7 @@
 
                     <TextView
                         android:id="@+id/applications_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/applications"
                         android:nextFocusUp="@id/mtu_text"
