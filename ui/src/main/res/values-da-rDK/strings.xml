@@ -72,6 +72,8 @@
     <string name="config_file_exists_error">Konfigurationsfilen \"%s\" findes allerede</string>
     <string name="config_not_found_error">Konfigurationsfilen \"%s\" blev ikke fundet</string>
     <string name="config_rename_error">Kan ikke omdøbe konfigurationsfilen \"%s\"</string>
+    <string name="config_save_error">Kan ikke gemme konfigurationen for \"%1$s\": %2$s</string>
+    <string name="config_save_success">Konfiguration for \"%s\" blev gemt</string>
     <string name="create_activity_title">Opret WireGuard tunnel</string>
     <string name="create_empty">Opret fra ny</string>
     <string name="create_from_file">Importér fra fil eller arkiv</string>
@@ -88,6 +90,7 @@
     <string name="dns_search_domains">DNS-søgedomæner</string>
     <string name="edit">Redigér</string>
     <string name="endpoint">Slutpunkt</string>
+    <string name="error_prepare">Fejl ved forberedelse af tunnel: %s</string>
     <string name="error_up">Fejl under aktivering af tunnel: %s</string>
     <string name="exclude_private_ips">Eksludér private IP-adresser</string>
     <string name="generate_new_private_key">Generér ny privat nøgle</string>
@@ -152,6 +155,7 @@
     <string name="tunnel_create_success">Tunnelen blev succesfuldt oprettet \"%s\"</string>
     <string name="tunnel_error_already_exists">Tunnel \"%s\" eksisterer allerede</string>
     <string name="tunnel_error_invalid_name">Ugyldigt navn</string>
+    <string name="tunnel_list_placeholder">Tilføj en tunnel ved hjælp af knappen nedenfor</string>
     <string name="tunnel_name">Tunnel Navn</string>
     <string name="tunnel_dns_failure">Kunne ikke opslå DNS adresse: \"%s\"</string>
     <string name="tunnel_rename_error">Kan ikke omdøbe tunnel: %s</string>

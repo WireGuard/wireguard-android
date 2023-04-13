@@ -21,7 +21,7 @@
         <item quantity="other">Importerte %d tunneler</item>
     </plurals>
     <plurals name="set_excluded_applications">
-        <item quantity="one">%d ekskludert program</item>
+        <item quantity="one">%d ekskludert app</item>
         <item quantity="other">%d ekskluderte apper</item>
     </plurals>
     <plurals name="set_included_applications">
@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Ukjent seksjon</string>
     <string name="bad_config_reason_value_out_of_range">Verdien er utenfor gyldig område</string>
     <string name="bad_extension_error">Filen må være .conf eller .zip</string>
+    <string name="error_no_qr_found">Ingen QR-kode funnet i bildet</string>
+    <string name="error_qr_checksum">Feil ved sjekksumverifisering av QR-kode</string>
     <string name="cancel">Avbryt</string>
     <string name="config_delete_error">Kan ikke slette konfigurasjonsfilen %s</string>
     <string name="config_exists_error">Konfigurasjon for «%s» finnes allerede</string>
@@ -105,14 +107,19 @@
     <string name="tv_select_a_storage_drive">Velg en lagringsenhet</string>
     <string name="tv_no_file_picker">Vennligst installer et filhåndteringsverktøy for å bla i filer</string>
     <string name="tv_add_tunnel_get_started">Opprett en ny tunnel for å komme i gang</string>
+    <string name="donate_title">♥ Donér til WireGuard-prosjektet</string>
+    <string name="donate_summary">Hvert bidrag hjelper</string>
+    <string name="donate_google_play_disappointment">Takk for at du støtter WireGuard-prosjektet!\n\nPå grunn av Googles retningslinjer, kan vi dessverre ikke linke til den delen av prosjektets nettside der du kan donere. Forhåpentligvis klarer du å finne denne selv!\n\nVi takker igjen for ditt bidrag.</string>
     <string name="disable_config_export_title">Deaktiver eksport av konfigurasjon</string>
     <string name="disable_config_export_description">Deaktivering av konfigurasjonseksport gjør private nøkler mindre tilgjengelig</string>
     <string name="dns_servers">DNS tjenere</string>
+    <string name="dns_search_domains">Søk gjennom domener</string>
     <string name="edit">Rediger</string>
     <string name="endpoint">Endepunkt</string>
     <string name="error_down">Feil når tunnel skulle tas ned: %s</string>
     <string name="error_fetching_apps">Feil ved henting av applikasjonsliste: %s</string>
     <string name="error_root">Vennligst få root-tilgang og prøv igjen</string>
+    <string name="error_prepare">Feil ved klargjøring av tunnel: %s</string>
     <string name="error_up">Feil når tunnel skulle tas opp: %s</string>
     <string name="exclude_private_ips">Utelukk private IP-adresser</string>
     <string name="generate_new_private_key">Lag ny privat nøkkel</string>
@@ -210,13 +217,16 @@
     <string name="tunnel_create_success">Opprettet tunnelen «%s»</string>
     <string name="tunnel_error_already_exists">Tunnel «%s» finnes allerede</string>
     <string name="tunnel_error_invalid_name">Ugyldig navn</string>
+    <string name="tunnel_list_placeholder">Legg til en tunnel ved å bruke knappen under</string>
     <string name="tunnel_name">Tunnelnavn</string>
     <string name="tunnel_on_error">Kan ikke slå på tunnel (wgTurnOn returnerte %d)</string>
+    <string name="tunnel_dns_failure">Kan ikke slå opp DNS-vertsnavn: “%s\"</string>
     <string name="tunnel_rename_error">Kan ikke endre navn på tunnel: %s</string>
     <string name="tunnel_rename_success">Endret navn på tunnelen til «%s»</string>
     <string name="type_name_go_userspace">Bruk userspace</string>
     <string name="type_name_kernel_module">Kjernemodul</string>
     <string name="unknown_error">Ukjent feil</string>
+    <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Sjekker %s backend versjon</string>
     <string name="version_summary_unknown">Ukjent %s versjon</string>
     <string name="version_title">WireGuard for Android v%s</string>
