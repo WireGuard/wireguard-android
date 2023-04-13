@@ -157,8 +157,7 @@ class LogViewerActivity : AppCompatActivity() {
             builder.append(rawLogLines[i])
             builder.append('\n')
         }
-        val ret = builder.toString().toByteArray(Charsets.UTF_8)
-        return ret
+        return builder.toString().toByteArray(Charsets.UTF_8)
     }
 
     private suspend fun saveLog() {
