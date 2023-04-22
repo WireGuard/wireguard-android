@@ -6,21 +6,24 @@
 package com.wireguard.android.backend;
 
 import android.os.SystemClock;
-import android.util.Pair;
 
 import com.wireguard.crypto.Key;
 import com.wireguard.util.NonNullForAll;
 
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 /**
  * Class representing transfer statistics for a {@link Tunnel} instance.
  */
 @NonNullForAll
 public class Statistics {
-    private final Map<Key, Pair<Long, Long>> peerBytes = new HashMap<>();
+    private final Map<Key, PeerStatistics> peerStats = new HashMap<>();
     private long lastTouched = SystemClock.elapsedRealtime();
+    private LocalDateTime defaultLastHandshakeTime = LocalDateTime.ofEpochSecond(
+            0, 0, ZoneOffset.UTC);
 
     Statistics() {
     }
@@ -28,14 +31,16 @@ public class Statistics {
     /**
      * Add a peer and its current data usage to the internal map.
      *
-     * @param key A WireGuard public key bound to a particular peer
-     * @param rx  The received traffic for the {@link com.wireguard.config.Peer} referenced by
-     *            the provided {@link Key}. This value is in bytes
-     * @param tx  The transmitted traffic for the {@link com.wireguard.config.Peer} referenced by
-     *            the provided {@link Key}. This value is in bytes.
+     * @param key               A WireGuard public key bound to a particular peer
+     * @param rx                The received traffic for the {@link com.wireguard.config.Peer} referenced by
+     *                          the provided {@link Key}. This value is in bytes
+     * @param tx                The transmitted traffic for the {@link com.wireguard.config.Peer} referenced by
+     *                          the provided {@link Key}. This value is in bytes.
+     * @param lastHandshakeTime The last handshake time for the {@link com.wireguard.config.Peer} referenced by
+     *                          the provided {@link Key}. This value is in LocalDateTime.
      */
-    void add(final Key key, final long rx, final long tx) {
-        peerBytes.put(key, Pair.create(rx, tx));
+    void add(final Key key, final long rx, final long tx, final LocalDateTime lastHandshakeTime) {
+        peerStats.put(key, new PeerStatistics(rx, tx, lastHandshakeTime));
         lastTouched = SystemClock.elapsedRealtime();
     }
 
@@ -56,10 +61,10 @@ public class Statistics {
      * @return a long representing the number of bytes received by this peer.
      */
     public long peerRx(final Key peer) {
-        final Pair<Long, Long> rxTx = peerBytes.get(peer);
-        if (rxTx == null)
+        final PeerStatistics stats = peerStats.get(peer);
+        if (stats == null)
             return 0;
-        return rxTx.first;
+        return stats.getRx();
     }
 
     /**
@@ -70,10 +75,24 @@ public class Statistics {
      * @return a long representing the number of bytes transmitted by this peer.
      */
     public long peerTx(final Key peer) {
-        final Pair<Long, Long> rxTx = peerBytes.get(peer);
-        if (rxTx == null)
+        final PeerStatistics stats = peerStats.get(peer);
+        if (stats == null)
             return 0;
-        return rxTx.second;
+        return stats.getTx();
+    }
+
+    /**
+     * Get the last handshake time for the {@link com.wireguard.config.Peer} referenced by
+     * the provided {@link Key}
+     *
+     * @param peer A {@link Key} representing a {@link com.wireguard.config.Peer}.
+     * @return a LocalDateTime representing the last handshake time by this peer.
+     */
+    public LocalDateTime peerLastHandshakeTime(final Key peer) {
+        final PeerStatistics info = peerStats.get(peer);
+        if (info == null)
+            return defaultLastHandshakeTime;
+        return info.getLastHandshakeTime();
     }
 
     /**
@@ -83,7 +102,7 @@ public class Statistics {
      * {@link com.wireguard.config.Peer}s
      */
     public Key[] peers() {
-        return peerBytes.keySet().toArray(new Key[0]);
+        return peerStats.keySet().toArray(new Key[0]);
     }
 
     /**
@@ -93,8 +112,8 @@ public class Statistics {
      */
     public long totalRx() {
         long rx = 0;
-        for (final Pair<Long, Long> val : peerBytes.values()) {
-            rx += val.first;
+        for (final PeerStatistics val : peerStats.values()) {
+            rx += val.getRx();
         }
         return rx;
     }
@@ -106,8 +125,8 @@ public class Statistics {
      */
     public long totalTx() {
         long tx = 0;
-        for (final Pair<Long, Long> val : peerBytes.values()) {
-            tx += val.second;
+        for (final PeerStatistics val : peerStats.values()) {
+            tx += val.getTx();
         }
         return tx;
     }

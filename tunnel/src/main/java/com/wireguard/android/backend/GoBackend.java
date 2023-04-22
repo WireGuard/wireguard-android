@@ -24,6 +24,8 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -125,12 +127,16 @@ public final class GoBackend implements Backend {
         Key key = null;
         long rx = 0;
         long tx = 0;
+        long lastHandshakeTimeSec = 0;
+        int lastHandshakeTimeNSec = 0;
         for (final String line : config.split("\\n")) {
             if (line.startsWith("public_key=")) {
                 if (key != null)
-                    stats.add(key, rx, tx);
+                    stats.add(key, rx, tx, LocalDateTime.ofEpochSecond(lastHandshakeTimeSec, lastHandshakeTimeNSec, ZoneOffset.UTC));
                 rx = 0;
                 tx = 0;
+                lastHandshakeTimeSec = 0;
+                lastHandshakeTimeNSec = 0;
                 try {
                     key = Key.fromHex(line.substring(11));
                 } catch (final KeyFormatException ignored) {
@@ -152,10 +158,26 @@ public final class GoBackend implements Backend {
                 } catch (final NumberFormatException ignored) {
                     tx = 0;
                 }
+            } else if (line.startsWith("last_handshake_time_sec=")) {
+                if (key == null)
+                    continue;
+                try {
+                    lastHandshakeTimeSec = Long.parseLong(line.substring(24));
+                } catch (final NumberFormatException ignored) {
+                    lastHandshakeTimeSec = 0;
+                }
+            } else if (line.startsWith("last_handshake_time_nsec=")) {
+                if (key == null)
+                    continue;
+                try {
+                    lastHandshakeTimeNSec = Integer.parseInt(line.substring(25));
+                } catch (final NumberFormatException ignored) {
+                    lastHandshakeTimeNSec = 0;
+                }
             }
         }
         if (key != null)
-            stats.add(key, rx, tx);
+            stats.add(key, rx, tx, LocalDateTime.ofEpochSecond(lastHandshakeTimeSec, lastHandshakeTimeNSec, ZoneOffset.UTC));
         return stats;
     }
 
@@ -237,7 +259,8 @@ public final class GoBackend implements Backend {
             }
 
 
-            dnsRetry: for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
+            dnsRetry:
+            for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
                 // Pre-resolve IPs so they're cached when building the userspace string
                 for (final Peer peer : config.getPeers()) {
                     final InetEndpoint ep = peer.getEndpoint().orElse(null);
