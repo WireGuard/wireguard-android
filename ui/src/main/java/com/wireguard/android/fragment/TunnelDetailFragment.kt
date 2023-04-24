@@ -112,16 +112,25 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
                 val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding.peersLayout.getChildAt(i))
                         ?: continue
                 val publicKey = peer.item!!.publicKey
-                val rx = statistics.peerRx(publicKey)
-                val tx = statistics.peerTx(publicKey)
-                if (rx == 0L && tx == 0L) {
+                val peerStats = statistics.peer(publicKey)
+                if (peerStats == null || (peerStats.rxBytes == 0L && peerStats.txBytes == 0L)) {
                     peer.transferLabel.visibility = View.GONE
                     peer.transferText.visibility = View.GONE
-                    continue
+                } else {
+                    peer.transferText.text = getString(R.string.transfer_rx_tx,
+                        QuantityFormatter.formatBytes(peerStats.rxBytes),
+                        QuantityFormatter.formatBytes(peerStats.txBytes))
+                    peer.transferLabel.visibility = View.VISIBLE
+                    peer.transferText.visibility = View.VISIBLE
                 }
-                peer.transferText.text = getString(R.string.transfer_rx_tx, QuantityFormatter.formatBytes(rx), QuantityFormatter.formatBytes(tx))
-                peer.transferLabel.visibility = View.VISIBLE
-                peer.transferText.visibility = View.VISIBLE
+                if (peerStats == null || peerStats.latestHandshakeEpochMillis == 0L) {
+                    peer.latestHandshakeLabel.visibility = View.GONE
+                    peer.latestHandshakeText.visibility = View.GONE
+                } else {
+                    peer.latestHandshakeText.text = QuantityFormatter.formatEpochAgo(peerStats.latestHandshakeEpochMillis)
+                    peer.latestHandshakeLabel.visibility = View.VISIBLE
+                    peer.latestHandshakeText.visibility = View.VISIBLE
+                }
             }
         } catch (e: Throwable) {
             for (i in 0 until binding.peersLayout.childCount) {
@@ -129,6 +138,8 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
                         ?: continue
                 peer.transferLabel.visibility = View.GONE
                 peer.transferText.visibility = View.GONE
+                peer.latestHandshakeLabel.visibility = View.GONE
+                peer.latestHandshakeText.visibility = View.GONE
             }
         }
     }

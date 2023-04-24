@@ -171,7 +171,7 @@
                 android:id="@+id/transfer_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/endpoint_text"
+                android:layout_below="@+id/persistent_keepalive_text"
                 android:layout_marginTop="8dp"
                 android:labelFor="@+id/transfer_text"
                 android:text="@string/transfer"
@@ -193,6 +193,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transfer_label"
                 tools:text="1024 MB"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/latest_handshake_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/transfer_text"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/latest_handshake_text"
+                android:text="@string/latest_handshake"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/transfer_text"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/latest_handshake_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/latest_handshake_label"
+                android:contentDescription="@string/latest_handshake"
+                android:nextFocusUp="@id/transfer_text"
+                android:onClick="@{ClipboardUtils::copyTextView}"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/latest_handshake_label"
+                tools:text="4 minutes, 27 seconds ago"
                 tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
