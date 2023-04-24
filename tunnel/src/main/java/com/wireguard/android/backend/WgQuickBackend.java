@@ -20,6 +20,7 @@ import com.wireguard.util.NonNullForAll;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -83,17 +84,17 @@ public final class WgQuickBackend implements Backend {
         final Statistics stats = new Statistics();
         final Collection<String> output = new ArrayList<>();
         try {
-            if (rootShell.run(output, String.format("wg show '%s' transfer", tunnel.getName())) != 0)
+            if (rootShell.run(output, String.format("wg show '%s' dump", tunnel.getName())) != 0)
                 return stats;
         } catch (final Exception ignored) {
             return stats;
         }
         for (final String line : output) {
             final String[] parts = line.split("\\t");
-            if (parts.length != 3)
+            if (parts.length != 8)
                 continue;
             try {
-                stats.add(Key.fromBase64(parts[0]), Long.parseLong(parts[1]), Long.parseLong(parts[2]));
+                stats.add(Key.fromBase64(parts[0]), Long.parseLong(parts[5]), Long.parseLong(parts[6]), Long.parseLong(parts[4]) * 1000);
             } catch (final Exception ignored) {
             }
         }
