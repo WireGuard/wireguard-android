@@ -24,6 +24,7 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -125,12 +126,14 @@ public final class GoBackend implements Backend {
         Key key = null;
         long rx = 0;
         long tx = 0;
+        long latestHandshakeMSec = 0;
         for (final String line : config.split("\\n")) {
             if (line.startsWith("public_key=")) {
                 if (key != null)
-                    stats.add(key, rx, tx);
+                    stats.add(key, rx, tx, latestHandshakeMSec);
                 rx = 0;
                 tx = 0;
+                latestHandshakeMSec = 0;
                 try {
                     key = Key.fromHex(line.substring(11));
                 } catch (final KeyFormatException ignored) {
@@ -152,10 +155,26 @@ public final class GoBackend implements Backend {
                 } catch (final NumberFormatException ignored) {
                     tx = 0;
                 }
+            } else if (line.startsWith("last_handshake_time_sec=")) {
+                if (key == null)
+                    continue;
+                try {
+                    latestHandshakeMSec += Long.parseLong(line.substring(24)) * 1000;
+                } catch (final NumberFormatException ignored) {
+                    latestHandshakeMSec = 0;
+                }
+            } else if (line.startsWith("last_handshake_time_nsec=")) {
+                if (key == null)
+                    continue;
+                try {
+                    latestHandshakeMSec += Long.parseLong(line.substring(25)) / 1000000;
+                } catch (final NumberFormatException ignored) {
+                    latestHandshakeMSec = 0;
+                }
             }
         }
         if (key != null)
-            stats.add(key, rx, tx);
+            stats.add(key, rx, tx, latestHandshakeMSec);
         return stats;
     }
 
