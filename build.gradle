@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        activityVersion = '1.7.0'
+        activityVersion = '1.7.1'
         annotationsVersion = '1.6.0'
         appcompatVersion = '1.6.1'
         biometricVersion = '1.1.0'
@@ -11,7 +11,7 @@ buildscript {
         coroutinesVersion = '1.6.4'
         datastoreVersion = '1.0.0'
         desugarVersion = '1.1.5'
-        fragmentVersion = '1.5.6'
+        fragmentVersion = '1.5.7'
         jsr305Version = '3.0.2'
         junitVersion = '4.13.2'
         lifecycleRuntimeKtxVersion = '2.6.1'
