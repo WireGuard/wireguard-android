@@ -1,7 +1,6 @@
 -allowaccessmodification
--dontpreverify
 -dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
+-dontobfuscate
 -verbose
 
 -keepattributes *Annotation*
