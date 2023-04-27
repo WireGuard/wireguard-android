@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        wireguardVersionCode = 499
-        wireguardVersionName = '1.0.20230412'
+        wireguardVersionCode = 500
+        wireguardVersionName = '1.0.20230427'
     }
 }
