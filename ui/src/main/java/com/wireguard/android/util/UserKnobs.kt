@@ -88,4 +88,34 @@ object UserKnobs {
                 it[RUNNING_TUNNELS] = runningTunnels
         }
     }
+
+    private val UPDATER_NEWER_VERSION_SEEN = stringPreferencesKey("updater_newer_version_seen")
+    val updaterNewerVersionSeen: Flow<String?>
+        get() = Application.getPreferencesDataStore().data.map {
+            it[UPDATER_NEWER_VERSION_SEEN]
+        }
+
+    suspend fun setUpdaterNewerVersionSeen(newerVersionSeen: String?) {
+        Application.getPreferencesDataStore().edit {
+            if (newerVersionSeen == null)
+                it.remove(UPDATER_NEWER_VERSION_SEEN)
+            else
+                it[UPDATER_NEWER_VERSION_SEEN] = newerVersionSeen
+        }
+    }
+
+    private val UPDATER_NEWER_VERSION_CONSENTED = stringPreferencesKey("updater_newer_version_consented")
+    val updaterNewerVersionConsented: Flow<String?>
+        get() = Application.getPreferencesDataStore().data.map {
+            it[UPDATER_NEWER_VERSION_CONSENTED]
+        }
+
+    suspend fun setUpdaterNewerVersionConsented(newerVersionConsented: String?) {
+        Application.getPreferencesDataStore().edit {
+            if (newerVersionConsented == null)
+                it.remove(UPDATER_NEWER_VERSION_CONSENTED)
+            else
+                it[UPDATER_NEWER_VERSION_CONSENTED] = newerVersionConsented
+        }
+    }
 }

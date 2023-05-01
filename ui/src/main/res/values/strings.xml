@@ -229,6 +229,13 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="updater_avalable">An application update is available. Please update now.</string>
+    <string name="updater_action">Download &amp; Update</string>
+    <string name="updater_rechecking">Fetching update metadata…</string>
+    <string name="updater_download_progress">Downloading update: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Downloading update: %s</string>
+    <string name="updater_installing">Installing update…</string>
+    <string name="updater_failure">Update failure: %s. Will retry momentarily…</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>

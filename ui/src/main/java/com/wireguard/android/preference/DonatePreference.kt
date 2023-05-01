@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.preference.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wireguard.android.R
+import com.wireguard.android.updater.Updater
 import com.wireguard.android.util.ErrorMessages
 
 class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
@@ -22,21 +23,8 @@ class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(cont
     override fun getTitle() = context.getString(R.string.donate_title)
 
     override fun onClick() {
-        val installer = try {
-            val packageName = context.packageName
-            val pm = context.packageManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                pm.getInstallSourceInfo(packageName).installingPackageName ?: ""
-            } else {
-                @Suppress("DEPRECATION")
-                pm.getInstallerPackageName(packageName) ?: ""
-            }
-        } catch (_: Throwable) {
-            ""
-        }
-
         /* Google Play Store forbids links to our donation page. */
-        if (installer == "com.android.vending") {
+        if (Updater.installerIsGooglePlay()) {
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.donate_title)
                 .setMessage(R.string.donate_google_play_disappointment)

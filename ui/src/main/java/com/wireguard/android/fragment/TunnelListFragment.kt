@@ -33,6 +33,7 @@ import com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowC
 import com.wireguard.android.databinding.TunnelListFragmentBinding
 import com.wireguard.android.databinding.TunnelListItemBinding
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.android.updater.SnackbarUpdateShower
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.QrCodeFromFileScanner
 import com.wireguard.android.util.TunnelImporter
@@ -121,6 +122,8 @@ class TunnelListFragment : BaseFragment() {
         }
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) { actionMode?.finish() }
         backPressedCallback?.isEnabled = false
+
+        SnackbarUpdateShower.attachToActivity(requireActivity(), binding?.mainContainer!!, binding?.createFab)
 
         return binding?.root
     }
