@@ -1,0 +1,29 @@
+[versions]
+agp = "8.0.0"
+kotlin = "1.8.0"
+
+[libraries]
+androidx-activity-ktx = "androidx.activity:activity-ktx:1.7.1"
+androidx-annotation = "androidx.annotation:annotation:1.6.0"
+androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
+androidx-biometric = "androidx.biometric:biometric:1.1.0"
+androidx-collection = "androidx.collection:collection:1.2.0"
+androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+androidx-coordinatorlayout = "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
+androidx-core-ktx = "androidx.core:core-ktx:1.10.0"
+androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
+androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.5.7"
+androidx-lifecycle-runtime-ktx = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
+desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.1.5"
+google-material = "com.google.android.material:material:1.8.0"
+jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
+junit = "junit:junit:4.13.2"
+kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+zxing-android-embedded = "com.journeyapps:zxing-android-embedded:4.3.0"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
