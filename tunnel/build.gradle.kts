@@ -117,12 +117,8 @@ publishing {
             name = "sonatype"
             url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = providers.gradleProperty("SONATYPE_USER")
-                    .orElse(providers.environmentVariable("SONATYPE_USER"))
-                    .orNull
-                password = providers.gradleProperty("SONATYPE_PASSWORD")
-                    .orElse(providers.environmentVariable("SONATYPE_PASSWORD"))
-                    .orNull
+                username = providers.environmentVariable("SONATYPE_USER").orNull
+                password = providers.environmentVariable("SONATYPE_PASSWORD").orNull
             }
         }
     }
