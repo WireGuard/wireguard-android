@@ -26,12 +26,12 @@ The library makes use of Java 8 features, so be sure to support those in your gr
 
 ```
 compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
     coreLibraryDesugaringEnabled = true
 }
 dependencies {
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
 }
 ```
 
