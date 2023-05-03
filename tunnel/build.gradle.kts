@@ -1,6 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
+val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+
 plugins {
     alias(libs.plugins.android.library)
     `maven-publish`
@@ -13,7 +15,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    namespace = "com.wireguard.android.tunnel"
+    namespace = "${pkg}.tunnel"
     defaultConfig {
         minSdk = 21
     }
@@ -37,14 +39,14 @@ android {
         release {
             externalNativeBuild {
                 cmake {
-                    arguments("-DANDROID_PACKAGE_NAME=com.wireguard.android")
+                    arguments("-DANDROID_PACKAGE_NAME=${pkg}")
                 }
             }
         }
         debug {
             externalNativeBuild {
                 cmake {
-                    arguments("-DANDROID_PACKAGE_NAME=com.wireguard.android.debug")
+                    arguments("-DANDROID_PACKAGE_NAME=${pkg}.debug")
                 }
             }
         }
@@ -74,7 +76,7 @@ dependencies {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.wireguard.android"
+            groupId = pkg
             artifactId = "tunnel"
             version = providers.gradleProperty("wireguardVersionName").get()
             afterEvaluate {
