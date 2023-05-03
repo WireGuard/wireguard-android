@@ -25,7 +25,7 @@
         <item quantity="other">%d välistatud rakendust</item>
     </plurals>
     <plurals name="set_included_applications">
-        <item quantity="one">%d kaasatud rakendust</item>
+        <item quantity="one">%d kaasatud rakendus</item>
         <item quantity="other">%d kaasatud rakendust</item>
     </plurals>
     <plurals name="n_excluded_applications">
@@ -79,8 +79,8 @@
     <string name="bad_config_reason_unknown_section">Tundmatu sektsioon</string>
     <string name="bad_config_reason_value_out_of_range">Väärtus lubatud vahemikust väljas</string>
     <string name="bad_extension_error">Faililaiend peab olema .conf või .zip</string>
-    <string name="error_no_qr_found">QR koodi ei leitud pildilt</string>
-    <string name="error_qr_checksum">QR koodi kontrollsumma verifitseerimine ebaõnnestus</string>
+    <string name="error_no_qr_found">QR-koodi ei leitud pildilt</string>
+    <string name="error_qr_checksum">QR-koodi kontrollsumma verifitseerimine ebaõnnestus</string>
     <string name="cancel">Tühista</string>
     <string name="config_delete_error">Seadistusfaili %s kustutamine ebaõnnestus</string>
     <string name="config_exists_error">\"%s\" seadistus on juba olemas</string>
@@ -90,8 +90,8 @@
     <string name="config_save_error">\"%1$s\" seadistuse salvestamine ebaõnnestus: %2$s</string>
     <string name="config_save_success">\"%s\" seadistus salvestatud</string>
     <string name="create_activity_title">Loo WireGuard tunnel</string>
-    <string name="create_bin_dir_error">Ei saa luua lokaalset binary kataloogi</string>
-    <string name="create_downloads_file_error">Ei saa luua faili allalaadimiste kataloogis</string>
+    <string name="create_bin_dir_error">Lokaalse programmfaili kataloogi tekitamine ebaõnnestus</string>
+    <string name="create_downloads_file_error">Faili loomine allalaadimiste kataloogis ebaõnnestus</string>
     <string name="create_empty">Sisesta käsitsi</string>
     <string name="create_from_file">Impordi failist või arhiivist</string>
     <string name="create_from_qr_code">Skaneeri QR-koodist</string>
@@ -107,15 +107,20 @@
     <string name="tv_select_a_storage_drive">Vali salvestusseade</string>
     <string name="tv_no_file_picker">Failide vaatamiseks paigalda failide haldusvahend</string>
     <string name="tv_add_tunnel_get_started">Alustamiseks lisa uus tunnel</string>
+    <string name="donate_title">♥ Anneta WireGuard\'i projektile</string>
+    <string name="donate_summary">Iga panus aitab</string>
+    <string name="donate_google_play_disappointment">Aitäh, et toetad WireGuard\'i projekti!\n\nKahjuks ei saa me Google\'i eeskirjade tõttu linkida projekti veebilehele, kus saab annetusi teha. Loodetavasti leiad selle ise!\n\n
+Aitäh veelkord sinu panuse eest.</string>
     <string name="disable_config_export_title">Keela seadistuste eksportimine</string>
     <string name="disable_config_export_description">Seadistuste eksportimise keelamine teeb privaatvõtmetele ligipääsu keerulisemaks</string>
-    <string name="dns_servers">DNS serverid</string>
+    <string name="dns_servers">DNS-serverid</string>
     <string name="dns_search_domains">DNS-i otsingudomeenid</string>
     <string name="edit">Muuda</string>
     <string name="endpoint">Lõpp-punkt</string>
     <string name="error_down">Viga tunneli väljalülitamisel: %s</string>
     <string name="error_fetching_apps">Viga rakenduste nimekirja pärimisel: %s</string>
     <string name="error_root">Hangi juurkasutaja õigused ja proovi uuesti</string>
+    <string name="error_prepare">Viga tunneli ettevalmistamisel: %s</string>
     <string name="error_up">Viga tunneli sisselülitamisel: %s</string>
     <string name="exclude_private_ips">Keela privaatsed IP\'d</string>
     <string name="generate_new_private_key">Tekita uus privaatvõti</string>
@@ -135,6 +140,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64 võti peab olema 44 sümbolit (32 baiti) pikk</string>
     <string name="key_length_explanation_binary">: WireGuard võtmed peavad olema 32 baiti</string>
     <string name="key_length_explanation_hex">: WireGuard hex võti peab olema 64 sümbolit (32 baiti) pikk</string>
+    <string name="latest_handshake">Viimane kätlus</string>
+    <string name="latest_handshake_ago">%s tagasi</string>
     <string name="listen_port">Kuulamisport</string>
     <string name="log_export_error">Logifaili eksportimine ebaõnnestus: %s</string>
     <string name="log_export_subject">WireGuard Android logifail</string>
@@ -164,7 +171,7 @@
     <string name="no_configs_error">Seadistusi ei leitud</string>
     <string name="no_tunnels_error">Tunneleid ei ole</string>
     <string name="parse_error_generic">string</string>
-    <string name="parse_error_inet_address">IP aadress</string>
+    <string name="parse_error_inet_address">IP-aadress</string>
     <string name="parse_error_inet_endpoint">lõpp-punkt</string>
     <string name="parse_error_inet_network">IP võrk</string>
     <string name="parse_error_integer">number</string>
@@ -184,9 +191,9 @@
     <string name="save">Salvesta</string>
     <string name="select_all">Vali kõik</string>
     <string name="settings">Seaded</string>
-    <string name="shell_exit_status_read_error">Kest, shell, ei saa lugeda väljumise olekut</string>
-    <string name="shell_marker_count_error">Kest, shell, ootas 4 markerit, saadi %d</string>
-    <string name="shell_start_error">Kest, shell, ebaõnnestus käivitamisel: %d</string>
+    <string name="shell_exit_status_read_error">Kest ei saa lugeda väljundstaatust</string>
+    <string name="shell_marker_count_error">Kest ootas 4 markerit, saadi %d</string>
+    <string name="shell_start_error">Kesta käivitumine ebaõnnestus: %d</string>
     <string name="success_application_will_restart">Tegevus õnnestus. Rakendus taaskäivitub…</string>
     <string name="toggle_all">Vaheta kõik</string>
     <string name="toggle_error">WireGuard tunneli lülitamine ebaõnnestus: %s</string>
@@ -213,6 +220,7 @@
     <string name="tunnel_create_success">Tunnel \"%s\" lisatud</string>
     <string name="tunnel_error_already_exists">Tunnel \"%s\" on juba olemas</string>
     <string name="tunnel_error_invalid_name">Sobimatu nimi</string>
+    <string name="tunnel_list_placeholder">Lisa tunnel alloleva nupu abil</string>
     <string name="tunnel_name">Tunneli nimi</string>
     <string name="tunnel_on_error">Tunneli sisselülitamine ebaõnnestus (wgTurnOn tagastas %d)</string>
     <string name="tunnel_dns_failure">Ei saa lahendada DNS hostinime: \"%s\"</string>

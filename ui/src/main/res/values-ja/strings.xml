@@ -66,6 +66,8 @@
     <string name="bad_config_reason_unknown_section">未知のセクション</string>
     <string name="bad_config_reason_value_out_of_range">範囲外の値</string>
     <string name="bad_extension_error">ファイルの拡張子は .conf か .zip です</string>
+    <string name="error_no_qr_found">QRコードが見つかりません</string>
+    <string name="error_qr_checksum">QRコードのチェックサムの確認に失敗しました</string>
     <string name="cancel">キャンセル</string>
     <string name="config_delete_error">設定ファイル %s を削除できません</string>
     <string name="config_exists_error">\"%s\" の定義はすでに存在します</string>
@@ -91,7 +93,9 @@
     <string name="tv_delete">削除するトンネルを選択</string>
     <string name="tv_select_a_storage_drive">ストレージを選択</string>
     <string name="tv_no_file_picker">ファイルを参照するにはファイル管理アプリをインストールしてください</string>
-    <string name="tv_add_tunnel_get_started">Add a tunnel to get started</string>
+    <string name="tv_add_tunnel_get_started">トンネルを追加して開始する</string>
+    <string name="donate_title">♥ WireGuard プロジェクトに寄付する</string>
+    <string name="donate_summary">すべての貢献が役立ちます</string>
     <string name="disable_config_export_title">設定のエクスポートを無効にする</string>
     <string name="disable_config_export_description">設定のエクスポートを無効にすると、秘密鍵にアクセスされにくくなります</string>
     <string name="dns_servers">DNS サーバ</string>
@@ -101,6 +105,7 @@
     <string name="error_down">トンネル停止時エラー: %s</string>
     <string name="error_fetching_apps">アプリ一覧取得エラー: %s</string>
     <string name="error_root">root 権限を取得して再試行してください</string>
+    <string name="error_prepare">トンネル準備中エラー: %s</string>
     <string name="error_up">トンネル起動時エラー: %s</string>
     <string name="exclude_private_ips">プライベート IP アドレスを除外</string>
     <string name="generate_new_private_key">新しい秘密鍵を生成する</string>
@@ -120,6 +125,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64 鍵は44文字 (32バイト) でなければなりません</string>
     <string name="key_length_explanation_binary">: WireGuard 鍵は32バイトでなければなりません</string>
     <string name="key_length_explanation_hex">: WireGuard hex 鍵は64文字 (32バイト) でなければなりません</string>
+    <string name="latest_handshake">直近のハンドシェイク</string>
+    <string name="latest_handshake_ago">%s 前</string>
     <string name="listen_port">Listen ポート</string>
     <string name="log_export_error">ログをエクスポートできません: %s</string>
     <string name="log_export_subject">WireGuard Android ログファイル</string>
@@ -198,6 +205,7 @@
     <string name="tunnel_create_success">トンネル \"%s\" を作成しました</string>
     <string name="tunnel_error_already_exists">トンネル “%s” はすでに存在します</string>
     <string name="tunnel_error_invalid_name">不正な名前</string>
+    <string name="tunnel_list_placeholder">下のボタンを使用してトンネルを追加</string>
     <string name="tunnel_name">トンネル名</string>
     <string name="tunnel_on_error">トンネルを有効にできません (wgTurnOn が %d を返却)</string>
     <string name="tunnel_dns_failure">DNSホスト名を解決できませんでした: “%s”</string>

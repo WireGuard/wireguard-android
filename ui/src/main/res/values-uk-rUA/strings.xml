@@ -133,6 +133,8 @@
     <string name="tv_select_a_storage_drive">Виберіть диск зберігання</string>
     <string name="tv_no_file_picker">Будь ласка, встановіть провідник для перегляду файлів</string>
     <string name="tv_add_tunnel_get_started">Додайте тунель, щоб почати</string>
+    <string name="donate_title">♥️ Пожертвуйте на проект WireGuard</string>
+    <string name="donate_summary">Кожен внесок допомагає</string>
     <string name="disable_config_export_title">Вимкнути експорт конфігурації</string>
     <string name="disable_config_export_description">Вимкнення експорту налаштувань робить приватні ключі менш доступними</string>
     <string name="dns_servers">DNS-сервери</string>
@@ -142,6 +144,7 @@
     <string name="error_down">Помилка вимкнення тунелю: %s</string>
     <string name="error_fetching_apps">Помилка при отриманні списку додатків: %s</string>
     <string name="error_root">Будь ласка, отримайте root-доступ і спробуйте ще раз</string>
+    <string name="error_prepare">Помилка підготовки тунелю: %s</string>
     <string name="error_up">Помилка при увімкненні тунелю: %s</string>
     <string name="exclude_private_ips">Виключити приватні IP</string>
     <string name="generate_new_private_key">Згенерувати новий приватний ключ</string>
@@ -161,6 +164,8 @@
     <string name="key_length_explanation_base64">: Ключі WireGuard base64 повинні мати довжину 44 символи (32 байти)</string>
     <string name="key_length_explanation_binary">: Ключі WireGuard повинні мати довжину 32 байти</string>
     <string name="key_length_explanation_hex">: hex ключі WireGuard повинні мати довжину 64 символи (32 байти)</string>
+    <string name="latest_handshake">Останнє рукостискання</string>
+    <string name="latest_handshake_ago">%s тому</string>
     <string name="listen_port">Порт</string>
     <string name="log_export_error">Не вдалося експортувати журнал: %s</string>
     <string name="log_export_subject">Файл журналу WireGuard</string>
@@ -239,6 +244,7 @@
     <string name="tunnel_create_success">Тунель успішно створено “%s”</string>
     <string name="tunnel_error_already_exists">Тунель \"%s\" вже існує</string>
     <string name="tunnel_error_invalid_name">Неприпустиме ім\'я</string>
+    <string name="tunnel_list_placeholder">Додайте тунель, використовуючи кнопку нижче</string>
     <string name="tunnel_name">Назва тунелю</string>
     <string name="tunnel_on_error">Неможливо ввімкнути тунель (wgTurnon returned %d)</string>
     <string name="tunnel_dns_failure">Не вдалося знайти DNS хост: “%s</string>

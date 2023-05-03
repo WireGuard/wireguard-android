@@ -107,6 +107,9 @@
     <string name="tv_select_a_storage_drive">Selecciones un dispositivo de almacenamiento</string>
     <string name="tv_no_file_picker">Por favor, instale una herramienta de gestión de archivos para navegar por archivos</string>
     <string name="tv_add_tunnel_get_started">Agregue un túnel para empezar</string>
+    <string name="donate_title">♥ Donar al Proyecto WireGuard</string>
+    <string name="donate_summary">Todas las contribuciones ayudan</string>
+    <string name="donate_google_play_disappointment">¡Gracias por apoyar el proyecto WireGuard!\n\nLamentablemente, debido a las políticas de Google, no estamos autorizados a enlazar a la parte de la página web del proyecto donde puedes hacer una donación. ¡Esperemos que puedas averiguar esto!\n\nGracias de nuevo por tu contribución.</string>
     <string name="disable_config_export_title">Inhabilitar la exportación de configuración</string>
     <string name="disable_config_export_description">Desactivar la exportación de configuración hace que las claves privadas sean menos accesibles</string>
     <string name="dns_servers">Servidores DNS</string>
@@ -116,6 +119,7 @@
     <string name="error_down">Error al bajar el túnel: %s</string>
     <string name="error_fetching_apps">Error al obtener la lista de aplicaciones: %s</string>
     <string name="error_root">Por favor, obtén acceso root y vuelve a intentarlo</string>
+    <string name="error_prepare">Error al preparar el túnel: %s</string>
     <string name="error_up">Error al abrir el túnel: %s</string>
     <string name="exclude_private_ips">Excluir direcciones privadas</string>
     <string name="generate_new_private_key">Generar nueva clave privada</string>
@@ -135,6 +139,8 @@
     <string name="key_length_explanation_base64">Las claves base64 de WireGuard deben tener 44 caracteres (32 bytes)</string>
     <string name="key_length_explanation_binary">: Las claves WireGuard deben tener 32 bytes</string>
     <string name="key_length_explanation_hex">: Las claves hexadecimales de Wirex deben tener 64 caracteres (32 bytes)</string>
+    <string name="latest_handshake">Última comunicación</string>
+    <string name="latest_handshake_ago">hace %s</string>
     <string name="listen_port">Puerto de escucha</string>
     <string name="log_export_error">No se pudo exportar el registro: %s</string>
     <string name="log_export_subject">Archivo de registro WireGuard Android</string>
@@ -213,6 +219,7 @@
     <string name="tunnel_create_success">Túnel creado con éxito “%s”</string>
     <string name="tunnel_error_already_exists">Túnel “%s” ya existe</string>
     <string name="tunnel_error_invalid_name">Nombre inválido</string>
+    <string name="tunnel_list_placeholder">Añadir un túnel usando el botón azul de abajo</string>
     <string name="tunnel_name">Nombre del túnel</string>
     <string name="tunnel_on_error">No se puede activar el túnel (wgTurnOn devolvió %d)</string>
     <string name="tunnel_dns_failure">No se puede resolver el nombre de host DNS: “%s”</string>
