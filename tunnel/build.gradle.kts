@@ -55,8 +55,8 @@ android {
         }
     }
     lint {
-        disable.add("LongLogTag")
-        disable.add("NewApi")
+        disable += "LongLogTag"
+        disable += "NewApi"
     }
     publishing {
         singleVariant("release") {

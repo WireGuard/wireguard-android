@@ -54,9 +54,9 @@ android {
         }
     }
     lint {
-        disable.add("LongLogTag")
-        warning.add("MissingTranslation")
-        warning.add("ImpliedQuantity")
+        disable += "LongLogTag"
+        warning += "MissingTranslation"
+        warning += "ImpliedQuantity"
     }
 }
 
