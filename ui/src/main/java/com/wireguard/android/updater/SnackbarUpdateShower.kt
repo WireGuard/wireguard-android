@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.QuantityFormatter
@@ -88,6 +89,9 @@ object SnackbarUpdateShower {
     }
 
     fun attachToActivity(activity: FragmentActivity, view: View, anchor: View?) {
+        if (BuildConfig.IS_GOOGLE_PLAY)
+            return
+
         val snackbar = SwapableSnackbar(activity, view, anchor)
         val context = activity.applicationContext
 

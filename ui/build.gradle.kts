@@ -23,6 +23,7 @@ android {
         versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()
         versionName = providers.gradleProperty("wireguardVersionName").get()
         buildConfigField("int", "MIN_SDK_VERSION", minSdk.toString())
+        buildConfigField("boolean", "IS_GOOGLE_PLAY", false.toString())
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -44,6 +45,10 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
+        }
+        create("googleplay") {
+            initWith(getByName("release"))
+            buildConfigField("boolean", "IS_GOOGLE_PLAY", true.toString())
         }
     }
     lint {

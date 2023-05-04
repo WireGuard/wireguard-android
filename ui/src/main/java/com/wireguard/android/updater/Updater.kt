@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
+import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.util.UserKnobs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -360,7 +361,7 @@ object Updater {
     }
 
     fun monitorForUpdates() {
-        if (installerIsGooglePlay())
+        if (BuildConfig.IS_GOOGLE_PLAY)
             return
 
         updaterScope.launch {
@@ -400,21 +401,34 @@ object Updater {
         }.launchIn(Application.getCoroutineScope())
     }
 
-    fun installer(): String {
-        val context = Application.get().applicationContext
-        return try {
-            val packageName = context.packageName
-            val pm = context.packageManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                pm.getInstallSourceInfo(packageName).installingPackageName ?: ""
-            } else {
-                @Suppress("DEPRECATION")
-                pm.getInstallerPackageName(packageName) ?: ""
+    class AppUpdatedReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (BuildConfig.IS_GOOGLE_PLAY)
+                return
+
+            if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED)
+                return
+
+            val installer = try {
+                val packageName = context.packageName
+                val pm = context.packageManager
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    pm.getInstallSourceInfo(packageName).installingPackageName ?: ""
+                } else {
+                    @Suppress("DEPRECATION")
+                    pm.getInstallerPackageName(packageName) ?: ""
+                }
+            } catch (_: Throwable) {
+                ""
             }
-        } catch (_: Throwable) {
-            ""
+            if (installer != context.packageName)
+                return
+
+            /* TODO: does not work because of restrictions placed on broadcast receivers. */
+            val start = Intent(context, MainActivity::class.java)
+            start.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(start)
         }
     }
-
-    fun installerIsGooglePlay(): Boolean = installer() == "com.android.vending"
 }
