@@ -14,8 +14,8 @@ import android.os.Build
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 object QuantityFormatter {
     fun formatBytes(bytes: Long): String {
@@ -33,7 +33,7 @@ object QuantityFormatter {
         var span = (System.currentTimeMillis() - epochMillis) / 1000
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-            return Application.get().applicationContext.getString(R.string.latest_handshake_ago, span.toDuration(DurationUnit.SECONDS).toString())
+            return Application.get().applicationContext.getString(R.string.latest_handshake_ago, span.seconds.toString())
 
         if (span <= 0L)
             return RelativeDateTimeFormatter.getInstance().format(RelativeDateTimeFormatter.Direction.PLAIN, RelativeDateTimeFormatter.AbsoluteUnit.NOW)
