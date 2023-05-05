@@ -55,11 +55,13 @@ class QrCodeFromFileScanner(
                 multFactor = originalWidth.toFloat() / originalHeight.toFloat()
                 newWidth = (newHeight * multFactor).toInt()
             }
+
             originalWidth > originalHeight -> {
                 newWidth = scaledSize
                 multFactor = originalHeight.toFloat() / originalWidth.toFloat()
                 newHeight = (newWidth * multFactor).toInt()
             }
+
             originalHeight == originalWidth -> {
                 newHeight = scaledSize
                 newWidth = scaledSize

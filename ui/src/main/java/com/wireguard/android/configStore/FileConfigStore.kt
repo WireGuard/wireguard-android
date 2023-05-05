@@ -40,9 +40,9 @@ class FileConfigStore(private val context: Context) : ConfigStore {
 
     override fun enumerate(): Set<String> {
         return context.fileList()
-                .filter { it.endsWith(".conf") }
-                .map { it.substring(0, it.length - ".conf".length) }
-                .toSet()
+            .filter { it.endsWith(".conf") }
+            .map { it.substring(0, it.length - ".conf".length) }
+            .toSet()
     }
 
     private fun fileFor(name: String): File {

@@ -37,6 +37,7 @@ class ConfigNamingDialogFragment : DialogFragment() {
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val configText = requireArguments().getString(KEY_CONFIG_TEXT)

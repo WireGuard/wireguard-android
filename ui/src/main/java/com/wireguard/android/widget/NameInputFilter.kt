@@ -13,10 +13,12 @@ import com.wireguard.android.backend.Tunnel
  * InputFilter for entering WireGuard configuration names (Linux interface names).
  */
 class NameInputFilter : InputFilter {
-    override fun filter(source: CharSequence,
-                        sStart: Int, sEnd: Int,
-                        dest: Spanned,
-                        dStart: Int, dEnd: Int): CharSequence? {
+    override fun filter(
+        source: CharSequence,
+        sStart: Int, sEnd: Int,
+        dest: Spanned,
+        dStart: Int, dEnd: Int
+    ): CharSequence? {
         var replacement: SpannableStringBuilder? = null
         var rIndex = 0
         val dLength = dest.length
@@ -26,7 +28,8 @@ class NameInputFilter : InputFilter {
             // Restrict characters to those valid in interfaces.
             // Ensure adding this character does not push the length over the limit.
             if (dIndex < Tunnel.NAME_MAX_LENGTH && isAllowed(c) &&
-                    dLength + (sIndex - sStart) < Tunnel.NAME_MAX_LENGTH) {
+                dLength + (sIndex - sStart) < Tunnel.NAME_MAX_LENGTH
+            ) {
                 ++rIndex
             } else {
                 if (replacement == null) replacement = SpannableStringBuilder(source, sStart, sEnd)

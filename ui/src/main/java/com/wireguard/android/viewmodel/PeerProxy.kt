@@ -16,8 +16,6 @@ import com.wireguard.config.Attribute
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Peer
 import java.lang.ref.WeakReference
-import java.util.ArrayList
-import java.util.LinkedHashSet
 
 class PeerProxy : BaseObservable, Parcelable {
     private val dnsRoutes: MutableList<String?> = ArrayList()
@@ -240,24 +238,32 @@ class PeerProxy : BaseObservable, Parcelable {
             peerProxy.setTotalPeers(sender.size)
         }
 
-        override fun onItemRangeChanged(sender: ObservableList<PeerProxy?>,
-                                        positionStart: Int, itemCount: Int) {
+        override fun onItemRangeChanged(
+            sender: ObservableList<PeerProxy?>,
+            positionStart: Int, itemCount: Int
+        ) {
             // Do nothing.
         }
 
-        override fun onItemRangeInserted(sender: ObservableList<PeerProxy?>,
-                                         positionStart: Int, itemCount: Int) {
+        override fun onItemRangeInserted(
+            sender: ObservableList<PeerProxy?>,
+            positionStart: Int, itemCount: Int
+        ) {
             onChanged(sender)
         }
 
-        override fun onItemRangeMoved(sender: ObservableList<PeerProxy?>,
-                                      fromPosition: Int, toPosition: Int,
-                                      itemCount: Int) {
+        override fun onItemRangeMoved(
+            sender: ObservableList<PeerProxy?>,
+            fromPosition: Int, toPosition: Int,
+            itemCount: Int
+        ) {
             // Do nothing.
         }
 
-        override fun onItemRangeRemoved(sender: ObservableList<PeerProxy?>,
-                                        positionStart: Int, itemCount: Int) {
+        override fun onItemRangeRemoved(
+            sender: ObservableList<PeerProxy?>,
+            positionStart: Int, itemCount: Int
+        ) {
             onChanged(sender)
         }
     }
@@ -276,12 +282,12 @@ class PeerProxy : BaseObservable, Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<PeerProxy> = PeerProxyCreator()
         private val IPV4_PUBLIC_NETWORKS = setOf(
-                "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3",
-                "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12",
-                "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
-                "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16",
-                "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10",
-                "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
+            "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3",
+            "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12",
+            "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
+            "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16",
+            "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10",
+            "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
         )
         private val IPV4_WILDCARD = setOf("0.0.0.0/0")
     }

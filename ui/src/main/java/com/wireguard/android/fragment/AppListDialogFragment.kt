@@ -49,7 +49,8 @@ class AppListDialogFragment : DialogFragment() {
                     packageInfos.forEach {
                         val packageName = it.packageName
                         val appInfo = it.applicationInfo
-                        val appData = ApplicationData(appInfo.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
+                        val appData =
+                            ApplicationData(appInfo.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
                         applicationData.add(appData)
                         appData.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -143,10 +144,12 @@ class AppListDialogFragment : DialogFragment() {
                 selectedApps.add(data.packageName)
             }
         }
-        setFragmentResult(REQUEST_SELECTION, bundleOf(
+        setFragmentResult(
+            REQUEST_SELECTION, bundleOf(
                 KEY_SELECTED_APPS to selectedApps.toTypedArray(),
                 KEY_IS_EXCLUDED to (tabs?.selectedTabPosition == 0)
-        ))
+            )
+        )
         dismiss()
     }
 

@@ -31,25 +31,29 @@ object BiometricAuthenticator {
     }
 
     fun authenticate(
-            @StringRes dialogTitleRes: Int,
-            fragment: Fragment,
-            callback: (Result) -> Unit
+        @StringRes dialogTitleRes: Int,
+        fragment: Fragment,
+        callback: (Result) -> Unit
     ) {
         val authCallback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 Log.d(TAG, "BiometricAuthentication error: errorCode=$errorCode, msg=$errString")
-                callback(when (errorCode) {
-                    BiometricPrompt.ERROR_CANCELED, BiometricPrompt.ERROR_USER_CANCELED,
-                    BiometricPrompt.ERROR_NEGATIVE_BUTTON -> {
-                        Result.Cancelled
+                callback(
+                    when (errorCode) {
+                        BiometricPrompt.ERROR_CANCELED, BiometricPrompt.ERROR_USER_CANCELED,
+                        BiometricPrompt.ERROR_NEGATIVE_BUTTON -> {
+                            Result.Cancelled
+                        }
+
+                        BiometricPrompt.ERROR_HW_NOT_PRESENT, BiometricPrompt.ERROR_HW_UNAVAILABLE,
+                        BiometricPrompt.ERROR_NO_BIOMETRICS, BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL -> {
+                            Result.HardwareUnavailableOrDisabled
+                        }
+
+                        else -> Result.Failure(errorCode, fragment.getString(R.string.biometric_auth_error_reason, errString))
                     }
-                    BiometricPrompt.ERROR_HW_NOT_PRESENT, BiometricPrompt.ERROR_HW_UNAVAILABLE,
-                    BiometricPrompt.ERROR_NO_BIOMETRICS, BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL -> {
-                        Result.HardwareUnavailableOrDisabled
-                    }
-                    else -> Result.Failure(errorCode, fragment.getString(R.string.biometric_auth_error_reason, errString))
-                })
+                )
             }
 
             override fun onAuthenticationFailed() {
@@ -64,9 +68,9 @@ object BiometricAuthenticator {
         }
         val biometricPrompt = BiometricPrompt(fragment, { Handler(Looper.getMainLooper()).post(it) }, authCallback)
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle(fragment.getString(dialogTitleRes))
-                .setAllowedAuthenticators(allowedAuthenticators)
-                .build()
+            .setTitle(fragment.getString(dialogTitleRes))
+            .setAllowedAuthenticators(allowedAuthenticators)
+            .build()
         if (BiometricManager.from(fragment.requireContext()).canAuthenticate(allowedAuthenticators) == BiometricManager.BIOMETRIC_SUCCESS) {
             biometricPrompt.authenticate(promptInfo)
         } else {

@@ -25,7 +25,7 @@ val Any.applicationScope: CoroutineScope
 
 val Preference.activity: SettingsActivity
     get() = context as? SettingsActivity
-            ?: throw IllegalStateException("Failed to resolve SettingsActivity")
+        ?: throw IllegalStateException("Failed to resolve SettingsActivity")
 
 val Preference.lifecycleScope: CoroutineScope
     get() = activity.lifecycleScope

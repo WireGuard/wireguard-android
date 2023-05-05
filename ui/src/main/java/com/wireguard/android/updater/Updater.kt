@@ -44,13 +44,11 @@ import kotlin.time.Duration.Companion.seconds
 
 object Updater {
     private const val TAG = "WireGuard/Updater"
-    private const val LATEST_VERSION_URL =
-        "https://download.wireguard.com/android-client/latest.sig"
+    private const val LATEST_VERSION_URL = "https://download.wireguard.com/android-client/latest.sig"
     private const val APK_PATH_URL = "https://download.wireguard.com/android-client/%s"
     private val APK_NAME_PREFIX = BuildConfig.APPLICATION_ID.removeSuffix(".debug") + "-"
     private const val APK_NAME_SUFFIX = ".apk"
-    private const val RELEASE_PUBLIC_KEY_BASE64 =
-        "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
+    private const val RELEASE_PUBLIC_KEY_BASE64 = "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
     private val CURRENT_VERSION = Version(BuildConfig.VERSION_NAME.removeSuffix("-debug"))
 
     private val updaterScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -219,12 +217,7 @@ object Updater {
         val receiver = InstallReceiver()
         val context = Application.get().applicationContext
         val pendingIntent = withContext(Dispatchers.Main) {
-            ContextCompat.registerReceiver(
-                context,
-                receiver,
-                IntentFilter(receiver.sessionId),
-                ContextCompat.RECEIVER_NOT_EXPORTED
-            )
+            ContextCompat.registerReceiver(context, receiver, IntentFilter(receiver.sessionId), ContextCompat.RECEIVER_NOT_EXPORTED)
             PendingIntent.getBroadcast(
                 context,
                 0,
@@ -241,24 +234,20 @@ object Updater {
         }
 
         emitProgress(Progress.Downloading(0UL, 0UL), true)
-        val connection =
-            URL(APK_PATH_URL.format(update.fileName)).openConnection() as HttpURLConnection
+        val connection = URL(APK_PATH_URL.format(update.fileName)).openConnection() as HttpURLConnection
         connection.setRequestProperty("User-Agent", Application.USER_AGENT)
         connection.connect()
         if (connection.responseCode != HttpURLConnection.HTTP_OK)
             throw IOException("Update could not be fetched: ${connection.responseCode}")
 
         var downloadedByteLen: ULong = 0UL
-        val totalByteLen =
-            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) connection.contentLengthLong else connection.contentLength).toLong()
-                .toULong()
+        val totalByteLen = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) connection.contentLengthLong else connection.contentLength).toLong().toULong()
         val fileBytes = ByteArray(1024 * 32 /* 32 KiB */)
         val digest = MessageDigest.getInstance("SHA-256")
         emitProgress(Progress.Downloading(downloadedByteLen, totalByteLen), true)
 
         val installer = context.packageManager.packageInstaller
-        val params =
-            PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
+        val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
         params.setAppPackageName(context.packageName) /* Enforces updates; disallows new apps. */
@@ -316,18 +305,10 @@ object Updater {
             if (sessionId != intent.action)
                 return
 
-            when (val status =
-                intent.getIntExtra(
-                    PackageInstaller.EXTRA_STATUS,
-                    PackageInstaller.STATUS_FAILURE_INVALID
-                )) {
+            when (val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE_INVALID)) {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                     val id = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, 0)
-                    val userIntervention = IntentCompat.getParcelableExtra(
-                        intent,
-                        Intent.EXTRA_INTENT,
-                        Intent::class.java
-                    )!!
+                    val userIntervention = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent::class.java)!!
                     Application.getCoroutineScope().launch {
                         emitProgress(Progress.NeedsUserIntervention(userIntervention, id))
                     }
@@ -346,9 +327,7 @@ object Updater {
                         context.applicationContext.packageManager.packageInstaller.abandonSession(id)
                     } catch (_: SecurityException) {
                     }
-                    val message =
-                        intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
-                            ?: "Installation error $status"
+                    val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "Installation error $status"
                     Application.getCoroutineScope().launch {
                         val e = Exception(message)
                         Log.e(TAG, "Update failure", e)
@@ -365,9 +344,7 @@ object Updater {
             return
 
         updaterScope.launch {
-            if (UserKnobs.updaterNewerVersionSeen.firstOrNull()
-                    ?.let { Version(it) > CURRENT_VERSION } == true
-            )
+            if (UserKnobs.updaterNewerVersionSeen.firstOrNull()?.let { Version(it) > CURRENT_VERSION } == true)
                 return@launch
 
             var waitTime = 15
@@ -387,8 +364,10 @@ object Updater {
         }
 
         UserKnobs.updaterNewerVersionSeen.onEach { ver ->
-            if (ver != null && Version(ver) > CURRENT_VERSION && UserKnobs.updaterNewerVersionConsented.firstOrNull()
-                    ?.let { Version(it) > CURRENT_VERSION } != true
+            if (
+                ver != null &&
+                Version(ver) > CURRENT_VERSION &&
+                UserKnobs.updaterNewerVersionConsented.firstOrNull()?.let { Version(it) > CURRENT_VERSION } != true
             )
                 emitProgress(Progress.Available(ver))
         }.launchIn(Application.getCoroutineScope())

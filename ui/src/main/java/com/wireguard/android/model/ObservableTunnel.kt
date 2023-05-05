@@ -21,10 +21,10 @@ import kotlinx.coroutines.withContext
  * Encapsulates the volatile and nonvolatile state of a WireGuard tunnel.
  */
 class ObservableTunnel internal constructor(
-        private val manager: TunnelManager,
-        private var name: String,
-        config: Config?,
-        state: Tunnel.State
+    private val manager: TunnelManager,
+    private var name: String,
+    config: Config?,
+    state: Tunnel.State
 ) : BaseObservable(), Keyed<String>, Tunnel {
     override val key
         get() = name

@@ -55,9 +55,9 @@ class ConfigProxy : Parcelable {
         val resolvedPeers: MutableCollection<Peer> = ArrayList()
         peers.forEach { resolvedPeers.add(it.resolve()) }
         return Config.Builder()
-                .setInterface(`interface`.resolve())
-                .addPeers(resolvedPeers)
-                .build()
+            .setInterface(`interface`.resolve())
+            .addPeers(resolvedPeers)
+            .build()
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

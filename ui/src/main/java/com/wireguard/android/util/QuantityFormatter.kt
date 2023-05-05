@@ -15,7 +15,6 @@ import com.wireguard.android.Application
 import com.wireguard.android.R
 import java.util.Locale
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit
 
 object QuantityFormatter {
     fun formatBytes(bytes: Long): String {

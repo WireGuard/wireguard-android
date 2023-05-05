@@ -35,10 +35,10 @@ class SlashDrawable(private val mDrawable: Drawable) : Drawable() {
         val radiusX = scale(CORNER_RADIUS, width)
         val radiusY = scale(CORNER_RADIUS, height)
         updateRect(
-                scale(LEFT, width),
-                scale(TOP, height),
-                scale(RIGHT, width),
-                scale(TOP + mCurrentSlashLength, height)
+            scale(LEFT, width),
+            scale(TOP, height),
+            scale(RIGHT, width),
+            scale(TOP + mCurrentSlashLength, height)
         )
         mPath.reset()
         // Draw the slash vertically

@@ -1,5 +1,5 @@
-
 <resources>
+
     <style name="WireGuardTheme" parent="Theme.Material3.Dark">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>

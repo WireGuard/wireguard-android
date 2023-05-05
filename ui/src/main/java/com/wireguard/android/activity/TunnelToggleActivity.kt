@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.N)
 class TunnelToggleActivity : AppCompatActivity() {
-    private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
+    private val permissionActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
 
     private fun toggleTunnelWithPermissionsResult() {
         val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return

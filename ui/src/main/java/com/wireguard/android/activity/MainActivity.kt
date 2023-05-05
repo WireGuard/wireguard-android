@@ -77,6 +77,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
+
             R.id.menu_action_edit -> {
                 supportFragmentManager.commit {
                     replace(R.id.detail_container, TunnelEditorFragment())
@@ -91,12 +92,15 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?,
-                                         newTunnel: ObservableTunnel?): Boolean {
+    override fun onSelectedTunnelChanged(
+        oldTunnel: ObservableTunnel?,
+        newTunnel: ObservableTunnel?
+    ): Boolean {
         val fragmentManager = supportFragmentManager
         if (fragmentManager.isStateSaved) {
             return false

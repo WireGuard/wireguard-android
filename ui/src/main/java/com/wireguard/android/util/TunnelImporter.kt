@@ -24,7 +24,6 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.util.ArrayList
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -135,12 +134,16 @@ object TunnelImporter {
             message = context.getString(R.string.import_success, tunnels[0].name)
         else if (tunnels.isEmpty() && throwables.size == 1)
         else if (throwables.isEmpty())
-            message = context.resources.getQuantityString(R.plurals.import_total_success,
-                    tunnels.size, tunnels.size)
+            message = context.resources.getQuantityString(
+                R.plurals.import_total_success,
+                tunnels.size, tunnels.size
+            )
         else if (!throwables.isEmpty())
-            message = context.resources.getQuantityString(R.plurals.import_partial_success,
-                    tunnels.size + throwables.size,
-                    tunnels.size, tunnels.size + throwables.size)
+            message = context.resources.getQuantityString(
+                R.plurals.import_partial_success,
+                tunnels.size + throwables.size,
+                tunnels.size, tunnels.size + throwables.size
+            )
 
         messageCallback(message)
     }

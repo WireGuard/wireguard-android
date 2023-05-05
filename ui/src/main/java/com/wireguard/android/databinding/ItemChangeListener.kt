@@ -61,8 +61,10 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
             }
         }
 
-        override fun onItemRangeChanged(sender: ObservableList<T>, positionStart: Int,
-                                        itemCount: Int) {
+        override fun onItemRangeChanged(
+            sender: ObservableList<T>, positionStart: Int,
+            itemCount: Int
+        ) {
             val listener = weakListener.get()
             if (listener != null) {
                 for (i in positionStart until positionStart + itemCount) {
@@ -75,8 +77,10 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
             }
         }
 
-        override fun onItemRangeInserted(sender: ObservableList<T>, positionStart: Int,
-                                         itemCount: Int) {
+        override fun onItemRangeInserted(
+            sender: ObservableList<T>, positionStart: Int,
+            itemCount: Int
+        ) {
             val listener = weakListener.get()
             if (listener != null) {
                 for (i in positionStart until positionStart + itemCount)
@@ -86,8 +90,10 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
             }
         }
 
-        override fun onItemRangeMoved(sender: ObservableList<T>, fromPosition: Int,
-                                      toPosition: Int, itemCount: Int) {
+        override fun onItemRangeMoved(
+            sender: ObservableList<T>, fromPosition: Int,
+            toPosition: Int, itemCount: Int
+        ) {
             val listener = weakListener.get()
             if (listener != null) {
                 val views = arrayOfNulls<View>(itemCount)
@@ -99,8 +105,10 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
             }
         }
 
-        override fun onItemRangeRemoved(sender: ObservableList<T>, positionStart: Int,
-                                        itemCount: Int) {
+        override fun onItemRangeRemoved(
+            sender: ObservableList<T>, positionStart: Int,
+            itemCount: Int
+        ) {
             val listener = weakListener.get()
             if (listener != null) {
                 listener.container.removeViews(positionStart, itemCount)

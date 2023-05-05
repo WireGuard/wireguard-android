@@ -45,10 +45,12 @@
 
         <activity
             android:name=".activity.TunnelToggleActivity"
-            android:theme="@style/NoBackgroundTheme"
-            android:excludeFromRecents="true"/>
+            android:excludeFromRecents="true"
+            android:theme="@style/NoBackgroundTheme" />
 
-        <activity android:name=".activity.MainActivity" android:exported="true">
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,8 +64,8 @@
 
         <activity
             android:name=".activity.TvMainActivity"
-            android:theme="@style/TvTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/TvTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -87,8 +89,8 @@
 
         <activity
             android:name=".activity.LogViewerActivity"
-            android:label="@string/log_viewer_title"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/log_viewer_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -100,14 +102,18 @@
             android:exported="false"
             android:grantUriPermissions="true" />
 
-        <receiver android:name=".BootShutdownReceiver" android:exported="true">
+        <receiver
+            android:name=".BootShutdownReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".updater.Updater$AppUpdatedReceiver" android:exported="true">
+        <receiver
+            android:name=".updater.Updater$AppUpdatedReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -115,8 +121,8 @@
 
         <receiver
             android:name=".model.TunnelManager$IntentReceiver"
-            android:permission="${applicationId}.permission.CONTROL_TUNNELS"
-            android:exported="true">
+            android:exported="true"
+            android:permission="${applicationId}.permission.CONTROL_TUNNELS">
             <intent-filter>
                 <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
                 <action android:name="com.wireguard.android.action.SET_TUNNEL_UP" />
@@ -126,9 +132,9 @@
 
         <service
             android:name=".QuickTileService"
+            android:exported="true"
             android:icon="@drawable/ic_tile"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="true">
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
 
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

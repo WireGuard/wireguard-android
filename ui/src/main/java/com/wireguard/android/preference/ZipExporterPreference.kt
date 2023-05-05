@@ -70,14 +70,16 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                 val message = context.getString(R.string.zip_export_error, error)
                 Log.e(TAG, message, e)
                 Snackbar.make(
-                        activity.findViewById(android.R.id.content),
-                        message, Snackbar.LENGTH_LONG).show()
+                    activity.findViewById(android.R.id.content),
+                    message, Snackbar.LENGTH_LONG
+                ).show()
                 isEnabled = true
             }
         }
     }
 
-    override fun getSummary() = if (exportedFilePath == null) context.getString(R.string.zip_export_summary) else context.getString(R.string.zip_export_success, exportedFilePath)
+    override fun getSummary() =
+        if (exportedFilePath == null) context.getString(R.string.zip_export_summary) else context.getString(R.string.zip_export_success, exportedFilePath)
 
     override fun getTitle() = context.getString(R.string.zip_export_title)
 
@@ -91,13 +93,15 @@ class ZipExporterPreference(context: Context, attrs: AttributeSet?) : Preference
                     isEnabled = false
                     exportZip()
                 }
+
                 is BiometricAuthenticator.Result.Failure -> {
                     Snackbar.make(
-                            activity.findViewById(android.R.id.content),
-                            it.message,
-                            Snackbar.LENGTH_SHORT
+                        activity.findViewById(android.R.id.content),
+                        it.message,
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 }
+
                 is BiometricAuthenticator.Result.Cancelled -> {}
             }
         }

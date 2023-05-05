@@ -5,7 +5,6 @@
 package com.wireguard.android.fragment
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -67,16 +66,14 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.config_editor, menu)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelEditorFragmentBinding.inflate(inflater, container, false)
         binding?.apply {
@@ -103,8 +100,10 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         val focusedView = activity.currentFocus
         if (focusedView != null) {
             val inputManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputManager?.hideSoftInputFromWindow(focusedView.windowToken,
-                    InputMethodManager.HIDE_NOT_ALWAYS)
+            inputManager?.hideSoftInputFromWindow(
+                focusedView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
         }
         parentFragmentManager.popBackStackImmediate()
 
@@ -138,6 +137,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
                             onTunnelCreated(null, e)
                         }
                     }
+
                     tunnel!!.name != binding!!.name -> {
                         Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
                         try {
@@ -147,6 +147,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
                             onTunnelRenamed(tunnel!!, newConfig, e)
                         }
                     }
+
                     else -> {
                         Log.d(TAG, "Attempting to save config of " + tunnel!!.name)
                         try {
@@ -202,8 +203,10 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?,
-                                         newTunnel: ObservableTunnel?) {
+    override fun onSelectedTunnelChanged(
+        oldTunnel: ObservableTunnel?,
+        newTunnel: ObservableTunnel?
+    ) {
         tunnel = newTunnel
         if (binding == null) return
         binding!!.config = ConfigProxy()
@@ -240,8 +243,10 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         }
     }
 
-    private suspend fun onTunnelRenamed(renamedTunnel: ObservableTunnel, newConfig: Config,
-                                        throwable: Throwable?) {
+    private suspend fun onTunnelRenamed(
+        renamedTunnel: ObservableTunnel, newConfig: Config,
+        throwable: Throwable?
+    ) {
         val ctx = activity ?: Application.get()
         if (throwable == null) {
             val message = ctx.getString(R.string.tunnel_rename_success, renamedTunnel.name)
@@ -298,13 +303,15 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
                         haveShownKeys = true
                         showPrivateKey(edit)
                     }
+
                     is BiometricAuthenticator.Result.Failure -> {
                         Snackbar.make(
-                                binding!!.mainContainer,
-                                it.message,
-                                Snackbar.LENGTH_SHORT
+                            binding!!.mainContainer,
+                            it.message,
+                            Snackbar.LENGTH_SHORT
                         ).show()
                     }
+
                     is BiometricAuthenticator.Result.Cancelled -> {}
                 }
             }

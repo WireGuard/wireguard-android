@@ -40,8 +40,10 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
         menuInflater.inflate(R.menu.tunnel_detail, menu)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelDetailFragmentBinding.inflate(inflater, container, false)
         binding?.executePendingBindings()
@@ -110,16 +112,18 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
             val statistics = tunnel.getStatisticsAsync()
             for (i in 0 until binding.peersLayout.childCount) {
                 val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding.peersLayout.getChildAt(i))
-                        ?: continue
+                    ?: continue
                 val publicKey = peer.item!!.publicKey
                 val peerStats = statistics.peer(publicKey)
                 if (peerStats == null || (peerStats.rxBytes == 0L && peerStats.txBytes == 0L)) {
                     peer.transferLabel.visibility = View.GONE
                     peer.transferText.visibility = View.GONE
                 } else {
-                    peer.transferText.text = getString(R.string.transfer_rx_tx,
+                    peer.transferText.text = getString(
+                        R.string.transfer_rx_tx,
                         QuantityFormatter.formatBytes(peerStats.rxBytes),
-                        QuantityFormatter.formatBytes(peerStats.txBytes))
+                        QuantityFormatter.formatBytes(peerStats.txBytes)
+                    )
                     peer.transferLabel.visibility = View.VISIBLE
                     peer.transferText.visibility = View.VISIBLE
                 }
@@ -135,7 +139,7 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
         } catch (e: Throwable) {
             for (i in 0 until binding.peersLayout.childCount) {
                 val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding.peersLayout.getChildAt(i))
-                        ?: continue
+                    ?: continue
                 peer.transferLabel.visibility = View.GONE
                 peer.transferText.visibility = View.GONE
                 peer.latestHandshakeLabel.visibility = View.GONE

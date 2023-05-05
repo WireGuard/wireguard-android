@@ -142,18 +142,20 @@ class LogViewerActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
             R.id.save_log -> {
                 saveButton?.isEnabled = false
                 lifecycleScope.launch { saveLog() }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private val downloadsFileSaver = DownloadsFileSaver(this)
 
-    private suspend fun rawLogBytes() : ByteArray {
+    private suspend fun rawLogBytes(): ByteArray {
         val builder = StringBuilder()
         withContext(Dispatchers.IO) {
             for (i in 0 until rawLogLines.size()) {
@@ -179,12 +181,14 @@ class LogViewerActivity : AppCompatActivity() {
         saveButton?.isEnabled = true
         if (outputFile == null)
             return
-        Snackbar.make(findViewById(android.R.id.content),
-                if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
-                else getString(R.string.log_export_error, ErrorMessages[exception]),
-                if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.shareFab)
-                .show()
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
+            else getString(R.string.log_export_error, ErrorMessages[exception]),
+            if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG
+        )
+            .setAnchorView(binding.shareFab)
+            .show()
     }
 
     private suspend fun streamingLog() = withContext(Dispatchers.IO) {
@@ -287,7 +291,8 @@ class LogViewerActivity : AppCompatActivity() {
          *
          * <pre>05-26 11:02:36.886 5689 5689 D AndroidRuntime: CheckJNI is OFF.</pre>
          */
-        private val THREADTIME_LINE: Pattern = Pattern.compile("^(\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\s+[0-9A-Za-z]+)?\\s+(\\d+)\\s+(\\d+)\\s+([A-Z])\\s+(.+?)\\s*: (.*)$")
+        private val THREADTIME_LINE: Pattern =
+            Pattern.compile("^(\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})(?:\\s+[0-9A-Za-z]+)?\\s+(\\d+)\\s+(\\d+)\\s+([A-Z])\\s+(.+?)\\s*: (.*)$")
         private val LOGS: MutableMap<String, ByteArray> = ConcurrentHashMap()
         private const val TAG = "WireGuard/LogViewerActivity"
     }
@@ -310,7 +315,7 @@ class LogViewerActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.log_viewer_entry, parent, false)
+                .inflate(R.layout.log_viewer_entry, parent, false)
             return ViewHolder(view)
         }
 
@@ -321,8 +326,10 @@ class LogViewerActivity : AppCompatActivity() {
             else
                 SpannableString("${line.tag}: ${line.msg}").apply {
                     setSpan(StyleSpan(BOLD), 0, "${line.tag}:".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    setSpan(ForegroundColorSpan(levelToColor(line.level)),
-                            0, "${line.tag}:".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    setSpan(
+                        ForegroundColorSpan(levelToColor(line.level)),
+                        0, "${line.tag}:".length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             holder.layout.apply {
                 findViewById<MaterialTextView>(R.id.log_date).text = line.time.toString()
@@ -344,11 +351,11 @@ class LogViewerActivity : AppCompatActivity() {
         override fun insert(uri: Uri, values: ContentValues?): Uri? = null
 
         override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? =
-                logForUri(uri)?.let {
-                    val m = MatrixCursor(arrayOf(android.provider.OpenableColumns.DISPLAY_NAME, android.provider.OpenableColumns.SIZE), 1)
-                    m.addRow(arrayOf("wireguard-log.txt", it.size.toLong()))
-                    m
-                }
+            logForUri(uri)?.let {
+                val m = MatrixCursor(arrayOf(android.provider.OpenableColumns.DISPLAY_NAME, android.provider.OpenableColumns.SIZE), 1)
+                m.addRow(arrayOf("wireguard-log.txt", it.size.toLong()))
+                m
+            }
 
         override fun onCreate(): Boolean = true
 
@@ -358,7 +365,8 @@ class LogViewerActivity : AppCompatActivity() {
 
         override fun getType(uri: Uri): String? = logForUri(uri)?.let { "text/plain" }
 
-        override fun getStreamTypes(uri: Uri, mimeTypeFilter: String): Array<String>? = getType(uri)?.let { if (compareMimeTypes(it, mimeTypeFilter)) arrayOf(it) else null }
+        override fun getStreamTypes(uri: Uri, mimeTypeFilter: String): Array<String>? =
+            getType(uri)?.let { if (compareMimeTypes(it, mimeTypeFilter)) arrayOf(it) else null }
 
         override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
             if (mode != "r") return null

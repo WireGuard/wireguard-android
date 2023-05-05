@@ -46,9 +46,9 @@ class DownloadsFileSaver(private val context: ComponentActivity) {
             contentValues.put(MediaColumns.DISPLAY_NAME, name)
             contentValues.put(MediaColumns.MIME_TYPE, mimeType)
             val contentUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-                    ?: throw IOException(context.getString(R.string.create_downloads_file_error))
+                ?: throw IOException(context.getString(R.string.create_downloads_file_error))
             val contentStream = contentResolver.openOutputStream(contentUri)
-                    ?: throw IOException(context.getString(R.string.create_downloads_file_error))
+                ?: throw IOException(context.getString(R.string.create_downloads_file_error))
             @Suppress("DEPRECATION") var cursor = contentResolver.query(contentUri, arrayOf(MediaColumns.DATA), null, null, null)
             var path: String? = null
             if (cursor != null) {

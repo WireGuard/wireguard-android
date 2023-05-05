@@ -42,8 +42,7 @@ object SnackbarUpdateShower {
                 override fun onDismissed(snackbar: Snackbar?, @DismissEvent event: Int) {
                     super.onDismissed(snackbar, event)
                     if (event == DISMISS_EVENT_MANUAL || event == DISMISS_EVENT_ACTION ||
-                        (snackbar == actionSnackbar && !showingAction) ||
-                        (snackbar == statusSnackbar && !showingStatus)
+                        (snackbar == actionSnackbar && !showingAction) || (snackbar == statusSnackbar && !showingStatus)
                     )
                         return
                     activity.lifecycleScope.launch {
@@ -106,10 +105,7 @@ object SnackbarUpdateShower {
                     snackbar.dismiss()
 
                 is Updater.Progress.Available ->
-                    snackbar.showAction(
-                        context.getString(R.string.updater_avalable),
-                        context.getString(R.string.updater_action)
-                    ) {
+                    snackbar.showAction(context.getString(R.string.updater_avalable), context.getString(R.string.updater_action)) {
                         progress.update()
                     }
 
@@ -145,12 +141,7 @@ object SnackbarUpdateShower {
                 }
 
                 is Updater.Progress.Failure -> {
-                    snackbar.showText(
-                        context.getString(
-                            R.string.updater_failure,
-                            ErrorMessages[progress.error]
-                        )
-                    )
+                    snackbar.showText( context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
                     delay(5.seconds)
                     progress.retry()
                 }

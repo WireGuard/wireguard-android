@@ -67,7 +67,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected abstract fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?): Boolean
 
     fun removeOnSelectedTunnelChangedListener(
-            listener: OnSelectedTunnelChangedListener) {
+        listener: OnSelectedTunnelChangedListener
+    ) {
         selectionChangeRegistry.remove(listener)
     }
 
@@ -77,17 +78,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private class SelectionChangeNotifier : NotifierCallback<OnSelectedTunnelChangedListener, ObservableTunnel, ObservableTunnel>() {
         override fun onNotifyCallback(
-                listener: OnSelectedTunnelChangedListener,
-                oldTunnel: ObservableTunnel?,
-                ignored: Int,
-                newTunnel: ObservableTunnel?
+            listener: OnSelectedTunnelChangedListener,
+            oldTunnel: ObservableTunnel?,
+            ignored: Int,
+            newTunnel: ObservableTunnel?
         ) {
             listener.onSelectedTunnelChanged(oldTunnel, newTunnel)
         }
     }
 
     private class SelectionChangeRegistry :
-            CallbackRegistry<OnSelectedTunnelChangedListener, ObservableTunnel, ObservableTunnel>(SelectionChangeNotifier())
+        CallbackRegistry<OnSelectedTunnelChangedListener, ObservableTunnel, ObservableTunnel>(SelectionChangeNotifier())
 
     companion object {
         private const val KEY_SELECTED_TUNNEL = "selected_tunnel"

@@ -211,12 +211,13 @@ class TvMainActivity : AppCompatActivity() {
                 try {
                     tunnelFileImportResultLauncher.launch("*/*")
                 } catch (_: Throwable) {
-                    MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false).setPositiveButton(android.R.string.ok) { _, _ ->
-                        try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://webstoreredirect")))
-                        } catch (_: Throwable) {
-                        }
-                    }.show()
+                    MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false)
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            try {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://webstoreredirect")))
+                            } catch (_: Throwable) {
+                            }
+                        }.show()
                 }
             }
         }
@@ -359,6 +360,7 @@ class TvMainActivity : AppCompatActivity() {
                     binding.tunnelList.requestFocus()
                 }
             }
+
             filesRoot.get()?.isNotEmpty() == true -> {
                 files.clear()
                 filesRoot.set("")
@@ -372,7 +374,7 @@ class TvMainActivity : AppCompatActivity() {
     private suspend fun updateStats() {
         binding.tunnelList.forEach { viewItem ->
             val listItem = DataBindingUtil.findBinding<TvTunnelListItemBinding>(viewItem)
-                    ?: return@forEach
+                ?: return@forEach
             try {
                 val tunnel = listItem.item!!
                 if (tunnel.state != Tunnel.State.UP || isDeleting.get()) {

@@ -13,10 +13,12 @@ import com.wireguard.crypto.Key
  * InputFilter for entering WireGuard private/public keys encoded with base64.
  */
 class KeyInputFilter : InputFilter {
-    override fun filter(source: CharSequence,
-                        sStart: Int, sEnd: Int,
-                        dest: Spanned,
-                        dStart: Int, dEnd: Int): CharSequence? {
+    override fun filter(
+        source: CharSequence,
+        sStart: Int, sEnd: Int,
+        dest: Spanned,
+        dStart: Int, dEnd: Int
+    ): CharSequence? {
         var replacement: SpannableStringBuilder? = null
         var rIndex = 0
         val dLength = dest.length
@@ -26,8 +28,9 @@ class KeyInputFilter : InputFilter {
             // Restrict characters to the base64 character set.
             // Ensure adding this character does not push the length over the limit.
             if ((dIndex + 1 < Key.Format.BASE64.length && isAllowed(c) ||
-                            dIndex + 1 == Key.Format.BASE64.length && c == '=') &&
-                    dLength + (sIndex - sStart) < Key.Format.BASE64.length) {
+                        dIndex + 1 == Key.Format.BASE64.length && c == '=') &&
+                dLength + (sIndex - sStart) < Key.Format.BASE64.length
+            ) {
                 ++rIndex
             } else {
                 if (replacement == null) replacement = SpannableStringBuilder(source, sStart, sEnd)

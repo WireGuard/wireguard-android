@@ -11,10 +11,10 @@ import android.widget.RelativeLayout
 import com.wireguard.android.R
 
 class MultiselectableRelativeLayout @JvmOverloads constructor(
-        context: Context? = null,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        defStyleRes: Int = 0
+    context: Context? = null,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
     private var multiselected = false
 

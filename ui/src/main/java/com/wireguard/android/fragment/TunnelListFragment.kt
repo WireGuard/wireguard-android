@@ -91,8 +91,10 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelListFragmentBinding.inflate(inflater, container, false)
         val bottomSheet = AddTunnelsSheet()
@@ -105,14 +107,18 @@ class TunnelListFragment : BaseFragment() {
                         AddTunnelsSheet.REQUEST_CREATE -> {
                             startActivity(Intent(requireActivity(), TunnelCreatorActivity::class.java))
                         }
+
                         AddTunnelsSheet.REQUEST_IMPORT -> {
                             tunnelFileImportResultLauncher.launch("*/*")
                         }
+
                         AddTunnelsSheet.REQUEST_SCAN -> {
-                            qrImportResultLauncher.launch(ScanOptions()
+                            qrImportResultLauncher.launch(
+                                ScanOptions()
                                     .setOrientationLocked(false)
                                     .setBeepEnabled(false)
-                                    .setPrompt(getString(R.string.qr_code_hint)))
+                                    .setPrompt(getString(R.string.qr_code_hint))
+                            )
                         }
                     }
                 }
@@ -191,8 +197,8 @@ class TunnelListFragment : BaseFragment() {
         val binding = binding
         if (binding != null)
             Snackbar.make(binding.mainContainer, message, Snackbar.LENGTH_LONG)
-                    .setAnchorView(binding.createFab)
-                    .show()
+                .setAnchorView(binding.createFab)
+                .show()
         else
             Toast.makeText(activity ?: Application.get(), message, Toast.LENGTH_SHORT).show()
     }
@@ -234,6 +240,7 @@ class TunnelListFragment : BaseFragment() {
                     mode.finish()
                     true
                 }
+
                 R.id.menu_action_select_all -> {
                     lifecycleScope.launch {
                         val tunnels = Application.getTunnelManager().getTunnels()
@@ -243,6 +250,7 @@ class TunnelListFragment : BaseFragment() {
                     }
                     true
                 }
+
                 else -> false
             }
         }
@@ -308,7 +316,7 @@ class TunnelListFragment : BaseFragment() {
         private fun animateFab(view: View?, show: Boolean) {
             view ?: return
             val animation = AnimationUtils.loadAnimation(
-                    context, if (show) R.anim.scale_up else R.anim.scale_down
+                context, if (show) R.anim.scale_up else R.anim.scale_down
             )
             animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {

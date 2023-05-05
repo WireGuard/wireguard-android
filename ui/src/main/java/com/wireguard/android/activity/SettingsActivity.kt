@@ -62,9 +62,9 @@ class SettingsActivity : AppCompatActivity() {
                 zipExporter?.parent?.removePreference(zipExporter)
             }
             val wgQuickOnlyPrefs = arrayOf(
-                    preferenceManager.findPreference("tools_installer"),
-                    preferenceManager.findPreference("restore_on_boot"),
-                    preferenceManager.findPreference<Preference>("multiple_tunnels")
+                preferenceManager.findPreference("tools_installer"),
+                preferenceManager.findPreference("restore_on_boot"),
+                preferenceManager.findPreference<Preference>("multiple_tunnels")
             ).filterNotNull()
             wgQuickOnlyPrefs.forEach { it.isVisible = false }
             lifecycleScope.launch {
