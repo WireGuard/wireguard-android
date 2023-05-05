@@ -50,6 +50,7 @@ android {
         }
         create("googleplay") {
             initWith(getByName("release"))
+            matchingFallbacks += "release"
             buildConfigField("boolean", "IS_GOOGLE_PLAY", true.toString())
         }
     }

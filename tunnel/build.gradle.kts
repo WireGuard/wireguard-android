@@ -50,9 +50,6 @@ android {
                 }
             }
         }
-        create("googleplay") {
-            initWith(getByName("release"))
-        }
     }
     lint {
         disable += "LongLogTag"
