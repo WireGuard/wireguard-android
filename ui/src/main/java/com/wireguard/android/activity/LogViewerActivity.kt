@@ -112,19 +112,21 @@ class LogViewerActivity : AppCompatActivity() {
         }
 
         binding.shareFab.setOnClickListener {
-            revokeLastUri()
-            val key = KeyPair().privateKey.toHex()
-            LOGS[key] = rawLogBytes()
-            lastUri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.exported-log/$key")
-            val shareIntent = ShareCompat.IntentBuilder(this)
+            lifecycleScope.launch {
+                revokeLastUri()
+                val key = KeyPair().privateKey.toHex()
+                LOGS[key] = rawLogBytes()
+                lastUri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.exported-log/$key")
+                val shareIntent = ShareCompat.IntentBuilder(this@LogViewerActivity)
                     .setType("text/plain")
                     .setSubject(getString(R.string.log_export_subject))
                     .setStream(lastUri)
                     .setChooserTitle(R.string.log_export_title)
                     .createChooserIntent()
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            grantUriPermission("android", lastUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            revokeLastActivityResultLauncher.launch(shareIntent)
+                grantUriPermission("android", lastUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                revokeLastActivityResultLauncher.launch(shareIntent)
+            }
         }
     }
 
@@ -151,11 +153,13 @@ class LogViewerActivity : AppCompatActivity() {
 
     private val downloadsFileSaver = DownloadsFileSaver(this)
 
-    private fun rawLogBytes() : ByteArray {
+    private suspend fun rawLogBytes() : ByteArray {
         val builder = StringBuilder()
-        for (i in 0 until rawLogLines.size()) {
-            builder.append(rawLogLines[i])
-            builder.append('\n')
+        withContext(Dispatchers.IO) {
+            for (i in 0 until rawLogLines.size()) {
+                builder.append(rawLogLines[i])
+                builder.append('\n')
+            }
         }
         return builder.toString().toByteArray(Charsets.UTF_8)
     }
