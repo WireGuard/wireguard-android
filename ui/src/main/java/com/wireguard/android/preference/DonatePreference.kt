@@ -12,8 +12,8 @@ import android.util.AttributeSet
 import android.widget.Toast
 import androidx.preference.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
+import com.wireguard.android.updater.Updater
 import com.wireguard.android.util.ErrorMessages
 
 class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
@@ -23,7 +23,7 @@ class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(cont
 
     override fun onClick() {
         /* Google Play Store forbids links to our donation page. */
-        if (BuildConfig.IS_GOOGLE_PLAY) {
+        if (Updater.installerIsGooglePlay(context)) {
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.donate_title)
                 .setMessage(R.string.donate_google_play_disappointment)

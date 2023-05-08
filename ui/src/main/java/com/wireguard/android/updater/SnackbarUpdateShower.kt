@@ -88,9 +88,6 @@ object SnackbarUpdateShower {
     }
 
     fun attachToActivity(activity: FragmentActivity, view: View, anchor: View?) {
-        if (BuildConfig.IS_GOOGLE_PLAY)
-            return
-
         val snackbar = SwapableSnackbar(activity, view, anchor)
         val context = activity.applicationContext
 

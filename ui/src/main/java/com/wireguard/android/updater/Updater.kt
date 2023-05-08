@@ -53,6 +53,21 @@ object Updater {
 
     private val updaterScope = CoroutineScope(Job() + Dispatchers.IO)
 
+    private fun installer(context: Context): String = try {
+        val packageName = context.packageName
+        val pm = context.packageManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            pm.getInstallSourceInfo(packageName).installingPackageName ?: ""
+        } else {
+            @Suppress("DEPRECATION")
+            pm.getInstallerPackageName(packageName) ?: ""
+        }
+    } catch (_: Throwable) {
+        ""
+    }
+
+    fun installerIsGooglePlay(context: Context): Boolean = installer(context) == "com.android.vending"
+
     sealed class Progress {
         object Complete : Progress()
         class Available(val version: String) : Progress() {
@@ -340,7 +355,7 @@ object Updater {
     }
 
     fun monitorForUpdates() {
-        if (BuildConfig.IS_GOOGLE_PLAY)
+        if (installerIsGooglePlay(Application.get()))
             return
 
         updaterScope.launch {
@@ -382,25 +397,10 @@ object Updater {
 
     class AppUpdatedReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (BuildConfig.IS_GOOGLE_PLAY)
-                return
-
             if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED)
                 return
 
-            val installer = try {
-                val packageName = context.packageName
-                val pm = context.packageManager
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    pm.getInstallSourceInfo(packageName).installingPackageName ?: ""
-                } else {
-                    @Suppress("DEPRECATION")
-                    pm.getInstallerPackageName(packageName) ?: ""
-                }
-            } catch (_: Throwable) {
-                ""
-            }
-            if (installer != context.packageName)
+            if (installer(context) != context.packageName)
                 return
 
             /* TODO: does not work because of restrictions placed on broadcast receivers. */
