@@ -44,12 +44,14 @@ import kotlin.time.Duration.Companion.seconds
 
 object Updater {
     private const val TAG = "WireGuard/Updater"
-    private const val LATEST_VERSION_URL = "https://download.wireguard.com/android-client/latest.sig"
-    private const val APK_PATH_URL = "https://download.wireguard.com/android-client/%s"
-    private val APK_NAME_PREFIX = BuildConfig.APPLICATION_ID.removeSuffix(".debug") + "-"
+    private const val UPDATE_URL_FMT = "https://download.wireguard.com/android-client/%s"
+    private const val APK_NAME_PREFIX = BuildConfig.APPLICATION_ID + "-"
     private const val APK_NAME_SUFFIX = ".apk"
-    private const val RELEASE_PUBLIC_KEY_BASE64 = "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
     private val CURRENT_VERSION = Version(BuildConfig.VERSION_NAME.removeSuffix("-debug"))
+    private val LATEST_FILE = if (BuildConfig.DEBUG) "latest-debug.sig" else "latest.sig"
+    private val RELEASE_PUBLIC_KEY_BASE64 =
+        if (BuildConfig.DEBUG) "RWTKFCNaLimMkuolGwAw12XT6sx+nnS7KE1wmhJ7YHXvAPedtPR/rofU"
+        else "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
 
     private val updaterScope = CoroutineScope(Job() + Dispatchers.IO)
 
@@ -213,7 +215,7 @@ object Updater {
     }
 
     private fun checkForUpdates(): Update? {
-        val connection = URL(LATEST_VERSION_URL).openConnection() as HttpURLConnection
+        val connection = URL(UPDATE_URL_FMT.format(LATEST_FILE)).openConnection() as HttpURLConnection
         connection.setRequestProperty("User-Agent", Application.USER_AGENT)
         connection.connect()
         if (connection.responseCode != HttpURLConnection.HTTP_OK)
@@ -249,7 +251,7 @@ object Updater {
         }
 
         emitProgress(Progress.Downloading(0UL, 0UL), true)
-        val connection = URL(APK_PATH_URL.format(update.fileName)).openConnection() as HttpURLConnection
+        val connection = URL(UPDATE_URL_FMT.format(update.fileName)).openConnection() as HttpURLConnection
         connection.setRequestProperty("User-Agent", Application.USER_AGENT)
         connection.connect()
         if (connection.responseCode != HttpURLConnection.HTTP_OK)
