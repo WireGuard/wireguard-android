@@ -7,11 +7,10 @@ package com.wireguard.android.updater
 
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.wireguard.android.BuildConfig
 import com.wireguard.android.R
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.QuantityFormatter
@@ -21,15 +20,20 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
-object SnackbarUpdateShower {
-    private class SwapableSnackbar(activity: FragmentActivity, view: View, anchor: View?) {
-        val actionSnackbar = makeSnackbar(activity, view, anchor)
-        val statusSnackbar = makeSnackbar(activity, view, anchor)
+class SnackbarUpdateShower(private val fragment: Fragment) {
+    private var lastUserIntervention: Updater.Progress.NeedsUserIntervention? = null
+    private val intentLauncher = fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        lastUserIntervention?.markAsDone()
+    }
+
+    private class SwapableSnackbar(fragment: Fragment, view: View, anchor: View?) {
+        val actionSnackbar = makeSnackbar(fragment, view, anchor)
+        val statusSnackbar = makeSnackbar(fragment, view, anchor)
         var showingAction: Boolean = false
         var showingStatus: Boolean = false
 
-        private fun makeSnackbar(activity: FragmentActivity, view: View, anchor: View?): Snackbar {
-            val snackbar = Snackbar.make(activity, view, "", Snackbar.LENGTH_INDEFINITE)
+        private fun makeSnackbar(fragment: Fragment, view: View, anchor: View?): Snackbar {
+            val snackbar = Snackbar.make(fragment.requireContext(), view, "", Snackbar.LENGTH_INDEFINITE)
             if (anchor != null)
                 snackbar.anchorView = anchor
             snackbar.setTextMaxLines(6)
@@ -45,7 +49,7 @@ object SnackbarUpdateShower {
                         (snackbar == actionSnackbar && !showingAction) || (snackbar == statusSnackbar && !showingStatus)
                     )
                         return
-                    activity.lifecycleScope.launch {
+                    fragment.lifecycleScope.launch {
                         delay(5.seconds)
                         snackbar?.show()
                     }
@@ -87,14 +91,9 @@ object SnackbarUpdateShower {
         }
     }
 
-    fun attachToActivity(activity: FragmentActivity, view: View, anchor: View?) {
-        val snackbar = SwapableSnackbar(activity, view, anchor)
-        val context = activity.applicationContext
-
-        var lastUserIntervention: Updater.Progress.NeedsUserIntervention? = null
-        val intentLauncher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            lastUserIntervention?.markAsDone()
-        }
+    fun attach(view: View, anchor: View?) {
+        val snackbar = SwapableSnackbar(fragment, view, anchor)
+        val context = fragment.requireContext()
 
         Updater.state.onEach { progress ->
             when (progress) {
@@ -138,11 +137,11 @@ object SnackbarUpdateShower {
                 }
 
                 is Updater.Progress.Failure -> {
-                    snackbar.showText( context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
+                    snackbar.showText(context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
                     delay(5.seconds)
                     progress.retry()
                 }
             }
-        }.launchIn(activity.lifecycleScope)
+        }.launchIn(fragment.lifecycleScope)
     }
 }

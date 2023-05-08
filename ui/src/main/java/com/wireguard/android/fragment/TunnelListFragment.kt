@@ -81,6 +81,8 @@ class TunnelListFragment : BaseFragment() {
         }
     }
 
+    private val snackbarUpdateShower = SnackbarUpdateShower(this)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null) {
@@ -125,11 +127,10 @@ class TunnelListFragment : BaseFragment() {
                 bottomSheet.showNow(childFragmentManager, "BOTTOM_SHEET")
             }
             executePendingBindings()
+            snackbarUpdateShower.attach(mainContainer, createFab)
         }
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) { actionMode?.finish() }
         backPressedCallback?.isEnabled = false
-
-        SnackbarUpdateShower.attachToActivity(requireActivity(), binding?.mainContainer!!, binding?.createFab)
 
         return binding?.root
     }
