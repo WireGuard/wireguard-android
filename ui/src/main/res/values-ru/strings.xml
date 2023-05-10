@@ -254,6 +254,13 @@
     <string name="type_name_go_userspace">Пользовательское пространство Go</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="updater_avalable">Доступно обновление приложения. Пожалуйста, обновите.</string>
+    <string name="updater_action">Загрузить и установить</string>
+    <string name="updater_rechecking">Получение метаданных обновления…</string>
+    <string name="updater_download_progress">Загрузка обновления: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Загрузка обновления: %s</string>
+    <string name="updater_installing">Установка обновления…</string>
+    <string name="updater_failure">Ошибка обновления: %s. Повторите попытку…</string>
     <string name="version_summary">%1$s бэкенд %2$s</string>
     <string name="version_summary_checking">Проверка версии бэкэнда %s</string>
     <string name="version_summary_unknown">Неизвестная версия %s</string>

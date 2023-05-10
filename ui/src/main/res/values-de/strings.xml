@@ -119,6 +119,7 @@
     <string name="error_down">Fehler beim Abschalten des Tunnels: %s</string>
     <string name="error_fetching_apps">Fehler beim Abrufen der App-Liste: %s</string>
     <string name="error_root">Bitte root-Zugriff anfordern und erneut versuchen</string>
+    <string name="error_prepare">Fehler beim Vorbereiten des Tunnels: %s</string>
     <string name="error_up">Fehler beim Starten des Tunnels: %s</string>
     <string name="exclude_private_ips">Private IPs ausschließen</string>
     <string name="generate_new_private_key">Neuen privaten Schlüssel generieren</string>
@@ -138,6 +139,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64-Schlüssel müssen 44 Zeichen enthalten (32 Bytes)</string>
     <string name="key_length_explanation_binary">: WireGuard-Schlüssel müssen 32 Bytes groß sein</string>
     <string name="key_length_explanation_hex">: WireGuard Hex-Schlüssel müssen 64 Zeichen (32 Bytes) groß sein</string>
+    <string name="latest_handshake">Letzter Handshake</string>
+    <string name="latest_handshake_ago">vor %s</string>
     <string name="listen_port">Eingangs-Port</string>
     <string name="log_export_error">Konnte Protokoll nicht exportieren: %s</string>
     <string name="log_export_subject">WireGuard Android Protokolldatei</string>
@@ -216,6 +219,7 @@
     <string name="tunnel_create_success">Tunnel „%s “ erfolgreich erstellt</string>
     <string name="tunnel_error_already_exists">Tunnel „%s“ existiert bereits</string>
     <string name="tunnel_error_invalid_name">Ungültiger Name</string>
+    <string name="tunnel_list_placeholder">Füge einen Tunnel mit der Schaltfläche unten hinzu</string>
     <string name="tunnel_name">Tunnelname</string>
     <string name="tunnel_on_error">Tunnel kann nicht eingeschaltet werden (wgTurnOn gab %d zurück)</string>
     <string name="tunnel_dns_failure">DNS-Hostname kann nicht aufgelöst werden: „%s“</string>
@@ -224,6 +228,13 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernelmodul</string>
     <string name="unknown_error">Unbekannter Fehler</string>
+    <string name="updater_avalable">Ein Anwendungsupdate ist verfügbar. Bitte jetzt aktualisieren.</string>
+    <string name="updater_action">Download &amp; Update</string>
+    <string name="updater_rechecking">Update-Metadaten abrufen…</string>
+    <string name="updater_download_progress">Update wird heruntergeladen: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Update wird heruntergeladen: %s</string>
+    <string name="updater_installing">Installiere Update…</string>
+    <string name="updater_failure">Fehler beim Aktualisieren: %s. Versuche es in Kürze erneut…</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Überprüfe %s Backend-Version</string>
     <string name="version_summary_unknown">Unbekannte %s Version</string>

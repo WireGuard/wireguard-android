@@ -215,6 +215,13 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">未知错误</string>
+    <string name="updater_avalable">有可用的应用程序更新。请立即更新。</string>
+    <string name="updater_action">下载 &amp; 更新</string>
+    <string name="updater_rechecking">正获取更新元数据…</string>
+    <string name="updater_download_progress">正在下载更新： %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">正在下载更新: %s</string>
+    <string name="updater_installing">安装更新中...</string>
+    <string name="updater_failure">更新失败： %s。不久后将重试…</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>
     <string name="version_summary_unknown">未知的 %s 版本</string>

@@ -229,6 +229,13 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="type_name_go_userspace">Go kasutajamaa</string>
     <string name="type_name_kernel_module">Tuumamoodul</string>
     <string name="unknown_error">Tundmatu viga</string>
+    <string name="updater_avalable">Rakenduse uuendus on saadaval. Palun uuenda nüüd.</string>
+    <string name="updater_action">Laadi alla ja uuenda</string>
+    <string name="updater_rechecking">Uuenduse andmete laadimine…</string>
+    <string name="updater_download_progress">Uuenduse allalaadimine: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Uuenduse allalaadimine: %s</string>
+    <string name="updater_installing">Uuenduse paigaldamine…</string>
+    <string name="updater_failure">Uuendamine ebaõnnestus: %s. Uus katse hetke pärast…</string>
     <string name="version_summary">%1$s taustsüsteem %2$s</string>
     <string name="version_summary_checking">Kontrollin %s taustsüsteemi versiooni</string>
     <string name="version_summary_unknown">Tundmatu %s versioon</string>
