@@ -41,6 +41,7 @@ android {
                 resources {
                     excludes += "DebugProbesKt.bin"
                     excludes += "kotlin-tooling-metadata.json"
+                    excludes += "META-INF/*.version"
                 }
             }
         }
