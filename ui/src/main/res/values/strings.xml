@@ -236,6 +236,8 @@
     <string name="updater_download_progress_nototal">Downloading update: %s</string>
     <string name="updater_installing">Installing update…</string>
     <string name="updater_failure">Update failure: %s. Will retry momentarily…</string>
+    <string name="updater_corrupt">This application is corrupt. Please re-download it.</string>
+    <string name="updater_corrupt_navigate">Open Website</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>

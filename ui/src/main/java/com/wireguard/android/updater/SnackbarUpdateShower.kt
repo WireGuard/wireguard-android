@@ -5,7 +5,10 @@
 
 package com.wireguard.android.updater
 
+import android.content.Intent
+import android.net.Uri
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,10 +30,11 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
     }
 
     private class SwapableSnackbar(fragment: Fragment, view: View, anchor: View?) {
-        val actionSnackbar = makeSnackbar(fragment, view, anchor)
-        val statusSnackbar = makeSnackbar(fragment, view, anchor)
-        var showingAction: Boolean = false
-        var showingStatus: Boolean = false
+        private val actionSnackbar = makeSnackbar(fragment, view, anchor)
+        private val statusSnackbar = makeSnackbar(fragment, view, anchor)
+        private var showingAction: Boolean = false
+        private var showingStatus: Boolean = false
+        private var permanentAction: Boolean = false
 
         private fun makeSnackbar(fragment: Fragment, view: View, anchor: View?): Snackbar {
             val snackbar = Snackbar.make(fragment.requireContext(), view, "", Snackbar.LENGTH_INDEFINITE)
@@ -45,7 +49,7 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
             snackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 override fun onDismissed(snackbar: Snackbar?, @DismissEvent event: Int) {
                     super.onDismissed(snackbar, event)
-                    if (event == DISMISS_EVENT_MANUAL || event == DISMISS_EVENT_ACTION ||
+                    if (event == DISMISS_EVENT_MANUAL || (event == DISMISS_EVENT_ACTION && !permanentAction) ||
                         (snackbar == actionSnackbar && !showingAction) || (snackbar == statusSnackbar && !showingStatus)
                     )
                         return
@@ -58,11 +62,12 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
             return snackbar
         }
 
-        fun showAction(text: String, action: String, listener: View.OnClickListener) {
+        fun showAction(text: String, action: String, permanent: Boolean = false, listener: View.OnClickListener) {
             if (showingStatus) {
                 showingStatus = false
                 statusSnackbar.dismiss()
             }
+            permanentAction = permanent
             actionSnackbar.setText(text)
             actionSnackbar.setAction(action, listener)
             if (!showingAction) {
@@ -140,6 +145,18 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
                     snackbar.showText(context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
                     delay(5.seconds)
                     progress.retry()
+                }
+
+                is Updater.Progress.Corrupt -> {
+                    snackbar.showAction(context.getString(R.string.updater_corrupt), context.getString(R.string.updater_corrupt_navigate), true) {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(progress.downloadUrl)
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: Throwable) {
+                            Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }.launchIn(fragment.lifecycleScope)

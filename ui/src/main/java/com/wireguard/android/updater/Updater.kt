@@ -4,12 +4,14 @@
  */
 package com.wireguard.android.updater
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInstaller
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
 import android.util.Log
@@ -115,6 +117,11 @@ object Updater {
                     downloadAndUpdateWrapErrors()
                 }
             }
+        }
+
+        class Corrupt(private val betterFile: String?) : Progress() {
+            val downloadUrl: String
+                get() = UPDATE_URL_FMT.format(betterFile ?: "")
         }
     }
 
@@ -357,8 +364,28 @@ object Updater {
     }
 
     fun monitorForUpdates() {
-        if (installerIsGooglePlay(Application.get()))
+        val context = Application.get()
+
+        if (installerIsGooglePlay(context))
             return
+
+        if (!if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                @Suppress("DEPRECATION")
+                context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS)
+            } else {
+                context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
+            }.requestedPermissions.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)
+        ) {
+            updaterScope.launch {
+                val update = try {
+                    checkForUpdates()
+                } catch (_: Throwable) {
+                    null
+                }
+                emitProgress(Progress.Corrupt(update?.fileName))
+            }
+            return
+        }
 
         updaterScope.launch {
             if (UserKnobs.updaterNewerVersionSeen.firstOrNull()?.let { Version(it) > CURRENT_VERSION } == true)

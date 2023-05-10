@@ -49,6 +49,10 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
         }
+        create("googleplay") {
+            initWith(getByName("release"))
+            matchingFallbacks += "release"
+        }
     }
     lint {
         disable += "LongLogTag"
