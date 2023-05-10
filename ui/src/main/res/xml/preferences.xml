@@ -12,6 +12,7 @@
         android:summaryOn="@string/restore_on_boot_summary_on"
         android:title="@string/restore_on_boot_title" />
     <com.wireguard.android.preference.ZipExporterPreference android:key="zip_exporter" />
+    <com.wireguard.android.preference.QuickTilePreference android:key="quick_tile" />
     <Preference
         android:key="log_viewer"
         android:singleLineTitle="false"

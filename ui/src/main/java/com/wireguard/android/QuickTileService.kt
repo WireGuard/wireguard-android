@@ -75,6 +75,7 @@ class QuickTileService : TileService() {
     }
 
     override fun onCreate() {
+        isAdded = true
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             iconOn = Icon.createWithResource(this, R.drawable.ic_tile)
             iconOff = iconOn
@@ -98,6 +99,11 @@ class QuickTileService : TileService() {
         iconOff = Icon.createWithBitmap(b)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        isAdded = false
+    }
+
     override fun onStartListening() {
         Application.getTunnelManager().addOnPropertyChangedCallback(onTunnelChangedCallback)
         if (tunnel != null) tunnel!!.addOnPropertyChangedCallback(onStateChangedCallback)
@@ -107,6 +113,14 @@ class QuickTileService : TileService() {
     override fun onStopListening() {
         if (tunnel != null) tunnel!!.removeOnPropertyChangedCallback(onStateChangedCallback)
         Application.getTunnelManager().removeOnPropertyChangedCallback(onTunnelChangedCallback)
+    }
+
+    override fun onTileAdded() {
+        isAdded = true
+    }
+
+    override fun onTileRemoved() {
+        isAdded = false
     }
 
     private fun updateTile() {
@@ -157,5 +171,7 @@ class QuickTileService : TileService() {
 
     companion object {
         private const val TAG = "WireGuard/QuickTileService"
+        var isAdded: Boolean = false
+            private set
     }
 }
