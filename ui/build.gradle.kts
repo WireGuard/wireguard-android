@@ -3,6 +3,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+// Grotesque workaround for https://issuetracker.google.com/issues/279780940
+System.setProperty("com.android.tools.r8.disableApiModeling", "1")
+
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
 plugins {
