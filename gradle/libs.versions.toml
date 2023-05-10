@@ -16,10 +16,10 @@ androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.5.7"
 androidx-lifecycle-runtime-ktx = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
 androidx-preference-ktx = "androidx.preference:preference-ktx:1.2.0"
 desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.0.3"
-google-material = "com.google.android.material:material:1.8.0"
+google-material = "com.google.android.material:material:1.9.0"
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 junit = "junit:junit:4.13.2"
-kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0"
 zxing-android-embedded = "com.journeyapps:zxing-android-embedded:4.3.0"
 
 [plugins]
