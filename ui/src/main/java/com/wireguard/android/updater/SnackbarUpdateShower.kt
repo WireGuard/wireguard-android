@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.wireguard.android.R
@@ -34,7 +35,6 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
         private val statusSnackbar = makeSnackbar(fragment, view, anchor)
         private var showingAction: Boolean = false
         private var showingStatus: Boolean = false
-        private var permanentAction: Boolean = false
 
         private fun makeSnackbar(fragment: Fragment, view: View, anchor: View?): Snackbar {
             val snackbar = Snackbar.make(fragment.requireContext(), view, "", Snackbar.LENGTH_INDEFINITE)
@@ -49,7 +49,7 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
             snackbar.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                 override fun onDismissed(snackbar: Snackbar?, @DismissEvent event: Int) {
                     super.onDismissed(snackbar, event)
-                    if (event == DISMISS_EVENT_MANUAL || (event == DISMISS_EVENT_ACTION && !permanentAction) ||
+                    if (event == DISMISS_EVENT_MANUAL || event == DISMISS_EVENT_ACTION ||
                         (snackbar == actionSnackbar && !showingAction) || (snackbar == statusSnackbar && !showingStatus)
                     )
                         return
@@ -62,12 +62,11 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
             return snackbar
         }
 
-        fun showAction(text: String, action: String, permanent: Boolean = false, listener: View.OnClickListener) {
+        fun showAction(text: String, action: String, listener: View.OnClickListener) {
             if (showingStatus) {
                 showingStatus = false
                 statusSnackbar.dismiss()
             }
-            permanentAction = permanent
             actionSnackbar.setText(text)
             actionSnackbar.setAction(action, listener)
             if (!showingAction) {
@@ -148,15 +147,25 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
                 }
 
                 is Updater.Progress.Corrupt -> {
-                    snackbar.showAction(context.getString(R.string.updater_corrupt), context.getString(R.string.updater_corrupt_navigate), true) {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(progress.downloadUrl)
-                        try {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(R.string.updater_corrupt_title)
+                        .setMessage(R.string.updater_corrupt_message)
+                        .setPositiveButton(R.string.updater_corrupt_navigate) { _, _ ->
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.data = Uri.parse(progress.downloadUrl)
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: Throwable) {
+                                Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
+                            }
+                        }.setCancelable(false).setOnDismissListener {
+                            val intent = Intent(Intent.ACTION_MAIN)
+                            intent.addCategory(Intent.CATEGORY_HOME)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             context.startActivity(intent)
-                        } catch (e: Throwable) {
-                            Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                            System.exit(0)
+                        }.show()
                 }
             }
         }.launchIn(fragment.lifecycleScope)
