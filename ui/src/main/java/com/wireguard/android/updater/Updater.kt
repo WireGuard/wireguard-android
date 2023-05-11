@@ -21,6 +21,7 @@ import com.wireguard.android.Application
 import com.wireguard.android.BuildConfig
 import com.wireguard.android.activity.MainActivity
 import com.wireguard.android.util.UserKnobs
+import com.wireguard.android.util.applicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -76,7 +77,7 @@ object Updater {
         object Complete : Progress()
         class Available(val version: String) : Progress() {
             fun update() {
-                Application.getCoroutineScope().launch {
+                applicationScope.launch {
                     UserKnobs.setUpdaterNewerVersionConsented(version)
                 }
             }
@@ -100,7 +101,7 @@ object Updater {
             }
 
             fun markAsDone() {
-                Application.getCoroutineScope().launch {
+                applicationScope.launch {
                     if (installerActive())
                         return@launch
                     delay(7.seconds)
@@ -333,13 +334,13 @@ object Updater {
                 PackageInstaller.STATUS_PENDING_USER_ACTION -> {
                     val id = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, 0)
                     val userIntervention = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent::class.java)!!
-                    Application.getCoroutineScope().launch {
+                    applicationScope.launch {
                         emitProgress(Progress.NeedsUserIntervention(userIntervention, id))
                     }
                 }
 
                 PackageInstaller.STATUS_SUCCESS -> {
-                    Application.getCoroutineScope().launch {
+                    applicationScope.launch {
                         emitProgress(Progress.Complete)
                     }
                     context.applicationContext.unregisterReceiver(this)
@@ -352,7 +353,7 @@ object Updater {
                     } catch (_: SecurityException) {
                     }
                     val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "Installation error $status"
-                    Application.getCoroutineScope().launch {
+                    applicationScope.launch {
                         val e = Exception(message)
                         Log.e(TAG, "Update failure", e)
                         emitProgress(Progress.Failure(e))
@@ -414,14 +415,14 @@ object Updater {
                 UserKnobs.updaterNewerVersionConsented.firstOrNull()?.let { Version(it) > CURRENT_VERSION } != true
             )
                 emitProgress(Progress.Available(ver))
-        }.launchIn(Application.getCoroutineScope())
+        }.launchIn(applicationScope)
 
         UserKnobs.updaterNewerVersionConsented.onEach { ver ->
             if (ver != null && Version(ver) > CURRENT_VERSION)
                 updaterScope.launch {
                     downloadAndUpdateWrapErrors()
                 }
-        }.launchIn(Application.getCoroutineScope())
+        }.launchIn(applicationScope)
     }
 
     class AppUpdatedReceiver : BroadcastReceiver() {
