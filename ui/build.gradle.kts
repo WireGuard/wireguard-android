@@ -2,6 +2,7 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.android.build.gradle.tasks.GenerateLocaleConfigTask
 
 // Grotesque workaround for https://issuetracker.google.com/issues/279780940
 System.setProperty("com.android.tools.r8.disableApiModeling", "1")
@@ -93,4 +94,15 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+}
+
+// Grotesque workaround for https://issuetracker.google.com/issues/281825213
+tasks.withType<GenerateLocaleConfigTask>().configureEach {
+    doLast {
+        localeConfig.asFileTree.files.forEach {
+            val lines = it.readLines()
+            val newLines = lines.subList(0, 2) + lines.subList(2, lines.size - 1).sorted() + lines.last()
+            it.writeText(newLines.joinToString(separator = "\n"))
+        }
+    }
 }
