@@ -241,7 +241,7 @@
     <string name="updater_installing">Installing update…</string>
     <string name="updater_failure">Update failure: %s. Will retry momentarily…</string>
     <string name="updater_corrupt_title">Application Corrupt</string>
-    <string name="updater_corrupt_message">This application is corrupt. Please re-download the APK from the website linked below. After, uninstall this application, and reinstall it from downloaded APK.</string>
+    <string name="updater_corrupt_message">This application is corrupt. Please re-download the APK from the website linked below. After, uninstall this application, and reinstall it from the downloaded APK.</string>
     <string name="updater_corrupt_navigate">Open Website</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
