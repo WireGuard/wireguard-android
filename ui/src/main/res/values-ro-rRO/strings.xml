@@ -120,6 +120,9 @@
     <string name="tv_select_a_storage_drive">Selectează o unitate de stocare</string>
     <string name="tv_no_file_picker">Instalează un serviciu de administrare a fișierelor pentru a căuta fișiere</string>
     <string name="tv_add_tunnel_get_started">Adaugă un tunel pentru a începe</string>
+    <string name="donate_title">♥ Donează pentru proiectul WireGuard</string>
+    <string name="donate_summary">Fiecare contribuţie ajută</string>
+    <string name="donate_google_play_disappointment">Vă mulțumim pentru sprijinul acordat Proiectului WireGuard!\n\nDin păcate, din cauza politicilor Google, nu avem voie să punem un link către pagina web a proiectului unde poți face o donație. Sperăm că vă puteți descurca!\n\nMulțumim din nou pentru contribuție.</string>
     <string name="disable_config_export_title">Dezactivează exportarea configurației</string>
     <string name="disable_config_export_description">Dezactivarea exportării configurației face mai puțin accesibile cheile private</string>
     <string name="dns_servers">Servere DNS</string>
@@ -129,6 +132,7 @@
     <string name="error_down">Eroare la oprirea tunelului: %s</string>
     <string name="error_fetching_apps">Eroare la preluarea listei de aplicații: %s</string>
     <string name="error_root">Obține acces root și încearcă din nou</string>
+    <string name="error_prepare">Eroare la pregătirea tunelului: %s</string>
     <string name="error_up">Eroare la pornirea tunelului: %s</string>
     <string name="exclude_private_ips">Excludere IP-uri private</string>
     <string name="generate_new_private_key">Generare cheie privată nouă</string>
@@ -148,6 +152,8 @@
     <string name="key_length_explanation_base64">: Cheile base64 ale WireGuard trebuie să aibă 44 de caractere (32 de octeți)</string>
     <string name="key_length_explanation_binary">: Cheile WireGuard trebuie să aibă 32 de octeți</string>
     <string name="key_length_explanation_hex">: Cheile hex WireGuard trebuie să aibă 64 de caractere (32 de octeți)</string>
+    <string name="latest_handshake">Cea mai recentă negociere</string>
+    <string name="latest_handshake_ago">%s în urmă</string>
     <string name="listen_port">Port de ascultare</string>
     <string name="log_export_error">Jurnalul nu poate fi exportat: %s</string>
     <string name="log_export_subject">Fișier de jurnal Android WireGuard</string>
@@ -191,6 +197,8 @@
     <string name="private_key">Cheie privată</string>
     <string name="public_key">Cheie publică</string>
     <string name="qr_code_hint">Sfat: generează cu `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Adaugă secțiune la panoul de setări rapide</string>
+    <string name="quick_settings_tile_add_summary">Comanda rapidă comută cel mai recent tunel</string>
     <string name="restore_on_boot_summary_off">Tunelurile activate nu vor fi pornite odată cu pornirea dispozitivului</string>
     <string name="restore_on_boot_summary_on">Tunelurile activate vor fi pornite odată cu pornirea dispozitivului</string>
     <string name="restore_on_boot_title">Restaurare la pornire</string>

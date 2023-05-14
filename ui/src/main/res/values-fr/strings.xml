@@ -6,7 +6,7 @@
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">Suppression réussie du tunnel %d</item>
-        <item quantity="other">Supprimé avec succès %d tunnels</item>
+        <item quantity="other">%d tunnels supprimés avec succès</item>
     </plurals>
     <plurals name="delete_title">
         <item quantity="one">%d tunnel sélectionné</item>
@@ -85,16 +85,16 @@
     <string name="config_delete_error">Impossible de supprimer le fichier de configuration %s</string>
     <string name="config_exists_error">La configuration de « %s » existe déjà</string>
     <string name="config_file_exists_error">Le fichier de configuration « %s » existe déjà</string>
-    <string name="config_not_found_error">Fichier de configuration «%s» introuvable</string>
-    <string name="config_rename_error">Impossible de renommer le fichier de configuration «%s»</string>
-    <string name="config_save_error">Impossible d’enregistrer la configuration pour «%1$s» : %2$s</string>
-    <string name="config_save_success">Configuration enregistrée avec succès pour “%s”</string>
+    <string name="config_not_found_error">Fichier de configuration « %s » introuvable</string>
+    <string name="config_rename_error">Impossible de renommer le fichier de configuration « %s »</string>
+    <string name="config_save_error">Impossible d’enregistrer la configuration pour « %1$s » : %2$s</string>
+    <string name="config_save_success">Configuration enregistrée avec succès pour « %s »</string>
     <string name="create_activity_title">Créer un tunnel WireGuard</string>
     <string name="create_bin_dir_error">Impossible de créer le répertoire binaire local</string>
     <string name="create_downloads_file_error">Impossible de créer le fichier dans le répertoire des téléchargements</string>
     <string name="create_empty">Créer à partir de zéro</string>
     <string name="create_from_file">Importer depuis un fichier ou une archive</string>
-    <string name="create_from_qr_code">Créer avec un scan de QR code</string>
+    <string name="create_from_qr_code">Importer depuis un QR code</string>
     <string name="create_output_dir_error">Impossible de créer le répertoire de sortie</string>
     <string name="create_temp_dir_error">Impossible de créer le répertoire temporaire local</string>
     <string name="create_tunnel">Créer un tunnel</string>
@@ -109,6 +109,7 @@
     <string name="tv_add_tunnel_get_started">Ajouter un tunnel pour commencer</string>
     <string name="donate_title">♥ Faire un don au projet WireGuard</string>
     <string name="donate_summary">Chaque contribution aide</string>
+    <string name="donate_google_play_disappointment">Merci de votre soutien au projet WireGuard !\n\nMalheureusement, en raisons des politiques de Google, nous ne pouvons pas vous rediriger vers la page vous permettant de faire un don. Heureusement, vous pouvez le trouver par vous-même !\n\nMerci encore pour votre soutien.</string>
     <string name="disable_config_export_title">Désactiver l\'export de configuration</string>
     <string name="disable_config_export_description">La désactivation de l\'export de configuration rend les clés privées moins accessibles</string>
     <string name="dns_servers">Serveurs DNS</string>
@@ -118,6 +119,7 @@
     <string name="error_down">Erreur lors de la désactivation du tunnel : %s</string>
     <string name="error_fetching_apps">Erreur lors de la récupération de la liste d\'applications : %s</string>
     <string name="error_root">Veuillez obtenir l\'accès root et essayez à nouveau</string>
+    <string name="error_prepare">Erreur lors de la préparation du tunnel : %s</string>
     <string name="error_up">Erreur lors de la mise en place du tunnel : %s</string>
     <string name="exclude_private_ips">Exclure les IPs privées</string>
     <string name="generate_new_private_key">Générer une nouvelle clé privée</string>
@@ -137,6 +139,8 @@
     <string name="key_length_explanation_base64">: Les clés base64 WireGuard doivent comporter 44 caractères (32 octets)</string>
     <string name="key_length_explanation_binary">: Les clés WireGuard doivent comporter 32 octets</string>
     <string name="key_length_explanation_hex">: Les clés hexadécimales WireGuard doivent comporter 64 caractères (32 octets)</string>
+    <string name="latest_handshake">Dernière liaison</string>
+    <string name="latest_handshake_ago">Il y a %s</string>
     <string name="listen_port">Port d\'écoute</string>
     <string name="log_export_error">Impossible d\'exporter le journal : %s</string>
     <string name="log_export_subject">Fichier journal d\'Android WireGuard</string>
@@ -180,6 +184,10 @@
     <string name="private_key">Clé privée</string>
     <string name="public_key">Clé publique</string>
     <string name="qr_code_hint">Astuce : générez avec \"qrencode -t ansiutf8 &lt; tunnel.conf\".</string>
+    <string name="quick_settings_tile_add_title">Ajouter une bascule au volet des paramètres</string>
+    <string name="quick_settings_tile_add_summary">Cette bascule active le dernier tunnel utilisé</string>
+    <string name="quick_settings_tile_add_failure">Impossible d\'ajouter la bascule : erreur %d</string>
+    <string name="quick_settings_tile_action">Activer le tunnel</string>
     <string name="restore_on_boot_summary_off">N\'affichera pas les tunnels activés au démarrage</string>
     <string name="restore_on_boot_summary_on">Les tunnels activés seront affichés au démarrage</string>
     <string name="restore_on_boot_title">Restaurer au démarrage</string>
@@ -224,6 +232,16 @@
     <string name="type_name_go_userspace">Implémentation Go en espace utilisateur</string>
     <string name="type_name_kernel_module">Module noyau</string>
     <string name="unknown_error">Erreur inconnue</string>
+    <string name="updater_avalable">Une mise à jour est disponible. Veuillez mettre l\'application à jour.</string>
+    <string name="updater_action">Télécharger &amp; Mettre à jour</string>
+    <string name="updater_rechecking">Récupération des métadonnées de la mise à jour…</string>
+    <string name="updater_download_progress">Téléchargement de la mise à jour : %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Téléchargement de la mise à jour : %s</string>
+    <string name="updater_installing">Installation de la mise à jour…</string>
+    <string name="updater_failure">Erreur lors de la mise à jour : %s. Nous réessaierons dans un instant…</string>
+    <string name="updater_corrupt_title">Application corrompue</string>
+    <string name="updater_corrupt_message">Cette application est corrompue. Veuillez réinstaller le fichier APK depuis le site ci-dessous. Ensuite, désinstallez cette application puis réinstallez-la à l\'aide du fichier APK téléchargé.</string>
+    <string name="updater_corrupt_navigate">Accéder au site internet</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Vérification de la version %s du backend</string>
     <string name="version_summary_unknown">Version %s inconnue</string>

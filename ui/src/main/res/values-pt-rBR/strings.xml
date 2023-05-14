@@ -79,6 +79,7 @@
     <string name="tv_select_a_storage_drive">Selecione uma unidade de armazenamento</string>
     <string name="tv_no_file_picker">Por favor, instale um utilitário de gerenciamento de arquivos para procurar arquivos</string>
     <string name="tv_add_tunnel_get_started">Adicione um túnel para começar</string>
+    <string name="donate_title">♥️ Doar para o projeto WireGuard</string>
     <string name="disable_config_export_title">Desativar exportação de configuração</string>
     <string name="disable_config_export_description">Desativar a exportação de configuração torna as chaves privadas menos acessíveis</string>
     <string name="dns_servers">Servidores DNS</string>

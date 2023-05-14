@@ -94,7 +94,7 @@
     <string name="bad_config_error">%1$s в %2$s</string>
     <string name="bad_config_explanation_pka">: Значение должно быть больше нуля, но меньше 65535</string>
     <string name="bad_config_explanation_positive_number">: Значение должно быть больше нуля</string>
-    <string name="bad_config_explanation_udp_port">: Должен быть действительный номер порта UDP</string>
+    <string name="bad_config_explanation_udp_port">: Должен быть допустимым UDP-портом</string>
     <string name="bad_config_reason_invalid_key">Неправильный ключ</string>
     <string name="bad_config_reason_invalid_number">Неправильный номер</string>
     <string name="bad_config_reason_invalid_value">Недопустимое значение</string>
@@ -142,7 +142,7 @@
     <string name="dns_search_domains">Домены поиска</string>
     <string name="edit">Изменить</string>
     <string name="endpoint">Конечная точка</string>
-    <string name="error_down">Ошибка при выходе из туннеля: %s</string>
+    <string name="error_down">Ошибка при отключении туннеля: %s</string>
     <string name="error_fetching_apps">Ошибка при получении списка приложений: %s</string>
     <string name="error_root">Пожалуйста, получите root-доступ и попробуйте снова</string>
     <string name="error_prepare">Ошибка при подготовке туннеля: %s</string>
@@ -202,7 +202,7 @@
     <string name="parse_error_integer">число</string>
     <string name="parse_error_reason">Невозможно разобрать %1$s “%2$s”</string>
     <string name="peer">Пир</string>
-    <string name="permission_description">управлять туннелями WireGuard, включая и отключая туннели по желанию, потенциально перенаправляя интернет-трафик</string>
+    <string name="permission_description">контроль над туннелями WireGuard, включение и отключение туннелей по своему усмотрению, возможность неправильного управления сетевым трафиком</string>
     <string name="permission_label">управлять туннелями WireGuard</string>
     <string name="persistent_keepalive">Постоянное соединение</string>
     <string name="pre_shared_key">Общий ключ</string>
@@ -210,6 +210,10 @@
     <string name="private_key">Приватный ключ</string>
     <string name="public_key">Публичный ключ</string>
     <string name="qr_code_hint">Совет: генерировать с “qrencode -t ansiutf8 &lt; tunnel.conf”.</string>
+    <string name="quick_settings_tile_add_title">Добавить элемент в панель быстрых настроек</string>
+    <string name="quick_settings_tile_add_summary">Элемент переключает последний активный туннель</string>
+    <string name="quick_settings_tile_add_failure">Не удается добавить ярлык: ошибка %d</string>
+    <string name="quick_settings_tile_action">Переключить туннель</string>
     <string name="restore_on_boot_summary_off">Не поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_summary_on">Поднимать ранее выбранные туннели при загрузке</string>
     <string name="restore_on_boot_title">Восстановить при загрузке</string>
@@ -251,7 +255,7 @@
     <string name="tunnel_dns_failure">Не удалось определить DNS имя: “%s”</string>
     <string name="tunnel_rename_error">Не удалось переименовать туннель: %s</string>
     <string name="tunnel_rename_success">Туннель успешно переименован в “%s”</string>
-    <string name="type_name_go_userspace">Пользовательское пространство Go</string>
+    <string name="type_name_go_userspace">Go в пользовательском пространстве</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="updater_avalable">Доступно обновление приложения. Пожалуйста, обновите.</string>
@@ -261,7 +265,10 @@
     <string name="updater_download_progress_nototal">Загрузка обновления: %s</string>
     <string name="updater_installing">Установка обновления…</string>
     <string name="updater_failure">Ошибка обновления: %s. Повторите попытку…</string>
-    <string name="version_summary">%1$s бэкенд %2$s</string>
+    <string name="updater_corrupt_title">Приложение повреждено</string>
+    <string name="updater_corrupt_message">Приложение повреждено. Загрузите APK с сайта, указанного ниже, затем удалите это приложение и установите из загруженного APK.</string>
+    <string name="updater_corrupt_navigate">Открыть сайт</string>
+    <string name="version_summary">Бэкенд: %1$s %2$s</string>
     <string name="version_summary_checking">Проверка версии бэкэнда %s</string>
     <string name="version_summary_unknown">Неизвестная версия %s</string>
     <string name="version_title">WireGuard для Android v%s</string>

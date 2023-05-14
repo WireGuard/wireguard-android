@@ -184,6 +184,10 @@
     <string name="private_key">Privater Schlüssel</string>
     <string name="public_key">Öffentlicher Schlüssel</string>
     <string name="qr_code_hint">Tipp: Mit `qrencode -t ansiutf8 &lt; tunnel.conf` generieren.</string>
+    <string name="quick_settings_tile_add_title">Kachel zu Schnelleinstellungen hinzufügen</string>
+    <string name="quick_settings_tile_add_summary">Die Verknüpfung schaltet den letzten Tunnel um</string>
+    <string name="quick_settings_tile_add_failure">Verknüpfung kann nicht hinzugefügt werden: Fehler %d</string>
+    <string name="quick_settings_tile_action">Tunnel umschalten</string>
     <string name="restore_on_boot_summary_off">Aktivierte Tunnel beim Systemstart nicht automatisch starten</string>
     <string name="restore_on_boot_summary_on">Aktivierte Tunnel beim Systemstart automatisch wieder starten</string>
     <string name="restore_on_boot_title">Beim Neustart wiederherstellen</string>
@@ -235,6 +239,9 @@
     <string name="updater_download_progress_nototal">Update wird heruntergeladen: %s</string>
     <string name="updater_installing">Installiere Update…</string>
     <string name="updater_failure">Fehler beim Aktualisieren: %s. Versuche es in Kürze erneut…</string>
+    <string name="updater_corrupt_title">Anwendung beschädigt</string>
+    <string name="updater_corrupt_message">Diese Anwendung ist beschädigt. Bitte laden Sie die APK erneut von der unten verlinkten Website herunter. Deinstallieren Sie danach diese Anwendung und installieren Sie sie mit der heruntergeladenen APK neu.</string>
+    <string name="updater_corrupt_navigate">Webseite öffnen</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Überprüfe %s Backend-Version</string>
     <string name="version_summary_unknown">Unbekannte %s Version</string>
