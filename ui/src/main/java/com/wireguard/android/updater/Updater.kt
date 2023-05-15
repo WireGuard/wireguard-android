@@ -312,13 +312,18 @@ object Updater {
         session.close()
     }
 
+    private var updating = false
     private suspend fun downloadAndUpdateWrapErrors() {
+        if (updating)
+            return
+        updating = true
         try {
             downloadAndUpdate()
         } catch (e: Throwable) {
             Log.e(TAG, "Update failure", e)
             emitProgress(Progress.Failure(e))
         }
+        updating = false
     }
 
     private class InstallReceiver : BroadcastReceiver() {
