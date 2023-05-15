@@ -50,11 +50,9 @@ object Updater {
     private const val UPDATE_URL_FMT = "https://download.wireguard.com/android-client/%s"
     private const val APK_NAME_PREFIX = BuildConfig.APPLICATION_ID + "-"
     private const val APK_NAME_SUFFIX = ".apk"
-    private val CURRENT_VERSION = Version(BuildConfig.VERSION_NAME.removeSuffix("-debug"))
-    private val LATEST_FILE = if (BuildConfig.DEBUG) "latest-debug.sig" else "latest.sig"
-    private val RELEASE_PUBLIC_KEY_BASE64 =
-        if (BuildConfig.DEBUG) "RWTKFCNaLimMkuolGwAw12XT6sx+nnS7KE1wmhJ7YHXvAPedtPR/rofU"
-        else "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
+    private const val LATEST_FILE = "latest.sig"
+    private const val RELEASE_PUBLIC_KEY_BASE64 = "RWTAzwGRYr3EC9px0Ia3fbttz8WcVN6wrOwWp2delz4el6SI8XmkKSMp"
+    private val CURRENT_VERSION by lazy { Version(BuildConfig.VERSION_NAME) }
 
     private val updaterScope = CoroutineScope(Job() + Dispatchers.IO)
 
@@ -365,6 +363,9 @@ object Updater {
     }
 
     fun monitorForUpdates() {
+        if (BuildConfig.DEBUG)
+            return
+
         val context = Application.get()
 
         if (installerIsGooglePlay(context))
