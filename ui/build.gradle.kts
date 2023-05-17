@@ -4,9 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.android.build.gradle.tasks.ExtractSupportedLocalesTask
 
-// Grotesque workaround for https://issuetracker.google.com/issues/279780940
-System.setProperty("com.android.tools.r8.disableApiModeling", "1")
-
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
 plugins {
@@ -94,13 +91,4 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-}
-
-// Grotesque workaround for https://issuetracker.google.com/issues/281825213
-tasks.withType<ExtractSupportedLocalesTask>().configureEach {
-    doLast {
-        val file = localeList.asFile.get()
-        val lines = file.readLines()
-        file.writeText((listOf(lines[0]) + lines.subList(1, lines.size).sorted()).joinToString(separator = "\n"))
-    }
 }
