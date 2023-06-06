@@ -46,8 +46,8 @@ public class RootShell {
         final String packageName = context.getPackageName();
         if (packageName.contains("'"))
             throw new RuntimeException("Impossibly invalid package name contains a single quote");
-        preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; magisk --sqlite \"UPDATE policies SET notification=0, logging=0 WHERE package_name='%s'\" >/dev/null 2>&1; id -u\n",
-                packageName, localBinaryDir, localTemporaryDir, packageName);
+        preamble = String.format("export CALLING_PACKAGE=%s PATH=\"%s:$PATH\" TMPDIR='%s'; magisk --sqlite \"UPDATE policies SET notification=0, logging=0 WHERE uid=%d\" >/dev/null 2>&1; id -u\n",
+                packageName, localBinaryDir, localTemporaryDir, android.os.Process.myUid());
     }
 
     private static boolean isExecutableInPath(final String name) {
