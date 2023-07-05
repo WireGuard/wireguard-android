@@ -2,7 +2,6 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.android.build.gradle.tasks.ExtractSupportedLocalesTask
 
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
