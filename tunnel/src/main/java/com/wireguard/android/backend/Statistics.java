@@ -21,31 +21,7 @@ import androidx.annotation.Nullable;
  */
 @NonNullForAll
 public class Statistics {
-
-    // TODO: switch to Java Record class once R8 supports desugaring those.
-    public final class PeerStats {
-        public final long rxBytes, txBytes, latestHandshakeEpochMillis;
-
-        PeerStats(final long rxBytes, final long txBytes, final long latestHandshakeEpochMillis) {
-            this.rxBytes = rxBytes;
-            this.txBytes = txBytes;
-            this.latestHandshakeEpochMillis = latestHandshakeEpochMillis;
-        }
-
-        @Override public boolean equals(final Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            final PeerStats stats = (PeerStats) o;
-            return rxBytes == stats.rxBytes && txBytes == stats.txBytes && latestHandshakeEpochMillis == stats.latestHandshakeEpochMillis;
-        }
-
-        @Override public int hashCode() {
-            return Objects.hash(rxBytes, txBytes, latestHandshakeEpochMillis);
-        }
-    }
-
+    public record PeerStats(long rxBytes, long txBytes, long latestHandshakeEpochMillis) { }
     private final Map<Key, PeerStats> stats = new HashMap<>();
     private long lastTouched = SystemClock.elapsedRealtime();
 
@@ -85,7 +61,7 @@ public class Statistics {
      */
     @Nullable
     public PeerStats peer(final Key peer) {
-        return this.stats.get(peer);
+        return stats.get(peer);
     }
 
     /**
