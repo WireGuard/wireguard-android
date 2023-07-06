@@ -4,6 +4,7 @@
  */
 package com.wireguard.android
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -53,7 +54,12 @@ class QuickTileService : TileService() {
             null -> {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivityAndCollapse(intent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_IMMUTABLE))
+                } else {
+                    @Suppress("DEPRECATION")
+                    startActivityAndCollapse(intent)
+                }
             }
             else -> {
                 unlockAndRun {
