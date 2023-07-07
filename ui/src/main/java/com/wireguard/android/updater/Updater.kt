@@ -383,13 +383,15 @@ object Updater {
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
             }.requestedPermissions.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)
         ) {
-            updaterScope.launch {
-                val update = try {
-                    checkForUpdates()
-                } catch (_: Throwable) {
-                    null
+            if (installer(context).isNotEmpty()) {
+                updaterScope.launch {
+                    val update = try {
+                        checkForUpdates()
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    emitProgress(Progress.Corrupt(update?.fileName))
                 }
-                emitProgress(Progress.Corrupt(update?.fileName))
             }
             return
         }
