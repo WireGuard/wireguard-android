@@ -107,6 +107,9 @@
     <string name="tv_select_a_storage_drive">Välj en lagringsenhet</string>
     <string name="tv_no_file_picker">Installera ett filhanteringsverktyg för att bläddra bland filer</string>
     <string name="tv_add_tunnel_get_started">Lägg till en tunnel för att komma igång</string>
+    <string name="donate_title">♥ Donera till WireGuard Projektet</string>
+    <string name="donate_summary">Varje bidrag hjälper</string>
+    <string name="donate_google_play_disappointment">Tack för att du stödjer WireGuard Projektet!\n\nPå grund av Googles policyer får vi dessvärre inte till den del av projektets webbsida där du kan göra en donation. Förhoppningsvis kan du hitta dit ändå!\n\nTack igen för ditt bidrag.</string>
     <string name="disable_config_export_title">Inaktivera export av konfiguration</string>
     <string name="disable_config_export_description">Inaktivering av konfigurationsexport gör privata nycklar mindre tillgängliga</string>
     <string name="dns_servers">DNS-servrar</string>
@@ -116,6 +119,7 @@
     <string name="error_down">Fel vid nedtagning av tunnel: %s</string>
     <string name="error_fetching_apps">Fel vid hämtning av applista: %s</string>
     <string name="error_root">Vänligen få rootbehörighet och försök igen</string>
+    <string name="error_prepare">Fel vid förberedelse av tunnel: %s</string>
     <string name="error_up">Fel vid uppstart av tunnel: %s</string>
     <string name="exclude_private_ips">Uteslut privata IP-adresser</string>
     <string name="generate_new_private_key">Skapa ny privat nyckel</string>
@@ -135,6 +139,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64 nycklar måste vara 44 tecken (32 bytes)</string>
     <string name="key_length_explanation_binary">: WireGuard nycklar måste vara 32 bytes</string>
     <string name="key_length_explanation_hex">: WireGuard hex nycklar måste vara 64 tecken (32 bytes)</string>
+    <string name="latest_handshake">Senaste handskakning</string>
+    <string name="latest_handshake_ago">%s sedan</string>
     <string name="listen_port">Lyssningsport</string>
     <string name="log_export_error">Kan inte exportera loggen: %s</string>
     <string name="log_export_subject">WireGuard Android loggfil</string>
@@ -178,6 +184,10 @@
     <string name="private_key">Privat nyckel</string>
     <string name="public_key">Offentlig nyckel</string>
     <string name="qr_code_hint">Tips: generera med `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Lägg till tile i snabbinställningarna</string>
+    <string name="quick_settings_tile_add_summary">Tilen växlar din senaste tunnel mellan på och av</string>
+    <string name="quick_settings_tile_add_failure">Misslyckades med att skapa tile: fel %d</string>
+    <string name="quick_settings_tile_action">Växla tunnel på/av</string>
     <string name="restore_on_boot_summary_off">Kommer inte ta upp aktiverade tunnlar vid uppstart</string>
     <string name="restore_on_boot_summary_on">Kommer ta upp aktiverade tunnlar vid uppstart</string>
     <string name="restore_on_boot_title">Återställ vid uppstart</string>
@@ -213,6 +223,7 @@
     <string name="tunnel_create_success">Lyckades skapa tunnel “%s”</string>
     <string name="tunnel_error_already_exists">Tunnel ”%s” finns redan</string>
     <string name="tunnel_error_invalid_name">Ogiltigt namn</string>
+    <string name="tunnel_list_placeholder">Lägg till en tunnel med knappen nedan</string>
     <string name="tunnel_name">Tunnelns namn</string>
     <string name="tunnel_on_error">Kunde inte aktivera tunneln (wgTurnOn returnerade %d)</string>
     <string name="tunnel_dns_failure">Det går inte att lösa DNS-värdnamn: ”%s”</string>
@@ -221,6 +232,16 @@
     <string name="type_name_go_userspace">Användarutrymme för Go</string>
     <string name="type_name_kernel_module">Kärnmodul</string>
     <string name="unknown_error">Okänt fel</string>
+    <string name="updater_avalable">Det finns en uppdatering till appen. Vänligen uppdatera nu.</string>
+    <string name="updater_action">Ladda ner &amp; uppdatera</string>
+    <string name="updater_rechecking">Hämtar uppdateringens metadata…</string>
+    <string name="updater_download_progress">Laddar ner uppdatering: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Laddar ner uppdatering: %s</string>
+    <string name="updater_installing">Installerar uppdatering…</string>
+    <string name="updater_failure">Uppdatering misslyckades: %s. Försöker igen inom kort…</string>
+    <string name="updater_corrupt_title">Applikationen är korrupt</string>
+    <string name="updater_corrupt_message">Applikationen är korrupt. Vänligen ladda ner en APK från hemsidan länkad nedan. Avinstallera därefter denna applikation och installera den nerladdade APKn.</string>
+    <string name="updater_corrupt_navigate">Öppna hemsida</string>
     <string name="version_summary">%1$s bakstycke %2$s</string>
     <string name="version_summary_checking">Kontrollerar %s backstycke utgåva</string>
     <string name="version_summary_unknown">Okänd %s utgåva</string>

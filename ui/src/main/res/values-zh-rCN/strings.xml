@@ -172,9 +172,9 @@
     <string name="public_key">公钥</string>
     <string name="qr_code_hint">提示：使用命令 `qrencode -t ansiutf8 &lt; tunnel.conf` 生成二维码</string>
     <string name="quick_settings_tile_add_title">添加磁贴到快速设置面板</string>
-    <string name="quick_settings_tile_add_summary">快捷方式磁贴开/关最近使用的隧道。</string>
-    <string name="quick_settings_tile_add_failure">无法添加快捷方式磁贴：错误 %d</string>
-    <string name="quick_settings_tile_action">开/关隧道</string>
+    <string name="quick_settings_tile_add_summary">通过快捷磁贴开启/关闭上次使用的隧道</string>
+    <string name="quick_settings_tile_add_failure">无法添加快捷磁贴：错误 %d</string>
+    <string name="quick_settings_tile_action">开启/关闭隧道</string>
     <string name="restore_on_boot_summary_off">未启用</string>
     <string name="restore_on_boot_summary_on">设备启动时自动开启上次使用的隧道</string>
     <string name="restore_on_boot_title">启动时恢复</string>
@@ -226,8 +226,8 @@
     <string name="updater_download_progress_nototal">正在下载更新：%s</string>
     <string name="updater_installing">正在安装更新…</string>
     <string name="updater_failure">更新失败：%s。将在稍后重试…</string>
-    <string name="updater_corrupt_title">应用程序损坏</string>
-    <string name="updater_corrupt_message">此应用程序已损坏。请从下面链接的网站重新下载APK。然后卸载此应用程序并从下载的APK重新安装它。</string>
+    <string name="updater_corrupt_title">应用损坏</string>
+    <string name="updater_corrupt_message">此应用已损坏。请从下方链接的网站中重新下载 APK，然后卸载此应用并重新安装。</string>
     <string name="updater_corrupt_navigate">打开网站</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">正在检查 %s backend 版本</string>

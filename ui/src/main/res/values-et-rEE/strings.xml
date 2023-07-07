@@ -185,6 +185,7 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="private_key">Privaatvõti</string>
     <string name="public_key">Avalik võti</string>
     <string name="qr_code_hint">Vihje: tekita käsuga `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_action">Lülita tunnel</string>
     <string name="restore_on_boot_summary_off">Ei lülita seadme käivitumisel lubatud tunneleid sisse</string>
     <string name="restore_on_boot_summary_on">Lülitab seadme käivitumisel lubatud tunnelid sisse</string>
     <string name="restore_on_boot_title">Taasta seadme käivitumisel</string>
@@ -236,6 +237,9 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="updater_download_progress_nototal">Uuenduse allalaadimine: %s</string>
     <string name="updater_installing">Uuenduse paigaldamine…</string>
     <string name="updater_failure">Uuendamine ebaõnnestus: %s. Uus katse hetke pärast…</string>
+    <string name="updater_corrupt_title">Rakendus rikutud</string>
+    <string name="updater_corrupt_message">See rakendus on rikutud. Palun laadi APK uuesti allpool lingitud veebilehelt. Pärast seda desinstalli rakendus ja installi allalaaditud APK uuesti.</string>
+    <string name="updater_corrupt_navigate">Ava veebileht</string>
     <string name="version_summary">%1$s taustsüsteem %2$s</string>
     <string name="version_summary_checking">Kontrollin %s taustsüsteemi versiooni</string>
     <string name="version_summary_unknown">Tundmatu %s versioon</string>

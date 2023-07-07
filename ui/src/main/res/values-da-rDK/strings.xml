@@ -51,6 +51,9 @@
     <string name="add_peer">Tilføj modpart</string>
     <string name="addresses">Adresser</string>
     <string name="applications">Applikationer</string>
+    <string name="allow_remote_control_intents_summary_off">Eksterne apps kan ikke slå tunneler til/fra (Anbefales)</string>
+    <string name="allow_remote_control_intents_summary_on">Eksterne apps må slå tunneler til/fra (Avanceret)</string>
+    <string name="allow_remote_control_intents_title">Tillad fjernstyring fra eksterne apps</string>
     <string name="allowed_ips">Tilladte IP-adresser</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
@@ -85,6 +88,7 @@
     <string name="tv_delete">Vælg tunnel du vil slette</string>
     <string name="tv_select_a_storage_drive">Vælg et lagerdrev</string>
     <string name="tv_add_tunnel_get_started">Tilføj en tunnel for at komme i gang</string>
+    <string name="donate_title">♥ Donér til WireGuard projektet</string>
     <string name="disable_config_export_title">Deaktivér eksportering af konfiguration</string>
     <string name="dns_servers">DNS-servere</string>
     <string name="dns_search_domains">DNS-søgedomæner</string>
