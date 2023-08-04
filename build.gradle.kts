@@ -7,7 +7,7 @@ plugins {
 
 tasks {
     wrapper {
-        gradleVersion = "8.1.1"
-        distributionSha256Sum = "e111cb9948407e26351227dabce49822fb88c37ee72f1d1582a69c68af2e702f"
+        gradleVersion = "8.2.1"
+        distributionSha256Sum = "03ec176d388f2aa99defcadc3ac6adf8dd2bce5145a129659537c0874dea5ad1"
     }
 }
