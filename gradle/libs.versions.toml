@@ -1,9 +1,9 @@
 [versions]
-agp = "8.2.0-alpha10"
-kotlin = "1.8.21"
+agp = "8.2.0-alpha15"
+kotlin = "1.9.0"
 
 [libraries]
-androidx-activity-ktx = "androidx.activity:activity-ktx:1.7.1"
+androidx-activity-ktx = "androidx.activity:activity-ktx:1.7.2"
 androidx-annotation = "androidx.annotation:annotation:1.6.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 androidx-biometric = "androidx.biometric:biometric:1.1.0"
