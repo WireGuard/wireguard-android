@@ -6,6 +6,7 @@ package com.wireguard.android.util
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.getSystemService
@@ -29,6 +30,8 @@ object ClipboardUtils {
         }
         val service = view.context.getSystemService<ClipboardManager>() ?: return
         service.setPrimaryClip(ClipData.newPlainText(data.second, data.first))
-        Snackbar.make(view, view.context.getString(R.string.copied_to_clipboard, data.second), Snackbar.LENGTH_LONG).show()
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            Snackbar.make(view, view.context.getString(R.string.copied_to_clipboard, data.second), Snackbar.LENGTH_LONG).show()
+        }
     }
 }
