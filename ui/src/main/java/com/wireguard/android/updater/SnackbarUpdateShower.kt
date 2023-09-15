@@ -5,7 +5,9 @@
 
 package com.wireguard.android.updater
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.View
 import android.widget.Toast
@@ -159,11 +161,19 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
                                 Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_SHORT).show()
                             }
                         }.setCancelable(false).setOnDismissListener {
-                            val intent = Intent(Intent.ACTION_MAIN)
-                            intent.addCategory(Intent.CATEGORY_HOME)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
+                            val homeIntent = Intent(Intent.ACTION_MAIN).apply {
+                                addCategory(Intent.CATEGORY_HOME)
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            val resolveInfoList = context.packageManager.queryIntentActivities(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
+                            if (resolveInfoList.isNotEmpty()) {
+                                val firstResolveInfo = resolveInfoList[0]
+                                val componentName = ComponentName(firstResolveInfo.activityInfo.packageName, firstResolveInfo.activityInfo.name)
+                                val explicitIntent = Intent(homeIntent).apply {
+                                    component = componentName
+                                }
+                                context.startActivity(explicitIntent)
+                            }
                             System.exit(0)
                         }.show()
                 }

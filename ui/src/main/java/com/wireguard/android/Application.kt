@@ -4,8 +4,10 @@
  */
 package com.wireguard.android
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -51,13 +53,17 @@ class Application : android.app.Application() {
 
     override fun attachBaseContext(context: Context) {
         super.attachBaseContext(context)
-        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_HOME)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            System.exit(0)
+        val homeIntent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        val resolveInfoList = packageManager.queryIntentActivities(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
+        if (resolveInfoList.isNotEmpty()) {
+            val firstResolveInfo = resolveInfoList[0]
+            val explicitIntent = Intent(homeIntent).apply {
+                component = ComponentName(firstResolveInfo.activityInfo.packageName, firstResolveInfo.activityInfo.name)
+            }
+            startActivity(explicitIntent)
         }
     }
 

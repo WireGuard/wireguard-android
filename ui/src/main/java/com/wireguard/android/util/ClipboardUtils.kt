@@ -31,7 +31,7 @@ object ClipboardUtils {
         val service = view.context.getSystemService<ClipboardManager>() ?: return
         service.setPrimaryClip(ClipData.newPlainText(data.second, data.first))
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            Snackbar.make(view, view.context.getString(R.string.copied_to_clipboard, data.second), Snackbar.LENGTH_LONG).show()
+            Snackbar.make(view, view.context.getString(R.string.copied_to_clipboard), Snackbar.LENGTH_LONG).show()
         }
     }
 }
