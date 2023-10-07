@@ -99,7 +99,8 @@ public class BadConfigException extends Exception {
         MISSING_SECTION,
         SYNTAX_ERROR,
         UNKNOWN_ATTRIBUTE,
-        UNKNOWN_SECTION
+        UNKNOWN_SECTION,
+        INVALID_ADDITIONAL_CONFIG
     }
 
     public enum Section {

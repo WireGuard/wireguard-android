@@ -304,6 +304,55 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tunnel_wifi_detail_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/wifi_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wifi_settings"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/wifi_auto_disconnect_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:labelFor="@+id/wifi_auto_disconnect_text"
+                        android:text="@string/blacklisted_wifi_networks"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/wifi_title" />
+
+                    <TextView
+                        android:id="@+id/wifi_auto_disconnect_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/blacklisted_wifi_networks"
+                        android:onClick="@{ClipboardUtils::copyTextView}"
+                        android:text="@{config.autoDisconnectEnabled ? config.autoDisconnectNetworks : @string/wifi_auto_disconnect_disabled}"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/wifi_auto_disconnect_label"
+                        tools:text="Network 1" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
                 android:id="@+id/peers_layout"
                 android:layout_width="match_parent"
@@ -314,7 +363,7 @@
                 app:items="@{config.peers}"
                 app:layout="@{@layout/tunnel_detail_peer}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tunnel_detail_card"
+                app:layout_constraintTop_toBottomOf="@+id/tunnel_wifi_detail_card"
                 tools:ignore="UselessLeaf" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
