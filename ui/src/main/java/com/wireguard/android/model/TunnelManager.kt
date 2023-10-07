@@ -115,27 +115,42 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         applicationScope.launch {
             try {
                 onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate() }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
-                PeriodicWorkRequest
-                    .Builder(
-                        WifiWorker::class.java, 15,
-                        TimeUnit.MINUTES, 5, TimeUnit.MINUTES
-                    )
-                    .setConstraints(
-                        Constraints.Builder()
-                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .setRequiredNetworkType(NetworkType.UNMETERED)
-                            .build()
-                    )
-                    .build()
-                    .also {
-                        WorkManager.getInstance(context)
-                            .enqueueUniquePeriodicWork("WIFI_WORKER", ExistingPeriodicWorkPolicy.UPDATE, it)
-                    }
-                // Fire once, at the start
-                GenericWifiWorker(context).doWork()
+                loadOrUnloadWifiWorker()
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
+        }
+    }
+
+    private suspend fun loadOrUnloadWifiWorker() {
+        val workerTag = "WIFI_WORKER"
+        val hasAnyTunnelsNeedingWifi =
+            getTunnels().any { tunnel -> getTunnelState(tunnel) == Tunnel.State.UP && tunnel.getConfigAsync().isAutoDisconnectEnabled }
+        if (hasAnyTunnelsNeedingWifi) {
+            Log.d(WIFI_TAG, "There's one or more tunnels that check for Wi-Fi connectivity - (re)loading worker")
+            PeriodicWorkRequest
+                .Builder(
+                    WifiWorker::class.java, 15,
+                    TimeUnit.MINUTES, 5, TimeUnit.MINUTES
+                )
+                .addTag(workerTag)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiredNetworkType(NetworkType.UNMETERED)
+                        .build()
+                )
+                .build()
+                .also {
+                    WorkManager.getInstance(context)
+                        .enqueueUniquePeriodicWork("WIFI_WORKER", ExistingPeriodicWorkPolicy.UPDATE, it)
+                }
+            // Fire once, at the start
+            GenericWifiWorker(context).doWork()
+        } else {
+            // Kill the worker - no need to keep it running
+            Log.d(WIFI_TAG, "There's no more connected tunnels that check for Wi-Fi functionality - killing worker")
+            WorkManager.getInstance(context).cancelAllWorkByTag(workerTag)
         }
     }
 
@@ -239,6 +254,12 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         saveState()
         if (throwable != null)
             throw throwable
+        try {
+            if (tunnel.getConfigAsync().isAutoDisconnectEnabled)
+                loadOrUnloadWifiWorker()
+        } catch (e: Throwable) {
+            // Ignore
+        }
         newState
     }
 
@@ -273,6 +294,9 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     class GenericWifiWorker(val context: Context) {
+        private var connectivityManager =
+            context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
         private var networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -306,8 +330,6 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         }
 
         fun doWork() {
-            val connectivityManager =
-                context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()
