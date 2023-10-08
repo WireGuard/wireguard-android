@@ -4,7 +4,12 @@
  */
 package com.wireguard.android.fragment
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -18,6 +23,9 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
@@ -34,6 +42,9 @@ import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.config.Config
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Fragment for editing a WireGuard configuration.
@@ -112,10 +123,29 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
             selectedTunnel = tunnel
     }
 
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private var requestPermissionCallback: ((permissions: Map<String, Boolean>) -> Unit)? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            requestPermissionCallback?.invoke(it);
+        }
+    }
+
+    private suspend fun suspendRequestPermissions(permissions: Array<String>): Map<String, Boolean> {
+        return suspendCoroutine { cont ->
+            requestPermissionCallback = {
+                cont.resume(it)
+                requestPermissionCallback = null
+            }
+            requestPermissionLauncher?.launch(permissions)
+        }
+    }
+
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == R.id.menu_action_save) {
             binding ?: return false
-            val newConfig = try {
+            var newConfig = try {
                 binding!!.config!!.resolve()
             } catch (e: Throwable) {
                 val error = ErrorMessages[e]
@@ -127,6 +157,73 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
             }
             val activity = requireActivity()
             activity.lifecycleScope.launch {
+                if (newConfig.isAutoDisconnectEnabled) run {
+                    val disableFeature = {
+                        // The user has changed their mind - disable the feature, but leave the network list in place
+                        newConfig = Config.Builder()
+                            .setInterface(newConfig.`interface`)
+                            .addPeers(newConfig.peers)
+                            .setAutoDisconnect(false)
+                            .setAutoDisconnectNetworks(newConfig.autoDisconnectNetworks)
+                            .build()
+                    }
+
+                    val requiredPermissions = arrayListOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        requiredPermissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    }
+                    val allRequiredPermissionsGranted =
+                        requiredPermissions.all { ContextCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED }
+                    if (!allRequiredPermissionsGranted) {
+                        val shouldAsk = suspendCancellableCoroutine { cont ->
+                            AlertDialog.Builder(activity)
+                                .setMessage(R.string.wifi_location_needed_message)
+                                .setTitle(R.string.wifi_location_needed_title)
+                                .create()
+                                .run {
+                                    val listener = DialogInterface.OnClickListener { _, button ->
+                                        when (button) {
+                                            AlertDialog.BUTTON_POSITIVE -> cont.resume(true)
+                                            else -> cont.resume(false)
+                                        }
+                                    }
+                                    cont.invokeOnCancellation { this.dismiss() }
+                                    setButton(AlertDialog.BUTTON_POSITIVE, context.getText(R.string.wifi_location_ok), listener)
+                                    setButton(AlertDialog.BUTTON_NEGATIVE, context.getText(R.string.wifi_location_cancel), listener)
+                                    show()
+                                }
+                        }
+                        if (!shouldAsk) {
+                            disableFeature()
+                            return@run
+                        }
+
+                        // Ask for the permissions
+                        val basePermissionsGranted = suspendRequestPermissions(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        ).values.all { it }
+                        if (!basePermissionsGranted) {
+                            disableFeature()
+                            return@run
+                        }
+
+                        // If we're not on android Q, we're done - all required permissions granted
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                            return@run
+                        }
+
+                        // If we're on android Q or more, the background location needs its separate permission - it can't be
+                        // requested together with the 2 base location ones.
+                        val backgroundPermissionGranted = suspendRequestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)).values.all { it }
+                        if (!backgroundPermissionGranted) {
+                            disableFeature()
+                        }
+                    }
+                }
+
                 when {
                     tunnel == null -> {
                         Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)

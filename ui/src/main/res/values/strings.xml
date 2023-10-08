@@ -263,4 +263,8 @@
     <string name="auto_disconnect_networks_label">Networks</string>
     <string name="blacklisted_wifi_networks">Blacklisted Wi-Fi networks</string>
     <string name="wifi_auto_disconnect_disabled">&lt;Disabled&gt;</string>
+    <string name="wifi_location_needed_message">To use the auto-disconnect feature, you need to enable fine location access for this application.</string>
+    <string name="wifi_location_needed_title">Location permissions needed</string>
+    <string name="wifi_location_ok">Ok</string>
+    <string name="wifi_location_cancel">Cancel</string>
 </resources>
