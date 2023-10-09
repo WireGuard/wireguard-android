@@ -315,7 +315,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     }
                     val manager = getTunnelManager()
                     val tunnels = manager.getTunnels().filter { tunnel ->
-                        tunnel.getConfigAsync().isAutoDisconnectEnabled && tunnel.getConfigAsync().autoDisconnectNetworks.contains(ssid)
+                        tunnel.getConfigAsync().isAutoDisconnectEnabled && tunnel.getConfigAsync().autoDisconnectNetworks.split(",").any{ it.trim() == ssid }
                     }
                     tunnels.forEach { tunnel ->
                         try {
