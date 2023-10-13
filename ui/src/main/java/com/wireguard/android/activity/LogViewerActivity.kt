@@ -223,7 +223,7 @@ class LogViewerActivity : AppCompatActivity() {
                 } else {
                     if (bufferedLogLines.isNotEmpty()) {
                         bufferedLogLines.last().msg += "\n$line"
-                    } else if (!logLines.isEmpty) {
+                    } else if (!logLines.isEmpty()) {
                         logLines[logLines.size() - 1].msg += "\n$line"
                         priorModified = true
                     }
