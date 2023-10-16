@@ -54,12 +54,7 @@ class QuickTileService : TileService() {
             null -> {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_IMMUTABLE))
-                } else {
-                    @Suppress("DEPRECATION")
-                    startActivityAndCollapse(intent)
-                }
+                startActivityCompat(intent)
             }
             else -> {
                 unlockAndRun {
@@ -70,11 +65,20 @@ class QuickTileService : TileService() {
                         } catch (_: Throwable) {
                             val toggleIntent = Intent(this@QuickTileService, TunnelToggleActivity::class.java)
                             toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(toggleIntent)
+                            startActivityCompat(toggleIntent)
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun startActivityCompat(intent: Intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
+        } else {
+            @Suppress("DEPRECATION", "StartActivityAndCollapseDeprecated")
+            startActivityAndCollapse(intent)
         }
     }
 
