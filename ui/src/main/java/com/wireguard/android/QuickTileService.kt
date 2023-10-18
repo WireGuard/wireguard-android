@@ -9,8 +9,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Icon
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
@@ -55,7 +57,7 @@ class QuickTileService : TileService() {
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent,  PendingIntent.FLAG_IMMUTABLE))
+                    startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
                 } else {
                     @Suppress("DEPRECATION")
                     startActivityAndCollapse(intent)
@@ -68,6 +70,12 @@ class QuickTileService : TileService() {
                             tunnel.setStateAsync(Tunnel.State.TOGGLE)
                             updateTile()
                         } catch (_: Throwable) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !Settings.canDrawOverlays(this@QuickTileService)) {
+                                val permissionIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                                permissionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivityAndCollapse(PendingIntent.getActivity(this@QuickTileService, 0, permissionIntent, PendingIntent.FLAG_IMMUTABLE))
+                                return@launch
+                            }
                             val toggleIntent = Intent(this@QuickTileService, TunnelToggleActivity::class.java)
                             toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(toggleIntent)
