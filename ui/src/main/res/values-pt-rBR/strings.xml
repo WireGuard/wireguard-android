@@ -27,9 +27,13 @@
     <string name="all_applications">Todos as aplicativos</string>
     <string name="exclude_from_tunnel">Retirar</string>
     <string name="include_in_tunnel">Incluir somente</string>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">segundo</item>
+        <item quantity="other">segundos</item>
+    </plurals>
     <string name="use_all_applications">Usar todas aplicações</string>
     <string name="add_peer">Adicionar Par</string>
-    <string name="addresses">Endereço:</string>
+    <string name="addresses">Endereço</string>
     <string name="applications">Aplicativo</string>
     <string name="allow_remote_control_intents_summary_off">Aplicativos externos podem não alternar túneis (recomendado)</string>
     <string name="allow_remote_control_intents_summary_on">Aplicativos externos podem alternar túneis (avançado)</string>
@@ -80,6 +84,8 @@
     <string name="tv_no_file_picker">Por favor, instale um utilitário de gerenciamento de arquivos para procurar arquivos</string>
     <string name="tv_add_tunnel_get_started">Adicione um túnel para começar</string>
     <string name="donate_title">♥️ Doar para o projeto WireGuard</string>
+    <string name="donate_summary">Todas as contribuições ajudam</string>
+    <string name="donate_google_play_disappointment">Obrigado por apoiar o Projeto WireGuard!\n\nInfelizmente, devido às políticas do Google, não temos permissão para vincular a parte da página do projeto onde você pode fazer uma doação. Esperamos que você consiga descobrir isso!\n\nObrigado novamente pela sua contribuição.</string>
     <string name="disable_config_export_title">Desativar exportação de configuração</string>
     <string name="disable_config_export_description">Desativar a exportação de configuração torna as chaves privadas menos acessíveis</string>
     <string name="dns_servers">Servidores DNS</string>
@@ -89,6 +95,7 @@
     <string name="error_down">Erro ao derrubar o túnel: %s</string>
     <string name="error_fetching_apps">Erro ao obter lista de apps: %s</string>
     <string name="error_root">Por favor, obtenha acesso root e tente novamente</string>
+    <string name="error_prepare">Erro ao preparar o túnel: %s</string>
     <string name="error_up">Erro ao criar túnel: %s</string>
     <string name="exclude_private_ips">Excluir IPs privados</string>
     <string name="generate_new_private_key">Gerar uma nova chave privada</string>
@@ -108,6 +115,8 @@
     <string name="key_length_explanation_base64">: Chaves base64 do WireGuard devem ter 44 caracteres (32 bytes)</string>
     <string name="key_length_explanation_binary">: Chaves do WireGuard devem ter 32 bytes</string>
     <string name="key_length_explanation_hex">: Chaves hex do WireGuard devem ter 64 caracteres (32 bytes)</string>
+    <string name="latest_handshake">Último handshake</string>
+    <string name="latest_handshake_ago">%s atrás</string>
     <string name="listen_port">Porta de escuta</string>
     <string name="log_export_error">Não foi possível exportar o log: %s</string>
     <string name="log_export_subject">Arquivo de log do WireGuard Android</string>
@@ -149,6 +158,9 @@
     <string name="private_key">Chave Privada</string>
     <string name="public_key">Chave pública</string>
     <string name="qr_code_hint">Dica: gerar com `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Adicionar botão ao painel de configurações rápidas</string>
+    <string name="quick_settings_tile_add_summary">A tecla de atalho alterna o túnel mais recente</string>
+    <string name="quick_settings_tile_add_failure">Não foi possível adicionar o atalho de botão: erro %d</string>
     <string name="restore_on_boot_title">Restaurar na inicialização</string>
     <string name="save">Salvar</string>
     <string name="select_all">Selecionar tudo</string>
@@ -162,6 +174,7 @@
     <string name="tools_installer_failure">Não foi possível instalar ferramentas de linha de comando (sem root?)</string>
     <string name="tools_installer_initial">Instalar ferramentas opcionais para scripting</string>
     <string name="tools_installer_initial_magisk">Instalar ferramentas opcionais para scripting como o módulo Magisk</string>
+    <string name="tools_installer_initial_system">Instalar ferramentas opcionais para escrever na partição do sistema</string>
     <string name="tools_installer_success_magisk">wg e wg-quick instalado como um módulo Magisk (é necessário reiniciar)</string>
     <string name="tools_installer_success_system">wg e wg-quick instalados na partição do sistema</string>
     <string name="tools_installer_title">Instalar ferramentas de linha de comando</string>
@@ -179,8 +192,27 @@
     <string name="tunnel_create_success">Túnel criado com sucesso “%s”</string>
     <string name="tunnel_error_already_exists">Túnel “%s” já existe</string>
     <string name="tunnel_error_invalid_name">Nome inválido</string>
+    <string name="tunnel_list_placeholder">Adicionar um túnel usando o botão abaixo</string>
+    <string name="tunnel_name">Nome do túnel</string>
+    <string name="tunnel_on_error">Não foi possível ativar o túnel (wgTurnOn retornou %d)</string>
+    <string name="tunnel_dns_failure">Não foi possível resolver host DNS: \"%s\"</string>
+    <string name="tunnel_rename_error">Não foi possível renomear o túnel: %s</string>
+    <string name="tunnel_rename_success">Renomeado com sucesso o túnel para “%s”</string>
     <string name="type_name_kernel_module">Modo de Kernel</string>
     <string name="unknown_error">Erro desconhecido</string>
+    <string name="updater_avalable">Uma atualização do aplicativo está disponível. Pôr favor atualize agora.</string>
+    <string name="updater_action">Baixar &amp; Atualizar</string>
+    <string name="updater_rechecking">Obtendo metadados de atualização…</string>
+    <string name="updater_download_progress">Baixando a atualização: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Baixando atualização: %s</string>
+    <string name="updater_installing">Instalando atualização…</string>
+    <string name="updater_failure">Falha na atualização: %s. Tentaremos novamente em breve…</string>
+    <string name="updater_corrupt_title">Aplicativo corrompido</string>
+    <string name="updater_corrupt_message">Este aplicativo está corrompido. Por favor, baixe novamente o APK do site vinculado abaixo. Depois disso, desinstale o aplicativo e reinstale-o a partir do APK baixado.</string>
+    <string name="updater_corrupt_navigate">Abrir site</string>
+    <string name="version_summary_checking">Verificando a versão do backend %s</string>
+    <string name="version_summary_unknown">Versão %s desconhecida</string>
+    <string name="version_title">WireGuard para Android v%s</string>
     <string name="vpn_not_authorized_error">Serviço de VPN não autorizado pelo usuário</string>
     <string name="vpn_start_error">Não foi possível iniciar o serviço de VPN do Android</string>
     <string name="zip_export_error">Não foi possível exportar túneis: %s</string>

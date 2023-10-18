@@ -119,6 +119,7 @@
     <string name="error_down">Tünel kapatılırken hata oluştu: %s</string>
     <string name="error_fetching_apps">Uygulama listesi getirilirken hata oluştu: %s</string>
     <string name="error_root">Lütfen root erişimi elde edin ve tekrar deneyin</string>
+    <string name="error_prepare">Tünel hazırlanırken hata oluştu: %s</string>
     <string name="error_up">Tünel açılırken hata oluştu: %s</string>
     <string name="exclude_private_ips">Özel IP’leri hariç tut</string>
     <string name="generate_new_private_key">Yeni özel anahtar oluştur</string>
@@ -138,6 +139,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64 anahtarları 44 karakter (32 bayt) olmalıdır</string>
     <string name="key_length_explanation_binary">: WireGuard anahtarları 32 bayt olmalıdır</string>
     <string name="key_length_explanation_hex">: WireGuard onaltılık anahtarları 64 karakter (32 bayt) olmalıdır</string>
+    <string name="latest_handshake">En son el sıkışma</string>
+    <string name="latest_handshake_ago">%s önce</string>
     <string name="listen_port">Dinlenen port</string>
     <string name="log_export_error">Günlük dışa aktarılamıyor: %s</string>
     <string name="log_export_subject">WireGuard Android Günlük Dosyası</string>
@@ -181,6 +184,10 @@
     <string name="private_key">Özel anahtar</string>
     <string name="public_key">Genel anahtar</string>
     <string name="qr_code_hint">İpucu: `qrencode -t ansiutf8 &lt; tunnel.conf` ile oluşturun.</string>
+    <string name="quick_settings_tile_add_title">Hızlı ayarlar paneline kutucuk ekle</string>
+    <string name="quick_settings_tile_add_summary">Kısayol kutucuğu en son tüneli değiştirir</string>
+    <string name="quick_settings_tile_add_failure">Kısayol kutucuğu eklenemiyor: hata %d</string>
+    <string name="quick_settings_tile_action">Tüneli aç/kapat</string>
     <string name="restore_on_boot_summary_off">Önyüklemede etkin tünelleri açmayacak</string>
     <string name="restore_on_boot_summary_on">Önyüklemede etkin tünelleri açacak</string>
     <string name="restore_on_boot_title">Cihaz açılırken başlat</string>
@@ -225,6 +232,16 @@
     <string name="type_name_go_userspace">Kullanıcı alanına git</string>
     <string name="type_name_kernel_module">Çekirdek modülü</string>
     <string name="unknown_error">Bilinmeyen hata</string>
+    <string name="updater_avalable">Bir uygulama güncellemesi mevcut. Lütfen şimdi güncelleyin.</string>
+    <string name="updater_action">İndir &amp; Güncelle</string>
+    <string name="updater_rechecking">Güncelleme meta verileri getiriliyor…</string>
+    <string name="updater_download_progress">Güncelleme indiriliyor: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Güncelleme indiriliyor: %s</string>
+    <string name="updater_installing">Güncelleme yükleniyor…</string>
+    <string name="updater_failure">Güncelleme hatası: %s. Kısa bir süre sonra tekrar denenecek…</string>
+    <string name="updater_corrupt_title">Uygulama Bozuk</string>
+    <string name="updater_corrupt_message">Bu uygulama bozuk. Lütfen APK\'yı aşağıda bağlantısı verilen web sitesinden yeniden indirin. Daha sonra bu uygulamayı kaldırın ve indirilen APK\'dan yeniden yükleyin.</string>
+    <string name="updater_corrupt_navigate">Web Sitesini Aç</string>
     <string name="version_summary">%1$s arka uç %2$s</string>
     <string name="version_summary_checking">%s arka uç sürümü kontrol ediliyor</string>
     <string name="version_summary_unknown">Bilinmeyen %s sürümü</string>

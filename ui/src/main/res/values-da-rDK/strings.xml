@@ -20,6 +20,14 @@
         <item quantity="one">Importeret %d tunnel</item>
         <item quantity="other">Importeret %d tunneler</item>
     </plurals>
+    <plurals name="set_excluded_applications">
+        <item quantity="one">%d Ekskluderet Applikation</item>
+        <item quantity="other">%d Ekskluderet Applikationer</item>
+    </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d Inkluderet Applikation</item>
+        <item quantity="other">%d Inkluderet Applikationer</item>
+    </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="one">%d ekskluderet</item>
         <item quantity="other">%d ekskluderet</item>
@@ -83,6 +91,8 @@
     <string name="create_from_qr_code">Scan fra QR-kode</string>
     <string name="create_tunnel">Opret Tunnel</string>
     <string name="copied_to_clipboard">%s kopieret til udklipsholder</string>
+    <string name="dark_theme_summary_off">Bruger lige nu lyst (dag) tema</string>
+    <string name="dark_theme_summary_on">Bruger lige nu mørkt (nat) tema</string>
     <string name="dark_theme_title">Brug mørkt tema</string>
     <string name="delete">Slet</string>
     <string name="tv_delete">Vælg tunnel du vil slette</string>
@@ -111,6 +121,7 @@
     <string name="interface_title">Grænseflade</string>
     <string name="key_contents_error">Ugyldige tegn i nøgle</string>
     <string name="key_length_error">Forkert længde på nøgle</string>
+    <string name="latest_handshake_ago">%s siden</string>
     <string name="listen_port">Lytteport</string>
     <string name="log_export_error">Kunne ikke eksportere log: %s</string>
     <string name="log_export_subject">WireGuard Android Log-fil</string>
@@ -166,6 +177,11 @@
     <string name="tunnel_rename_success">Tunnel blev succesfuldt omdøbt til \"%s\"</string>
     <string name="type_name_kernel_module">Kerne modul</string>
     <string name="unknown_error">Ukendt fejl</string>
+    <string name="updater_avalable">En applikationsopdatering er tilgængelig. Opdatér venligst nu.</string>
+    <string name="updater_action">Hent &amp; Opdatér</string>
+    <string name="updater_download_progress">Henter opdatering: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Henter opdatering: %s</string>
+    <string name="updater_installing">Installerer opdatering…</string>
     <string name="version_summary_unknown">Ukendt %s version</string>
     <string name="version_title">WireGuard for Android v%s</string>
     <string name="zip_export_error">Ikke i stand til at eksportere tunneler: %s</string>

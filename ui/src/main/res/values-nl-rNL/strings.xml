@@ -24,6 +24,10 @@
         <item quantity="one">%d uitgesloten applicatie(s)</item>
         <item quantity="other">%d uitgesloten applicaties</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d inbegrepen applicatie</item>
+        <item quantity="other">%d inbegrepen applicaties</item>
+    </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="one">%d uitgesloten</item>
         <item quantity="other">%d uitgesloten</item>
@@ -46,6 +50,10 @@
     <plurals name="persistent_keepalive_seconds_unit">
         <item quantity="one">iedere seconde</item>
         <item quantity="other">iedere %d seconden</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="one">seconde</item>
+        <item quantity="other">seconden</item>
     </plurals>
     <string name="use_all_applications">Gebruik alle applicaties</string>
     <string name="add_peer">Peer toevoegen</string>
@@ -168,19 +176,32 @@
     <string name="parse_error_integer">nummer</string>
     <string name="parse_error_reason">Kan %1$s%2$s niet parsen</string>
     <string name="peer">Peer</string>
+    <string name="permission_description">beheer WireGuard tunnels, zet tunnels naar keuze aan en uit, en misleid mogelijk het Internetverkeer</string>
     <string name="permission_label">WireGuard tunnels beheren</string>
     <string name="persistent_keepalive">Voortdurende verbindingstest</string>
     <string name="pre_shared_key">Gedeelde sleutel</string>
     <string name="pre_shared_key_enabled">ingeschakeld</string>
     <string name="private_key">Privésleutel</string>
     <string name="public_key">Publieke sleutel</string>
+    <string name="qr_code_hint">Tip: genereer met `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Voeg tegel toe aan snelle instellingen</string>
+    <string name="quick_settings_tile_add_summary">De sneltoets schakelt de meest recente tunnel aan</string>
+    <string name="quick_settings_tile_add_failure">Kan geen sneltoets toevoegen: fout %d</string>
     <string name="quick_settings_tile_action">tunnel in-/uitschakelen</string>
+    <string name="restore_on_boot_summary_off">Zal ingeschakelde tunnels niet aanzetten bij opstarten</string>
+    <string name="restore_on_boot_summary_on">Zal ingeschakelde tunnels aanzetten bij opstarten</string>
     <string name="restore_on_boot_title">Tunnel starten bij herstart</string>
     <string name="save">Opslaan</string>
     <string name="select_all">Selecteer alles</string>
     <string name="settings">Instellingen</string>
+    <string name="shell_exit_status_read_error">Shell kan de exitstatus niet lezen</string>
+    <string name="shell_marker_count_error">Shell verwachtte 4 markeringen, ontving er %d</string>
+    <string name="shell_start_error">Shell kon niet starten: %d</string>
+    <string name="success_application_will_restart">Succes. De toepassing zal nu herstarten…</string>
     <string name="toggle_all">Alles wisselen</string>
+    <string name="toggle_error">Fout bij omschakelen Wireguard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick zijn al geïnstalleerd</string>
+    <string name="tools_installer_failure">Kan de command-line tools niet installeren (geen root?)</string>
     <string name="tools_installer_initial">Optionele tools voor scripts installeren</string>
     <string name="tools_installer_title">Installeer command line tools</string>
     <string name="tools_installer_working">Installeren van wg en wg-quick</string>
@@ -194,13 +215,24 @@
     <string name="tunnel_error_invalid_name">Ongeldige naam</string>
     <string name="tunnel_list_placeholder">Voeg een tunnel toe met de knop hieronder</string>
     <string name="tunnel_name">Tunnelnaam</string>
+    <string name="tunnel_rename_error">Kan tunnel niet hernoemen: %s</string>
+    <string name="tunnel_rename_success">Tunnel succesvol hernoemd naar \"%s\"</string>
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kernel module</string>
     <string name="unknown_error">Onbekende fout</string>
+    <string name="updater_avalable">Er is een nieuwe versie beschikbaar. Werk het programma s.v.p. bij.</string>
     <string name="updater_action">Download &amp; installeer updates</string>
     <string name="updater_rechecking">Update metadata downloaden…</string>
+    <string name="updater_download_progress">Ophalen nieuwe versie: %1$s / %2$s (%3$.2f%%)</string>
     <string name="updater_download_progress_nototal">Updates downloaden: %s</string>
     <string name="updater_installing">Update wordt geïnstalleerd…</string>
+    <string name="updater_failure">Bijwerken mislukt: %s. Zal het zo opnieuw proberen…</string>
+    <string name="updater_corrupt_title">Toepassing beschadigd</string>
+    <string name="updater_corrupt_message">De toepassing is beschadigd. Download de APK opnieuw van de onderstaande website. De-installeer daarna het programma, en herinstalleer het met de gedownloade APK.</string>
+    <string name="updater_corrupt_navigate">Open website</string>
+    <string name="version_title">WireGuard voor Android v%s</string>
+    <string name="zip_export_summary">Zip-bestand wordt opgeslagen in de downloadmap</string>
+    <string name="zip_export_title">Exporteer tunnels naar zip-bestand</string>
     <string name="biometric_prompt_zip_exporter_title">Authenticeer om de tunnel configuratie te exporteren</string>
     <string name="biometric_prompt_private_key_title">Authenticeer om de persoonlijke sleutel te bekijken</string>
     <string name="biometric_auth_error">Authenticatiefout</string>

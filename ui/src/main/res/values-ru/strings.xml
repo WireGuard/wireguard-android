@@ -88,7 +88,7 @@
     <string name="allow_remote_control_intents_summary_off">Внешние приложения не могут переключать туннели (рекомендуется)</string>
     <string name="allow_remote_control_intents_summary_on">Внешние приложения могут переключать туннели (продвинутые)</string>
     <string name="allow_remote_control_intents_title">Разрешить управление через внешние приложения</string>
-    <string name="allowed_ips">Разрешенные IP-адреса</string>
+    <string name="allowed_ips">Разрешенные IP</string>
     <string name="bad_config_context">%1$s из %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s в %2$s</string>
@@ -135,7 +135,7 @@
     <string name="tv_add_tunnel_get_started">Добавьте туннель, чтобы начать</string>
     <string name="donate_title">♥ Пожертвовать проекту WireGuard</string>
     <string name="donate_summary">Каждое пожертвование помогает</string>
-    <string name="donate_google_play_disappointment">Спасибо за поддержку проекта WireGuard!\n\nК сожалению, из-за политики Google, нельзя размещать ссылку на тот раздел сайта проекта, где можно сделать пожертвование. Надеемся, вы сможете разобраться самостоятельно!\n\nЕщё раз спасибо за ваш вклад.</string>
+    <string name="donate_google_play_disappointment">Спасибо за поддержку проекта WireGuard!\n\nК сожалению, из-за политики Google, нельзя размещать ссылку на тот раздел сайта проекта, где можно сделать пожертвование. Надеемся, вы сможете разобраться самостоятельно!\n\nЕщераз спасибо за ваш вклад.</string>
     <string name="disable_config_export_title">Отключить экспорт конфигурации</string>
     <string name="disable_config_export_description">Отключение экспорта конфигурации делает приватные ключи менее доступными</string>
     <string name="dns_servers">DNS-серверы</string>

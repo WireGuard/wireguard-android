@@ -99,8 +99,8 @@
     <string name="create_temp_dir_error">Lokales temporäres Verzeichnis kann nicht erstellt werden</string>
     <string name="create_tunnel">Tunnel erstellen</string>
     <string name="copied_to_clipboard">%s in die Zwischenanlage kopiert</string>
-    <string name="dark_theme_summary_off">Verwende helles Design (Tag)</string>
-    <string name="dark_theme_summary_on">Verwende dunkles Design (Nacht)</string>
+    <string name="dark_theme_summary_off">Helles (Tag) Design in Verwendung</string>
+    <string name="dark_theme_summary_on">Dunkles (Nacht) Design in Verwendung</string>
     <string name="dark_theme_title">Dunkles Design verwenden</string>
     <string name="delete">Entfernen</string>
     <string name="tv_delete">Wählen Sie den zu löschenden Tunnel aus</string>
@@ -202,14 +202,14 @@
     <string name="toggle_error">Fehler beim Umschalten des WireGuard-Tunnels: %s</string>
     <string name="tools_installer_already">wg und wg-quick sind bereits installiert</string>
     <string name="tools_installer_failure">Kommandozeilenwerkzeuge konnten nicht installiert werden (kein Root?)</string>
-    <string name="tools_installer_initial">Optionale Tools für Skripte installieren</string>
+    <string name="tools_installer_initial">Optionale Werkzeuge für Skripte installieren</string>
     <string name="tools_installer_initial_magisk">Optionale Werkzeuge für das Skripten als Magisk-Modul installieren</string>
     <string name="tools_installer_initial_system">Optionale Werkzeuge für Skripte auf der Systempartition installieren</string>
     <string name="tools_installer_success_magisk">wg und wg-quick als Magisk-Modul installiert (Neustart erforderlich)</string>
     <string name="tools_installer_success_system">wg und wg-quick auf der Systempartition installiert</string>
     <string name="tools_installer_title">Kommandozeilenwerkzeuge installieren</string>
     <string name="tools_installer_working">Installiere wg und wg-quick</string>
-    <string name="tools_unavailable_error">Erforderliche Tools nicht verfügbar</string>
+    <string name="tools_unavailable_error">Erforderliche Werkzeuge nicht verfügbar</string>
     <string name="transfer">Transfer</string>
     <string name="transfer_bytes">%d B</string>
     <string name="transfer_gibibytes">%.2f GiB</string>

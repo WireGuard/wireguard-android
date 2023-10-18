@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_applications">Minden alkalmazás</string>
+    <string name="exclude_from_tunnel">Kizárás</string>
+    <string name="addresses">Címek</string>
+    <string name="applications">Alkalmazások</string>
+    <string name="allowed_ips">Engedélyezett IP-k</string>
+    <string name="bad_config_reason_invalid_key">Érvénytelen kulcs</string>
+    <string name="bad_config_reason_invalid_value">Helytelen érték</string>
+    <string name="bad_config_reason_syntax_error">Szintaktikai hiba</string>
+    <string name="bad_config_reason_unknown_section">Ismeretlen szekció</string>
+    <string name="bad_config_reason_value_out_of_range">Az érték a megengedett tartományon kívül van</string>
+    <string name="bad_extension_error">A fájl .conf vagy .zip legyen</string>
+    <string name="config_not_found_error">Konfigurációs állomány \"%s\" nem található meg</string>
+    <string name="dns_servers">DNS szerverek</string>
+    <string name="dns_search_domains">Domain keresés</string>
+    <string name="edit">Szerkesztés</string>
+    <string name="endpoint">Végpont</string>
+    <string name="log_saver_activity_label">Log mentése</string>
+    <string name="log_viewer_pref_title">Alkalmazás log megtekintése</string>
+    <string name="name">Név</string>
+    <string name="parse_error_inet_address">IP cím</string>
+    <string name="parse_error_inet_network">IP hálózat</string>
+    <string name="parse_error_integer">szám</string>
+    <string name="pre_shared_key_enabled">engedélyezve</string>
+    <string name="public_key">Nyilvános kulcs</string>
+    <string name="quick_settings_tile_action">Csatorna átkapcsolása</string>
+    <string name="save">Mentés</string>
+    <string name="select_all">Összes kijelölése</string>
+    <string name="settings">Beállítások</string>
+    <string name="toggle_all">Összes átkapcsolása</string>
+    <string name="tunnel_name">Csatorna neve</string>
+    <string name="type_name_kernel_module">Kernel modul</string>
+    <string name="unknown_error">Ismeretlen hiba</string>
+    <string name="updater_corrupt_navigate">Weboldal megnyitása</string>
+</resources>

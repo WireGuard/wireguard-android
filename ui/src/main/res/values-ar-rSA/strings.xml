@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="delete_error">
+        <item quantity="zero">غير قادر على حذف %d النفق: %s</item>
+        <item quantity="one">غير قادر على حذف %d النفق: %s</item>
+        <item quantity="two">غير قادر على حذف %d النفق: %s</item>
+        <item quantity="few">غير قادر على حذف %d أنفاق: %s</item>
+        <item quantity="many">غير قادر على حذف %d أنفاق: %s</item>
+        <item quantity="other">غير قادر على حذف %d أنفاق: %s</item>
+    </plurals>
     <plurals name="delete_success">
         <item quantity="zero">تم حذف %d من الأنفاق بنجاح</item>
         <item quantity="one">تم حذف %d من الأنفاق بنجاح</item>
@@ -23,6 +31,30 @@
         <item quantity="few">تم استيراد %1$d من %2$d من الأنفاق</item>
         <item quantity="many">تم استيراد %1$d من %2$d من الأنفاق</item>
         <item quantity="other">تم استيراد %1$d من %2$d من الأنفاق</item>
+    </plurals>
+    <plurals name="import_total_success">
+        <item quantity="zero">تم استيراد %d نفق</item>
+        <item quantity="one">تم استيراد %d نفق</item>
+        <item quantity="two">تم استيراد نفقين</item>
+        <item quantity="few">تم استيراد %d أنفاق</item>
+        <item quantity="many">تم استيراد %d أنفاق</item>
+        <item quantity="other">تم استيراد %d أنفاق</item>
+    </plurals>
+    <plurals name="set_excluded_applications">
+        <item quantity="zero">%d تطبيقات مستبعدة</item>
+        <item quantity="one">%d تطبيق مستبعد</item>
+        <item quantity="two">تطبيقين مستبعدين</item>
+        <item quantity="few">%d تطبيقات مستبعدة</item>
+        <item quantity="many">%d تطبيقات مستبعدة</item>
+        <item quantity="other">%d تطبيقات مستبعدة</item>
+    </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="zero">%d تطبيق مضمن</item>
+        <item quantity="one">%d تطبيق مضمن</item>
+        <item quantity="two">تطبيقين مضمننين</item>
+        <item quantity="few">%d تطبيقات مضمنة</item>
+        <item quantity="many">%d تطبيقات مضمنة</item>
+        <item quantity="other">%d تطبيقات مضمنة</item>
     </plurals>
     <plurals name="n_excluded_applications">
         <item quantity="zero">تم استبعاد %d</item>
@@ -51,6 +83,14 @@
         <item quantity="many">تضمين %d من التطبيقات</item>
         <item quantity="other">تضمين %d من التطبيقات</item>
     </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="zero">استبعاد %d تطبيقات</item>
+        <item quantity="one">استبعاد %d تطبيقات</item>
+        <item quantity="two">استبعاد طبيقين</item>
+        <item quantity="few">استبعاد %d تطبيقات</item>
+        <item quantity="many">استبعاد %d تطبيقات</item>
+        <item quantity="other">استبعاد %d تطبيقات</item>
+    </plurals>
     <plurals name="persistent_keepalive_seconds_unit">
         <item quantity="zero">كل %d ثانية</item>
         <item quantity="one">كل ثانية</item>
@@ -58,6 +98,14 @@
         <item quantity="few">كل %d ثوانٍ</item>
         <item quantity="many">كل %d ثوانٍ</item>
         <item quantity="other">كل %d ثوانٍ</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="zero">لا ثانية</item>
+        <item quantity="one">ثانية</item>
+        <item quantity="two">ثنيتين</item>
+        <item quantity="few">ثواني</item>
+        <item quantity="many">ثواني</item>
+        <item quantity="other">ثوان</item>
     </plurals>
     <string name="use_all_applications">استخدام جميع التطبيقات</string>
     <string name="add_peer">إضافة ند</string>
@@ -113,6 +161,7 @@
     <string name="tv_add_tunnel_get_started">أضف نفقاً لتبدأ</string>
     <string name="donate_title">♥️ تبرع لمشروع وايرجارد</string>
     <string name="donate_summary">كل مساهمة تساعد</string>
+    <string name="donate_google_play_disappointment">شكرًا لك على دعم مشروع\n\nWireGuard! للأسف، نظرًا لسياسات Google، لا يُسمح لنا بالارتباط بجزء من صفحة الويب الخاصة بالمشروع حيث يمكنك التبرع. نأمل أن تتمكن من معرفة ذلك!\n\nشكرًا مرة أخرى على مساهمتك.</string>
     <string name="disable_config_export_title">تعطيل تصدير التكوين</string>
     <string name="disable_config_export_description">تعطيل تصدير الإعدادات يجعل المفاتيح الخاصة غير متاحة</string>
     <string name="dns_servers">خوادم DNS</string>
@@ -142,6 +191,8 @@
     <string name="key_length_explanation_base64">: مفاتيح وايرجارد في الأساس 64 (base64) يجب أن تكون 44 حرفاً (32 بايت)</string>
     <string name="key_length_explanation_binary">: مفاتيح وايرجارد يجب أن تكون 32 بايت</string>
     <string name="key_length_explanation_hex">: مفاتيح وايرجارد في نظام عد ستة عشري (hexadecimal) يجب أن تكون 64 حرفاً (32 بايت)</string>
+    <string name="latest_handshake">أحدث مصافحة</string>
+    <string name="latest_handshake_ago">منذ %s</string>
     <string name="listen_port">منفذ الاستماع</string>
     <string name="log_export_error">غير قادر على تصدير السجل: %s</string>
     <string name="log_export_subject">ملف سجل اندرويد وايرجارد</string>
@@ -177,6 +228,7 @@
     <string name="parse_error_integer">رقم</string>
     <string name="parse_error_reason">لا يمكن تحليل %1$s \"%2$s\"</string>
     <string name="peer">ند</string>
+    <string name="permission_description">التحكم في أنفاق WireGuard، وتمكين الأنفاق وتعطيلها حسب الرغبة، مما قد يؤدي إلى تضليل حركة مرور الإنترنت</string>
     <string name="permission_label">التحكم في أنفاق وايرجارد</string>
     <string name="persistent_keepalive">الحفاظ المستمر</string>
     <string name="pre_shared_key">مفتاح مسبق التشارك (Pre-shared key)</string>
@@ -184,6 +236,10 @@
     <string name="private_key">مفتاح خاص</string>
     <string name="public_key">مفتاح عام</string>
     <string name="qr_code_hint">نصيحة: إنشاء بواسطة `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">إضافة بلاطة إلى لوحة الإعدادات السريعة</string>
+    <string name="quick_settings_tile_add_summary">بلاطة الاختصار تستبدل أحدث نفق</string>
+    <string name="quick_settings_tile_add_failure">تعذر إضافة لوحة الاختصار: خطأ %d</string>
+    <string name="quick_settings_tile_action">تبديل النفق</string>
     <string name="restore_on_boot_summary_off">لن تجلب الأنفاق المفعلة عند التمهيد</string>
     <string name="restore_on_boot_summary_on">سوف تجلب الأنفاق المفعلة عند التمهيد</string>
     <string name="restore_on_boot_title">الإستعادة عند تشغيل الجهاز</string>
@@ -211,6 +267,7 @@
     <string name="transfer_gibibytes">%.2f جيبي بايت</string>
     <string name="transfer_kibibytes">%.2f كيبيبايت</string>
     <string name="transfer_mibibytes">%.2f مبيبايت</string>
+    <string name="transfer_rx_tx">rx: %1$s, tx: %2$s</string>
     <string name="transfer_tibibytes">%.2f تيبي بايت</string>
     <string name="tun_create_error">غير قادر على إنشاء جهاز tun</string>
     <string name="tunnel_config_error">غير قادر على تكوين النفق (wg-quick أعاد %d)</string>
@@ -224,8 +281,19 @@
     <string name="tunnel_dns_failure">غير قادر على حل اسم مضيف نظام أسماء النطاقات (DNS hostname): \"%s\"</string>
     <string name="tunnel_rename_error">غير قادر على إعادة تسمية النفق: %s</string>
     <string name="tunnel_rename_success">تمت إعادة تسمية النفق بنجاح إلى \"%s\"</string>
+    <string name="type_name_go_userspace">انتقل مساحة المستخدمين</string>
     <string name="type_name_kernel_module">وحدة النواة</string>
     <string name="unknown_error">خطأ غير معروف</string>
+    <string name="updater_avalable">يتوفر تحديث للتطبيق. الرجاء التحديث الآن.</string>
+    <string name="updater_action">تنزيل &amp; تحديث</string>
+    <string name="updater_rechecking">جارِ جلب تحديث البيانات الوصفية…</string>
+    <string name="updater_download_progress">جارِ تنزيل التحديث: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">جارِ تنزيل التحديث: %s</string>
+    <string name="updater_installing">جارِ تثبيت التحديث…</string>
+    <string name="updater_failure">فشل التحديث: %s. ستتم إعادة المحاولة للحظات…</string>
+    <string name="updater_corrupt_title">التطبيق تالف</string>
+    <string name="updater_corrupt_message">هذا التطبيق تالف. يرجى إعادة تنزيل APK من موقع الويب المرتبط أدناه. بعد ذلك، قم بإلغاء تثبيت هذا التطبيق، وأعِد تثبيته من ملف APK الذي تم تنزيله.</string>
+    <string name="updater_corrupt_navigate">فتح الموقع</string>
     <string name="version_summary">%1$s خلفية %2$s</string>
     <string name="version_summary_checking">التحقق من إصدار خلفية %s</string>
     <string name="version_summary_unknown">إصدار %s غير معروف</string>

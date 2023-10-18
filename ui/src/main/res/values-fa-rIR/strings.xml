@@ -99,7 +99,7 @@
     <string name="create_output_dir_error">نمی‌توان دایرکتوری خروجی را ایجاد کرد</string>
     <string name="create_temp_dir_error">نمی‌توان دایرکتوری موقت محلی را ساخت</string>
     <string name="create_tunnel">ساختن تونل</string>
-    <string name="copied_to_clipboard">متن در کلیپ‌بورد کپی شد</string>
+    <string name="copied_to_clipboard">%s در کلیپ‌بورد کپی شد</string>
     <string name="dark_theme_summary_off">اکنون از پوسته روشن(روز) استفاده می‌شود</string>
     <string name="dark_theme_summary_on">اکنون از پوسته تاریک(شب) استفاده می‌شود</string>
     <string name="dark_theme_title">استفاده از پوسته تاریک</string>
