@@ -141,9 +141,16 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
                 }
 
                 is Updater.Progress.Failure -> {
-                    snackbar.showText(context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
-                    delay(5.seconds)
-                    progress.retry()
+                    switch (progress.error.code()) {
+                        case INSTALL_FAILED_ABORTED:
+                            // User aborted installation, do not attempt to retry update
+                            snackbar.showText(context.getString(R.string.updater_aborted))
+                            return
+                        default:
+                            snackbar.showText(context.getString(R.string.updater_failure, ErrorMessages[progress.error]))
+                            delay(5.seconds)
+                            progress.retry()
+                    }
                 }
 
                 is Updater.Progress.Corrupt -> {
