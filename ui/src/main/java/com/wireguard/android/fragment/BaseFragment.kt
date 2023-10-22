@@ -7,6 +7,7 @@ package com.wireguard.android.fragment
 import android.content.Context
 import android.util.Log
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -105,6 +106,18 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message, e)
             }
+        }
+    }
+
+    fun setShortcutState(view: CompoundButton, checked: Boolean) {
+        val tunnel = when (val binding = DataBindingUtil.findBinding<ViewDataBinding>(view)) {
+            is TunnelDetailFragmentBinding -> binding.tunnel
+            is TunnelListItemBinding -> binding.item
+            else -> return
+        } ?: return
+        val activity = activity ?: return
+        activity.lifecycleScope.launch {
+            tunnel.setShortcutsAsync(checked)
         }
     }
 

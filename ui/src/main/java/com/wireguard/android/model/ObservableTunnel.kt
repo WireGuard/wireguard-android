@@ -139,6 +139,24 @@ class ObservableTunnel internal constructor(
 
     suspend fun deleteAsync() = manager.delete(this)
 
+    suspend fun setShortcutsAsync(hasShortcuts: Boolean) = manager.setShortcuts(this, hasShortcuts)
+
+    @get:Bindable
+    var hasShortcut: Boolean? = null
+        get() {
+            if (field == null)
+            // Opportunistically fetch this if we don't have a cached one, and rely on data bindings to update it eventually
+                applicationScope.launch {
+                    try {
+                        field = manager.hasShortcut(this@ObservableTunnel)
+                    } catch (e: Throwable) {
+                        Log.e(TAG, Log.getStackTraceString(e))
+                    }
+                }
+            return field
+        }
+        private set
+
 
     companion object {
         private const val TAG = "WireGuard/ObservableTunnel"
