@@ -100,8 +100,7 @@ class PeerProxy : BaseObservable, Parcelable {
     }
 
     private fun calculateAllowedIpsState() {
-        val newState: AllowedIpsState
-        newState = if (totalPeers == 1) {
+        val newState: AllowedIpsState = if (totalPeers == 1) {
             // String comparison works because we only care if allowedIps is a superset of one of
             // the above sets of (valid) *networks*. We are not checking for a superset based on
             // the individual addresses in each set.
@@ -150,7 +149,7 @@ class PeerProxy : BaseObservable, Parcelable {
             }
         }
         // DNS servers only need to handled specially when we're excluding private IPs.
-        if (excludingPrivateIps) output.addAll(dnsRoutes) else output.removeAll(dnsRoutes)
+        if (excludingPrivateIps) output.addAll(dnsRoutes) else output.removeAll(dnsRoutes.toSet())
         allowedIps = Attribute.join(output)
         allowedIpsState = if (excludingPrivateIps) AllowedIpsState.CONTAINS_IPV4_PUBLIC_NETWORKS else AllowedIpsState.CONTAINS_IPV4_WILDCARD
         notifyPropertyChanged(BR.allowedIps)
@@ -212,7 +211,7 @@ class PeerProxy : BaseObservable, Parcelable {
         CONTAINS_IPV4_PUBLIC_NETWORKS, CONTAINS_IPV4_WILDCARD, INVALID, OTHER
     }
 
-    private class InterfaceDnsListener constructor(peerProxy: PeerProxy) : OnPropertyChangedCallback() {
+    private class InterfaceDnsListener(peerProxy: PeerProxy) : OnPropertyChangedCallback() {
         private val weakPeerProxy: WeakReference<PeerProxy> = WeakReference(peerProxy)
         override fun onPropertyChanged(sender: Observable, propertyId: Int) {
             val peerProxy = weakPeerProxy.get()

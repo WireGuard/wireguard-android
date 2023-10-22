@@ -59,9 +59,9 @@ final class Ed25519 {
         private BigInteger y;
     }
 
-    private static BigInteger recoverX(BigInteger y) {
+    private static BigInteger recoverX(final BigInteger y) {
         // x^2 = (y^2 - 1) / (d * y^2 + 1) mod 2^255-19
-        BigInteger xx =
+        final BigInteger xx =
                 y.pow(2)
                         .subtract(BigInteger.ONE)
                         .multiply(D_BI.multiply(y.pow(2)).add(BigInteger.ONE).modInverse(P_BI));
@@ -75,9 +75,9 @@ final class Ed25519 {
         return x;
     }
 
-    private static Point edwards(Point a, Point b) {
-        Point o = new Point();
-        BigInteger xxyy = D_BI.multiply(a.x.multiply(b.x).multiply(a.y).multiply(b.y)).mod(P_BI);
+    private static Point edwards(final Point a, final Point b) {
+        final Point o = new Point();
+        final BigInteger xxyy = D_BI.multiply(a.x.multiply(b.x).multiply(a.y).multiply(b.y)).mod(P_BI);
         o.x =
                 (a.x.multiply(b.y).add(b.x.multiply(a.y)))
                         .multiply(BigInteger.ONE.add(xxyy).modInverse(P_BI))
@@ -89,19 +89,19 @@ final class Ed25519 {
         return o;
     }
 
-    private static byte[] toLittleEndian(BigInteger n) {
-        byte[] b = new byte[32];
-        byte[] nBytes = n.toByteArray();
+    private static byte[] toLittleEndian(final BigInteger n) {
+        final byte[] b = new byte[32];
+        final byte[] nBytes = n.toByteArray();
         System.arraycopy(nBytes, 0, b, 32 - nBytes.length, nBytes.length);
         for (int i = 0; i < b.length / 2; i++) {
-            byte t = b[i];
+            final byte t = b[i];
             b[i] = b[b.length - i - 1];
             b[b.length - i - 1] = t;
         }
         return b;
     }
 
-    private static CachedXYT getCachedXYT(Point p) {
+    private static CachedXYT getCachedXYT(final Point p) {
         return new CachedXYT(
                 Field25519.expand(toLittleEndian(p.y.add(p.x).mod(P_BI))),
                 Field25519.expand(toLittleEndian(p.y.subtract(p.x).mod(P_BI))),
@@ -109,7 +109,7 @@ final class Ed25519 {
     }
 
     static {
-        Point b = new Point();
+        final Point b = new Point();
         b.y = BigInteger.valueOf(4).multiply(BigInteger.valueOf(5).modInverse(P_BI)).mod(P_BI);
         b.x = recoverX(b.y);
 
@@ -130,7 +130,7 @@ final class Ed25519 {
             }
         }
         bi = b;
-        Point b2 = edwards(b, b);
+        final Point b2 = edwards(b, b);
         B2 = new CachedXYT[8];
         for (int i = 0; i < 8; i++) {
             B2[i] = getCachedXYT(bi);
@@ -191,7 +191,7 @@ final class Ed25519 {
          * <p>
          * On entry: in1, in2 are in reduced-size form.
          */
-        static void sum(long[] output, long[] in1, long[] in2) {
+        static void sum(final long[] output, final long[] in1, final long[] in2) {
             for (int i = 0; i < LIMB_CNT; i++) {
                 output[i] = in1[i] + in2[i];
             }
@@ -202,7 +202,7 @@ final class Ed25519 {
          * <p>
          * On entry: in is in reduced-size form.
          */
-        static void sum(long[] output, long[] in) {
+        static void sum(final long[] output, final long[] in) {
             sum(output, output, in);
         }
 
@@ -212,7 +212,7 @@ final class Ed25519 {
          * <p>
          * On entry: in1, in2 are in reduced-size form.
          */
-        static void sub(long[] output, long[] in1, long[] in2) {
+        static void sub(final long[] output, final long[] in1, final long[] in2) {
             for (int i = 0; i < LIMB_CNT; i++) {
                 output[i] = in1[i] - in2[i];
             }
@@ -224,14 +224,14 @@ final class Ed25519 {
          * <p>
          * On entry: in, output are in reduced-size form.
          */
-        static void sub(long[] output, long[] in) {
+        static void sub(final long[] output, final long[] in) {
             sub(output, in, output);
         }
 
         /**
          * Multiply a number by a scalar: output = in * scalar
          */
-        static void scalarProduct(long[] output, long[] in, long scalar) {
+        static void scalarProduct(final long[] output, final long[] in, final long scalar) {
             for (int i = 0; i < LIMB_CNT; i++) {
                 output[i] = in[i] * scalar;
             }
@@ -245,7 +245,7 @@ final class Ed25519 {
          * <p>
          * out[x] <= 14 * the largest product of the input limbs.
          */
-        static void product(long[] out, long[] in2, long[] in) {
+        static void product(final long[] out, final long[] in2, final long[] in) {
             out[0] = in2[0] * in[0];
             out[1] = in2[0] * in[1]
                     + in2[1] * in[0];
@@ -340,8 +340,8 @@ final class Ed25519 {
          *               temporary buffer and its contents changed.
          * @param output An output array of size LIMB_CNT. After the call |output[i]| < 2^26 will hold.
          */
-        static void reduce(long[] input, long[] output) {
-            long[] tmp;
+        static void reduce(final long[] input, final long[] output) {
+            final long[] tmp;
             if (input.length == 19) {
                 tmp = input;
             } else {
@@ -359,7 +359,7 @@ final class Ed25519 {
          * On entry: |output[i]| < 14*2^54
          * On exit: |output[0..8]| < 280*2^54
          */
-        static void reduceSizeByModularReduction(long[] output) {
+        static void reduceSizeByModularReduction(final long[] output) {
             // The coefficients x[10], x[11],..., x[18] are eliminated by reduction modulo 2^255 - 19.
             // For example, the coefficient x[18] is multiplied by 19 and added to the coefficient x[8].
             //
@@ -401,7 +401,7 @@ final class Ed25519 {
          * <p>
          * On entry: |output[i]| < 280*2^54
          */
-        static void reduceCoefficients(long[] output) {
+        static void reduceCoefficients(final long[] output) {
             output[10] = 0;
 
             for (int i = 0; i < LIMB_CNT; i += 2) {
@@ -429,7 +429,7 @@ final class Ed25519 {
             output[10] = 0;
             // Now output[1..9] are reduced, and |output[0]| < 2^26 + 19*281*2^29 so |over| will be no more
             // than 2^16.
-            long over = output[0] / TWO_TO_26;
+            final long over = output[0] / TWO_TO_26;
             output[0] -= over << 26;
             output[1] += over;
             // Now output[0,2..9] are reduced, and |output[1]| < 2^25 + 2^16 < 2^26. The bound on
@@ -444,8 +444,8 @@ final class Ed25519 {
          * The output is reduced degree (indeed, one need only provide storage for 10 limbs) and
          * |output[i]| < 2^26.
          */
-        static void mult(long[] output, long[] in, long[] in2) {
-            long[] t = new long[19];
+        static void mult(final long[] output, final long[] in, final long[] in2) {
+            final long[] t = new long[19];
             product(t, in, in2);
             // |t[i]| < 2^26
             reduce(t, output);
@@ -459,7 +459,7 @@ final class Ed25519 {
          * <p>
          * out[x] <= 14 * the largest product of the input limbs.
          */
-        private static void squareInner(long[] out, long[] in) {
+        private static void squareInner(final long[] out, final long[] in) {
             out[0] = in[0] * in[0];
             out[1] = 2 * in[0] * in[1];
             out[2] = 2 * (in[1] * in[1] + in[0] * in[2]);
@@ -496,8 +496,8 @@ final class Ed25519 {
          * On exit: The |output| argument is in reduced coefficients form (indeed, one need only provide
          * storage for 10 limbs) and |out[i]| < 2^26.
          */
-        static void square(long[] output, long[] in) {
-            long[] t = new long[19];
+        static void square(final long[] output, final long[] in) {
+            final long[] t = new long[19];
             squareInner(t, in);
             // |t[i]| < 14*2^54 because the largest product of two limbs will be < 2^(27+27) and SquareInner
             // adds together, at most, 14 of those products.
@@ -507,10 +507,10 @@ final class Ed25519 {
         /**
          * Takes a little-endian, 32-byte number and expands it into mixed radix form.
          */
-        static long[] expand(byte[] input) {
-            long[] output = new long[LIMB_CNT];
+        static long[] expand(final byte[] input) {
+            final long[] output = new long[LIMB_CNT];
             for (int i = 0; i < LIMB_CNT; i++) {
-                output[i] = ((((long) (input[EXPAND_START[i]] & 0xff))
+                output[i] = (((input[EXPAND_START[i]] & 0xff)
                         | ((long) (input[EXPAND_START[i] + 1] & 0xff)) << 8
                         | ((long) (input[EXPAND_START[i] + 2] & 0xff)) << 16
                         | ((long) (input[EXPAND_START[i] + 3] & 0xff)) << 24) >> EXPAND_SHIFT[i]) & MASK[i & 1];
@@ -525,24 +525,22 @@ final class Ed25519 {
          * On entry: |input_limbs[i]| < 2^26
          */
         @SuppressWarnings("NarrowingCompoundAssignment")
-        static byte[] contract(long[] inputLimbs) {
-            long[] input = Arrays.copyOf(inputLimbs, LIMB_CNT);
+        static byte[] contract(final long[] inputLimbs) {
+            final long[] input = Arrays.copyOf(inputLimbs, LIMB_CNT);
             for (int j = 0; j < 2; j++) {
                 for (int i = 0; i < 9; i++) {
                     // This calculation is a time-invariant way to make input[i] non-negative by borrowing
                     // from the next-larger limb.
-                    int carry = -(int) ((input[i] & (input[i] >> 31)) >> SHIFT[i & 1]);
-                    input[i] = input[i] + (carry << SHIFT[i & 1]);
+                    final int carry = -(int) ((input[i] & (input[i] >> 31)) >> SHIFT[i & 1]);
+                    input[i] += ((long) carry << SHIFT[i & 1]);
                     input[i + 1] -= carry;
                 }
 
                 // There's no greater limb for input[9] to borrow from, but we can multiply by 19 and borrow
                 // from input[0], which is valid mod 2^255-19.
-                {
-                    int carry = -(int) ((input[9] & (input[9] >> 31)) >> 25);
-                    input[9] += (carry << 25);
-                    input[0] -= (carry * 19);
-                }
+                final int carry = -(int) ((input[9] & (input[9] >> 31)) >> 25);
+                input[9] += ((long) carry << 25);
+                input[0] -= (carry * 19L);
 
                 // After the first iteration, input[1..9] are non-negative and fit within 25 or 26 bits,
                 // depending on position. However, input[0] may be negative.
@@ -560,8 +558,8 @@ final class Ed25519 {
             // input[0] negative *and* input[1] through input[9] were all zero.  In that case, input[1] is
             // now 2^25 - 1, and this last borrow-propagation step will leave input[1] non-negative.
             {
-                int carry = -(int) ((input[0] & (input[0] >> 31)) >> 26);
-                input[0] += (carry << 26);
+                final int carry = -(int) ((input[0] & (input[0] >> 31)) >> 26);
+                input[0] += ((long) carry << 26);
                 input[1] -= carry;
             }
 
@@ -569,17 +567,15 @@ final class Ed25519 {
             // limb which is, nominally, 25 bits wide.
             for (int j = 0; j < 2; j++) {
                 for (int i = 0; i < 9; i++) {
-                    int carry = (int) (input[i] >> SHIFT[i & 1]);
+                    final int carry = (int) (input[i] >> SHIFT[i & 1]);
                     input[i] &= MASK[i & 1];
                     input[i + 1] += carry;
                 }
             }
 
-            {
-                int carry = (int) (input[9] >> 25);
-                input[9] &= 0x1ffffff;
-                input[0] += 19 * carry;
-            }
+            final int carry = (int) (input[9] >> 25);
+            input[9] &= 0x1ffffff;
+            input[0] += 19L * carry;
 
             // If the first carry-chain pass, just above, ended up with a carry from input[9], and that
             // caused input[0] to be out-of-bounds, then input[0] was < 2^26 + 2*19, because the carry was,
@@ -608,7 +604,7 @@ final class Ed25519 {
             for (int i = 0; i < LIMB_CNT; i++) {
                 input[i] <<= EXPAND_SHIFT[i];
             }
-            byte[] output = new byte[FIELD_LEN];
+            final byte[] output = new byte[FIELD_LEN];
             for (int i = 0; i < LIMB_CNT; i++) {
                 output[EXPAND_START[i]] |= input[i] & 0xff;
                 output[EXPAND_START[i] + 1] |= (input[i] >> 8) & 0xff;
@@ -624,17 +620,17 @@ final class Ed25519 {
          * Shamelessly copied from agl's code which was shamelessly copied from djb's code. Only the
          * comment format and the variable namings are different from those.
          */
-        static void inverse(long[] out, long[] z) {
-            long[] z2 = new long[Field25519.LIMB_CNT];
-            long[] z9 = new long[Field25519.LIMB_CNT];
-            long[] z11 = new long[Field25519.LIMB_CNT];
-            long[] z2To5Minus1 = new long[Field25519.LIMB_CNT];
-            long[] z2To10Minus1 = new long[Field25519.LIMB_CNT];
-            long[] z2To20Minus1 = new long[Field25519.LIMB_CNT];
-            long[] z2To50Minus1 = new long[Field25519.LIMB_CNT];
-            long[] z2To100Minus1 = new long[Field25519.LIMB_CNT];
-            long[] t0 = new long[Field25519.LIMB_CNT];
-            long[] t1 = new long[Field25519.LIMB_CNT];
+        static void inverse(final long[] out, final long[] z) {
+            final long[] z2 = new long[Field25519.LIMB_CNT];
+            final long[] z9 = new long[Field25519.LIMB_CNT];
+            final long[] z11 = new long[Field25519.LIMB_CNT];
+            final long[] z2To5Minus1 = new long[Field25519.LIMB_CNT];
+            final long[] z2To10Minus1 = new long[Field25519.LIMB_CNT];
+            final long[] z2To20Minus1 = new long[Field25519.LIMB_CNT];
+            final long[] z2To50Minus1 = new long[Field25519.LIMB_CNT];
+            final long[] z2To100Minus1 = new long[Field25519.LIMB_CNT];
+            final long[] t0 = new long[Field25519.LIMB_CNT];
+            final long[] t1 = new long[Field25519.LIMB_CNT];
 
             square(z2, z);                          // 2
             square(t1, z2);                         // 4
@@ -711,7 +707,7 @@ final class Ed25519 {
         /**
          * Returns 0xffffffff iff a == b and zero otherwise.
          */
-        private static int eq(int a, int b) {
+        private static int eq(int a, final int b) {
             a = ~(a ^ b);
             a &= a << 16;
             a &= a << 8;
@@ -724,7 +720,7 @@ final class Ed25519 {
         /**
          * returns 0xffffffff if a >= b and zero otherwise, where a and b are both non-negative.
          */
-        private static int gte(int a, int b) {
+        private static int gte(int a, final int b) {
             a -= b;
             // a >= 0 iff a >= b.
             return ~(a >> 31);
@@ -764,19 +760,19 @@ final class Ed25519 {
             this(new long[Field25519.LIMB_CNT], new long[Field25519.LIMB_CNT], new long[Field25519.LIMB_CNT]);
         }
 
-        XYZ(long[] x, long[] y, long[] z) {
+        XYZ(final long[] x, final long[] y, final long[] z) {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        XYZ(XYZ xyz) {
+        XYZ(final XYZ xyz) {
             x = Arrays.copyOf(xyz.x, Field25519.LIMB_CNT);
             y = Arrays.copyOf(xyz.y, Field25519.LIMB_CNT);
             z = Arrays.copyOf(xyz.z, Field25519.LIMB_CNT);
         }
 
-        XYZ(PartialXYZT partialXYZT) {
+        XYZ(final PartialXYZT partialXYZT) {
             this();
             fromPartialXYZT(this, partialXYZT);
         }
@@ -784,7 +780,7 @@ final class Ed25519 {
         /**
          * ge_p1p1_to_p2.c
          */
-        static XYZ fromPartialXYZT(XYZ out, PartialXYZT in) {
+        static XYZ fromPartialXYZT(final XYZ out, final PartialXYZT in) {
             Field25519.mult(out.x, in.xyz.x, in.t);
             Field25519.mult(out.y, in.xyz.y, in.xyz.z);
             Field25519.mult(out.z, in.xyz.z, in.t);
@@ -795,14 +791,14 @@ final class Ed25519 {
          * Encodes this point to bytes.
          */
         byte[] toBytes() {
-            long[] recip = new long[Field25519.LIMB_CNT];
-            long[] x = new long[Field25519.LIMB_CNT];
-            long[] y = new long[Field25519.LIMB_CNT];
+            final long[] recip = new long[Field25519.LIMB_CNT];
+            final long[] x = new long[Field25519.LIMB_CNT];
+            final long[] y = new long[Field25519.LIMB_CNT];
             Field25519.inverse(recip, z);
             Field25519.mult(x, this.x, recip);
             Field25519.mult(y, this.y, recip);
-            byte[] s = Field25519.contract(y);
-            s[31] = (byte) (s[31] ^ (getLsb(x) << 7));
+            final byte[] s = Field25519.contract(y);
+            s[31] ^= (getLsb(x) << 7);
             return s;
         }
 
@@ -830,20 +826,20 @@ final class Ed25519 {
          * Checks that the point is on curve
          */
         boolean isOnCurve() {
-            long[] x2 = new long[Field25519.LIMB_CNT];
+            final long[] x2 = new long[Field25519.LIMB_CNT];
             Field25519.square(x2, x);
-            long[] y2 = new long[Field25519.LIMB_CNT];
+            final long[] y2 = new long[Field25519.LIMB_CNT];
             Field25519.square(y2, y);
-            long[] z2 = new long[Field25519.LIMB_CNT];
+            final long[] z2 = new long[Field25519.LIMB_CNT];
             Field25519.square(z2, z);
-            long[] z4 = new long[Field25519.LIMB_CNT];
+            final long[] z4 = new long[Field25519.LIMB_CNT];
             Field25519.square(z4, z2);
-            long[] lhs = new long[Field25519.LIMB_CNT];
+            final long[] lhs = new long[Field25519.LIMB_CNT];
             // lhs = y^2 - x^2
             Field25519.sub(lhs, y2, x2);
             // lhs = z^2 * (y2 - x2)
             Field25519.mult(lhs, lhs, z2);
-            long[] rhs = new long[Field25519.LIMB_CNT];
+            final long[] rhs = new long[Field25519.LIMB_CNT];
             // rhs = x^2 * y^2
             Field25519.mult(rhs, x2, y2);
             // rhs = D * x^2 * y^2
@@ -879,12 +875,12 @@ final class Ed25519 {
             this(new XYZ(), new long[Field25519.LIMB_CNT]);
         }
 
-        XYZT(XYZ xyz, long[] t) {
+        XYZT(final XYZ xyz, final long[] t) {
             this.xyz = xyz;
             this.t = t;
         }
 
-        XYZT(PartialXYZT partialXYZT) {
+        XYZT(final PartialXYZT partialXYZT) {
             this();
             fromPartialXYZT(this, partialXYZT);
         }
@@ -892,7 +888,7 @@ final class Ed25519 {
         /**
          * ge_p1p1_to_p2.c
          */
-        private static XYZT fromPartialXYZT(XYZT out, PartialXYZT in) {
+        private static XYZT fromPartialXYZT(final XYZT out, final PartialXYZT in) {
             Field25519.mult(out.xyz.x, in.xyz.x, in.t);
             Field25519.mult(out.xyz.y, in.xyz.y, in.xyz.z);
             Field25519.mult(out.xyz.z, in.xyz.z, in.t);
@@ -904,22 +900,22 @@ final class Ed25519 {
          * Decodes {@code s} into an extented projective point.
          * See Section 5.1.3 Decoding in https://tools.ietf.org/html/rfc8032#section-5.1.3
          */
-        private static XYZT fromBytesNegateVarTime(byte[] s) throws GeneralSecurityException {
-            long[] x = new long[Field25519.LIMB_CNT];
-            long[] y = Field25519.expand(s);
-            long[] z = new long[Field25519.LIMB_CNT];
+        private static XYZT fromBytesNegateVarTime(final byte[] s) throws GeneralSecurityException {
+            final long[] x = new long[Field25519.LIMB_CNT];
+            final long[] y = Field25519.expand(s);
+            final long[] z = new long[Field25519.LIMB_CNT];
             z[0] = 1;
-            long[] t = new long[Field25519.LIMB_CNT];
-            long[] u = new long[Field25519.LIMB_CNT];
-            long[] v = new long[Field25519.LIMB_CNT];
-            long[] vxx = new long[Field25519.LIMB_CNT];
-            long[] check = new long[Field25519.LIMB_CNT];
+            final long[] t = new long[Field25519.LIMB_CNT];
+            final long[] u = new long[Field25519.LIMB_CNT];
+            final long[] v = new long[Field25519.LIMB_CNT];
+            final long[] vxx = new long[Field25519.LIMB_CNT];
+            final long[] check = new long[Field25519.LIMB_CNT];
             Field25519.square(u, y);
             Field25519.mult(v, u, D);
             Field25519.sub(u, u, z); // u = y^2 - 1
             Field25519.sum(v, v, z); // v = dy^2 + 1
 
-            long[] v3 = new long[Field25519.LIMB_CNT];
+            final long[] v3 = new long[Field25519.LIMB_CNT];
             Field25519.square(v3, v);
             Field25519.mult(v3, v3, v); // v3 = v^3
             Field25519.square(x, v3);
@@ -979,12 +975,12 @@ final class Ed25519 {
             this(new XYZ(), new long[Field25519.LIMB_CNT]);
         }
 
-        PartialXYZT(XYZ xyz, long[] t) {
+        PartialXYZT(final XYZ xyz, final long[] t) {
             this.xyz = xyz;
             this.t = t;
         }
 
-        PartialXYZT(PartialXYZT other) {
+        PartialXYZT(final PartialXYZT other) {
             xyz = new XYZ(other.xyz);
             t = Arrays.copyOf(other.t, Field25519.LIMB_CNT);
         }
@@ -1008,27 +1004,27 @@ final class Ed25519 {
          * @param yMinusX y - x
          * @param t2d     2d * xy
          */
-        CachedXYT(long[] yPlusX, long[] yMinusX, long[] t2d) {
+        CachedXYT(final long[] yPlusX, final long[] yMinusX, final long[] t2d) {
             this.yPlusX = yPlusX;
             this.yMinusX = yMinusX;
             this.t2d = t2d;
         }
 
-        CachedXYT(CachedXYT other) {
+        CachedXYT(final CachedXYT other) {
             yPlusX = Arrays.copyOf(other.yPlusX, Field25519.LIMB_CNT);
             yMinusX = Arrays.copyOf(other.yMinusX, Field25519.LIMB_CNT);
             t2d = Arrays.copyOf(other.t2d, Field25519.LIMB_CNT);
         }
 
         // z is one implicitly, so this just copies {@code in} to {@code output}.
-        void multByZ(long[] output, long[] in) {
+        void multByZ(final long[] output, final long[] in) {
             System.arraycopy(in, 0, output, 0, Field25519.LIMB_CNT);
         }
 
         /**
          * If icopy is 1, copies {@code other} into this point. Time invariant wrt to icopy value.
          */
-        void copyConditional(CachedXYT other, int icopy) {
+        void copyConditional(final CachedXYT other, final int icopy) {
             copyConditional(yPlusX, other.yPlusX, icopy);
             copyConditional(yMinusX, other.yMinusX, icopy);
             copyConditional(t2d, other.t2d, icopy);
@@ -1044,10 +1040,10 @@ final class Ed25519 {
          * values in a[10..19] or b[10..19] aren't swapped, and all all values in a[0..9],b[0..9] must
          * have magnitude less than Integer.MAX_VALUE.
          */
-        static void copyConditional(long[] a, long[] b, int icopy) {
-            int copy = -icopy;
+        static void copyConditional(final long[] a, final long[] b, final int icopy) {
+            final int copy = -icopy;
             for (int i = 0; i < Field25519.LIMB_CNT; i++) {
-                int x = copy & (((int) a[i]) ^ ((int) b[i]));
+                final int x = copy & (((int) a[i]) ^ ((int) b[i]));
                 a[i] = ((int) a[i]) ^ x;
             }
         }
@@ -1064,7 +1060,7 @@ final class Ed25519 {
         /**
          * ge_p3_to_cached.c
          */
-        CachedXYZT(XYZT xyzt) {
+        CachedXYZT(final XYZT xyzt) {
             this();
             Field25519.sum(yPlusX, xyzt.xyz.y, xyzt.xyz.x);
             Field25519.sub(yMinusX, xyzt.xyz.y, xyzt.xyz.x);
@@ -1080,13 +1076,13 @@ final class Ed25519 {
          * @param z       Z
          * @param t2d     2d * (XY/Z)
          */
-        CachedXYZT(long[] yPlusX, long[] yMinusX, long[] z, long[] t2d) {
+        CachedXYZT(final long[] yPlusX, final long[] yMinusX, final long[] z, final long[] t2d) {
             super(yPlusX, yMinusX, t2d);
             this.z = z;
         }
 
         @Override
-        public void multByZ(long[] output, long[] in) {
+        public void multByZ(final long[] output, final long[] in) {
             Field25519.mult(output, in, z);
         }
     }
@@ -1101,8 +1097,8 @@ final class Ed25519 {
      * @param extended extended projective point input
      * @param cached   cached projective point input
      */
-    private static void add(PartialXYZT partialXYZT, XYZT extended, CachedXYT cached) {
-        long[] t = new long[Field25519.LIMB_CNT];
+    private static void add(final PartialXYZT partialXYZT, final XYZT extended, final CachedXYT cached) {
+        final long[] t = new long[Field25519.LIMB_CNT];
 
         // Y1 + X1
         Field25519.sum(partialXYZT.xyz.x, extended.xyz.y, extended.xyz.x);
@@ -1148,8 +1144,8 @@ final class Ed25519 {
      * @param extended extended projective point input
      * @param cached   cached projective point input
      */
-    private static void sub(PartialXYZT partialXYZT, XYZT extended, CachedXYT cached) {
-        long[] t = new long[Field25519.LIMB_CNT];
+    private static void sub(final PartialXYZT partialXYZT, final XYZT extended, final CachedXYT cached) {
+        final long[] t = new long[Field25519.LIMB_CNT];
 
         // Y1 + X1
         Field25519.sum(partialXYZT.xyz.x, extended.xyz.y, extended.xyz.x);
@@ -1195,8 +1191,8 @@ final class Ed25519 {
      * conversion from PartialXYZT to XYZT and also this fixes a typo in calculation of Y3 and T3 in
      * the paper, H should be replaced with A+B.
      */
-    private static void doubleXYZ(PartialXYZT partialXYZT, XYZ p) {
-        long[] t0 = new long[Field25519.LIMB_CNT];
+    private static void doubleXYZ(final PartialXYZT partialXYZT, final XYZ p) {
+        final long[] t0 = new long[Field25519.LIMB_CNT];
 
         // XX = X1^2
         Field25519.square(partialXYZT.xyz.x, p.x);
@@ -1232,14 +1228,14 @@ final class Ed25519 {
     /**
      * Doubles {@code p} and puts the result into this PartialXYZT.
      */
-    private static void doubleXYZT(PartialXYZT partialXYZT, XYZT p) {
+    private static void doubleXYZT(final PartialXYZT partialXYZT, final XYZT p) {
         doubleXYZ(partialXYZT, p.xyz);
     }
 
     /**
      * Compares two byte values in constant time.
      */
-    private static int eq(int a, int b) {
+    private static int eq(final int a, final int b) {
         int r = ~(a ^ b) & 0xff;
         r &= r << 4;
         r &= r << 2;
@@ -1260,9 +1256,9 @@ final class Ed25519 {
      * @param pos in B[pos][j] = (j+1)*B*256^pos
      * @param b   value in [-8, 8] range.
      */
-    private static void select(CachedXYT t, int pos, byte b) {
-        int bnegative = (b & 0xff) >> 7;
-        int babs = b - (((-bnegative) & b) << 1);
+    private static void select(final CachedXYT t, final int pos, final byte b) {
+        final int bnegative = (b & 0xff) >> 7;
+        final int babs = b - (((-bnegative) & b) << 1);
 
         t.copyConditional(B_TABLE[pos][0], eq(babs, 1));
         t.copyConditional(B_TABLE[pos][1], eq(babs, 2));
@@ -1273,11 +1269,11 @@ final class Ed25519 {
         t.copyConditional(B_TABLE[pos][6], eq(babs, 7));
         t.copyConditional(B_TABLE[pos][7], eq(babs, 8));
 
-        long[] yPlusX = Arrays.copyOf(t.yMinusX, Field25519.LIMB_CNT);
-        long[] yMinusX = Arrays.copyOf(t.yPlusX, Field25519.LIMB_CNT);
-        long[] t2d = Arrays.copyOf(t.t2d, Field25519.LIMB_CNT);
+        final long[] yPlusX = Arrays.copyOf(t.yMinusX, Field25519.LIMB_CNT);
+        final long[] yMinusX = Arrays.copyOf(t.yPlusX, Field25519.LIMB_CNT);
+        final long[] t2d = Arrays.copyOf(t.t2d, Field25519.LIMB_CNT);
         neg(t2d, t2d);
-        CachedXYT minust = new CachedXYT(yPlusX, yMinusX, t2d);
+        final CachedXYT minust = new CachedXYT(yPlusX, yMinusX, t2d);
         t.copyConditional(minust, bnegative);
     }
 
@@ -1292,10 +1288,10 @@ final class Ed25519 {
      * @throws IllegalStateException iff there is arithmetic error.
      */
     @SuppressWarnings("NarrowingCompoundAssignment")
-    private static XYZ scalarMultWithBase(byte[] a) {
-        byte[] e = new byte[2 * Field25519.FIELD_LEN];
+    private static XYZ scalarMultWithBase(final byte[] a) {
+        final byte[] e = new byte[2 * Field25519.FIELD_LEN];
         for (int i = 0; i < Field25519.FIELD_LEN; i++) {
-            e[2 * i + 0] = (byte) (((a[i] & 0xff) >> 0) & 0xf);
+            e[2 * i] = (byte) (((a[i] & 0xff) >> 0) & 0xf);
             e[2 * i + 1] = (byte) (((a[i] & 0xff) >> 4) & 0xf);
         }
         // each e[i] is between 0 and 15
@@ -1313,21 +1309,21 @@ final class Ed25519 {
         }
         e[e.length - 1] += carry;
 
-        PartialXYZT ret = new PartialXYZT(NEUTRAL);
-        XYZT xyzt = new XYZT();
+        final PartialXYZT ret = new PartialXYZT(NEUTRAL);
+        final XYZT xyzt = new XYZT();
         // Although B_TABLE's i can be at most 31 (stores only 32 4bit multiples of B) and we have 64
         // 4bit values in e array, the below for loop adds cached values by iterating e by two in odd
         // indices. After the result, we can double the result point 4 times to shift the multiplication
         // scalar by 4 bits.
         for (int i = 1; i < e.length; i += 2) {
-            CachedXYT t = new CachedXYT(CACHED_NEUTRAL);
+            final CachedXYT t = new CachedXYT(CACHED_NEUTRAL);
             select(t, i / 2, e[i]);
             add(ret, XYZT.fromPartialXYZT(xyzt, ret), t);
         }
 
         // Doubles the result 4 times to shift the multiplication scalar 4 bits to get the actual result
         // for the odd indices in e.
-        XYZ xyz = new XYZ();
+        final XYZ xyz = new XYZ();
         doubleXYZ(ret, XYZ.fromPartialXYZT(xyz, ret));
         doubleXYZ(ret, XYZ.fromPartialXYZT(xyz, ret));
         doubleXYZ(ret, XYZ.fromPartialXYZT(xyz, ret));
@@ -1335,14 +1331,14 @@ final class Ed25519 {
 
         // Add multiples of B for even indices of e.
         for (int i = 0; i < e.length; i += 2) {
-            CachedXYT t = new CachedXYT(CACHED_NEUTRAL);
+            final CachedXYT t = new CachedXYT(CACHED_NEUTRAL);
             select(t, i / 2, e[i]);
             add(ret, XYZT.fromPartialXYZT(xyzt, ret), t);
         }
 
         // This check is to protect against flaws, i.e. if there is a computation error through a
         // faulty CPU or if the implementation contains a bug.
-        XYZ result = new XYZ(ret);
+        final XYZ result = new XYZ(ret);
         if (!result.isOnCurve()) {
             throw new IllegalStateException("arithmetic error in scalar multiplication");
         }
@@ -1350,8 +1346,8 @@ final class Ed25519 {
     }
 
     @SuppressWarnings("NarrowingCompoundAssignment")
-    private static byte[] slide(byte[] a) {
-        byte[] r = new byte[256];
+    private static byte[] slide(final byte[] a) {
+        final byte[] r = new byte[256];
         // Writes each bit in a[0..31] into r[0..255]:
         // a = a[0]+256*a[1]+...+256^31*a[31] is equal to
         // r = r[0]+2*r[1]+...+2^255*r[255]
@@ -1395,22 +1391,22 @@ final class Ed25519 {
      * Note that execution time varies based on the input since this will only be used in verification
      * of signatures.
      */
-    private static XYZ doubleScalarMultVarTime(byte[] a, XYZT pointA, byte[] b) {
+    private static XYZ doubleScalarMultVarTime(final byte[] a, final XYZT pointA, final byte[] b) {
         // pointA, 3*pointA, 5*pointA, 7*pointA, 9*pointA, 11*pointA, 13*pointA, 15*pointA
-        CachedXYZT[] pointAArray = new CachedXYZT[8];
+        final CachedXYZT[] pointAArray = new CachedXYZT[8];
         pointAArray[0] = new CachedXYZT(pointA);
         PartialXYZT t = new PartialXYZT();
         doubleXYZT(t, pointA);
-        XYZT doubleA = new XYZT(t);
+        final XYZT doubleA = new XYZT(t);
         for (int i = 1; i < pointAArray.length; i++) {
             add(t, doubleA, pointAArray[i - 1]);
             pointAArray[i] = new CachedXYZT(new XYZT(t));
         }
 
-        byte[] aSlide = slide(a);
-        byte[] bSlide = slide(b);
+        final byte[] aSlide = slide(a);
+        final byte[] bSlide = slide(b);
         t = new PartialXYZT(NEUTRAL);
-        XYZT u = new XYZT();
+        final XYZT u = new XYZT();
         int i = 255;
         for (; i >= 0; i--) {
             if (aSlide[i] != 0 || bSlide[i] != 0) {
@@ -1439,12 +1435,12 @@ final class Ed25519 {
      * <p>
      * Note that execution time might depend on the input {@code in}.
      */
-    private static boolean isNonZeroVarTime(long[] in) {
-        long[] inCopy = new long[in.length + 1];
+    private static boolean isNonZeroVarTime(final long[] in) {
+        final long[] inCopy = new long[in.length + 1];
         System.arraycopy(in, 0, inCopy, 0, in.length);
         Field25519.reduceCoefficients(inCopy);
-        byte[] bytes = Field25519.contract(inCopy);
-        for (byte b : bytes) {
+        final byte[] bytes = Field25519.contract(inCopy);
+        for (final byte b : bytes) {
             if (b != 0) {
                 return true;
             }
@@ -1455,14 +1451,14 @@ final class Ed25519 {
     /**
      * Returns the least significant bit of {@code in}.
      */
-    private static int getLsb(long[] in) {
+    private static int getLsb(final long[] in) {
         return Field25519.contract(in)[0] & 1;
     }
 
     /**
      * Negates all values in {@code in} and store it in {@code out}.
      */
-    private static void neg(long[] out, long[] in) {
+    private static void neg(final long[] out, final long[] in) {
         for (int i = 0; i < in.length; i++) {
             out[i] = -in[i];
         }
@@ -1471,10 +1467,10 @@ final class Ed25519 {
     /**
      * Computes {@code in}^(2^252-3) mod 2^255-19 and puts the result in {@code out}.
      */
-    private static void pow2252m3(long[] out, long[] in) {
-        long[] t0 = new long[Field25519.LIMB_CNT];
-        long[] t1 = new long[Field25519.LIMB_CNT];
-        long[] t2 = new long[Field25519.LIMB_CNT];
+    private static void pow2252m3(final long[] out, final long[] in) {
+        final long[] t0 = new long[Field25519.LIMB_CNT];
+        final long[] t1 = new long[Field25519.LIMB_CNT];
+        final long[] t2 = new long[Field25519.LIMB_CNT];
 
         // z2 = z1^2^1
         Field25519.square(t0, in);
@@ -1573,7 +1569,7 @@ final class Ed25519 {
     /**
      * Returns 3 bytes of {@code in} starting from {@code idx} in Little-Endian format.
      */
-    private static long load3(byte[] in, int idx) {
+    private static long load3(final byte[] in, final int idx) {
         long result;
         result = (long) in[idx] & 0xff;
         result |= (long) (in[idx + 1] & 0xff) << 8;
@@ -1584,7 +1580,7 @@ final class Ed25519 {
     /**
      * Returns 4 bytes of {@code in} starting from {@code idx} in Little-Endian format.
      */
-    private static long load4(byte[] in, int idx) {
+    private static long load4(final byte[] in, final int idx) {
         long result = load3(in, idx);
         result |= (long) (in[idx + 3] & 0xff) << 24;
         return result;
@@ -1599,7 +1595,7 @@ final class Ed25519 {
      * where l = 2^252 + 27742317777372353535851937790883648493.
      * Overwrites s in place.
      */
-    private static void reduce(byte[] s) {
+    private static void reduce(final byte[] s) {
         // Observation:
         // 2^252 mod l is equivalent to -27742317777372353535851937790883648493 mod l
         // Let m = -27742317777372353535851937790883648493
@@ -1625,12 +1621,12 @@ final class Ed25519 {
         long s15 = 2097151 & (load3(s, 39) >> 3);
         long s16 = 2097151 & load3(s, 42);
         long s17 = 2097151 & (load4(s, 44) >> 5);
-        long s18 = 2097151 & (load3(s, 47) >> 2);
-        long s19 = 2097151 & (load4(s, 49) >> 7);
-        long s20 = 2097151 & (load4(s, 52) >> 4);
-        long s21 = 2097151 & (load3(s, 55) >> 1);
-        long s22 = 2097151 & (load4(s, 57) >> 6);
-        long s23 = (load4(s, 60) >> 3);
+        final long s18 = 2097151 & (load3(s, 47) >> 2);
+        final long s19 = 2097151 & (load4(s, 49) >> 7);
+        final long s20 = 2097151 & (load4(s, 52) >> 4);
+        final long s21 = 2097151 & (load3(s, 55) >> 1);
+        final long s22 = 2097151 & (load4(s, 57) >> 6);
+        final long s23 = (load4(s, 60) >> 3);
         long carry0;
         long carry1;
         long carry2;
@@ -1643,11 +1639,11 @@ final class Ed25519 {
         long carry9;
         long carry10;
         long carry11;
-        long carry12;
-        long carry13;
-        long carry14;
-        long carry15;
-        long carry16;
+        final long carry12;
+        final long carry13;
+        final long carry14;
+        final long carry15;
+        final long carry16;
 
         // s23*2^462 = s23*2^210*2^252 is equivalent to s23*2^210*m in mod l
         // As m is a 125 bit number, the result needs to scattered to 6 limbs (125/21 ceil is 6)
@@ -1959,45 +1955,45 @@ final class Ed25519 {
      * s[0]+256*s[1]+...+256^31*s[31] = (ab+c) mod l
      * where l = 2^252 + 27742317777372353535851937790883648493.
      */
-    private static void mulAdd(byte[] s, byte[] a, byte[] b, byte[] c) {
+    private static void mulAdd(final byte[] s, final byte[] a, final byte[] b, final byte[] c) {
         // This is very similar to Ed25519.reduce, the difference in here is that it computes ab+c
         // See Ed25519.reduce for related comments.
-        long a0 = 2097151 & load3(a, 0);
-        long a1 = 2097151 & (load4(a, 2) >> 5);
-        long a2 = 2097151 & (load3(a, 5) >> 2);
-        long a3 = 2097151 & (load4(a, 7) >> 7);
-        long a4 = 2097151 & (load4(a, 10) >> 4);
-        long a5 = 2097151 & (load3(a, 13) >> 1);
-        long a6 = 2097151 & (load4(a, 15) >> 6);
-        long a7 = 2097151 & (load3(a, 18) >> 3);
-        long a8 = 2097151 & load3(a, 21);
-        long a9 = 2097151 & (load4(a, 23) >> 5);
-        long a10 = 2097151 & (load3(a, 26) >> 2);
-        long a11 = (load4(a, 28) >> 7);
-        long b0 = 2097151 & load3(b, 0);
-        long b1 = 2097151 & (load4(b, 2) >> 5);
-        long b2 = 2097151 & (load3(b, 5) >> 2);
-        long b3 = 2097151 & (load4(b, 7) >> 7);
-        long b4 = 2097151 & (load4(b, 10) >> 4);
-        long b5 = 2097151 & (load3(b, 13) >> 1);
-        long b6 = 2097151 & (load4(b, 15) >> 6);
-        long b7 = 2097151 & (load3(b, 18) >> 3);
-        long b8 = 2097151 & load3(b, 21);
-        long b9 = 2097151 & (load4(b, 23) >> 5);
-        long b10 = 2097151 & (load3(b, 26) >> 2);
-        long b11 = (load4(b, 28) >> 7);
-        long c0 = 2097151 & load3(c, 0);
-        long c1 = 2097151 & (load4(c, 2) >> 5);
-        long c2 = 2097151 & (load3(c, 5) >> 2);
-        long c3 = 2097151 & (load4(c, 7) >> 7);
-        long c4 = 2097151 & (load4(c, 10) >> 4);
-        long c5 = 2097151 & (load3(c, 13) >> 1);
-        long c6 = 2097151 & (load4(c, 15) >> 6);
-        long c7 = 2097151 & (load3(c, 18) >> 3);
-        long c8 = 2097151 & load3(c, 21);
-        long c9 = 2097151 & (load4(c, 23) >> 5);
-        long c10 = 2097151 & (load3(c, 26) >> 2);
-        long c11 = (load4(c, 28) >> 7);
+        final long a0 = 2097151 & load3(a, 0);
+        final long a1 = 2097151 & (load4(a, 2) >> 5);
+        final long a2 = 2097151 & (load3(a, 5) >> 2);
+        final long a3 = 2097151 & (load4(a, 7) >> 7);
+        final long a4 = 2097151 & (load4(a, 10) >> 4);
+        final long a5 = 2097151 & (load3(a, 13) >> 1);
+        final long a6 = 2097151 & (load4(a, 15) >> 6);
+        final long a7 = 2097151 & (load3(a, 18) >> 3);
+        final long a8 = 2097151 & load3(a, 21);
+        final long a9 = 2097151 & (load4(a, 23) >> 5);
+        final long a10 = 2097151 & (load3(a, 26) >> 2);
+        final long a11 = (load4(a, 28) >> 7);
+        final long b0 = 2097151 & load3(b, 0);
+        final long b1 = 2097151 & (load4(b, 2) >> 5);
+        final long b2 = 2097151 & (load3(b, 5) >> 2);
+        final long b3 = 2097151 & (load4(b, 7) >> 7);
+        final long b4 = 2097151 & (load4(b, 10) >> 4);
+        final long b5 = 2097151 & (load3(b, 13) >> 1);
+        final long b6 = 2097151 & (load4(b, 15) >> 6);
+        final long b7 = 2097151 & (load3(b, 18) >> 3);
+        final long b8 = 2097151 & load3(b, 21);
+        final long b9 = 2097151 & (load4(b, 23) >> 5);
+        final long b10 = 2097151 & (load3(b, 26) >> 2);
+        final long b11 = (load4(b, 28) >> 7);
+        final long c0 = 2097151 & load3(c, 0);
+        final long c1 = 2097151 & (load4(c, 2) >> 5);
+        final long c2 = 2097151 & (load3(c, 5) >> 2);
+        final long c3 = 2097151 & (load4(c, 7) >> 7);
+        final long c4 = 2097151 & (load4(c, 10) >> 4);
+        final long c5 = 2097151 & (load3(c, 13) >> 1);
+        final long c6 = 2097151 & (load4(c, 15) >> 6);
+        final long c7 = 2097151 & (load3(c, 18) >> 3);
+        final long c8 = 2097151 & load3(c, 21);
+        final long c9 = 2097151 & (load4(c, 23) >> 5);
+        final long c10 = 2097151 & (load3(c, 26) >> 2);
+        final long c11 = (load4(c, 28) >> 7);
         long s0;
         long s1;
         long s2;
@@ -2039,12 +2035,12 @@ final class Ed25519 {
         long carry14;
         long carry15;
         long carry16;
-        long carry17;
-        long carry18;
-        long carry19;
-        long carry20;
-        long carry21;
-        long carry22;
+        final long carry17;
+        final long carry18;
+        final long carry19;
+        final long carry20;
+        final long carry21;
+        final long carry22;
 
         s0 = c0 + a0 * b0;
         s1 = c1 + a0 * b1 + a1 * b0;
@@ -2455,11 +2451,11 @@ final class Ed25519 {
     // This is needed to ensure that EdDSA signatures are non-malleable, as failing to check
     // the range of S allows to modify signatures (cf. RFC 8032, Section 5.2.7 and Section 8.4.)
     // @param s an integer in little-endian order.
-    private static boolean isSmallerThanGroupOrder(byte[] s) {
+    private static boolean isSmallerThanGroupOrder(final byte[] s) {
         for (int j = Field25519.FIELD_LEN - 1; j >= 0; j--) {
             // compare unsigned bytes
-            int a = s[j] & 0xff;
-            int b = GROUP_ORDER[j] & 0xff;
+            final int a = s[j] & 0xff;
+            final int b = GROUP_ORDER[j] & 0xff;
             if (a != b) {
                 return a < b;
             }
@@ -2480,20 +2476,20 @@ final class Ed25519 {
             if (publicKey.length != PUBLIC_KEY_LEN) {
                 return false;
             }
-            byte[] s = Arrays.copyOfRange(signature, Field25519.FIELD_LEN, SIGNATURE_LEN);
+            final byte[] s = Arrays.copyOfRange(signature, Field25519.FIELD_LEN, SIGNATURE_LEN);
             if (!isSmallerThanGroupOrder(s)) {
                 return false;
             }
-            MessageDigest digest = MessageDigest.getInstance("SHA-512");
+            final MessageDigest digest = MessageDigest.getInstance("SHA-512");
             digest.update(signature, 0, Field25519.FIELD_LEN);
             digest.update(publicKey);
             digest.update(message);
-            byte[] h = digest.digest();
+            final byte[] h = digest.digest();
             reduce(h);
 
-            XYZT negPublicKey = XYZT.fromBytesNegateVarTime(publicKey);
-            XYZ xyz = doubleScalarMultVarTime(h, negPublicKey, s);
-            byte[] expectedR = xyz.toBytes();
+            final XYZT negPublicKey = XYZT.fromBytesNegateVarTime(publicKey);
+            final XYZ xyz = doubleScalarMultVarTime(h, negPublicKey, s);
+            final byte[] expectedR = xyz.toBytes();
             for (int i = 0; i < Field25519.FIELD_LEN; i++) {
                 if (expectedR[i] != signature[i]) {
                     return false;

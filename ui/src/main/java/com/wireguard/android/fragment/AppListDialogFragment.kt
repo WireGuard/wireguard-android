@@ -87,7 +87,6 @@ class AppListDialogFragment : DialogFragment() {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             pm.getPackagesHoldingPermissions(permissions, PackageInfoFlags.of(0L))
         } else {
-            @Suppress("DEPRECATION")
             pm.getPackagesHoldingPermissions(permissions, 0)
         }
     }

@@ -37,7 +37,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 import java.util.Locale
-import kotlin.system.exitProcess
 
 class Application : android.app.Application() {
     private val futureBackend = CompletableDeferred<Backend>()

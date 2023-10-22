@@ -105,9 +105,8 @@ public final class Interface {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Interface))
+        if (!(obj instanceof final Interface other))
             return false;
-        final Interface other = (Interface) obj;
         return addresses.equals(other.addresses)
                 && dnsServers.equals(other.dnsServers)
                 && dnsSearchDomains.equals(other.dnsSearchDomains)

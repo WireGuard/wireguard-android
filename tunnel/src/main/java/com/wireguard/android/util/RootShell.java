@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import androidx.annotation.Nullable;
@@ -46,16 +48,16 @@ public class RootShell {
         final String packageName = context.getPackageName();
         if (packageName.contains("'"))
             throw new RuntimeException("Impossibly invalid package name contains a single quote");
-        preamble = String.format("export CALLING_PACKAGE='%s' PATH=\"%s:$PATH\" TMPDIR='%s'; magisk --sqlite \"UPDATE policies SET notification=0, logging=0 WHERE uid=%d\" >/dev/null 2>&1; id -u\n",
+        preamble = String.format(Locale.getDefault(), "export CALLING_PACKAGE='%s' PATH=\"%s:$PATH\" TMPDIR='%s'; magisk --sqlite \"UPDATE policies SET notification=0, logging=0 WHERE uid=%d\" >/dev/null 2>&1; id -u\n",
                 packageName, localBinaryDir, localTemporaryDir, android.os.Process.myUid());
     }
 
-    private static boolean isExecutableInPath(final String name) {
+    private static boolean isExecutableInPath() {
         final String path = System.getenv("PATH");
         if (path == null)
             return false;
         for (final String dir : path.split(":"))
-            if (new File(dir, name).canExecute())
+            if (new File(dir, RootShell.SU).canExecute())
                 return true;
         return false;
     }
@@ -91,17 +93,17 @@ public class RootShell {
             final String script = "echo " + marker + "; echo " + marker + " >&2; (" + command +
                     "); ret=$?; echo " + marker + " $ret; echo " + marker + " $ret >&2\n";
             Log.v(TAG, "executing: " + command);
-            stdin.write(script);
+            Objects.requireNonNull(stdin).write(script);
             stdin.flush();
             String line;
             int errnoStdout = Integer.MIN_VALUE;
             int errnoStderr = Integer.MAX_VALUE;
             int markersSeen = 0;
-            while ((line = stdout.readLine()) != null) {
+            while ((line = Objects.requireNonNull(stdout).readLine()) != null) {
                 if (line.startsWith(marker)) {
                     ++markersSeen;
                     if (line.length() > marker.length() + 1) {
-                        errnoStdout = Integer.valueOf(line.substring(marker.length() + 1));
+                        errnoStdout = Integer.parseInt(line.substring(marker.length() + 1));
                         break;
                     }
                 } else if (markersSeen > 0) {
@@ -110,11 +112,11 @@ public class RootShell {
                     Log.v(TAG, "stdout: " + line);
                 }
             }
-            while ((line = stderr.readLine()) != null) {
+            while ((line = Objects.requireNonNull(stderr).readLine()) != null) {
                 if (line.startsWith(marker)) {
                     ++markersSeen;
                     if (line.length() > marker.length() + 1) {
-                        errnoStderr = Integer.valueOf(line.substring(marker.length() + 1));
+                        errnoStderr = Integer.parseInt(line.substring(marker.length() + 1));
                         break;
                     }
                 } else if (markersSeen > 2) {
@@ -131,7 +133,7 @@ public class RootShell {
     }
 
     public void start() throws IOException, RootShellException {
-        if (!isExecutableInPath(SU))
+        if (!isExecutableInPath())
             throw new RootShellException(Reason.NO_ROOT_ACCESS);
         synchronized (lock) {
             if (isRunning())

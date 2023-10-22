@@ -118,7 +118,7 @@ object TunnelImporter {
             // Config text is valid, now create the tunnel…
             ConfigNamingDialogFragment.newInstance(configText).show(parentFragmentManager, null)
         } catch (e: Throwable) {
-            onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)
+            onTunnelImportFinished(emptyList(), listOf(e), messageCallback)
         }
     }
 
@@ -130,20 +130,22 @@ object TunnelImporter {
             message = context.getString(R.string.import_error, error)
             Log.e(TAG, message, throwable)
         }
-        if (tunnels.size == 1 && throwables.isEmpty())
-            message = context.getString(R.string.import_success, tunnels[0].name)
-        else if (tunnels.isEmpty() && throwables.size == 1)
-        else if (throwables.isEmpty())
-            message = context.resources.getQuantityString(
-                R.plurals.import_total_success,
-                tunnels.size, tunnels.size
-            )
-        else if (!throwables.isEmpty())
-            message = context.resources.getQuantityString(
-                R.plurals.import_partial_success,
-                tunnels.size + throwables.size,
-                tunnels.size, tunnels.size + throwables.size
-            )
+
+        message = when {
+            throwables.isEmpty() ->
+                if (tunnels.size == 1)
+                    context.getString(R.string.import_success, tunnels[0].name)
+                else
+                    context.resources.getQuantityString(R.plurals.import_total_success, tunnels.size, tunnels.size)
+
+            throwables.size > 1 || tunnels.isNotEmpty() -> //skip tunnels.isEmpty() && throwables.size == 1
+                context.resources.getQuantityString(
+                    R.plurals.import_partial_success,
+                    tunnels.size + throwables.size,
+                    tunnels.size, tunnels.size + throwables.size)
+
+            else -> message
+        }
 
         messageCallback(message)
     }

@@ -228,7 +228,7 @@ public final class Key {
     public int hashCode() {
         int ret = 0;
         for (int i = 0; i < key.length / 4; ++i)
-            ret ^= (key[i * 4 + 0] >> 0) + (key[i * 4 + 1] >> 8) + (key[i * 4 + 2] >> 16) + (key[i * 4 + 3] >> 24);
+            ret ^= (key[i * 4] >> 0) + (key[i * 4 + 1] >> 8) + (key[i * 4 + 2] >> 16) + (key[i * 4 + 3] >> 24);
         return ret;
     }
 

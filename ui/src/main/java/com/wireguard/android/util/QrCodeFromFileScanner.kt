@@ -45,8 +45,8 @@ class QrCodeFromFileScanner(
         val originalWidth = source.width
         val originalHeight = source.height
 
-        var newWidth = -1
-        var newHeight = -1
+        val newWidth: Int
+        val newHeight: Int
         val multFactor: Float
 
         when {
@@ -62,7 +62,7 @@ class QrCodeFromFileScanner(
                 newHeight = (newWidth * multFactor).toInt()
             }
 
-            originalHeight == originalWidth -> {
+            else -> {
                 newHeight = scaledSize
                 newWidth = scaledSize
             }

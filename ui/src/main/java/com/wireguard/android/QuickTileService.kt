@@ -5,6 +5,7 @@
 package com.wireguard.android
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,7 +18,6 @@ import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.databinding.Observable.OnPropertyChangedCallback
 import com.wireguard.android.activity.MainActivity
@@ -33,7 +33,8 @@ import kotlinx.coroutines.launch
  * system framework as necessary to update the appearance of the tile in the system UI, and to
  * forward click events to the application.
  */
-@RequiresApi(Build.VERSION_CODES.N)
+
+@TargetApi(Build.VERSION_CODES.N)
 class QuickTileService : TileService() {
     private val onStateChangedCallback = OnStateChangedCallback()
     private val onTunnelChangedCallback = OnTunnelChangedCallback()
@@ -60,7 +61,7 @@ class QuickTileService : TileService() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
-                } else {
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     @Suppress("DEPRECATION")
                     startActivityAndCollapse(intent)
                 }

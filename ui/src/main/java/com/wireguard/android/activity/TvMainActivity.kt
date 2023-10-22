@@ -273,7 +273,6 @@ class TvMainActivity : AppCompatActivity() {
                 }
             })
         } else {
-            @Suppress("DEPRECATION")
             list.add(KeyedFile(Environment.getExternalStorageDirectory()))
             try {
                 File("/storage").listFiles()?.forEach {

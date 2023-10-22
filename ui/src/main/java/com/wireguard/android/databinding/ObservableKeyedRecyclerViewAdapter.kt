@@ -65,7 +65,7 @@ class ObservableKeyedRecyclerViewAdapter<K, E : Keyed<out K>> internal construct
         fun onConfigureRow(binding: B, item: T, position: Int)
     }
 
-    private class OnListChangedCallback<E : Keyed<*>> constructor(adapter: ObservableKeyedRecyclerViewAdapter<*, E>) : ObservableList.OnListChangedCallback<ObservableList<E>>() {
+    private class OnListChangedCallback<E : Keyed<*>>(adapter: ObservableKeyedRecyclerViewAdapter<*, E>) : ObservableList.OnListChangedCallback<ObservableList<E>>() {
         private val weakAdapter: WeakReference<ObservableKeyedRecyclerViewAdapter<*, E>> = WeakReference(adapter)
 
         override fun onChanged(sender: ObservableList<E>) {
