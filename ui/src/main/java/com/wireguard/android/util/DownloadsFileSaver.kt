@@ -49,7 +49,7 @@ class DownloadsFileSaver(private val context: ComponentActivity) {
                 ?: throw IOException(context.getString(R.string.create_downloads_file_error))
             val contentStream = contentResolver.openOutputStream(contentUri)
                 ?: throw IOException(context.getString(R.string.create_downloads_file_error))
-            @Suppress("DEPRECATION") var cursor = contentResolver.query(contentUri, arrayOf(MediaColumns.DATA), null, null, null)
+            var cursor = contentResolver.query(contentUri, arrayOf(MediaColumns.DATA), null, null, null)
             var path: String? = null
             if (cursor != null) {
                 try {
@@ -83,7 +83,7 @@ class DownloadsFileSaver(private val context: ComponentActivity) {
                     return@withContext null
                 }
             }
-            @Suppress("DEPRECATION") val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             withContext(Dispatchers.IO) {
                 val file = File(path, name)
                 if (!path.isDirectory && !path.mkdirs())

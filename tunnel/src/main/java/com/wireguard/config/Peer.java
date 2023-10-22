@@ -85,9 +85,8 @@ public final class Peer {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Peer))
+        if (!(obj instanceof final Peer other))
             return false;
-        final Peer other = (Peer) obj;
         return allowedIps.equals(other.allowedIps)
                 && endpoint.equals(other.endpoint)
                 && persistentKeepalive.equals(other.persistentKeepalive)

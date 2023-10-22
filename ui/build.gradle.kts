@@ -61,6 +61,7 @@ android {
         disable += "LongLogTag"
         warning += "MissingTranslation"
         warning += "ImpliedQuantity"
+        baseline = file("lint-baseline.xml")
     }
 }
 

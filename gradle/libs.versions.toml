@@ -1,6 +1,6 @@
 [versions]
-agp = "8.2.0-beta06"
-kotlin = "1.9.0"
+agp = "8.3.0-alpha09"
+kotlin = "1.9.10"
 
 [libraries]
 androidx-activity-ktx = "androidx.activity:activity-ktx:1.8.0"
@@ -19,7 +19,7 @@ desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.0.3"
 google-material = "com.google.android.material:material:1.10.0"
 jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 junit = "junit:junit:4.13.2"
-kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0"
+kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 zxing-android-embedded = "com.journeyapps:zxing-android-embedded:4.3.0"
 
 [plugins]

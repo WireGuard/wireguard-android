@@ -7,7 +7,9 @@ package com.wireguard.android.backend;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.net.VpnService.Builder;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 import android.util.Log;
@@ -24,7 +26,6 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -32,6 +33,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
@@ -43,6 +45,7 @@ import androidx.collection.ArraySet;
 @NonNullForAll
 public final class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
+    private static final Pattern COMPILE = Pattern.compile("\\n");
     private static final String TAG = "WireGuard/GoBackend";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
     private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
@@ -127,7 +130,7 @@ public final class GoBackend implements Backend {
         long rx = 0;
         long tx = 0;
         long latestHandshakeMSec = 0;
-        for (final String line : config.split("\\n")) {
+        for (final String line : COMPILE.split(config)) {
             if (line.startsWith("public_key=")) {
                 if (key != null)
                     stats.add(key, rx, tx, latestHandshakeMSec);
@@ -212,7 +215,7 @@ public final class GoBackend implements Backend {
             if (currentTunnel != null)
                 setStateInternal(currentTunnel, null, State.DOWN);
             try {
-                setStateInternal(tunnel, config, state);
+                setStateInternal(tunnel, config, State.UP);
             } catch (final Exception e) {
                 if (originalTunnel != null)
                     setStateInternal(originalTunnel, originalConfig, State.UP);
@@ -232,7 +235,7 @@ public final class GoBackend implements Backend {
             if (config == null)
                 throw new BackendException(Reason.TUNNEL_MISSING_CONFIG);
 
-            if (VpnService.prepare(context) != null)
+            if (android.net.VpnService.prepare(context) != null)
                 throw new BackendException(Reason.VPN_NOT_AUTHORIZED);
 
             final VpnService service;
@@ -278,7 +281,7 @@ public final class GoBackend implements Backend {
             final String goConfig = config.toWgUserspaceString();
 
             // Create the vpn tunnel with android API
-            final VpnService.Builder builder = service.getBuilder();
+            final Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
 
             for (final String excludedApplication : config.getInterface().getExcludedApplications())
@@ -313,9 +316,9 @@ public final class GoBackend implements Backend {
 
             builder.setMtu(config.getInterface().getMtu().orElse(1280));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            if (VERSION.SDK_INT >= VERSION_CODES.Q)
                 builder.setMetered(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (VERSION.SDK_INT >= VERSION_CODES.M)
                 service.setUnderlyingNetworks(null);
 
             builder.setBlocking(true);
@@ -338,7 +341,7 @@ public final class GoBackend implements Backend {
                 Log.w(TAG, "Tunnel already down");
                 return;
             }
-            int handleToClose = currentTunnelHandle;
+            final int handleToClose = currentTunnelHandle;
             currentTunnel = null;
             currentTunnelHandle = -1;
             currentConfig = null;

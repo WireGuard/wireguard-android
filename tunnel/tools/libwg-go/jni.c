@@ -69,3 +69,5 @@ JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion
 	free(version);
 	return ret;
 }
+
+

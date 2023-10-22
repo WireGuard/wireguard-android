@@ -117,7 +117,7 @@ public final class ToolsInstaller {
         for (int i = 0; i < files.length; ++i) {
             files[i] = new File(localBinaryDir, EXECUTABLES[i]);
             tempFiles[i] = new File(localBinaryDir, EXECUTABLES[i] + ".tmp");
-            allExist &= files[i].exists();
+            allExist = allExist && files[i].exists();
         }
         if (allExist)
             return false;
@@ -148,7 +148,7 @@ public final class ToolsInstaller {
         script.append("printf 'id=wireguard\nname=WireGuard Command Line Tools\nversion=1.0\nversionCode=1\nauthor=zx2c4\ndescription=Command line tools for WireGuard\nminMagisk=1500\n' > /data/adb/modules/wireguard/module.prop; ");
         script.append("touch /data/adb/modules/wireguard/auto_mount; ");
         for (final String name : EXECUTABLES) {
-            final File destination = new File("/data/adb/modules/wireguard" + INSTALL_DIR, name);
+            final File destination = new File("/data/adb/modules/wireguard%s".formatted(INSTALL_DIR), name);
             script.append(String.format("cp '%s' '%s'; chmod 755 '%s'; chcon 'u:object_r:system_file:s0' '%s' || true; ",
                     new File(localBinaryDir, name), destination, destination, destination));
         }

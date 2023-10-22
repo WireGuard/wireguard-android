@@ -114,9 +114,8 @@ public final class Config {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Config))
+        if (!(obj instanceof final Config other))
             return false;
-        final Config other = (Config) obj;
         return interfaze.equals(other.interfaze) && peers.equals(other.peers);
     }
 

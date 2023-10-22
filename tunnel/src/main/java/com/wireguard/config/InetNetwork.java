@@ -53,9 +53,8 @@ public final class InetNetwork {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof InetNetwork))
+        if (!(obj instanceof final InetNetwork other))
             return false;
-        final InetNetwork other = (InetNetwork) obj;
         return address.equals(other.address) && mask == other.mask;
     }
 

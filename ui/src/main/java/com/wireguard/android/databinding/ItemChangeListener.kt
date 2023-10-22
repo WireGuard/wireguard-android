@@ -46,7 +46,7 @@ internal class ItemChangeListener<T>(private val container: ViewGroup, private v
         }
     }
 
-    private class OnListChangedCallback<T> constructor(listener: ItemChangeListener<T>) : ObservableList.OnListChangedCallback<ObservableList<T>>() {
+    private class OnListChangedCallback<T>(listener: ItemChangeListener<T>) : ObservableList.OnListChangedCallback<ObservableList<T>>() {
         private val weakListener: WeakReference<ItemChangeListener<T>> = WeakReference(listener)
 
         override fun onChanged(sender: ObservableList<T>) {

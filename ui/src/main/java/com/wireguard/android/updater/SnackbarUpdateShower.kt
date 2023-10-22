@@ -5,6 +5,7 @@
 
 package com.wireguard.android.updater
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.view.View
@@ -22,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 import kotlin.time.Duration.Companion.seconds
 
 class SnackbarUpdateShower(private val fragment: Fragment) {
@@ -95,6 +97,7 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
         }
     }
 
+    @SuppressLint("UnsafeImplicitIntentLaunch")
     fun attach(view: View, anchor: View?) {
         val snackbar = SwapableSnackbar(fragment, view, anchor)
         val context = fragment.requireContext()
@@ -164,7 +167,7 @@ class SnackbarUpdateShower(private val fragment: Fragment) {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             context.startActivity(intent)
-                            System.exit(0)
+                            exitProcess(0)
                         }.show()
                 }
             }

@@ -29,8 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 
@@ -41,6 +43,7 @@ import androidx.annotation.Nullable;
 
 @NonNullForAll
 public final class WgQuickBackend implements Backend {
+    private static final Pattern COMPILE = Pattern.compile("\\t");
     private static final String TAG = "WireGuard/WgQuickBackend";
     private final File localTemporaryDir;
     private final RootShell rootShell;
@@ -90,7 +93,7 @@ public final class WgQuickBackend implements Backend {
             return stats;
         }
         for (final String line : output) {
-            final String[] parts = line.split("\\t");
+            final String[] parts = COMPILE.split(line);
             if (parts.length != 8)
                 continue;
             try {
@@ -127,9 +130,9 @@ public final class WgQuickBackend implements Backend {
         if (state == State.UP) {
             toolsInstaller.ensureToolsAvailable();
             if (!multipleTunnels && originalState == State.DOWN) {
-                final List<Pair<Tunnel, Config>> rewind = new LinkedList<>();
+                final Collection<Pair<Tunnel, Config>> rewind = new LinkedList<>();
                 try {
-                    for (final Map.Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
+                    for (final Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
                         setStateInternal(entry.getKey(), entry.getValue(), State.DOWN);
                         rewind.add(Pair.create(entry.getKey(), entry.getValue()));
                     }
@@ -153,7 +156,7 @@ public final class WgQuickBackend implements Backend {
                         setStateInternal(tunnel, originalConfig, State.UP);
                     }
                     if (!multipleTunnels && originalState == State.DOWN) {
-                        for (final Map.Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
+                        for (final Entry<Tunnel, Config> entry : runningConfigsSnapshot.entrySet()) {
                             setStateInternal(entry.getKey(), entry.getValue(), State.UP);
                         }
                     }

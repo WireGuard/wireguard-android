@@ -26,8 +26,8 @@ object BiometricAuthenticator {
     sealed class Result {
         data class Success(val cryptoObject: BiometricPrompt.CryptoObject?) : Result()
         data class Failure(val code: Int?, val message: CharSequence) : Result()
-        object HardwareUnavailableOrDisabled : Result()
-        object Cancelled : Result()
+        data object HardwareUnavailableOrDisabled : Result()
+        data object Cancelled : Result()
     }
 
     fun authenticate(

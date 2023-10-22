@@ -72,7 +72,7 @@ object Updater {
     fun installerIsGooglePlay(context: Context): Boolean = installer(context) == "com.android.vending"
 
     sealed class Progress {
-        object Complete : Progress()
+        data object Complete : Progress()
         class Available(val version: String) : Progress() {
             fun update() {
                 applicationScope.launch {
@@ -81,9 +81,9 @@ object Updater {
             }
         }
 
-        object Rechecking : Progress()
+        data object Rechecking : Progress()
         class Downloading(val bytesDownloaded: ULong, val bytesTotal: ULong) : Progress()
-        object Installing : Progress()
+        data object Installing : Progress()
         class NeedsUserIntervention(val intent: Intent, private val id: Int) : Progress() {
 
             private suspend fun installerActive(): Boolean {
@@ -263,7 +263,7 @@ object Updater {
         if (connection.responseCode != HttpURLConnection.HTTP_OK)
             throw IOException("Update could not be fetched: ${connection.responseCode}")
 
-        var downloadedByteLen: ULong = 0UL
+        var downloadedByteLen = 0UL
         val totalByteLen = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) connection.contentLengthLong else connection.contentLength).toLong().toULong()
         val fileBytes = ByteArray(1024 * 32 /* 32 KiB */)
         val digest = MessageDigest.getInstance("SHA-256")

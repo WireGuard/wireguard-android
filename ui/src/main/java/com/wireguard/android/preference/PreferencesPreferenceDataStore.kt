@@ -39,7 +39,7 @@ class PreferencesPreferenceDataStore(private val coroutineScope: CoroutineScope,
         val filteredValues = values?.filterNotNull()?.toSet()
         coroutineScope.launch {
             dataStore.edit {
-                if (filteredValues == null || filteredValues.isEmpty()) it.remove(pk)
+                if (filteredValues.isNullOrEmpty()) it.remove(pk)
                 else it[pk] = filteredValues
             }
         }
