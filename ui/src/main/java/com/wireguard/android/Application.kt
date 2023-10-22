@@ -4,8 +4,6 @@
  */
 package com.wireguard.android
 
-import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -39,6 +37,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 import java.util.Locale
+import kotlin.system.exitProcess
 
 class Application : android.app.Application() {
     private val futureBackend = CompletableDeferred<Backend>()
@@ -48,18 +47,6 @@ class Application : android.app.Application() {
     private lateinit var preferencesDataStore: DataStore<Preferences>
     private lateinit var toolsInstaller: ToolsInstaller
     private lateinit var tunnelManager: TunnelManager
-
-    override fun attachBaseContext(context: Context) {
-        super.attachBaseContext(context)
-        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_HOME)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            System.exit(0)
-        }
-    }
 
     private suspend fun determineBackend(): Backend {
         var backend: Backend? = null

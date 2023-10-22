@@ -4,6 +4,7 @@
  */
 package com.wireguard.android
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
@@ -51,6 +52,7 @@ class QuickTileService : TileService() {
         return ret
     }
 
+    @SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         when (val tunnel = tunnel) {
             null -> {
