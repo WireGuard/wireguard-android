@@ -10,18 +10,22 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.Application
 import com.wireguard.android.R
 import com.wireguard.android.fragment.ConfigNamingDialogFragment
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipEntry
@@ -110,16 +114,34 @@ object TunnelImporter {
         }
     }
 
-    fun importTunnel(parentFragmentManager: FragmentManager, configText: String, messageCallback: (CharSequence) -> Unit) {
+    suspend fun importTunnel(parentFragmentManager: FragmentManager, configText: String, messageCallback: (CharSequence) -> Unit) {
         try {
             // Ensure the config text is parseable before proceeding…
-            Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
+            val config = try {
+                Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
+            }
+            catch (e: Throwable) {
+                when (e) {
+                    is BadConfigException, is IOException -> throw IllegalArgumentException("Invalid config passed to ${javaClass.simpleName}", e)
+                    else -> throw e
+                }
+            }
 
-            // Config text is valid, now create the tunnel…
-            ConfigNamingDialogFragment.newInstance(configText).show(parentFragmentManager, null)
+            val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
+            Application.getTunnelManager().create(companyName.toString(), config)
+
         } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)
         }
+    }
+
+    private fun getCompanyName(text: String) : String? {
+        val pattern = "#company (.+)".toRegex()
+
+        val matchResult = pattern.find(text)
+        matchResult?.groupValues?.get(1)?.let {
+            return it
+        } ?: return null;
     }
 
     private fun onTunnelImportFinished(tunnels: List<ObservableTunnel>, throwables: Collection<Throwable>, messageCallback: (CharSequence) -> Unit) {
