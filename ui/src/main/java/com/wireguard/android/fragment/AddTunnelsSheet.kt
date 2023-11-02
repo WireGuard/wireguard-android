@@ -57,14 +57,6 @@ class AddTunnelsSheet : BottomSheetDialogFragment() {
                     peekHeight = 0
                     addBottomSheetCallback(bottomSheetCallback)
                 }
-                dialog.findViewById<View>(R.id.create_empty)?.setOnClickListener {
-                    dismiss()
-                    onRequestCreateConfig()
-                }
-                dialog.findViewById<View>(R.id.create_from_file)?.setOnClickListener {
-                    dismiss()
-                    onRequestImportConfig()
-                }
                 dialog.findViewById<View>(R.id.create_from_qrcode)?.setOnClickListener {
                     dismiss()
                     onRequestScanQRCode()
