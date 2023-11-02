@@ -2,7 +2,6 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
     <com.wireguard.android.preference.VersionPreference
-        android:icon="@mipmap/ic_launcher"
         android:key="version" />
     <com.wireguard.android.preference.QuickTilePreference android:key="quick_tile" />
     <Preference

@@ -56,8 +56,8 @@
                 android:layout_height="140dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
-                android:alpha="0.3333333"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_launcher_foreground"
+                style="@style/LogoStyle"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                 android:layout_marginStart="@dimen/tunnel_list_placeholder_margin"
                 android:layout_marginEnd="@dimen/tunnel_list_placeholder_margin"
                 android:text="@string/tunnel_list_placeholder"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
