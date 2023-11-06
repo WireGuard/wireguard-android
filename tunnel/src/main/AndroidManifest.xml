@@ -7,7 +7,7 @@
 
     <application>
         <service
-            android:name="com.wireguard.android.backend.GoBackend$VpnService"
+            android:name="com.jimberisolation.android.backend.GoBackend$VpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:exported="false">
             <intent-filter>

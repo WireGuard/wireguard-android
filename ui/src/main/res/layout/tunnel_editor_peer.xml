@@ -6,21 +6,21 @@
 
         <import type="android.view.View" />
 
-        <import type="com.wireguard.android.widget.KeyInputFilter" />
+        <import type="com.jimberisolation.android.widget.KeyInputFilter" />
 
-        <import type="com.wireguard.android.databinding.BindingAdapters" />
+        <import type="com.jimberisolation.android.databinding.BindingAdapters" />
 
         <variable
             name="collection"
-            type="androidx.databinding.ObservableList&lt;com.wireguard.android.viewmodel.PeerProxy&gt;" />
+            type="androidx.databinding.ObservableList&lt;com.jimberisolation.android.viewmodel.PeerProxy&gt;" />
 
         <variable
             name="item"
-            type="com.wireguard.android.viewmodel.PeerProxy" />
+            type="com.jimberisolation.android.viewmodel.PeerProxy" />
 
         <variable
             name="fragment"
-            type="com.wireguard.android.fragment.TunnelEditorFragment" />
+            type="com.jimberisolation.android.fragment.TunnelEditorFragment" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

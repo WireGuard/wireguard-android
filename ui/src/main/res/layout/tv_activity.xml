@@ -7,9 +7,9 @@
 
         <import type="android.view.View" />
 
-        <import type="com.wireguard.android.model.ObservableTunnel" />
+        <import type="com.jimberisolation.android.model.ObservableTunnel" />
 
-        <import type="com.wireguard.android.activity.TvMainActivity.KeyedFile" />
+        <import type="com.jimberisolation.android.activity.TvMainActivity.KeyedFile" />
 
         <variable
             name="isDeleting"
@@ -17,7 +17,7 @@
 
         <variable
             name="files"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, KeyedFile&gt;" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedArrayList&lt;String, KeyedFile&gt;" />
 
         <variable
             name="filesRoot"
@@ -25,15 +25,15 @@
 
         <variable
             name="tunnels"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
 
         <variable
             name="tunnelRowConfigurationHandler"
-            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
 
         <variable
             name="filesRowConfigurationHandler"
-            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

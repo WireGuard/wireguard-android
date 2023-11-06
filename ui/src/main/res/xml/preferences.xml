@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
-    <com.wireguard.android.preference.VersionPreference
+    <com.jimberisolation.android.preference.VersionPreference
         android:key="version"
         android:icon="@drawable/ic_launcher_foreground"/>
-    <com.wireguard.android.preference.QuickTilePreference android:key="quick_tile" />
+    <com.jimberisolation.android.preference.QuickTilePreference android:key="quick_tile" />
     <Preference
         android:key="log_viewer"
         android:singleLineTitle="false"

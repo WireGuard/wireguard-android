@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.wireguard.android.widget.NameInputFilter" />
+        <import type="com.jimberisolation.android.widget.NameInputFilter" />
     </data>
 
     <FrameLayout

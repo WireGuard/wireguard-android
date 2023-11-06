@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jimberisolation.android"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly">
 
@@ -125,9 +126,9 @@
             android:exported="true"
             android:permission="${applicationId}.permission.CONTROL_TUNNELS">
             <intent-filter>
-                <action android:name="com.wireguard.android.action.REFRESH_TUNNEL_STATES" />
-                <action android:name="com.wireguard.android.action.SET_TUNNEL_UP" />
-                <action android:name="com.wireguard.android.action.SET_TUNNEL_DOWN" />
+                <action android:name="com.jimberisolation.android.action.REFRESH_TUNNEL_STATES" />
+                <action android:name="com.jimberisolation.android.action.SET_TUNNEL_UP" />
+                <action android:name="com.jimberisolation.android.action.SET_TUNNEL_DOWN" />
             </intent-filter>
         </receiver>
 

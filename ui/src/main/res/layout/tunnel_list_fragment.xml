@@ -5,19 +5,19 @@
 
     <data>
 
-        <import type="com.wireguard.android.model.ObservableTunnel" />
+        <import type="com.jimberisolation.android.model.ObservableTunnel" />
 
         <variable
             name="fragment"
-            type="com.wireguard.android.fragment.TunnelListFragment" />
+            type="com.jimberisolation.android.fragment.TunnelListFragment" />
 
         <variable
             name="rowConfigurationHandler"
-            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
 
         <variable
             name="tunnels"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

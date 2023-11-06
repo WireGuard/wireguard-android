@@ -93,9 +93,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:https://git.zx2c4.com/wireguard-android")
-                    developerConnection.set("scm:git:https://git.zx2c4.com/wireguard-android")
-                    url.set("https://git.zx2c4.com/wireguard-android")
+                    connection.set("scm:git:https://git.zx2c4.com.jimberisolation.android")
+                    developerConnection.set("scm:git:https://git.zx2c4.com.jimberisolation.android")
+                    url.set("https://git.zx2c4.com.jimberisolation.android")
                 }
                 developers {
                     organization {

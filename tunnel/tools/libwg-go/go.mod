@@ -1,4 +1,4 @@
-module golang.zx2c4.com/wireguard/android
+module golang.zx2c4.com.jimberisolation.android
 
 go 1.20
 

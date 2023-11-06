@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detail_container"
-        android:name="com.wireguard.android.fragment.TunnelListFragment"
+        android:name="com.jimberisolation.android.fragment.TunnelListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="LIST" />

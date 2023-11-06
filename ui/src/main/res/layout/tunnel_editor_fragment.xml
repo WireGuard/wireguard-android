@@ -5,19 +5,19 @@
 
     <data>
 
-        <import type="com.wireguard.android.util.ClipboardUtils" />
+        <import type="com.jimberisolation.android.util.ClipboardUtils" />
 
-        <import type="com.wireguard.android.widget.KeyInputFilter" />
+        <import type="com.jimberisolation.android.widget.KeyInputFilter" />
 
-        <import type="com.wireguard.android.widget.NameInputFilter" />
+        <import type="com.jimberisolation.android.widget.NameInputFilter" />
 
         <variable
             name="fragment"
-            type="com.wireguard.android.fragment.TunnelEditorFragment" />
+            type="com.jimberisolation.android.fragment.TunnelEditorFragment" />
 
         <variable
             name="config"
-            type="com.wireguard.android.viewmodel.ConfigProxy" />
+            type="com.jimberisolation.android.viewmodel.ConfigProxy" />
 
         <variable
             name="name"

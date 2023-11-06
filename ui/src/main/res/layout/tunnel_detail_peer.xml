@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.wireguard.android.util.ClipboardUtils" />
+        <import type="com.jimberisolation.android.util.ClipboardUtils" />
 
         <variable
             name="item"

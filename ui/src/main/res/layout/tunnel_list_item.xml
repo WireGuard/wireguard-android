@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.wireguard.android.model.ObservableTunnel" />
+        <import type="com.jimberisolation.android.model.ObservableTunnel" />
 
-        <import type="com.wireguard.android.backend.Tunnel.State" />
+        <import type="com.jimberisolation.android.backend.Tunnel.State" />
 
         <variable
             name="collection"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+            type="com.jimberisolation.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
 
         <variable
             name="key"
@@ -19,14 +19,14 @@
 
         <variable
             name="item"
-            type="com.wireguard.android.model.ObservableTunnel" />
+            type="com.jimberisolation.android.model.ObservableTunnel" />
 
         <variable
             name="fragment"
-            type="com.wireguard.android.fragment.TunnelListFragment" />
+            type="com.jimberisolation.android.fragment.TunnelListFragment" />
     </data>
 
-    <com.wireguard.android.widget.MultiselectableRelativeLayout
+    <com.jimberisolation.android.widget.MultiselectableRelativeLayout
         android:id="@+id/tunnel_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="@sample/interface_names.json/names/names/name" />
 
-        <com.wireguard.android.widget.ToggleSwitch
+        <com.jimberisolation.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,5 +59,5 @@
             app:checked="@{item.state == State.UP}"
             app:onBeforeCheckedChanged="@{fragment::setTunnelState}"
             tools:checked="@sample/interface_names.json/names/checked/checked" />
-    </com.wireguard.android.widget.MultiselectableRelativeLayout>
+    </com.jimberisolation.android.widget.MultiselectableRelativeLayout>
 </layout>

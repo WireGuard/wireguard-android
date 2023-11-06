@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.wireguard.android.activity.TvMainActivity.KeyedFile" />
+        <import type="com.jimberisolation.android.activity.TvMainActivity.KeyedFile" />
 
         <variable
             name="key"
