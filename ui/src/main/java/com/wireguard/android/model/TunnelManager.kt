@@ -123,6 +123,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     private suspend fun loadOrUnloadWifiWorker() {
+        if(!tunnels.isCompleted) return; // This should be loaded only if the tunnels have all been properly initialized
         val workerTag = "WIFI_WORKER"
         val hasAnyTunnelsNeedingWifi =
             getTunnels().any { tunnel -> getTunnelState(tunnel) == Tunnel.State.UP && tunnel.getConfigAsync().isAutoDisconnectEnabled }
@@ -294,19 +295,29 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     class GenericWifiWorker(val context: Context) {
+        private val initWifiName: String?;
+        init{
+            initWifiName = getCurrentWifiName()
+        }
+        private fun getCurrentWifiName(): String? {
+            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val ssid: String? = wifiManager.connectionInfo.ssid.run {
+                when {
+                    this.contains("<unknown ssid>") -> null
+                    this.startsWith("\"") -> this.substring(1, this.length - 1)
+                    else -> null
+                }
+            }
+            return ssid
+        }
+
         private var connectivityManager =
             context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         private var networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                val ssid: String? = wifiManager.connectionInfo.ssid.run {
-                    when {
-                        this.contains("<unknown ssid>") -> null
-                        this.startsWith("\"") -> this.substring(1, this.length - 1)
-                        else -> null
-                    }
-                }
+                val ssid = getCurrentWifiName()
+                if(ssid == initWifiName) return;
 
                 applicationScope.launch {
                     if (ssid == null) {
