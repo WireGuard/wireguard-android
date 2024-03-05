@@ -6,6 +6,7 @@
 package com.wireguard.android.backend;
 
 import android.content.Context;
+import android.net.VpnService;
 import android.util.Log;
 import android.util.Pair;
 
@@ -114,7 +115,7 @@ public final class WgQuickBackend implements Backend {
     }
 
     @Override
-    public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
+    public State setState(final Tunnel tunnel, State state, @Nullable final Config config,List<String>blockedApps) throws Exception {
         final State originalState = getState(tunnel);
         final Config originalConfig = runningConfigs.get(tunnel);
         final Map<Tunnel, Config> runningConfigsSnapshot = new HashMap<>(runningConfigs);
@@ -164,6 +165,7 @@ public final class WgQuickBackend implements Backend {
         } else if (state == State.DOWN) {
             setStateInternal(tunnel, originalConfig == null ? config : originalConfig, State.DOWN);
         }
+
         return state;
     }
 
@@ -190,6 +192,7 @@ public final class WgQuickBackend implements Backend {
             runningConfigs.put(tunnel, config);
         else
             runningConfigs.remove(tunnel);
+
 
         tunnel.onStateChange(state);
     }

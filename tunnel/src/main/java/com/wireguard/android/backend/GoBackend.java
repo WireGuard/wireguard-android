@@ -26,6 +26,7 @@ import com.wireguard.util.NonNullForAll;
 import java.net.InetAddress;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -199,7 +200,7 @@ public final class GoBackend implements Backend {
      * @throws Exception Exception raised while changing tunnel state.
      */
     @Override
-    public State setState(final Tunnel tunnel, State state, @Nullable final Config config) throws Exception {
+    public State setState(final Tunnel tunnel, State state, @Nullable final Config config, List<String> blockedApps) throws Exception {
         final State originalState = getState(tunnel);
 
         if (state == State.TOGGLE)
@@ -210,21 +211,21 @@ public final class GoBackend implements Backend {
             final Config originalConfig = currentConfig;
             final Tunnel originalTunnel = currentTunnel;
             if (currentTunnel != null)
-                setStateInternal(currentTunnel, null, State.DOWN);
+                setStateInternal(currentTunnel, null, State.DOWN, blockedApps);
             try {
-                setStateInternal(tunnel, config, state);
+                setStateInternal(tunnel, config, state, blockedApps);
             } catch (final Exception e) {
                 if (originalTunnel != null)
-                    setStateInternal(originalTunnel, originalConfig, State.UP);
+                    setStateInternal(originalTunnel, originalConfig, State.UP, blockedApps);
                 throw e;
             }
         } else if (state == State.DOWN && tunnel == currentTunnel) {
-            setStateInternal(tunnel, null, State.DOWN);
+            setStateInternal(tunnel, null, State.DOWN, blockedApps);
         }
         return getState(tunnel);
     }
 
-    private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
+    private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state, List<String> blockedApps)
             throws Exception {
         Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
 
@@ -256,7 +257,8 @@ public final class GoBackend implements Backend {
             }
 
 
-            dnsRetry: for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
+            dnsRetry:
+            for (int i = 0; i < DNS_RESOLUTION_RETRIES; ++i) {
                 // Pre-resolve IPs so they're cached when building the userspace string
                 for (final Peer peer : config.getPeers()) {
                     final InetEndpoint ep = peer.getEndpoint().orElse(null);
@@ -280,6 +282,9 @@ public final class GoBackend implements Backend {
             // Create the vpn tunnel with android API
             final VpnService.Builder builder = service.getBuilder();
             builder.setSession(tunnel.getName());
+            for (int i = 0; i < blockedApps.size(); i++) {
+                builder.addDisallowedApplication(blockedApps.get(i));
+            }
 
             for (final String excludedApplication : config.getInterface().getExcludedApplications())
                 builder.addDisallowedApplication(excludedApplication);
@@ -345,7 +350,8 @@ public final class GoBackend implements Backend {
             wgTurnOff(handleToClose);
             try {
                 vpnService.get(0, TimeUnit.NANOSECONDS).stopSelf();
-            } catch (final TimeoutException ignored) { }
+            } catch (final TimeoutException ignored) {
+            }
         }
 
         tunnel.onStateChange(state);

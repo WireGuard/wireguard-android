@@ -8,6 +8,7 @@ package com.wireguard.android.backend;
 import com.wireguard.config.Config;
 import com.wireguard.util.NonNullForAll;
 
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
@@ -63,5 +64,5 @@ public interface Backend {
      * @return The updated state of the tunnel.
      * @throws Exception Exception raised while changing state.
      */
-    Tunnel.State setState(Tunnel tunnel, Tunnel.State state, @Nullable Config config) throws Exception;
+    Tunnel.State setState(Tunnel tunnel, Tunnel.State state, @Nullable Config config, List<String> blockedApps) throws Exception;
 }

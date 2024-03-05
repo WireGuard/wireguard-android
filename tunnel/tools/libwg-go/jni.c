@@ -6,6 +6,8 @@
 #include <jni.h>
 #include <stdlib.h>
 #include <string.h>
+#include <jni.h>
+#include <jni.h>
 
 struct go_string { const char *str; long n; };
 extern int wgTurnOn(struct go_string ifname, int tun_fd, struct go_string settings);
@@ -59,7 +61,12 @@ JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetConf
 	return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
+JNIEXPORT jstring
+JNIEXPORT jstring
+
+JNIEXPORT void JNICALL
+
+JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
 {
 	jstring ret;
 	char *version = wgVersion();
@@ -69,3 +76,5 @@ JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion
 	free(version);
 	return ret;
 }
+
+
