@@ -187,7 +187,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         if (previouslyRunning.isEmpty()) return
         withContext(Dispatchers.IO) {
             try {
-                tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(Dispatchers.IO + SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }
+                tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(Dispatchers.IO + SupervisorJob()) { setTunnelState(it, Tunnel.State.UP, Tunnel.StateChangeReason.AUTO_START) } }
                     .awaitAll()
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
@@ -241,7 +241,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         newName!!
     }
 
-    suspend fun setTunnelState(tunnel: ObservableTunnel, state: Tunnel.State): Tunnel.State = withContext(Dispatchers.Main.immediate) {
+    suspend fun setTunnelState(tunnel: ObservableTunnel, state: Tunnel.State, reason: Tunnel.StateChangeReason): Tunnel.State = withContext(Dispatchers.Main.immediate) {
         var newState = tunnel.state
         var throwable: Throwable? = null
         try {
@@ -255,11 +255,13 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         saveState()
         if (throwable != null)
             throw throwable
-        try {
-            if (tunnel.getConfigAsync().isAutoDisconnectEnabled)
-                loadOrUnloadWifiWorker()
-        } catch (e: Throwable) {
-            // Ignore
+        if(reason != Tunnel.StateChangeReason.AUTO_START){
+            try {
+                if (tunnel.getConfigAsync().isAutoDisconnectEnabled)
+                    loadOrUnloadWifiWorker()
+            } catch (e: Throwable) {
+                // Ignore
+            }
         }
         newState
     }
@@ -286,7 +288,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 val tunnels = manager.getTunnels()
                 val tunnel = tunnels[tunnelName] ?: return@launch
                 try {
-                    manager.setTunnelState(tunnel, state)
+                    manager.setTunnelState(tunnel, state, Tunnel.StateChangeReason.EXTERNAL_INTENT)
                 } catch (e: Throwable) {
                     Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_LONG).show()
                 }
@@ -330,7 +332,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     }
                     tunnels.forEach { tunnel ->
                         try {
-                            manager.setTunnelState(tunnel, Tunnel.State.DOWN)
+                            manager.setTunnelState(tunnel, Tunnel.State.DOWN, Tunnel.StateChangeReason.WIFI_WORKER)
                             Log.d(WIFI_TAG, "Disabled tunnel ${tunnel.name}")
                         } catch (e: Throwable) {
                             Log.d(WIFI_TAG, ErrorMessages[e])
