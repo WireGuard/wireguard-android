@@ -80,7 +80,18 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.zxing.android.embedded)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.google.play.services.auth)
     coreLibraryDesugaring(libs.desugarJdkLibs)
+
+    implementation("com.microsoft.identity.client:msal:4.9.0") {
+        exclude(group = "io.opentelemetry")
+    }
+    implementation("io.opentelemetry:opentelemetry-api:1.18.0")
+    implementation("io.opentelemetry:opentelemetry-context:1.18.0")
+    implementation("io.ktor:ktor-client-core:2.2.3") // Check for the latest version
+    implementation("io.ktor:ktor-client-cio:2.2.3")  // CIO engine for making requests
+    implementation("io.ktor:ktor-client-json:2.2.3")
+    implementation("io.ktor:ktor-client-serialization:2.2.3")
 }
 
 tasks.withType<JavaCompile>().configureEach {

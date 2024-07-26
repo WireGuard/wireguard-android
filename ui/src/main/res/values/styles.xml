@@ -41,4 +41,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="Button.Colored" parent="ThemeOverlay.AppCompat">
+        <item name="background">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
 </resources>

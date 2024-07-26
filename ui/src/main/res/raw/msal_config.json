@@ -1,0 +1,16 @@
+{
+  "client_id" : "33f8bdd0-ddb6-4f0f-8b40-2a958b02b2f3",
+  "authorization_user_agent" : "DEFAULT",
+  "redirect_uri" : "msauth://com.jimberisolation.android/ogbJiyyBm5ReTVOMgxI1kiBZ2eE%3D",
+  "broker_redirect_uri_registered": true,
+  "account_mode" : "SINGLE",
+  "authorities" : [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "AzureADMyOrg",
+        "tenant_id": "68e767ea-24db-4f44-bbf7-f5b9f5fe703a"
+      }
+    }
+  ]
+}

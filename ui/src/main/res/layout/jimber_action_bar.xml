@@ -3,19 +3,19 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<LinearLayout
+<androidx.appcompat.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content"
+    android:contentInsetStart="0dp"
+    android:contentInsetEnd="0dp">
 
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/jimber_logo"
         android:src="@drawable/jimber_logo_full"
-        style="@style/LogoStyle" />
+        />
 
-    <!-- You can add other views or adjust the layout as needed -->
-
-</LinearLayout>
+</androidx.appcompat.widget.Toolbar>

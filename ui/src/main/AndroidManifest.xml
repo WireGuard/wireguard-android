@@ -62,7 +62,25 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.GOOGLE_SIGN_IN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+
+        <activity android:exported="true" android:name="com.microsoft.identity.client.BrowserTabActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="com.jimberisolation.android"
+                    android:path="/ogbJiyyBm5ReTVOMgxI1kiBZ2eE="
+                    android:scheme="msauth" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".activity.TvMainActivity"
@@ -88,6 +106,11 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
+        <activity android:name=".activity.WelcomeActivity" />
+
+        <activity android:name=".activity.SignInActivity" />
+        <activity android:name=".activity.AddConnectionActivity" />
 
         <activity
             android:name=".activity.LogViewerActivity"

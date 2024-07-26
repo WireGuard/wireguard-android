@@ -10,34 +10,34 @@
     android:viewportHeight="93">
   <path
       android:pathData="M70.5,5.4l-7,4.2 -0.3,25.4c-0.1,14 -0.6,25.8 -1,26.2 -0.5,0.5 -5.1,-1.6 -10.3,-4.7 -5.2,-3 -10.2,-5.5 -11.2,-5.5 -2.5,-0 -15.7,7.8 -15.7,9.3 0.1,1.7 52.9,32 54.6,31.3 2.2,-0.8 1.6,-90 -0.6,-90.3 -0.8,-0.1 -4.6,1.7 -8.5,4.1z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M27.3,30.3c-14.5,8.4 -26.3,15.7 -26.3,16.3 0,1.1 14,9.4 16,9.4 0.7,-0 10,-5 20.7,-11.2l19.3,-11.2 0,-9.3c0,-8.2 -0.2,-9.3 -1.7,-9.3 -1,0.1 -13.6,6.9 -28,15.3z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M122,26.5l0,4.5 8.5,-0 8.5,-0 0,13.3c0,13.5 -0.7,16.3 -4,16.7 -3.7,0.5 -6.1,-0.2 -8.9,-2.5l-3,-2.6 -2.7,4c-3.1,4.8 -2.6,5.8 4,9 5.4,2.7 13.9,2.8 18.5,0.3 6.4,-3.4 7.1,-6.2 7.1,-27.9l0,-19.3 -14,-0 -14,-0 0,4.5z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M167,46.5l0,24.5 5.5,-0 5.5,-0 0,-24.5 0,-24.5 -5.5,-0 -5.5,-0 0,24.5z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M196,46.5l0,24.5 5,-0 5,-0 0,-16.3 0,-16.2 6.7,13.7 6.7,13.8 3.6,-0 3.6,-0 6.7,-13.8 6.7,-13.7 0,16.2 0,16.3 5,-0 5,-0 0,-24.5 0,-24.5 -6,-0 -6,-0 -7.2,14.5c-4,8 -7.5,14.5 -7.8,14.5 -0.3,-0 -3.8,-6.5 -7.8,-14.5l-7.2,-14.5 -6,-0 -6,-0 0,24.5z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M268,46.5l0,24.7 15.3,-0.4c12.2,-0.3 15.9,-0.7 18.9,-2.1 4.7,-2.4 7.1,-6.1 7.2,-11.3 0.1,-5 -1.6,-8.5 -5.4,-10.7l-2.8,-1.7 3.4,-3.4c3.8,-3.8 4.4,-7.7 1.9,-12.6 -2.8,-5.4 -6.3,-6.4 -23.2,-6.8l-15.3,-0.4 0,24.7zM294.7,32.2c2.3,3 2.3,4.9 -0.2,7.4 -2.2,2.2 -3.2,2.5 -8.8,2.2l-6.2,-0.3 -0.3,-5.3 -0.3,-5.2 7.4,-0c4.8,-0 7.8,0.4 8.4,1.2zM295,51.3c1.9,1 2.5,2 2.5,4.7 0,4.5 -2.8,6 -11.7,6l-6.8,-0 0,-6 0,-6 6.8,-0c3.7,-0 7.8,0.6 9.2,1.3z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M325,46.5l0,24.5 18.5,-0 18.5,-0 0,-4.5 0,-4.5 -13,-0 -13,-0 0,-5.5 0,-5.5 11.5,-0 11.5,-0 0,-4.5 0,-4.5 -11.5,-0 -11.5,-0 0,-5.5 0,-5.5 13,-0 13,-0 0,-4.5 0,-4.5 -18.5,-0 -18.5,-0 0,24.5z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
   <path
       android:pathData="M378,46.4l0,24.6 5.5,-0 5.5,-0 0,-7 0,-7.1 5.7,0.3 5.7,0.3 3.7,6.5 3.6,6.5 6.2,0.3c3.3,0.2 6.1,0.1 6.1,-0.2 0,-0.3 -2,-3.7 -4.5,-7.6 -2.5,-3.9 -4.5,-7.5 -4.5,-8 0,-0.5 0.9,-1.4 2,-2 5.8,-3.1 8,-16.8 3.7,-23 -4.3,-6.4 -7.4,-7.5 -23.9,-7.8l-14.8,-0.4 0,24.6zM404.4,32.1c4.9,2.3 5.7,9.7 1.4,13.6 -1.4,1.3 -4,1.9 -9.4,2.1l-7.4,0.4 0,-8.6 0,-8.6 6.5,-0c3.5,-0 7.5,0.5 8.9,1.1z"
-      android:fillColor="#000000"
-      android:strokeColor="#00000000"/>
+      android:fillColor="@color/jimber_primary"
+      android:strokeColor="@color/jimber_primary"/>
 </vector>

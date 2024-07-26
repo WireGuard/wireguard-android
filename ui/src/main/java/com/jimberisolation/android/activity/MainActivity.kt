@@ -4,8 +4,8 @@
  */
 package com.jimberisolation.android.activity
 
-import android.content.Intent
 import android.os.Bundle
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,10 +15,13 @@ import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
 import com.jimberisolation.android.fragment.TunnelEditorFragment
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.util.applicationScope
+import kotlinx.coroutines.launch
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -56,8 +59,21 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val manager = getTunnelManager()
+        val intent = Intent(this, WelcomeActivity::class.java)
+
+        applicationScope.launch {
+            val tunnels = manager.getTunnels();
+            if(tunnels.size == 0) {
+                startActivity(intent)
+            }
+            else {
+                setContentView(R.layout.main_activity)
+            }
+        }
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+
         actionBar = supportActionBar
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);

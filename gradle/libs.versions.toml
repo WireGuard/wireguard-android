@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.2"
+agp = "8.5.0"
 kotlin = "1.9.0"
 
 [libraries]
@@ -21,6 +21,7 @@ jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
 junit = "junit:junit:4.13.2"
 kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0"
 zxing-android-embedded = "com.journeyapps:zxing-android-embedded:4.3.0"
+google-play-services-auth = "com.google.android.gms:play-services-auth:21.2.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
