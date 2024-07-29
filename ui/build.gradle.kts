@@ -80,9 +80,9 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.zxing.android.embedded)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.google.play.services.auth)
     coreLibraryDesugaring(libs.desugarJdkLibs)
 
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
     implementation("com.microsoft.identity.client:msal:4.9.0") {
         exclude(group = "io.opentelemetry")
     }

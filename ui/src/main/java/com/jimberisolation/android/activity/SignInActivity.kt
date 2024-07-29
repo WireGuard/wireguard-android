@@ -71,7 +71,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("208834336031-0dlfs9fuaepiq3uhcf6fnh06mtohp4u9.apps.googleusercontent.com")
+            .requestIdToken("208834336031-hj9rfh5t47rgeo30ffg8qn159tdlslg2.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -102,6 +102,9 @@ class SignInActivity : AppCompatActivity() {
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
+
+            val b = account.idToken
+
             Log.d("GOEDZO", account.email.toString())
         } catch (e: ApiException) {
             Log.e("ERREURSSS", "ddd", e);
