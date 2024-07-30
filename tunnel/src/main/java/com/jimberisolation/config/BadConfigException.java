@@ -1,11 +1,11 @@
 /*
- * Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.config;
+package com.jimberisolation.config;
 
-import com.wireguard.crypto.KeyFormatException;
+import com.jimberisolation.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import androidx.annotation.Nullable;
@@ -44,7 +44,7 @@ public class BadConfigException extends Exception {
     }
 
     public BadConfigException(final Section section, final Location location,
-                              final ParseException cause) {
+                              final com.jimberisolation.config.ParseException cause) {
         this(section, location, Reason.INVALID_VALUE, cause.getText(), cause);
     }
 

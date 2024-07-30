@@ -92,6 +92,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.2.3")  // CIO engine for making requests
     implementation("io.ktor:ktor-client-json:2.2.3")
     implementation("io.ktor:ktor-client-serialization:2.2.3")
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
 }
 
 tasks.withType<JavaCompile>().configureEach {

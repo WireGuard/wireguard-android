@@ -4,7 +4,7 @@
  */
 package com.jimberisolation.android.configStore
 
-import com.wireguard.config.Config
+import com.jimberisolation.config.Config
 
 /**
  * Interface for persistent storage providers for WireGuard configurations.

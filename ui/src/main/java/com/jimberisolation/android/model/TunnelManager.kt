@@ -24,7 +24,7 @@ import com.jimberisolation.android.databinding.ObservableSortedKeyedArrayList
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.UserKnobs
 import com.jimberisolation.android.util.applicationScope
-import com.wireguard.config.Config
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

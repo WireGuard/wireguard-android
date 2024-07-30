@@ -7,8 +7,8 @@ package com.jimberisolation.android.configStore
 import android.content.Context
 import android.util.Log
 import com.jimberisolation.android.R
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.Config
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.Config
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException

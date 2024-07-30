@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.crypto;
+package com.jimberisolation.crypto;
 
-import com.wireguard.crypto.KeyFormatException.Type;
+import com.jimberisolation.crypto.KeyFormatException.Type;
 import com.wireguard.util.NonNullForAll;
 
 import java.security.MessageDigest;

@@ -32,7 +32,7 @@ import com.jimberisolation.android.util.AdminKnobs
 import com.jimberisolation.android.util.BiometricAuthenticator
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.viewmodel.ConfigProxy
-import com.wireguard.config.Config
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.launch
 
 /**

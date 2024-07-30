@@ -13,8 +13,8 @@ import com.jimberisolation.android.backend.BackendException.Reason;
 import com.jimberisolation.android.backend.Tunnel.State;
 import com.jimberisolation.android.util.RootShell;
 import com.jimberisolation.android.util.ToolsInstaller;
-import com.wireguard.config.Config;
-import com.wireguard.crypto.Key;
+import com.jimberisolation.config.Config;
+import com.jimberisolation.crypto.Key;
 import com.wireguard.util.NonNullForAll;
 
 import java.io.File;

@@ -7,7 +7,7 @@ package com.jimberisolation.android.backend;
 
 import android.os.SystemClock;
 
-import com.wireguard.crypto.Key;
+import com.jimberisolation.crypto.Key;
 import com.wireguard.util.NonNullForAll;
 
 import java.util.HashMap;
@@ -32,11 +32,11 @@ public class Statistics {
      * Add a peer and its current stats to the internal map.
      *
      * @param key               A WireGuard public key bound to a particular peer
-     * @param rxBytes           The received traffic for the {@link com.wireguard.config.Peer} referenced by
+     * @param rxBytes           The received traffic for the {@link com.jimberisolation.config.Peer} referenced by
      *                          the provided {@link Key}. This value is in bytes
-     * @param txBytes           The transmitted traffic for the {@link com.wireguard.config.Peer} referenced by
+     * @param txBytes           The transmitted traffic for the {@link com.jimberisolation.config.Peer} referenced by
      *                          the provided {@link Key}. This value is in bytes.
-     * @param latestHandshake   The timestamp of the latest handshake for the {@link com.wireguard.config.Peer}
+     * @param latestHandshake   The timestamp of the latest handshake for the {@link com.jimberisolation.config.Peer}
      *                          referenced by the provided {@link Key}. The value is in epoch milliseconds.
      */
     void add(final Key key, final long rxBytes, final long txBytes, final long latestHandshake) {
@@ -54,9 +54,9 @@ public class Statistics {
     }
 
     /**
-     * Get the statistics for the {@link com.wireguard.config.Peer} referenced by the provided {@link Key}
+     * Get the statistics for the {@link com.jimberisolation.config.Peer} referenced by the provided {@link Key}
      *
-     * @param peer A {@link Key} representing a {@link com.wireguard.config.Peer}.
+     * @param peer A {@link Key} representing a {@link com.jimberisolation.config.Peer}.
      * @return a {@link PeerStats} representing various statistics about this peer.
      */
     @Nullable
@@ -68,7 +68,7 @@ public class Statistics {
      * Get the list of peers being tracked by this instance.
      *
      * @return An array of {@link Key} instances representing WireGuard
-     * {@link com.wireguard.config.Peer}s
+     * {@link com.jimberisolation.config.Peer}s
      */
     public Key[] peers() {
         return stats.keySet().toArray(new Key[0]);

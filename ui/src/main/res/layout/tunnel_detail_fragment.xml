@@ -19,7 +19,7 @@
 
         <variable
             name="config"
-            type="com.wireguard.config.Config" />
+            type="com.jimberisolation.config.Config" />
     </data>
 
     <ScrollView

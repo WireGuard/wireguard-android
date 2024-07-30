@@ -24,8 +24,8 @@ import com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapte
 import com.jimberisolation.android.widget.ToggleSwitch
 import com.jimberisolation.android.widget.ToggleSwitch.OnBeforeCheckedChangeListener
 import com.jimberisolation.android.widget.TvCardView
-import com.wireguard.config.Attribute
-import com.wireguard.config.InetNetwork
+import com.jimberisolation.config.Attribute
+import com.jimberisolation.config.InetNetwork
 import java.net.InetAddress
 import java.util.Optional
 

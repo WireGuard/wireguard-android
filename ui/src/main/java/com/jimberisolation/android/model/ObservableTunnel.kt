@@ -12,7 +12,7 @@ import com.jimberisolation.android.backend.Statistics
 import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.Keyed
 import com.jimberisolation.android.util.applicationScope
-import com.wireguard.config.Config
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

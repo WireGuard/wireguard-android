@@ -60,7 +60,7 @@ class TunnelListFragment : BaseFragment() {
                 try {
                     val qrCodeFromFileScanner = QrCodeFromFileScanner(contentResolver, QRCodeReader())
                     val result = qrCodeFromFileScanner.scan(data)
-                    TunnelImporter.importTunnel(parentFragmentManager, result.text) { showSnackbar(it) }
+                    TunnelImporter.importTunnel(result.text) { showSnackbar(it) }
                 } catch (e: Exception) {
                     val error = ErrorMessages[e]
                     val message = Application.get().resources.getString(R.string.import_error, error)
@@ -77,7 +77,7 @@ class TunnelListFragment : BaseFragment() {
         val qrCode = result.contents
         val activity = activity
         if (qrCode != null && activity != null) {
-            activity.lifecycleScope.launch { TunnelImporter.importTunnel(parentFragmentManager, qrCode) { showSnackbar(it) } }
+            activity.lifecycleScope.launch { TunnelImporter.importTunnel(qrCode) { showSnackbar(it) } }
         }
     }
 

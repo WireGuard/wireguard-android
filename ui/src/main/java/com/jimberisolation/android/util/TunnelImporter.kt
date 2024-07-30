@@ -15,8 +15,8 @@ import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.ConfigNamingDialogFragment
 import com.jimberisolation.android.model.ObservableTunnel
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.Config
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -114,7 +114,7 @@ object TunnelImporter {
         }
     }
 
-    suspend fun importTunnel(parentFragmentManager: FragmentManager, configText: String, messageCallback: (CharSequence) -> Unit) {
+    suspend fun importTunnel(configText: String, messageCallback: (CharSequence) -> Unit) {
         try {
             // Ensure the config text is parseable before proceeding…
             val config = try {

@@ -13,8 +13,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.databinding.ConfigNamingDialogFragmentBinding
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.Config
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.IOException

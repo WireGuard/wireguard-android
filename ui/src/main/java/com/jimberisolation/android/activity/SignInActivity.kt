@@ -1,5 +1,10 @@
 package com.jimberisolation.android.activity
 
+import Company
+import Daemon
+import DnsServer
+import GenerateWireguardConfig
+import NetworkController
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +24,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.jimberisolation.android.R
+import com.jimberisolation.android.util.TunnelImporter
+import com.jimberisolation.android.util.createDaemon
+import com.jimberisolation.android.util.generateEd25519KeyPair
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAuthenticationResult
 import com.microsoft.identity.client.IPublicClientApplication
@@ -26,6 +34,11 @@ import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
+import com.jimberisolation.android.util.getCNCPublicKey
+import com.jimberisolation.android.util.getUserAuthentication
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.Arrays
 
 class SignInActivity : AppCompatActivity() {
@@ -71,7 +84,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("208834336031-hj9rfh5t47rgeo30ffg8qn159tdlslg2.apps.googleusercontent.com")
+            .requestIdToken("107269124183-7i5qr58qcfaar9u4fbeodcs43s61lmtm.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -99,17 +112,42 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
 
-            val b = account.idToken
+            val (authCookie, userId) = getUserAuthentication(account.idToken.toString());
+            val cloudControllerDetails = getCNCPublicKey(authCookie)
 
-            Log.d("GOEDZO", account.email.toString())
+            val createdDaemon = createDaemon(authCookie, userId.toString(), cloudControllerDetails.getString("routerPublicKey"))
+            Log.d( "DATA", cloudControllerDetails.getString("routerPublicKey"))
+            Log.d( "DATA", createdDaemon.toString())
+
+            val (pk, sk) = generateEd25519KeyPair()
+
+            val company = Company("Jimber")
+            val daemon = Daemon(sk, createdDaemon.getString("ipAddress"))
+            val dnsServer = DnsServer(cloudControllerDetails.getString("ipAddress"))
+            val networkController = NetworkController(cloudControllerDetails.getString("routerPublicKey"), cloudControllerDetails.getString("endpointAddress"), 51820)
+            val result = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
+
+            Log.d("NICE",  result)
+
+            GlobalScope.launch {
+                doStuff(result)
+            }
+
         } catch (e: ApiException) {
             Log.e("ERREURSSS", "ddd", e);
         }
     }
+
+
+    suspend fun doStuff(result: String) {
+        TunnelImporter.importTunnel(result) { }
+    }
+
 
     private fun getAuthInteractiveCallback(): AuthenticationCallback {
         return object : AuthenticationCallback {
