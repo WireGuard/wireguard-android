@@ -76,25 +76,6 @@
             android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
             tools:visibility="gone">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/logo_placeholder"
-                android:layout_width="280dp"
-                android:layout_height="280dp"
-                android:layout_gravity="center"
-                android:src="@drawable/jimber_logo_full"
-                style="@style/LogoStyle"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/tunnel_list_placeholder_margin"
-                android:layout_marginEnd="@dimen/tunnel_list_placeholder_margin"
-                android:text="@string/tunnel_list_placeholder"
-                android:textStyle="bold"
-                android:textColor="@color/md_theme_light_primary"
-                android:textSize="24sp" />
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_fab"
                 android:visibility="invisible"
@@ -105,14 +86,6 @@
                 android:nextFocusUp="@id/tunnel_list"
                 app:srcCompat="@drawable/ic_action_add_white" />
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="Sign in with Google" />
         </LinearLayout>
 
 

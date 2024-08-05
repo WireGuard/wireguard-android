@@ -21,38 +21,6 @@
                 android:layout_height="111dp"
                 android:src="@drawable/jimber_logo_full" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="280dp"
-                android:layout_height="50dp"
-                android:text="@string/sign_in_to_your_account"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="40dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="0dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="0dp"
-                android:textStyle="bold"
-                android:backgroundTint="@color/jimber_primary"
-                android:drawableLeft="@drawable/ic_action_sign_in"
-                app:cornerRadius="0dp"
-              />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/add_connection_button"
-                android:layout_width="280dp"
-                android:layout_height="50dp"
-                android:text="Add a connection"
-                android:paddingLeft="15dp"
-                android:paddingTop="0dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="0dp"
-                android:textStyle="bold"
-                android:backgroundTint="@color/jimber_primary"
-                android:drawableLeft="@drawable/ic_action_add_white"
-                app:cornerRadius="0dp"
-              />
-
         </LinearLayout>
 
     </FrameLayout>

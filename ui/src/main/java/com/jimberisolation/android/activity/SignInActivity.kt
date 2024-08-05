@@ -1,10 +1,5 @@
 package com.jimberisolation.android.activity
 
-import Company
-import Daemon
-import DnsServer
-import GenerateWireguardConfig
-import NetworkController
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -24,9 +20,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.jimberisolation.android.R
+import com.jimberisolation.android.fragment.TunnelListFragment
 import com.jimberisolation.android.util.TunnelImporter
-import com.jimberisolation.android.util.createDaemon
-import com.jimberisolation.android.util.generateEd25519KeyPair
+import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAuthenticationResult
 import com.microsoft.identity.client.IPublicClientApplication
@@ -34,8 +30,7 @@ import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
-import com.jimberisolation.android.util.getCNCPublicKey
-import com.jimberisolation.android.util.getUserAuthentication
+import createNetworkIsolationDaemonConfig
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -112,40 +107,30 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
+            val token = account.idToken.toString();
 
-            val (authCookie, userId) = getUserAuthentication(account.idToken.toString());
-            val cloudControllerDetails = getCNCPublicKey(authCookie)
+            val config = createNetworkIsolationDaemonConfig(token)
+            Log.d("Configuration",  config)
 
-            val createdDaemon = createDaemon(authCookie, userId.toString(), cloudControllerDetails.getString("routerPublicKey"))
-            Log.d( "DATA", cloudControllerDetails.getString("routerPublicKey"))
-            Log.d( "DATA", createdDaemon.toString())
-
-            val (pk, sk) = generateEd25519KeyPair()
-
-            val company = Company("Jimber")
-            val daemon = Daemon(sk, createdDaemon.getString("ipAddress"))
-            val dnsServer = DnsServer(cloudControllerDetails.getString("ipAddress"))
-            val networkController = NetworkController(cloudControllerDetails.getString("routerPublicKey"), cloudControllerDetails.getString("endpointAddress"), 51820)
-            val result = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
-
-            Log.d("NICE",  result)
-
-            GlobalScope.launch {
-                doStuff(result)
+            lifecycleScope.launch {
+                importTunnelAndNavigate(config)
             }
 
         } catch (e: ApiException) {
-            Log.e("ERREURSSS", "ddd", e);
+            Log.e("Authentication", "An error occurred", e);
         }
     }
 
+    private suspend fun importTunnelAndNavigate(result: String) {
+        importTunnel(result) { }
 
-    suspend fun doStuff(result: String) {
-        TunnelImporter.importTunnel(result) { }
+        val intent = Intent(this, MainActivity::class.java) // Missing intent assignment
+        startActivity(intent)
+        finish()
+
     }
 
 

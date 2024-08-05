@@ -21,7 +21,7 @@ android {
     namespace = pkg
     defaultConfig {
         applicationId = pkg
-        minSdk = 21
+        minSdk = 30
         targetSdk = 34
         versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()
         versionName = providers.gradleProperty("wireguardVersionName").get()
@@ -93,6 +93,7 @@ dependencies {
     implementation("io.ktor:ktor-client-json:2.2.3")
     implementation("io.ktor:ktor-client-serialization:2.2.3")
     implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+    implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.9.2")
 }
 
 tasks.withType<JavaCompile>().configureEach {

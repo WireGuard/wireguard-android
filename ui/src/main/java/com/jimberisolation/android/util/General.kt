@@ -1,11 +1,28 @@
-/*
- * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
+import java.net.InetAddress
+import java.net.UnknownHostException
 
-fun generateRandomString(length: Int = 10): String {
-    val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    return (1..length)
-        .map { allowedChars.random() }
-        .joinToString("")
+
+fun getDeviceHostname(): String {
+    return try {
+        val hostName = InetAddress.getLocalHost().hostName
+        hostName
+    } catch (e: UnknownHostException) {
+        "Unknown"
+    }
+}
+
+fun getUniqueDeviceName(email: String, existingNames: List<String?>): String {
+    val username = email.split("@")[0].replace(".", "")
+
+    val hostname = getDeviceHostname()
+    var combinedName = "$hostname-$username"
+    var counter = 1
+
+    // Check if the name already exists in the database
+    while (existingNames.contains(combinedName)) {
+        combinedName = "$hostname-$username$counter"
+        counter++
+    }
+
+    return combinedName;
 }

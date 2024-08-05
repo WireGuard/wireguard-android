@@ -22,30 +22,11 @@ class WelcomeActivity : AppCompatActivity() {
         actionBar = supportActionBar
         actionBar?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar?.setCustomView(R.layout.jimber_action_bar)
-
-        // Set click listeners for the buttons
-        findViewById<View>(R.id.sign_in_button)?.setOnClickListener {
-            navigateToSignIn()
-        }
-
-        findViewById<View>(R.id.add_connection_button)?.setOnClickListener {
-            navigateToAddConnection()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_activity, menu)
         return true
-    }
-
-    private fun navigateToSignIn() {
-        val intent = Intent(this, SignInActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun navigateToAddConnection() {
-        val intent = Intent(this, AddConnectionActivity::class.java)
-        startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
