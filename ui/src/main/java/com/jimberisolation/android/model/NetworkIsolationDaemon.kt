@@ -15,10 +15,17 @@ data class CreateDaemonData(
     val deviceName: String
 )
 
-fun createNetworkIsolationDaemonConfig(authToken: String): String {
+enum class AuthenticationType {
+    Google,
+    Microsoft
+}
+
+
+
+fun createNetworkIsolationDaemonConfig(authToken: String, authType: AuthenticationType): String {
     val keys = generateEd25519KeyPair()
 
-    val authResult = getUserAuthentication(authToken);
+    val authResult = getUserAuthentication(authToken, authType);
     val cloudController = getCloudControllerPublicKey(authResult.cookies)
 
     val existingDaemons = getExistingDaemons(authResult.cookies, authResult.userId.toString());

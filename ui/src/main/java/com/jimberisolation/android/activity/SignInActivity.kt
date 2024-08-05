@@ -24,6 +24,7 @@ import com.jimberisolation.android.fragment.TunnelListFragment
 import com.jimberisolation.android.util.TunnelImporter
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.microsoft.identity.client.AuthenticationCallback
+import com.microsoft.identity.client.IAccount
 import com.microsoft.identity.client.IAuthenticationResult
 import com.microsoft.identity.client.IPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication
@@ -69,7 +70,7 @@ class SignInActivity : AppCompatActivity() {
             val signInParameters = SignInParameters.builder()
                 .withActivity(this)
                 .withLoginHint(null)
-                .withScopes(Arrays.asList<String>("user.read"))
+                .withScopes(Arrays.asList("f1373772-6623-4090-9204-3cb04b9d46c9/.default"))
                 .withCallback(getAuthInteractiveCallback())
                 .build()
             mSingleAccountApp!!.signIn(signInParameters)
@@ -97,6 +98,7 @@ class SignInActivity : AppCompatActivity() {
             object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
                 override fun onCreated(application: ISingleAccountPublicClientApplication) {
                     mSingleAccountApp = application
+                    getCurrentAccount();
                 }
 
                 override fun onError(exception: MsalException) {
@@ -107,12 +109,53 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
+    // Function to get the current account
+    fun getCurrentAccount() {
+        mSingleAccountApp?.getCurrentAccountAsync(object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
+            override fun onAccountLoaded(activeAccount: IAccount?) {
+                if (activeAccount != null) {
+                     mSingleAccountApp?.signOut(object : ISingleAccountPublicClientApplication.SignOutCallback {
+                        override fun onSignOut() {
+                            println("Successfully signed out.")
+                        }
+
+                        override fun onError(exception: MsalException) {
+                            exception.printStackTrace()
+                        }
+                    })
+                    val accountName = activeAccount.username
+                    println("Signed in as: $accountName")
+                } else {
+                    // No account is signed in
+                    println("No account is signed in.")
+                }
+            }
+
+            override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
+                // Account changed
+                if (currentAccount != null) {
+                    // Do something with the new account info
+                    val accountName = currentAccount.username
+                    println("Account changed to: $accountName")
+                } else {
+                    // Signed out
+                    println("Signed out.")
+                }
+            }
+
+            override fun onError(exception: MsalException) {
+                // Log the exception
+                exception.printStackTrace()
+            }
+        })
+    }
+
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             val token = account.idToken.toString();
 
-            val config = createNetworkIsolationDaemonConfig(token)
+            val config = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
             Log.d("Configuration",  config)
 
             lifecycleScope.launch {
@@ -137,7 +180,14 @@ class SignInActivity : AppCompatActivity() {
     private fun getAuthInteractiveCallback(): AuthenticationCallback {
         return object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                Log.d("test", "")
+                val token = authenticationResult.accessToken;
+
+                val config = createNetworkIsolationDaemonConfig(token, AuthenticationType.Microsoft)
+                Log.d("Configuration",  config)
+
+                lifecycleScope.launch {
+                    importTunnelAndNavigate(config)
+                }
             }
 
             override fun onError(exception: MsalException) {

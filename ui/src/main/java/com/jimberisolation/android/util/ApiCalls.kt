@@ -1,5 +1,6 @@
 package com.jimberisolation.android.util
 
+import AuthenticationType
 import CreateDaemonData
 import org.json.JSONArray
 import org.json.JSONObject
@@ -14,8 +15,13 @@ data class UserAuthenticationResult(
 )
 
 
-fun getUserAuthentication(idToken: String): UserAuthenticationResult {
-    val url = URL("https://signal.staging.jimber.io/api/v1/auth/verify-google-id")
+fun getUserAuthentication(idToken: String, authenticationType: AuthenticationType): UserAuthenticationResult {
+
+    val type = when (authenticationType) {
+        AuthenticationType.Google -> "google"
+        AuthenticationType.Microsoft -> "microsoft"
+    }
+    val url = URL("https://signal.staging.jimber.io/api/v1/auth/verify-${type}-id")
 
     val jsonBody = JSONObject().apply {
         put("idToken", idToken)
