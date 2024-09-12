@@ -3,6 +3,7 @@
 /.idea/caches/
 /.idea/dictionaries/
 /.idea/libraries/
+/.kotlin/
 /captures/
 /local.properties
 .DS_Store

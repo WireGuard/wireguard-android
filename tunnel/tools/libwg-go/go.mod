@@ -3,8 +3,8 @@ module golang.zx2c4.com/wireguard/android
 go 1.20
 
 require (
-	golang.org/x/sys v0.13.0
-	golang.zx2c4.com/wireguard v0.0.0-20231022001213-2e0774f246fb
+	golang.org/x/sys v0.25.0
+	golang.zx2c4.com/wireguard v0.0.0-20231211153847-12269c276173
 )
 
 require (
