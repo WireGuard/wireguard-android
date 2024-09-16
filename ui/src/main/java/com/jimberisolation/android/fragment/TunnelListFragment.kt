@@ -30,6 +30,7 @@ import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.activity.SignInActivity
 import com.jimberisolation.android.activity.TunnelCreatorActivity
+import com.jimberisolation.android.activity.WelcomeActivity
 import com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler
 import com.jimberisolation.android.databinding.TunnelListFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
@@ -235,8 +236,8 @@ class TunnelListFragment : BaseFragment() {
                             val futures = tunnelsToDelete.map { async(SupervisorJob()) { it.deleteAsync() } }
                             onTunnelDeletionFinished(futures.awaitAll().size, null)
 
-                            // Redirect to SignInActivity and clear back stack
-                            val intent = Intent(activity, SignInActivity::class.java).apply {
+                            // Redirect to WelcomeActivity and clear back stack
+                            val intent = Intent(activity, WelcomeActivity::class.java).apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
                             startActivity(intent)

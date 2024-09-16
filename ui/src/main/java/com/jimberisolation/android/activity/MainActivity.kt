@@ -85,7 +85,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
     private fun navigateToScreen(tunnelsAvailable: Boolean) {
         if (!tunnelsAvailable) {
-            val intent = Intent(this, SignInActivity::class.java) // Missing intent assignment
+            val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
         } else {

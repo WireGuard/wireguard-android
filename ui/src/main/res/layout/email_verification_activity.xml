@@ -112,6 +112,19 @@
                     android:layout_margin="4dp" />
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/verification_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:clickable="true" />
+
             <!-- Verify button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/proceed"

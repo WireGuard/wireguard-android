@@ -34,6 +34,8 @@ class EmailVerificationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.email_verification_activity)
 
+        val errorTextView: TextView = findViewById(R.id.verification_error)
+
         actionBar = supportActionBar
         actionBar?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar?.setCustomView(R.layout.jimber_action_bar)
@@ -81,19 +83,19 @@ class EmailVerificationActivity : AppCompatActivity() {
             }
 
             if(verificationCode.length != 6) {
-                Snackbar.make(snackView,"Please fill in a valid verification code", Snackbar.LENGTH_LONG).show()
+                errorTextView.text = "Please fill in a valid verification code"
                 return@setOnClickListener;
             }
 
             val verifyResult = verifyEmailWithToken(EmailVerificationData(email.toString(), verificationCode.toInt()))
             if(verifyResult.isFailure) {
                 val verifyException = verifyResult.exceptionOrNull();
-                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
-                Snackbar.make(view, verifyException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                errorTextView.text = verifyException?.message
 
                 return@setOnClickListener;
             }
 
+            errorTextView.text = ""
             val userAuthenticationResult = verifyResult.getOrThrow();
             handleEmailVerification(userAuthenticationResult);
         }

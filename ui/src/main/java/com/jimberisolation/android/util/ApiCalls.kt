@@ -336,7 +336,7 @@ fun verifyEmailWithToken(emailVerificationData: EmailVerificationData): Result<U
                 val parsedObject = JSONObject(response)
                 if(!isSuccess) {
                     if(parsedObject.getString("message").contains("The token you've entered is invalid")){
-                        return Result.failure(Exception("Invalid code"))
+                        return Result.failure(Exception("The code you've entered is invalid"))
                     }
 
                     return Result.failure(Exception("Received status code $responseCode from API while verifying with token"))
