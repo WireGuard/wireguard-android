@@ -19,9 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.R
-import com.jimberisolation.android.fragment.TunnelListFragment
-import com.jimberisolation.android.util.TunnelImporter
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAccount
@@ -32,8 +31,6 @@ import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
 import createNetworkIsolationDaemonConfig
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Arrays
 
@@ -77,6 +74,8 @@ class SignInActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.email_sign_in)?.setOnClickListener {
+            val intent = Intent(this, EmailRegistrationActivity::class.java)
+            startActivity(intent)
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -86,6 +85,11 @@ class SignInActivity : AppCompatActivity() {
 
         signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+
+            // Always sign out
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+            googleSignInClient.signOut()
+
             handleSignInResultGoogle(task)
         }
 
@@ -155,11 +159,19 @@ class SignInActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             val token = account.idToken.toString();
 
-            val config = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
-            Log.d("Configuration",  config)
+            val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+            if(wireguardConfigResult.isFailure) {
+                val createDaemonException = wireguardConfigResult.exceptionOrNull();
+                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                return;
+            }
+
+            val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+            Log.d("Configuration", wireguardConfig)
 
             lifecycleScope.launch {
-                importTunnelAndNavigate(config)
+                importTunnelAndNavigate(wireguardConfig)
             }
 
         } catch (e: ApiException) {
@@ -182,16 +194,24 @@ class SignInActivity : AppCompatActivity() {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val token = authenticationResult.accessToken;
 
-                val config = createNetworkIsolationDaemonConfig(token, AuthenticationType.Microsoft)
-                Log.d("Configuration",  config)
+                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+                if(wireguardConfigResult.isFailure) {
+                    val createDaemonException = wireguardConfigResult.exceptionOrNull();
+                    val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                    Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                    return;
+                }
+
+                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                Log.d("Configuration", wireguardConfig)
 
                 lifecycleScope.launch {
-                    importTunnelAndNavigate(config)
+                    importTunnelAndNavigate(wireguardConfig)
                 }
             }
 
             override fun onError(exception: MsalException) {
-                Log.e("erreur", "errreur", exception)
+                Log.e("Error", "Error", exception)
             }
 
             override fun onCancel() {

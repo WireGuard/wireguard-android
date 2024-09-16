@@ -110,6 +110,8 @@
         <activity android:name=".activity.WelcomeActivity" />
 
         <activity android:name=".activity.SignInActivity" />
+        <activity android:name=".activity.EmailRegistrationActivity" />
+        <activity android:name=".activity.EmailVerificationActivity" />
         <activity android:name=".activity.AddConnectionActivity" />
 
         <activity

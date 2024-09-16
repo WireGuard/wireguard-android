@@ -66,4 +66,8 @@
     <color name="icon_foreground">#111279</color>
     <color name="jimber_primary">#111279</color>
     <color name="jimber_primary_button">#FFFFFF</color>
+
+    <color name="jimber_edit_text_color">#111279</color>
+    <color name="jimber_edit_background_color">#FFFFFF</color>
+    <color name="jimber_edit_border_color">#111279</color>
 </resources>

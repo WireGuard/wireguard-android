@@ -1,0 +1,143 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/base_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <!-- Jimber logo -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                style="@style/LogoStyle"
+                android:layout_width="280dp"
+                android:layout_height="111dp"
+                android:src="@drawable/jimber_logo_full" />
+
+            <!-- Verification token title -->
+            <TextView
+                android:id="@+id/verification_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/verification_token"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textColor="@color/jimber_primary"
+                android:layout_marginBottom="16dp"
+                android:textAlignment="center" />
+
+            <!-- Info text -->
+            <TextView
+                android:id="@+id/verification_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_verification_code_has_been_sent_to_your_email_address"
+                android:textSize="14sp"
+                android:textColor="@color/jimber_primary"
+                android:textAlignment="center"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Token input fields (6 digits) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/token_digit_1"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+
+                <EditText
+                    android:id="@+id/token_digit_2"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+
+                <EditText
+                    android:id="@+id/token_digit_3"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+
+                <EditText
+                    android:id="@+id/token_digit_4"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+
+                <EditText
+                    android:id="@+id/token_digit_5"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+
+                <EditText
+                    android:id="@+id/token_digit_6"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:maxLength="1"
+                    android:textSize="20sp"
+                    android:layout_margin="4dp" />
+            </LinearLayout>
+
+            <!-- Verify button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/proceed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify"
+                android:layout_margin="8dp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/jimber_primary"
+                app:cornerRadius="4dp"
+                />
+
+            <!-- Resend email link -->
+            <TextView
+                android:id="@+id/resend_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resend email"
+                android:textSize="14sp"
+                android:textColor="@color/jimber_primary"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:clickable="true" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

@@ -263,4 +263,9 @@
     <string name="sign_in_with_email">Sign in with Email</string>
     <string name="sign_in_with_microsoft">Sign in with Microsoft</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="back">Back</string>
+    <string name="email">Email</string>
+    <string name="your_verification_code_has_been_sent_to_your_email_address">Your verification code has been sent to your email address</string>
+    <string name="verification_token">Verification token</string>
 </resources>
