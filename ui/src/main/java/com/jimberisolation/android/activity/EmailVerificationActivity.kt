@@ -15,16 +15,17 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.R
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.jimberisolation.android.util.UserAuthenticationResult
-import com.jimberisolation.android.util.sendVerificationEmail
-import com.jimberisolation.android.util.verifyEmailWithToken
 import createNetworkIsolationDaemonConfigFromEmailVerification
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sendVerificationEmail
+import verifyEmailWithToken
 
 class EmailVerificationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
@@ -60,14 +61,18 @@ class EmailVerificationActivity : AppCompatActivity() {
         val textView: TextView = findViewById(R.id.resend_email)
 
         textView.setOnClickListener {
-            val result = sendVerificationEmail(email.toString())
+            // Launch a coroutine in the main scope
+            CoroutineScope(Dispatchers.Main).launch {
+                // Call the suspending function
+                val result = sendVerificationEmail(email.toString())
 
-            if(result.isFailure) {
-                Snackbar.make(snackView,"Something went wrong with resending email, please contact support", Snackbar.LENGTH_LONG).show()
-                return@setOnClickListener
+                if (result.isFailure) {
+                    Snackbar.make(snackView, "Something went wrong with resending email, please contact support", Snackbar.LENGTH_LONG).show()
+                    return@launch // Return from the coroutine if there's a failure
+                }
+
+                Snackbar.make(snackView, "Email successfully resent", Snackbar.LENGTH_LONG).show()
             }
-
-            Snackbar.make(snackView,"Email successfully resent", Snackbar.LENGTH_LONG).show()
         }
 
         findViewById<View>(R.id.proceed)?.setOnClickListener {
@@ -87,17 +92,19 @@ class EmailVerificationActivity : AppCompatActivity() {
                 return@setOnClickListener;
             }
 
-            val verifyResult = verifyEmailWithToken(EmailVerificationData(email.toString(), verificationCode.toInt()))
-            if(verifyResult.isFailure) {
-                val verifyException = verifyResult.exceptionOrNull();
-                errorTextView.text = verifyException?.message
+            CoroutineScope(Dispatchers.Main).launch {
+                val verifyResult = verifyEmailWithToken(EmailVerificationData(email.toString(), verificationCode.toInt()))
+                if(verifyResult.isFailure) {
+                    val verifyException = verifyResult.exceptionOrNull();
+                    errorTextView.text = verifyException?.message
 
-                return@setOnClickListener;
+                    return@launch;
+                }
+
+                errorTextView.text = ""
+                val userAuthenticationResult = verifyResult.getOrThrow();
+                handleEmailVerification(userAuthenticationResult);
             }
-
-            errorTextView.text = ""
-            val userAuthenticationResult = verifyResult.getOrThrow();
-            handleEmailVerification(userAuthenticationResult);
         }
 
         for (i in tokenInputs.indices) {
@@ -141,24 +148,27 @@ class EmailVerificationActivity : AppCompatActivity() {
     }
 
     private fun handleEmailVerification(userAuthenticationResult: UserAuthenticationResult) {
-        try {
-            val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult)
-            if(wireguardConfigResult.isFailure) {
-                val createDaemonException = wireguardConfigResult.exceptionOrNull();
-                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
-                Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
-                return;
-            }
+        lifecycleScope.launch {
+            try {
+                val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult)
 
-            val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
-            Log.d("Configuration", wireguardConfig)
+                if (wireguardConfigResult.isFailure) {
+                    val createDaemonException = wireguardConfigResult.exceptionOrNull()
+                    val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                    Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                    return@launch
+                }
 
-            lifecycleScope.launch {
+                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                Log.d("Configuration", wireguardConfig)
+
                 importTunnelAndNavigate(wireguardConfig)
-            }
 
-        } catch (e: ApiException) {
-            Log.e("Authentication", "An error occurred", e);
+            } catch (e: Exception) {
+                Log.e("Authentication", "An error occurred", e)
+                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                Snackbar.make(view, "An error occurred: ${e.message}", Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
 import com.jimberisolation.android.fragment.TunnelEditorFragment
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.applicationScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,6 +66,8 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         super.onCreate(savedInstanceState)
 
         actionBar = supportActionBar
+
+        SharedStorage.initialize(this)
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar()?.setCustomView(R.layout.jimber_action_bar);

@@ -1,3 +1,4 @@
+import com.jimberisolation.android.util.GetDaemonsNameResult
 import java.net.InetAddress
 import java.net.UnknownHostException
 
@@ -40,7 +41,7 @@ fun sanitizeHostname(combinedName: String): String {
     return sanitized
 }
 
-fun getUniqueDeviceName(email: String, existingNames: List<String?>): String {
+fun getUniqueDeviceName(email: String, existingNames: List<GetDaemonsNameResult>): String {
     val username = email.split("@")[0].replace(".", "")
 
     val hostname = getDeviceHostname()
@@ -50,8 +51,10 @@ fun getUniqueDeviceName(email: String, existingNames: List<String?>): String {
 
     var counter = 1
 
+    val names: List<String> = existingNames.map { it.name }
+
     // Check if the name already exists in the database
-    while (existingNames.contains(sanitizedName)) {
+    while (names.contains(sanitizedName)) {
         sanitizedName = sanitizeHostname("$baseName$counter")
         counter++
     }

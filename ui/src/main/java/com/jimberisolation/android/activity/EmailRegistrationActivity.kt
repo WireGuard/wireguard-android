@@ -10,8 +10,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.jimberisolation.android.R
-import com.jimberisolation.android.util.sendVerificationEmail
+import kotlinx.coroutines.launch
+import sendVerificationEmail
 
 class EmailRegistrationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
@@ -36,7 +38,9 @@ class EmailRegistrationActivity : AppCompatActivity() {
             val editText = findViewById<EditText>(R.id.email_input)
             val emailAddress = editText.text.toString()
 
-            sendVerificationEmail(emailAddress)
+            lifecycleScope.launch {
+                sendVerificationEmail(emailAddress)
+            }
 
             val intent = Intent(this, EmailVerificationActivity::class.java)
             intent.putExtra("EMAIL", emailAddress)

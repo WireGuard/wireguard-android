@@ -157,25 +157,26 @@ class SignInActivity : AppCompatActivity() {
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            val token = account.idToken.toString();
+            val token = account.idToken.toString()
 
-            val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
-            if(wireguardConfigResult.isFailure) {
-                val createDaemonException = wireguardConfigResult.exceptionOrNull();
-                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
-                Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
-                return;
-            }
-
-            val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
-            Log.d("Configuration", wireguardConfig)
-
+            // Launch a coroutine in the lifecycleScope
             lifecycleScope.launch {
+                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+
+                if (wireguardConfigResult.isFailure) {
+                    val createDaemonException = wireguardConfigResult.exceptionOrNull()
+                    val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                    Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                    return@launch
+                }
+
+                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                Log.d("Configuration", wireguardConfig)
+
                 importTunnelAndNavigate(wireguardConfig)
             }
-
         } catch (e: ApiException) {
-            Log.e("Authentication", "An error occurred", e);
+            Log.e("Authentication", "An error occurred", e)
         }
     }
 
@@ -192,20 +193,22 @@ class SignInActivity : AppCompatActivity() {
     private fun getAuthInteractiveCallback(): AuthenticationCallback {
         return object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
-                val token = authenticationResult.accessToken;
+                val token = authenticationResult.accessToken
 
-                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
-                if(wireguardConfigResult.isFailure) {
-                    val createDaemonException = wireguardConfigResult.exceptionOrNull();
-                    val view = findViewById<View>(android.R.id.content) // or some other view in your layout
-                    Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
-                    return;
-                }
-
-                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
-                Log.d("Configuration", wireguardConfig)
-
+                // Launch a coroutine in the lifecycleScope
                 lifecycleScope.launch {
+                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+
+                    if (wireguardConfigResult.isFailure) {
+                        val createDaemonException = wireguardConfigResult.exceptionOrNull()
+                        val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                        Snackbar.make(view, createDaemonException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                        return@launch
+                    }
+
+                    val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                    Log.d("Configuration", wireguardConfig)
+
                     importTunnelAndNavigate(wireguardConfig)
                 }
             }
@@ -216,10 +219,7 @@ class SignInActivity : AppCompatActivity() {
 
             override fun onCancel() {
                 /* User canceled the authentication */
-                Log.d(
-                    "cancelled",
-                    "User cancelled login."
-                )
+                Log.d("cancelled", "User cancelled login.")
             }
         }
     }
