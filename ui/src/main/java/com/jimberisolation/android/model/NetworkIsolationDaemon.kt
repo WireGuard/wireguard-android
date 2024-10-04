@@ -62,7 +62,7 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
     val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519,endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
-companyName
+
     return Result.success(wireguardConfig);
 }
 
