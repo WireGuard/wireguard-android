@@ -183,10 +183,10 @@ class SignInActivity : AppCompatActivity() {
     private suspend fun importTunnelAndNavigate(result: String) {
         importTunnel(result) { }
 
-        val intent = Intent(this, MainActivity::class.java) // Missing intent assignment
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
-
     }
 
 

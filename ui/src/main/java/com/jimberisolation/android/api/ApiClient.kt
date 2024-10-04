@@ -42,14 +42,14 @@ interface ApiService {
     @POST("auth/verify-{type}-id")
     suspend fun getUserAuthentication(@Path("type") type: String, @Body request: AuthRequest): retrofit2.Response<UserAuthenticationResult>
 
-    @GET("companies/Jimber/daemons/user/{userId}")
-    suspend fun getExistingDaemons(@Path("userId") userId: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
+    @GET("companies/{company}/daemons/user/{userId}")
+    suspend fun getExistingDaemons(@Path("userId") userId: String,  @Path("company") company: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
 
-    @GET("companies/Jimber/routers/cloud-network-controller")
-    suspend fun  getCloudControllerPublicKey(@Header("Cookie") cookies: String): RouterPublicKeyResult
+    @GET("companies/{company}/routers/cloud-network-controller")
+    suspend fun  getCloudControllerPublicKey(@Path("company") company: String, @Header("Cookie") cookies: String): RouterPublicKeyResult
 
-    @POST("companies/Jimber/daemons/user/{userId}")
-    suspend fun createDaemon(@Path("userId") userId: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
+    @POST("companies/{company}/daemons/user/{userId}")
+    suspend fun createDaemon(@Path("userId") userId: String, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
 
     @POST("auth/send-user-token-code")
     suspend fun sendVerificationEmail(@Body emailVerificationData: GetEmailVerificationCodeData): Boolean

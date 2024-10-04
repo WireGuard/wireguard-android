@@ -41,10 +41,10 @@ suspend fun getUserAuthenticationV2(idToken: String, authenticationType: Authent
     }
 }
 
-suspend fun getCloudControllerPublicKeyV2(): Result<RouterPublicKeyResult> {
+suspend fun getCloudControllerPublicKeyV2(company: String): Result<RouterPublicKeyResult> {
     return try {
         val cookies = getCookieString();
-        val result = ApiClient.apiService.getCloudControllerPublicKey(cookies)
+        val result = ApiClient.apiService.getCloudControllerPublicKey(company, cookies)
 
         Result.success(result)
     } catch (e: Exception) {
@@ -53,10 +53,10 @@ suspend fun getCloudControllerPublicKeyV2(): Result<RouterPublicKeyResult> {
     }
 }
 
-suspend fun getExistingDaemonsV2(userId: String): Result<List<GetDaemonsNameResult>> {
+suspend fun getExistingDaemonsV2(userId: String, company: String): Result<List<GetDaemonsNameResult>> {
     return try {
         val cookies = getCookieString();
-        val result = ApiClient.apiService.getExistingDaemons(userId, cookies)
+        val result = ApiClient.apiService.getExistingDaemons(userId, company, cookies)
 
         Result.success(result)
     } catch (e: Exception) {
@@ -65,10 +65,10 @@ suspend fun getExistingDaemonsV2(userId: String): Result<List<GetDaemonsNameResu
     }
 }
 
-suspend fun createDaemonV2(userId: String, createDaemonData: CreateDaemonData): Result<CreatedDaemonResult> {
+suspend fun createDaemonV2(userId: String, company: String, createDaemonData: CreateDaemonData): Result<CreatedDaemonResult> {
     return try {
         val cookies = getCookieString()
-        val result = ApiClient.apiService.createDaemon(userId, createDaemonData, cookies)
+        val result = ApiClient.apiService.createDaemon(userId, company, createDaemonData, cookies)
 
         Result.success(result)
     } catch (e: Exception) {

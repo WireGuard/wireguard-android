@@ -19,10 +19,11 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
 
     val userId = userAuthenticationResult.getOrThrow().id.toString();
     val email =  userAuthenticationResult.getOrThrow().email;
+    val companyName =  userAuthenticationResult.getOrThrow().company.name;
 
     SharedStorage.getInstance().saveCurrentUsingEmail(email);
 
-    val cloudControllerResult = getCloudControllerPublicKeyV2();
+    val cloudControllerResult = getCloudControllerPublicKeyV2(companyName);
     if (cloudControllerResult.isFailure) {
         return Result.failure(cloudControllerResult.exceptionOrNull() ?: RuntimeException("Unknown cloud controller error"))
     }
@@ -31,7 +32,7 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
     val endpointAddress = cloudControllerResult.getOrThrow().endpointAddress
     val ipAddress = cloudControllerResult.getOrThrow().ipAddress
 
-    val existingDaemonsResult = getExistingDaemonsV2(userId);
+    val existingDaemonsResult = getExistingDaemonsV2(userId, companyName);
     if (existingDaemonsResult.isFailure) {
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
@@ -46,7 +47,7 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
 
     val wireguardKeys = generateWireguardKeys(keys.sk, routerPublicKey)
 
-    val createdDaemonResult = createDaemonV2(userId, createDaemonData);
+    val createdDaemonResult = createDaemonV2(userId,companyName, createDaemonData);
     if (createdDaemonResult.isFailure) {
         return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown created daemon error"))
     }
@@ -61,7 +62,7 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
     val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519,endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
-
+companyName
     return Result.success(wireguardConfig);
 }
 
@@ -71,7 +72,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val userId = authenticationResult.id.toString()
     val email = authenticationResult.email
 
-    val cloudControllerResult = getCloudControllerPublicKeyV2();
+    val cloudControllerResult = getCloudControllerPublicKeyV2(authenticationResult.company.name);
     if (cloudControllerResult.isFailure) {
         return Result.failure(cloudControllerResult.exceptionOrNull() ?: RuntimeException("Unknown cloud controller error"))
     }
@@ -80,7 +81,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val endpointAddress = cloudControllerResult.getOrThrow().endpointAddress
     val ipAddress = cloudControllerResult.getOrThrow().ipAddress
 
-    val existingDaemonsResult = getExistingDaemonsV2(userId);
+    val existingDaemonsResult = getExistingDaemonsV2(userId, authenticationResult.company.name);
     if (existingDaemonsResult.isFailure) {
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
@@ -95,7 +96,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val wireguardKeys = generateWireguardKeys(keys.sk, routerPublicKey)
 
-    val createdDaemonResult = createDaemonV2(userId, createDaemonData);
+    val createdDaemonResult = createDaemonV2(userId, authenticationResult.company.name, createDaemonData);
     if (createdDaemonResult.isFailure) {
         return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown created daemon error"))
     }
