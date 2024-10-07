@@ -20,7 +20,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.microsoft.identity.client.AuthenticationCallback
 import com.microsoft.identity.client.IAccount
@@ -159,8 +161,11 @@ class SignInActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             val token = account.idToken.toString()
 
+            SharedStorage.initialize(this)
+
             // Launch a coroutine in the lifecycleScope
             lifecycleScope.launch {
+
                 val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
 
                 if (wireguardConfigResult.isFailure) {
@@ -170,18 +175,24 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!;
+                val companyName = wireguardConfigResult.getOrThrow()?.company!!;
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig)
+                importTunnelAndNavigate(wireguardConfig, companyName)
             }
         } catch (e: ApiException) {
             Log.e("Authentication", "An error occurred", e)
         }
     }
 
-    private suspend fun importTunnelAndNavigate(result: String) {
-        importTunnel(result) { }
+    private suspend fun importTunnelAndNavigate(result: String, companyName: String) {
+        val manager = getTunnelManager()
+
+        val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
+        if(alreadyExistingTunnel == null) {
+            importTunnel(result) { }
+        }
 
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -191,6 +202,8 @@ class SignInActivity : AppCompatActivity() {
 
 
     private fun getAuthInteractiveCallback(): AuthenticationCallback {
+        SharedStorage.initialize(this)
+
         return object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val token = authenticationResult.accessToken
@@ -206,10 +219,11 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!;
+                    val companyName = wireguardConfigResult.getOrThrow()?.company!!;
                     Log.d("Configuration", wireguardConfig)
 
-                    importTunnelAndNavigate(wireguardConfig)
+                    importTunnelAndNavigate(wireguardConfig, companyName)
                 }
             }
 

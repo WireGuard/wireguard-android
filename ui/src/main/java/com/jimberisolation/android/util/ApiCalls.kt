@@ -5,6 +5,10 @@ data class Company(
     val name: String
 )
 
+data class RefreshResult(
+    val accessToken: String,
+)
+
 data class UserAuthenticationResult(
     val id: Int,
     val email: String,
@@ -37,4 +41,9 @@ data class GetEmailVerificationCodeData(
 data class EmailVerificationData(
     val email: String,
     val token: Number
+)
+
+data class CreateDaemonResult(
+    val wireguardConfig: String,
+    val company: String
 )

@@ -5,6 +5,7 @@ import com.jimberisolation.android.util.CreatedDaemonResult
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.GetDaemonsNameResult
 import com.jimberisolation.android.util.GetEmailVerificationCodeData
+import com.jimberisolation.android.util.RefreshResult
 import com.jimberisolation.android.util.RouterPublicKeyResult
 import com.jimberisolation.android.util.UserAuthenticationResult
 import org.json.JSONObject
@@ -111,7 +112,27 @@ suspend fun verifyEmailWithToken(emailVerificationData: EmailVerificationData): 
         Result.success(result)
 
     } catch (e: Exception) {
-        Log.e("EMAIL_VERIFICATION_CODE", "ERROR IN EMAIL VERIFICATION CODE REQUEST", e)
+        Log.e("EMAIL_WITH_TOKEN", "ERROR IN EMAIL VERIFY WITH CODE CODE REQUEST", e)
+        Result.failure(e)
+    }
+}
+
+suspend fun refreshToken(): Result<RefreshResult> {
+    return try {
+        val cookies = getCookieString()
+        val result = ApiClient.apiService.refreshToken(cookies)
+
+        if(result.isSuccessful) {
+            val data = result.body();
+            SharedStorage.getInstance().saveAuthenticationToken(data?.accessToken!!)
+
+            return Result.success(data)
+        }
+
+        return Result.failure(Exception(result.errorBody().toString()))
+
+    } catch (e: Exception) {
+        Log.e("REFRESH_TOKEN", "ERROR IN GET REFRESH TOKEN", e)
         Result.failure(e)
     }
 }

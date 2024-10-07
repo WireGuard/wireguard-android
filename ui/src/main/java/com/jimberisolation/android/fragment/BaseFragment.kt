@@ -4,6 +4,7 @@
  */
 package com.jimberisolation.android.fragment
 
+import ApiService
 import android.content.Context
 import android.util.Log
 import android.view.View
@@ -24,7 +25,11 @@ import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
 import com.jimberisolation.android.util.ErrorMessages
+import com.jimberisolation.config.Config
+import getCloudControllerPublicKeyV2
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -50,7 +55,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.d("TAG", "MYLENNERT")
         (activity as? BaseActivity)?.addOnSelectedTunnelChangedListener(this)
     }
 
@@ -59,31 +63,61 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         super.onDetach()
     }
 
-    fun setTunnelState(view: View, checked: Boolean) {
+    fun setTunnelState(view: View, isChecked: Boolean) {
         val tunnel = when (val binding = DataBindingUtil.findBinding<ViewDataBinding>(view)) {
             is TunnelDetailFragmentBinding -> binding.tunnel
             is TunnelListItemBinding -> binding.item
             else -> return
         } ?: return
+
         val activity = activity ?: return
+
+        // Use lifecycleScope to launch a coroutine and handle the async call
         activity.lifecycleScope.launch {
-            if (Application.getBackend() is GoBackend) {
-                try {
-                    val intent = GoBackend.VpnService.prepare(activity)
-                    if (intent != null) {
-                        pendingTunnel = tunnel
-                        pendingTunnelUp = checked
-                        permissionActivityResultLauncher.launch(intent)
-                        return@launch
+            try {
+                if(isChecked) {
+                    // Await the result of the asynchronous configuration
+                    val currentConfig = tunnel.getConfigAsync()
+                    val currentConfigString = currentConfig.toWgQuickString();
+
+                    val newEndpoint = getCloudControllerPublicKeyV2(tunnel.name)
+                    if(newEndpoint.isSuccess) {
+                        val result = newEndpoint.getOrNull();
+
+                        val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
+                        val newPublicIp = result?.endpointAddress;
+
+                        val updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp.toString())
+
+                        val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
+                        tunnel.setConfigAsync(updatedConfig);
                     }
-                } catch (e: Throwable) {
-                    val message = activity.getString(R.string.error_prepare, ErrorMessages[e])
-                    Log.e(TAG, message, e)
                 }
+
+                // Proceed with permission handling if GoBackend is being used
+                if (Application.getBackend() is GoBackend) {
+                    try {
+                        val intent = GoBackend.VpnService.prepare(activity)
+                        if (intent != null) {
+                            pendingTunnel = tunnel
+                            pendingTunnelUp = isChecked
+                            permissionActivityResultLauncher.launch(intent)
+                            return@launch
+                        }
+                    } catch (e: Throwable) {
+                        val message = activity.getString(R.string.error_prepare, ErrorMessages[e])
+                        Log.e(TAG, message, e)
+                    }
+                }
+
+                // Set the tunnel state with permissions
+                setTunnelStateWithPermissionsResult(tunnel, isChecked)
+            } catch (e: Throwable) {
+                Log.e(TAG, "Failed to get or update tunnel config", e)
             }
-            setTunnelStateWithPermissionsResult(tunnel, checked)
         }
     }
+
 
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
         val activity = activity ?: return

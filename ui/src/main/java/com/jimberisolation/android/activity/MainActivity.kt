@@ -26,6 +26,7 @@ import com.jimberisolation.android.util.applicationScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import refreshToken
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -84,9 +85,25 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             val tunnelsAvailable = withContext(Dispatchers.IO) { manager.getTunnels() }
             navigateToScreen(tunnelsAvailable.size > 0)
         }
+
+        AuthEventManager.authFailedEvent.observe(this) { authFailed ->
+            if (authFailed) {
+                // Navigate to the login screen
+                val intent = Intent(this, WelcomeActivity::class.java)
+                startActivity(intent)
+                finish() // Optionally finish the current activity
+            }
+        }
     }
 
-    private fun navigateToScreen(tunnelsAvailable: Boolean) {
+    private suspend fun navigateToScreen(tunnelsAvailable: Boolean) {
+        val newAccessToken = refreshToken()
+        if (newAccessToken.isFailure) {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         if (!tunnelsAvailable) {
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
@@ -95,7 +112,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             setContentView(R.layout.main_activity)
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_activity, menu)

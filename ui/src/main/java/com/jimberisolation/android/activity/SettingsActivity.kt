@@ -20,6 +20,7 @@ import com.jimberisolation.android.QuickTileService
 import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.AdminKnobs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,6 +52,15 @@ class SettingsActivity : AppCompatActivity() {
             preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
             preferenceScreen.initialExpandedChildrenCount = 5
+
+            val deAuthorizePreference: Preference? = findPreference("deauthorize")
+
+            // Set an onClick listener
+            deAuthorizePreference?.setOnPreferenceClickListener {
+                SharedStorage.getInstance().saveRefreshToken("test");
+                SharedStorage.getInstance().saveAuthenticationToken("test");
+                true
+            }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || QuickTileService.isAdded) {
                 val quickTile = preferenceManager.findPreference<Preference>("quick_tile")

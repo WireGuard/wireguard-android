@@ -116,7 +116,6 @@ object TunnelImporter {
 
     suspend fun importTunnel(configText: String, messageCallback: (CharSequence) -> Unit) {
         try {
-            // Ensure the config text is parseable before proceeding…
             val config = try {
                 Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
             }
@@ -128,7 +127,7 @@ object TunnelImporter {
             }
 
             val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
-            Application.getTunnelManager().create(companyName.toString(), config)
+            Application.getTunnelManager().create(companyName, config)
 
         } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)

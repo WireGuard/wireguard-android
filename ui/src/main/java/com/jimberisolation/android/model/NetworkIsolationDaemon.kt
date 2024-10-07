@@ -1,5 +1,6 @@
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.CreateDaemonData
+import com.jimberisolation.android.util.CreateDaemonResult
 import com.jimberisolation.android.util.UserAuthenticationResult
 import com.jimberisolation.android.util.generateEd25519KeyPair
 import com.jimberisolation.android.util.generateWireguardKeys
@@ -9,7 +10,7 @@ enum class AuthenticationType {
     Microsoft
 }
 
-suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: AuthenticationType): Result<String?> {
+suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: AuthenticationType): Result<CreateDaemonResult?> {
     val keys = generateEd25519KeyPair()
 
     val userAuthenticationResult = getUserAuthenticationV2(authToken, authType)
@@ -56,14 +57,14 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
 
     val createdIpAddress = createdDaemon.ipAddress
 
-    val company = Company("Jimber")
+    val company = Company(companyName)
     val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, createdIpAddress)
     val dnsServer = DnsServer(ipAddress)
     val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519,endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
-    return Result.success(wireguardConfig);
+    return Result.success(CreateDaemonResult(wireguardConfig, companyName));
 }
 
 suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticationResult: UserAuthenticationResult): Result<String?> {
@@ -71,8 +72,9 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val userId = authenticationResult.id.toString()
     val email = authenticationResult.email
+    val companyName = authenticationResult.company.name
 
-    val cloudControllerResult = getCloudControllerPublicKeyV2(authenticationResult.company.name);
+    val cloudControllerResult = getCloudControllerPublicKeyV2(companyName);
     if (cloudControllerResult.isFailure) {
         return Result.failure(cloudControllerResult.exceptionOrNull() ?: RuntimeException("Unknown cloud controller error"))
     }
@@ -81,7 +83,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val endpointAddress = cloudControllerResult.getOrThrow().endpointAddress
     val ipAddress = cloudControllerResult.getOrThrow().ipAddress
 
-    val existingDaemonsResult = getExistingDaemonsV2(userId, authenticationResult.company.name);
+    val existingDaemonsResult = getExistingDaemonsV2(userId, companyName);
     if (existingDaemonsResult.isFailure) {
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
@@ -96,7 +98,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val wireguardKeys = generateWireguardKeys(keys.sk, routerPublicKey)
 
-    val createdDaemonResult = createDaemonV2(userId, authenticationResult.company.name, createDaemonData);
+    val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData);
     if (createdDaemonResult.isFailure) {
         return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown created daemon error"))
     }
@@ -105,7 +107,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val createdIpAddress = createdDaemon.ipAddress
 
-    val company = Company("Jimber")
+    val company = Company(companyName)
     val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, createdIpAddress)
     val dnsServer = DnsServer(ipAddress)
     val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519, endpointAddress, 51820)

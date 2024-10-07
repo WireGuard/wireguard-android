@@ -10,4 +10,9 @@
         android:singleLineTitle="false"
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title" />
+    <Preference
+        android:key="deauthorize"
+        android:singleLineTitle="false"
+        android:summary="Reset JWT credentials"
+        android:title="DeAuthorize" />
 </androidx.preference.PreferenceScreen>
