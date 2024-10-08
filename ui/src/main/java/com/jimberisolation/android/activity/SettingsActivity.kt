@@ -16,15 +16,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.jimberisolation.android.Application
+import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.QuickTileService
 import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.AdminKnobs
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Interface for changing application-global persistent settings.
@@ -51,16 +55,40 @@ class SettingsActivity : AppCompatActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
-            preferenceScreen.initialExpandedChildrenCount = 5
+            preferenceScreen.initialExpandedChildrenCount = 6
 
             val deAuthorizePreference: Preference? = findPreference("deauthorize")
+            val changePublicIpPreference: Preference? = findPreference("change_public_ip")
 
             // Set an onClick listener
             deAuthorizePreference?.setOnPreferenceClickListener {
-                SharedStorage.getInstance().saveRefreshToken("test");
-                SharedStorage.getInstance().saveAuthenticationToken("test");
+                SharedStorage.getInstance().saveRefreshToken("");
+                SharedStorage.getInstance().saveAuthenticationToken("");
                 true
             }
+
+            // Set an onClick listener
+            changePublicIpPreference?.setOnPreferenceClickListener {
+                val manager = getTunnelManager();
+
+                lifecycleScope.launch {
+                    val tunnel = manager.getTunnels().first();
+
+                    val currentConfig = tunnel.getConfigAsync()
+                    val currentConfigString = currentConfig.toWgQuickString();
+
+                    val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
+                    val newPublicIp = "1.1.1.1";
+
+                    val updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp)
+
+                    val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
+                    tunnel.setConfigAsync(updatedConfig);
+                }
+
+                true
+            }
+
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || QuickTileService.isAdded) {
                 val quickTile = preferenceManager.findPreference<Preference>("quick_tile")

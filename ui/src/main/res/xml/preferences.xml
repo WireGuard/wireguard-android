@@ -1,18 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
+
     <com.jimberisolation.android.preference.VersionPreference
         android:key="version"
         android:icon="@drawable/ic_launcher_foreground"/>
+
     <com.jimberisolation.android.preference.QuickTilePreference android:key="quick_tile" />
+
     <Preference
         android:key="log_viewer"
         android:singleLineTitle="false"
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title" />
+
+    <Preference
+        android:key="change_public_ip"
+        android:singleLineTitle="false"
+        android:summary="Change Public IP of first tunnel"
+        android:title="Change Public IP" />
+
     <Preference
         android:key="deauthorize"
         android:singleLineTitle="false"
         android:summary="Reset JWT credentials"
         android:title="DeAuthorize" />
+
 </androidx.preference.PreferenceScreen>
