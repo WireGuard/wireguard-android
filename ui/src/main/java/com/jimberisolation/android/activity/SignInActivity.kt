@@ -3,14 +3,19 @@ package com.jimberisolation.android.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -33,6 +38,8 @@ import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
 import createNetworkIsolationDaemonConfig
+import getDeviceHostname
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import java.util.Arrays
 
@@ -48,9 +55,13 @@ class SignInActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
     private var backPressedCallback: OnBackPressedCallback? = null
 
+    private var daemonName: String? = getDeviceHostname();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_activity)
+
+        SharedStorage.initialize(this)
 
         actionBar = supportActionBar
         actionBar?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
@@ -157,16 +168,16 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun handleSignInResultGoogle(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-            val token = account.idToken.toString()
+        lifecycleScope.launch {
+            try {
+                val account = completedTask.getResult(ApiException::class.java)
+                val token = account.idToken.toString()
 
-            SharedStorage.initialize(this)
+                // Await for the name input from the dialog
+                daemonName = showNameInputDialog() ?: return@launch
 
-            // Launch a coroutine in the lifecycleScope
-            lifecycleScope.launch {
-
-                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+                // Proceed with the WireGuard config
+                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google, daemonName!!)
 
                 if (wireguardConfigResult.isFailure) {
                     val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -175,16 +186,17 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!;
-                val companyName = wireguardConfigResult.getOrThrow()?.company!!;
+                val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                val companyName = wireguardConfigResult.getOrThrow()?.company!!
                 Log.d("Configuration", wireguardConfig)
 
                 importTunnelAndNavigate(wireguardConfig, companyName)
+            } catch (e: ApiException) {
+                Log.e("Authentication", "An error occurred", e)
             }
-        } catch (e: ApiException) {
-            Log.e("Authentication", "An error occurred", e)
         }
     }
+
 
     private suspend fun importTunnelAndNavigate(result: String, companyName: String) {
         val manager = getTunnelManager()
@@ -202,15 +214,13 @@ class SignInActivity : AppCompatActivity() {
 
 
     private fun getAuthInteractiveCallback(): AuthenticationCallback {
-        SharedStorage.initialize(this)
-
         return object : AuthenticationCallback {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val token = authenticationResult.accessToken
-
-                // Launch a coroutine in the lifecycleScope
                 lifecycleScope.launch {
-                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google)
+                    val daemonName = showNameInputDialog() ?: return@launch
+
+                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Microsoft, daemonName)
 
                     if (wireguardConfigResult.isFailure) {
                         val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -219,8 +229,8 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!;
-                    val companyName = wireguardConfigResult.getOrThrow()?.company!!;
+                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                    val companyName = wireguardConfigResult.getOrThrow()?.company!!
                     Log.d("Configuration", wireguardConfig)
 
                     importTunnelAndNavigate(wireguardConfig, companyName)
@@ -237,6 +247,7 @@ class SignInActivity : AppCompatActivity() {
             }
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings, menu)
@@ -257,6 +268,53 @@ class SignInActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private suspend fun showNameInputDialog(): String? {
+        // Create a deferred result to await the input
+        val result = CompletableDeferred<String?>()
+
+        // Inflate the dialog's custom view
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_input_name, null)
+
+        // Build the dialog
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        // Get reference to EditText and buttons in the dialog
+        val nameInput = dialogView.findViewById<EditText>(R.id.nameInput)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+        val btnSubmit = dialogView.findViewById<Button>(R.id.btnSubmit)
+
+        nameInput.setText(daemonName);
+
+        // Create the dialog
+        val dialog = dialogBuilder.create()
+
+        // Handle the Cancel button
+        btnCancel.setOnClickListener {
+            result.complete(null)  // Return null if canceled
+            dialog.dismiss()
+        }
+
+        // Handle the Submit button
+        btnSubmit.setOnClickListener {
+            val name = nameInput.text.toString().trim()
+
+            if (name.isNotEmpty()) {
+                result.complete(name)  // Pass the entered name to the result
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "Please enter a valid name.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Show the dialog
+        dialog.show()
+
+        // Await the result before proceeding
+        return result.await()
     }
 
     private fun handleBackPressed() {

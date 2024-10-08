@@ -33,6 +33,11 @@ class SharedStorage private constructor() {
         }
     }
 
+    // Finalizer method
+    protected fun finalize() {
+        println("SharedStorage instance is being garbage collected.")
+    }
+
     // Identifier is email
     // Function to save the refresh token
     fun saveRefreshToken(token: String) {

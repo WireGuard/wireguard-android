@@ -10,7 +10,7 @@ enum class AuthenticationType {
     Microsoft
 }
 
-suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: AuthenticationType): Result<CreateDaemonResult?> {
+suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: AuthenticationType, daemonName: String): Result<CreateDaemonResult?> {
     val keys = generateEd25519KeyPair()
 
     val userAuthenticationResult = getUserAuthenticationV2(authToken, authType)
@@ -39,13 +39,12 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
     }
 
     val existingDaemons = existingDaemonsResult.getOrThrow()
-    val mobileNetworkIsolationDeviceName = getMobileNetworkIsolationHostname(email)
-    val existingDaemon = getExistingDaemon(mobileNetworkIsolationDeviceName, existingDaemons)
+    val existingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
     val daemonIpAddress = existingDaemon?.ipAddress ?: run {
         val createDaemonData = CreateDaemonData(
             publicKey = keys.pk,
-            name = mobileNetworkIsolationDeviceName
+            name = daemonName
         )
 
         val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData)
@@ -68,7 +67,7 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
     return Result.success(CreateDaemonResult(wireguardConfig, companyName))
 }
 
-suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticationResult: UserAuthenticationResult): Result<CreateDaemonResult?> {
+suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticationResult: UserAuthenticationResult, daemonName: String): Result<CreateDaemonResult?> {
     val keys = generateEd25519KeyPair()
 
     val userId = authenticationResult.id.toString()
@@ -90,13 +89,12 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     }
 
     val existingDaemons = existingDaemonsResult.getOrThrow()
-    val mobileNetworkIsolationDeviceName = getMobileNetworkIsolationHostname(email)
-    val existingDaemon = getExistingDaemon(mobileNetworkIsolationDeviceName, existingDaemons)
+    val existingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
     val daemonIpAddress = existingDaemon?.ipAddress ?: run {
         val createDaemonData = CreateDaemonData(
             publicKey = keys.pk,
-            name = mobileNetworkIsolationDeviceName
+            name = daemonName
         )
 
         val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData)

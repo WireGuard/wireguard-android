@@ -5,23 +5,30 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.jimberisolation.android.util.UserAuthenticationResult
 import createNetworkIsolationDaemonConfigFromEmailVerification
+import getDeviceHostname
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,9 +39,13 @@ class EmailVerificationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
     private var backPressedCallback: OnBackPressedCallback? = null
 
+    private var daemonName: String? = getDeviceHostname();
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.email_verification_activity)
+
+        SharedStorage.initialize(this)
 
         val errorTextView: TextView = findViewById(R.id.verification_error)
 
@@ -149,9 +160,13 @@ class EmailVerificationActivity : AppCompatActivity() {
     }
 
     private fun handleEmailVerification(userAuthenticationResult: UserAuthenticationResult) {
+        if(daemonName == null) return;
+
         lifecycleScope.launch {
             try {
-                val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult)
+                val daemonName = showNameInputDialog() ?: return@launch
+
+                val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult, daemonName)
 
                 if (wireguardConfigResult.isFailure) {
                     val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -194,4 +209,52 @@ class EmailVerificationActivity : AppCompatActivity() {
     private fun handleBackPressed() {
         finish()
     }
+
+    private suspend fun showNameInputDialog(): String? {
+        // Create a deferred result to await the input
+        val result = CompletableDeferred<String?>()
+
+        // Inflate the dialog's custom view
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_input_name, null)
+
+        // Build the dialog
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        // Get reference to EditText and buttons in the dialog
+        val nameInput = dialogView.findViewById<EditText>(R.id.nameInput)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+        val btnSubmit = dialogView.findViewById<Button>(R.id.btnSubmit)
+
+        nameInput.setText(daemonName);
+
+        // Create the dialog
+        val dialog = dialogBuilder.create()
+
+        // Handle the Cancel button
+        btnCancel.setOnClickListener {
+            result.complete(null)  // Return null if canceled
+            dialog.dismiss()
+        }
+
+        // Handle the Submit button
+        btnSubmit.setOnClickListener {
+            val name = nameInput.text.toString().trim()
+
+            if (name.isNotEmpty()) {
+                result.complete(name)  // Pass the entered name to the result
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "Please enter a valid name.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Show the dialog
+        dialog.show()
+
+        // Await the result before proceeding
+        return result.await()
+    }
+
 }

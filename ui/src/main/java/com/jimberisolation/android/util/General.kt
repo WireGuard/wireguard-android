@@ -51,15 +51,6 @@ fun getExistingDaemon(name: String, existingNames: List<GetDaemonsNameResult>): 
     return null;
 }
 
-fun getMobileNetworkIsolationHostname(email: String): String {
-    val username = email.split("@")[0].replace(".", "")
-
-    val hostname = getDeviceHostname()
-    val baseName = "$hostname-$username"
-
-    return baseName;
-}
-
 fun getUniqueDeviceName(email: String, existingNames: List<GetDaemonsNameResult>): String {
     val username = email.split("@")[0].replace(".", "")
 
