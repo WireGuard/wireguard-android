@@ -99,20 +99,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
     implementation("com.squareup.okhttp3:okhttp:4.9.2")
-
-
-    // R8 otherwise gives issues
-//    implementation("com.google.auto.value:auto-value-annotations:1.9")
-//    annotationProcessor ("com.google.auto.value:auto-value:1.9")
-//    implementation ("com.google.crypto.tink:tink:1.6.1")
-//    implementation ("com.nimbusds:nimbus-jose-jwt:9.22")
-//    implementation ("com.google.code.findbugs:annotations:3.0.1")
-//    implementation ("org.bouncycastle:bctls-fips:1.0.10")
-//    implementation ("org.bouncycastle:bc-fips:1.0.2.3")
-//    implementation("com.microsoft.identity.client:msal:4.9.0") {
-//        exclude(group = "io.opentelemetry")
-//    }
-
 }
 
 tasks.withType<JavaCompile>().configureEach {
