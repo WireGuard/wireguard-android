@@ -102,12 +102,14 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
+            return;
         }
 
         if (!tunnelsAvailable) {
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
+            return;
         } else {
             setContentView(R.layout.main_activity)
         }
