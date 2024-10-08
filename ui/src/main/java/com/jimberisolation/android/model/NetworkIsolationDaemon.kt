@@ -38,36 +38,37 @@ suspend fun createNetworkIsolationDaemonConfig(authToken: String, authType: Auth
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
 
-    val existingDaemons = existingDaemonsResult.getOrThrow();
-    val uniqueDaemonName = getUniqueDeviceName(email, existingDaemons)
+    val existingDaemons = existingDaemonsResult.getOrThrow()
+    val mobileNetworkIsolationDeviceName = getMobileNetworkIsolationHostname(email)
+    val existingDaemon = getExistingDaemon(mobileNetworkIsolationDeviceName, existingDaemons)
 
-    val createDaemonData = CreateDaemonData(
-        publicKey = keys.pk,
-        name =  uniqueDaemonName
-    )
+    val daemonIpAddress = existingDaemon?.ipAddress ?: run {
+        val createDaemonData = CreateDaemonData(
+            publicKey = keys.pk,
+            name = mobileNetworkIsolationDeviceName
+        )
+
+        val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData)
+        if (createdDaemonResult.isFailure) {
+            return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown daemon creation error"))
+        }
+
+        createdDaemonResult.getOrThrow().ipAddress
+    }
 
     val wireguardKeys = generateWireguardKeys(keys.sk, routerPublicKey)
 
-    val createdDaemonResult = createDaemonV2(userId,companyName, createDaemonData);
-    if (createdDaemonResult.isFailure) {
-        return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown created daemon error"))
-    }
-
-    val createdDaemon = createdDaemonResult.getOrThrow();
-
-    val createdIpAddress = createdDaemon.ipAddress
-
     val company = Company(companyName)
-    val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, createdIpAddress)
+    val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, daemonIpAddress)
     val dnsServer = DnsServer(ipAddress)
-    val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519,endpointAddress, 51820)
+    val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519, endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
-    return Result.success(CreateDaemonResult(wireguardConfig, companyName));
+    return Result.success(CreateDaemonResult(wireguardConfig, companyName))
 }
 
-suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticationResult: UserAuthenticationResult): Result<String?> {
+suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticationResult: UserAuthenticationResult): Result<CreateDaemonResult?> {
     val keys = generateEd25519KeyPair()
 
     val userId = authenticationResult.id.toString()
@@ -88,31 +89,32 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
 
-    val existingDaemons = existingDaemonsResult.getOrThrow();
-    val uniqueDaemonName = getUniqueDeviceName(email, existingDaemons)
+    val existingDaemons = existingDaemonsResult.getOrThrow()
+    val mobileNetworkIsolationDeviceName = getMobileNetworkIsolationHostname(email)
+    val existingDaemon = getExistingDaemon(mobileNetworkIsolationDeviceName, existingDaemons)
 
-    val createDaemonData = CreateDaemonData(
-        publicKey = keys.pk,
-        name =  uniqueDaemonName
-    )
+    val daemonIpAddress = existingDaemon?.ipAddress ?: run {
+        val createDaemonData = CreateDaemonData(
+            publicKey = keys.pk,
+            name = mobileNetworkIsolationDeviceName
+        )
+
+        val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData)
+        if (createdDaemonResult.isFailure) {
+            return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown daemon creation error"))
+        }
+
+        createdDaemonResult.getOrThrow().ipAddress
+    }
 
     val wireguardKeys = generateWireguardKeys(keys.sk, routerPublicKey)
 
-    val createdDaemonResult = createDaemonV2(userId, companyName, createDaemonData);
-    if (createdDaemonResult.isFailure) {
-        return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Unknown created daemon error"))
-    }
-
-    val createdDaemon = createdDaemonResult.getOrThrow();
-
-    val createdIpAddress = createdDaemon.ipAddress
-
     val company = Company(companyName)
-    val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, createdIpAddress)
+    val daemon = Daemon(wireguardKeys.baseEncodedPrivateKeyInX25519, daemonIpAddress)
     val dnsServer = DnsServer(ipAddress)
     val networkController = NetworkController(wireguardKeys.baseEncodedCloudcontrollerPkInX25519, endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
-    return Result.success(wireguardConfig)
+    return Result.success(CreateDaemonResult(wireguardConfig, companyName))
 }

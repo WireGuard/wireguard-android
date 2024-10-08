@@ -22,7 +22,8 @@ data class RouterPublicKeyResult(
 )
 
 data class GetDaemonsNameResult(
-    val name: String
+    val name: String,
+    val ipAddress: String
 )
 
 data class CreateDaemonData(

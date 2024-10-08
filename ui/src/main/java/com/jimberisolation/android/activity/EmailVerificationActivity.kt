@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
@@ -159,10 +160,14 @@ class EmailVerificationActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val wireguardConfig = wireguardConfigResult.getOrThrow().toString()
+                val result = wireguardConfigResult.getOrThrow()
+
+                val wireguardConfig = result?.wireguardConfig!!
+                val companyName = result.company
+
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig)
+                importTunnelAndNavigate(wireguardConfig, companyName)
 
             } catch (e: Exception) {
                 Log.e("Authentication", "An error occurred", e)
@@ -172,13 +177,18 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun importTunnelAndNavigate(result: String) {
-        importTunnel(result) { }
+    private suspend fun importTunnelAndNavigate(result: String, companyName: String) {
+        val manager = getTunnelManager()
 
-        val intent = Intent(this, MainActivity::class.java) // Missing intent assignment
+        val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
+        if(alreadyExistingTunnel == null) {
+            importTunnel(result) { }
+        }
+
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
-
     }
 
     private fun handleBackPressed() {
