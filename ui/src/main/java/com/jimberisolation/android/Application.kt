@@ -120,7 +120,14 @@ class Application : android.app.Application() {
 
         if (BuildConfig.DEBUG) {
             StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
-            StrictMode.setThreadPolicy(ThreadPolicy.Builder().detectAll().penaltyLog().build())
+            StrictMode.setThreadPolicy(
+                ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork() // or .detectAll() for all thread-related checks
+                    .penaltyLog()    // Log violations
+                    .build()
+            )
         }
     }
 
