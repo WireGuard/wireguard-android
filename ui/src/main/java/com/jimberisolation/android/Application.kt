@@ -119,7 +119,7 @@ class Application : android.app.Application() {
         Updater.monitorForUpdates()
 
         if (BuildConfig.DEBUG) {
-            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
+            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
             StrictMode.setThreadPolicy(
                 ThreadPolicy.Builder()
                     .detectDiskReads()
