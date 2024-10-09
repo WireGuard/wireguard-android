@@ -46,7 +46,7 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
     companion object {
         private fun getBackendPrettyName(context: Context, backend: Backend) = when (backend) {
             is WgQuickBackend -> context.getString(R.string.type_name_kernel_module)
-            is GoBackend -> context.getString(R.string.type_name_go_userspace)
+            is GoBackend -> "Build version " + BuildConfig.VERSION_CODE + " |"
             else -> ""
         }
     }

@@ -118,16 +118,13 @@ class Application : android.app.Application() {
         }
         Updater.monitorForUpdates()
 
+        StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
         if (BuildConfig.DEBUG) {
             StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
-            StrictMode.setThreadPolicy(
-                ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork() // or .detectAll() for all thread-related checks
-                    .penaltyLog()    // Log violations
-                    .build()
-            )
+            StrictMode.setThreadPolicy(policy)
         }
     }
 
