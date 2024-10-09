@@ -26,6 +26,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application.Companion.getTunnelManager
+import com.jimberisolation.android.BuildConfig
 import com.jimberisolation.android.R
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
@@ -91,8 +92,11 @@ class SignInActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        println(BuildConfig.APPLICATION_ID)
+        println(Config.GOOGLE_AUTH_ID)
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("107269124183-jm55spjgcnmqt9f94vadssv8dp5jjpim.apps.googleusercontent.com")
+            .requestIdToken(Config.GOOGLE_AUTH_ID)
             .requestEmail()
             .build()
 

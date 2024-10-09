@@ -6,13 +6,9 @@ package com.jimberisolation.android.preference
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.preference.Preference
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.BuildConfig

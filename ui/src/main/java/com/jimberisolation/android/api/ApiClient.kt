@@ -26,7 +26,7 @@ object AuthEventManager {
 
 class AuthInterceptor : Interceptor {
     private val excludedUrls = listOf(
-        "https://signal.staging.jimber.io/api/v1/auth/refresh"
+        Config.BASE_URL + "auth/refresh",
     )
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -114,7 +114,7 @@ data class AuthRequest(
 
 // ApiClient class
 object ApiClient {
-    private const val BASE_URL = "https://signal.staging.jimber.io/api/v1/"
+    private const val BASE_URL = Config.BASE_URL
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)
