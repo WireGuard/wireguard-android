@@ -75,8 +75,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.jimberisolation.android.debug"
-                    android:path="/lvGC0B4SWYU8tNPHg/bdMjQinZQ="
+                    android:host="com.jimberisolation.android"
+                    android:path="/BAhPO5r6+gArwttJYkjO2isMw1A="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

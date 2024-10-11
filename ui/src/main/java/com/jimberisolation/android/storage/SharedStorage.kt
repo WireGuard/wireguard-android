@@ -3,6 +3,12 @@ package com.jimberisolation.android.storage
 import android.content.Context
 import android.content.SharedPreferences
 
+
+data class WireguardKeyPair(
+    val encodedPk: String,
+    val baseEncodedPrivateKeyInX25519: String
+)
+
 class SharedStorage private constructor() {
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -13,6 +19,8 @@ class SharedStorage private constructor() {
         private const val AUTHENTICATION_TOKEN_KEY = "authentication_token"
         private const val CURRENT_USING_EMAIL_KEY = "current_using_email"
 
+        private const val WIREGUARD_PK = "wireguard_encoded_pk"
+        private const val WIREGUARD_SK = "wireguard__encoded_sk"
         @Volatile
         private var INSTANCE: SharedStorage? = null
 
@@ -79,5 +87,25 @@ class SharedStorage private constructor() {
     // Function to get the authentication token
     fun getCurrentUsingEmail(): String {
         return sharedPreferences.getString(CURRENT_USING_EMAIL_KEY, null).toString()
+    }
+
+    fun saveWireguardKeyPair(company: String, encodedPk: String, encodedSk: String)  {
+        val editor = sharedPreferences.edit()
+        editor.putString(WIREGUARD_PK + "_" + company, encodedPk)
+        editor.putString(WIREGUARD_SK + "_" + company, encodedSk)
+
+        editor.apply()
+    }
+
+    // Function to get the authentication token
+    fun getWireguardKeyPair(company: String): WireguardKeyPair? {
+        val pk = sharedPreferences.getString(WIREGUARD_PK + "_" + company, null).toString()
+        val sk = sharedPreferences.getString(WIREGUARD_SK + "_" + company, null).toString()
+
+        if((pk != "" && pk != "null") && (sk != "" && sk != "null")) {
+            return WireguardKeyPair(pk, sk)
+        }
+
+        return null;
     }
 }
