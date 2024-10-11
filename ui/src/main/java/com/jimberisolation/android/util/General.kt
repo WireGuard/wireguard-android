@@ -1,3 +1,4 @@
+import android.os.Build
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.storage.WireguardKeyPair
 import com.jimberisolation.android.util.GetDaemonsNameResult
@@ -7,7 +8,7 @@ import java.net.UnknownHostException
 
 fun getDeviceHostname(): String {
     return try {
-        val hostName = InetAddress.getLocalHost().hostName
+        val hostName = Build.MODEL.replace(Regex("[^A-Za-z0-9]"), "")
         hostName
     } catch (e: UnknownHostException) {
         "Unknown"
