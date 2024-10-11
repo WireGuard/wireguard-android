@@ -10,23 +10,21 @@ enum class AuthenticationType {
     Microsoft
 }
 
-suspend fun createNetworkIsolationDaemonConfig(
-    authToken: String,
-    authType: AuthenticationType,
-    daemonName: String
-): Result<CreateDaemonResult?> {
-    val ed25519Keys = generateEd25519KeyPair()
-
-    // Authenticate the user
+suspend fun authenticateUser(authToken: String, authType: AuthenticationType): Result<UserAuthenticationResult> {
     val userAuthResult = getUserAuthenticationV2(authToken, authType)
     if (userAuthResult.isFailure) {
         return Result.failure(userAuthResult.exceptionOrNull() ?: RuntimeException("Failed to authenticate user"))
     }
 
-    val authenticatedUser = userAuthResult.getOrThrow()
-    val userId = authenticatedUser.id.toString()
-    val email = authenticatedUser.email
-    val companyName = authenticatedUser.company.name
+    return userAuthResult;
+}
+
+suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAuthenticationResult, daemonName: String): Result<CreateDaemonResult?> {
+    val ed25519Keys = generateEd25519KeyPair()
+
+    val userId = userAuthenticationResult.id.toString()
+    val email = userAuthenticationResult.email
+    val companyName = userAuthenticationResult.company.name
 
     // Save active email in SharedStorage
     SharedStorage.getInstance().saveCurrentUsingEmail(email)
@@ -73,7 +71,7 @@ suspend fun createNetworkIsolationDaemonConfig(
         daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
 
-        SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519)
+        SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
     } else {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519
@@ -137,7 +135,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
         daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
 
-        SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519)
+        SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
     } else {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519

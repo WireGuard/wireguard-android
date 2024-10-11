@@ -6,7 +6,8 @@ import android.content.SharedPreferences
 
 data class WireguardKeyPair(
     val encodedPk: String,
-    val baseEncodedPrivateKeyInX25519: String
+    val baseEncodedPrivateKeyInX25519: String,
+    val daemonName: String
 )
 
 class SharedStorage private constructor() {
@@ -20,7 +21,9 @@ class SharedStorage private constructor() {
         private const val CURRENT_USING_EMAIL_KEY = "current_using_email"
 
         private const val WIREGUARD_PK = "wireguard_encoded_pk"
-        private const val WIREGUARD_SK = "wireguard__encoded_sk"
+        private const val WIREGUARD_SK = "wireguard_encoded_sk"
+        private const val DAEMON_NAME = "wireguard_daemon_name"
+
         @Volatile
         private var INSTANCE: SharedStorage? = null
 
@@ -89,10 +92,11 @@ class SharedStorage private constructor() {
         return sharedPreferences.getString(CURRENT_USING_EMAIL_KEY, null).toString()
     }
 
-    fun saveWireguardKeyPair(company: String, encodedPk: String, encodedSk: String)  {
+    fun saveWireguardKeyPair(company: String, encodedPk: String, encodedSk: String, daemonName: String)  {
         val editor = sharedPreferences.edit()
         editor.putString(WIREGUARD_PK + "_" + company, encodedPk)
         editor.putString(WIREGUARD_SK + "_" + company, encodedSk)
+        editor.putString(DAEMON_NAME + "_" + company, daemonName)
 
         editor.apply()
     }
@@ -101,9 +105,11 @@ class SharedStorage private constructor() {
     fun getWireguardKeyPair(company: String): WireguardKeyPair? {
         val pk = sharedPreferences.getString(WIREGUARD_PK + "_" + company, null).toString()
         val sk = sharedPreferences.getString(WIREGUARD_SK + "_" + company, null).toString()
+        val daemonName = sharedPreferences.getString(DAEMON_NAME + "_" + company, null).toString()
+
 
         if((pk != "" && pk != "null") && (sk != "" && sk != "null")) {
-            return WireguardKeyPair(pk, sk)
+            return WireguardKeyPair(pk, sk, daemonName)
         }
 
         return null;

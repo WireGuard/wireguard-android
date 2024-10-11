@@ -23,6 +23,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import authenticateUser
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -47,8 +48,6 @@ import createNetworkIsolationDaemonConfig
 import getDeviceHostname
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.Arrays
 
 
@@ -185,11 +184,25 @@ class SignInActivity : AppCompatActivity() {
                 val account = completedTask.getResult(ApiException::class.java)
                 val token = account.idToken.toString()
 
-                // Await for the name input from the dialog
-                daemonName = showNameInputDialog() ?: return@launch
+                val userAuthenticationResult = authenticateUser(token, AuthenticationType.Google);
+                if(userAuthenticationResult.isFailure) {
+                    val userAuthenticationException = userAuthenticationResult.exceptionOrNull()
+                    val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                    Snackbar.make(view, userAuthenticationException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                    return@launch
+                }
+
+                val companyName = userAuthenticationResult.getOrThrow().company.name
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPair(companyName)
+                if(daemonAlreadyInStorage == null) {
+                    daemonName = showNameInputDialog() ?: return@launch
+                }
+                else {
+                    daemonName = daemonAlreadyInStorage.daemonName
+                }
 
                 // Proceed with the WireGuard config
-                val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Google, daemonName!!)
+                val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
 
                 if (wireguardConfigResult.isFailure) {
                     val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -199,7 +212,6 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
-                val companyName = wireguardConfigResult.getOrThrow()?.company!!
                 Log.d("Configuration", wireguardConfig)
 
                 importTunnelAndNavigate(wireguardConfig, companyName)
@@ -230,9 +242,25 @@ class SignInActivity : AppCompatActivity() {
             override fun onSuccess(authenticationResult: IAuthenticationResult) {
                 val token = authenticationResult.accessToken
                 lifecycleScope.launch {
-                    val daemonName = showNameInputDialog() ?: return@launch
+                    val userAuthenticationResult = authenticateUser(token, AuthenticationType.Microsoft);
+                    if(userAuthenticationResult.isFailure) {
+                        val userAuthenticationException = userAuthenticationResult.exceptionOrNull()
+                        val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                        Snackbar.make(view, userAuthenticationException?.message.toString(), Snackbar.LENGTH_LONG).show()
+                        return@launch
+                    }
 
-                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(token, AuthenticationType.Microsoft, daemonName)
+                    val companyName = userAuthenticationResult.getOrThrow().company.name
+                    val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPair(companyName)
+                    if(daemonAlreadyInStorage == null) {
+                        daemonName = showNameInputDialog() ?: return@launch
+                    }
+                    else {
+                        daemonName = daemonAlreadyInStorage.daemonName
+                    }
+
+                    // Proceed with the WireGuard config
+                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
 
                     if (wireguardConfigResult.isFailure) {
                         val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -242,7 +270,6 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
-                    val companyName = wireguardConfigResult.getOrThrow()?.company!!
                     Log.d("Configuration", wireguardConfig)
 
                     importTunnelAndNavigate(wireguardConfig, companyName)
