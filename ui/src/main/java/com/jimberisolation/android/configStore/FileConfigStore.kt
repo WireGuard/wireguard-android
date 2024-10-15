@@ -74,7 +74,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     override fun rename(tunnel: ObservableTunnel, replacement: String) {
         Log.d(TAG, "Renaming configuration for tunnel ${tunnel.name} to $replacement")
         val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
-        val replacementFile = fileFor(replacement)
+        val replacementFile = fileFor("daemon-${tunnel.getDaemonId()}-name-${replacement}")
         if (!replacementFile.createNewFile()) throw IOException(context.getString(R.string.config_exists_error, replacement))
         if (!file.renameTo(replacementFile)) {
             if (!replacementFile.delete()) Log.w(TAG, "Couldn't delete marker file for new name $replacement")
