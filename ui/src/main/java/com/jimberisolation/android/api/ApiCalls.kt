@@ -2,6 +2,7 @@ import android.util.Log
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.CreateDaemonData
 import com.jimberisolation.android.util.CreatedDaemonResult
+import com.jimberisolation.android.util.DeleteDaemonResult
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.GetDaemonsNameResult
 import com.jimberisolation.android.util.GetEmailVerificationCodeData
@@ -33,7 +34,7 @@ suspend fun getUserAuthenticationV2(idToken: String, authenticationType: Authent
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
         val cookies = response.headers().values("Set-Cookie")
 
-        saveTokens(cookies.joinToString("; "))
+        saveDataToLocalStorage(cookies.joinToString("; "), result.id.toString(), result.company.name)
         Result.success(result)
 
     } catch (e: Exception) {
@@ -78,6 +79,24 @@ suspend fun createDaemonV2(userId: String, company: String, createDaemonData: Cr
     }
 }
 
+suspend fun deleteDaemonV2(userId: String, company: String, daemonId: String): Result<DeleteDaemonResult> {
+    return try {
+        val cookies = getCookieString()
+        val result = ApiClient.apiService.deleteDaemon(userId, company, daemonId, cookies)
+
+        if(result.isSuccessful) {
+            val data = result.body();
+            return Result.success(data!!)
+        }
+
+        return Result.failure(Exception(result.errorBody().toString()))
+
+    } catch (e: Exception) {
+        Log.e("CREATE_DAEMON", "ERROR IN CREATE DAEMON", e)
+        Result.failure(e)
+    }
+}
+
 suspend fun sendVerificationEmail(email: String): Result<Boolean> {
     return try {
         val result = ApiClient.apiService.sendVerificationEmail(GetEmailVerificationCodeData(email)) // Adjust as needed
@@ -106,10 +125,8 @@ suspend fun verifyEmailWithToken(emailVerificationData: EmailVerificationData): 
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
         val cookies = response.headers().values("Set-Cookie")
 
-        saveTokens(cookies.joinToString("; "))
-        Result.success(result)
-
-        Result.success(result)
+        saveDataToLocalStorage(cookies.joinToString("; "), result.id.toString(), result.company.name)
+        return Result.success(result)
 
     } catch (e: Exception) {
         Log.e("EMAIL_WITH_TOKEN", "ERROR IN EMAIL VERIFY WITH CODE CODE REQUEST", e)
@@ -147,11 +164,15 @@ fun extractToken(cookieHeader: String, tokenName: String): String? {
     return null
 }
 
-private fun saveTokens(cookies: String) {
+private fun saveDataToLocalStorage(cookies: String, userId: String, company: String) {
     val authToken = extractToken(cookies, "Authentication")
     val refreshToken = extractToken(cookies, "Refresh")
 
     val sharedStorage = SharedStorage.getInstance()
+
+
+    sharedStorage.saveCurrentUsingCompany(company);
+    sharedStorage.saveCurrentUsingUserId(userId)
     sharedStorage.saveRefreshToken(refreshToken ?: "")
     sharedStorage.saveAuthenticationToken(authToken ?: "")
 }

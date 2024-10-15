@@ -128,16 +128,6 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
             val activity = requireActivity()
             activity.lifecycleScope.launch {
                 when {
-                    tunnel == null -> {
-                        Log.d(TAG, "Attempting to create new tunnel " + binding!!.name)
-                        val manager = Application.getTunnelManager()
-                        try {
-                            onTunnelCreated(manager.create(binding!!.name!!, newConfig), null)
-                        } catch (e: Throwable) {
-                            onTunnelCreated(null, e)
-                        }
-                    }
-
                     tunnel!!.name != binding!!.name -> {
                         Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
                         try {

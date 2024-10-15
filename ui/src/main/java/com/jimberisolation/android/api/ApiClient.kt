@@ -1,6 +1,7 @@
 import androidx.lifecycle.MutableLiveData
 import com.jimberisolation.android.util.CreateDaemonData
 import com.jimberisolation.android.util.CreatedDaemonResult
+import com.jimberisolation.android.util.DeleteDaemonResult
 import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.GetDaemonsNameResult
 import com.jimberisolation.android.util.GetEmailVerificationCodeData
@@ -15,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -96,6 +98,9 @@ interface ApiService {
 
     @POST("companies/{company}/daemons/user/{userId}")
     suspend fun createDaemon(@Path("userId") userId: String, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
+
+    @DELETE("companies/{company}/daemons/user/{userId}/{daemonId}")
+    suspend fun deleteDaemon(@Path("userId") userId: String, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonResult>
 
     @POST("auth/send-user-token-code")
     suspend fun sendVerificationEmail(@Body emailVerificationData: GetEmailVerificationCodeData): Boolean

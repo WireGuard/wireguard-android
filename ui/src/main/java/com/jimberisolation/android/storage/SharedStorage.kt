@@ -18,7 +18,8 @@ class SharedStorage private constructor() {
         private const val PREFS_NAME = "com.jimberisolation.android.PREFERENCE_FILE_KEY"
         private const val REFRESH_TOKEN_KEY = "refresh_token"
         private const val AUTHENTICATION_TOKEN_KEY = "authentication_token"
-        private const val CURRENT_USING_EMAIL_KEY = "current_using_email"
+        private const val CURRENT_USER_ID = "current_user_id"
+        private const val CURRENT_COMPANY = "current_company"
 
         private const val WIREGUARD_PK = "wireguard_encoded_pk"
         private const val WIREGUARD_SK = "wireguard_encoded_sk"
@@ -52,44 +53,56 @@ class SharedStorage private constructor() {
     // Identifier is email
     // Function to save the refresh token
     fun saveRefreshToken(token: String) {
-        val email = this.getCurrentUsingEmail();
+        val userId = this.getCurrentUserId();
 
         val editor = sharedPreferences.edit()
-        editor.putString(REFRESH_TOKEN_KEY + "_" +  email, token)
+        editor.putString(REFRESH_TOKEN_KEY + "_" +  userId, token)
         editor.apply()
     }
 
     // Function to get the refresh token
     fun getRefreshToken(): String {
-        val email = this.getCurrentUsingEmail();
-        return sharedPreferences.getString(REFRESH_TOKEN_KEY +"_" + email, null).toString()
+        val userId = this.getCurrentUserId();
+        return sharedPreferences.getString(REFRESH_TOKEN_KEY +"_" + userId, null).toString()
     }
 
     // Function to save the authentication token
     fun saveAuthenticationToken(token: String) {
-        val email = this.getCurrentUsingEmail();
+        val userId = this.getCurrentUserId();
 
         val editor = sharedPreferences.edit()
-        editor.putString(AUTHENTICATION_TOKEN_KEY + "_" + email, token)
+        editor.putString(AUTHENTICATION_TOKEN_KEY + "_" + userId, token)
         editor.apply()
     }
 
     // Function to get the authentication token
     fun getAuthenticationToken(): String {
-        val email = this.getCurrentUsingEmail();
-        return sharedPreferences.getString(AUTHENTICATION_TOKEN_KEY + "_" + email, null).toString()
+        val userId = this.getCurrentUserId();
+        return sharedPreferences.getString(AUTHENTICATION_TOKEN_KEY + "_" + userId, null).toString()
     }
 
     // Function to save the authentication token
-    fun saveCurrentUsingEmail(email: String) {
+    fun saveCurrentUsingUserId(userId: String) {
         val editor = sharedPreferences.edit()
-        editor.putString(CURRENT_USING_EMAIL_KEY + "_" + email, email)
+        editor.putString(CURRENT_USER_ID, userId)
         editor.apply()
     }
 
     // Function to get the authentication token
-    fun getCurrentUsingEmail(): String {
-        return sharedPreferences.getString(CURRENT_USING_EMAIL_KEY, null).toString()
+    fun getCurrentUserId(): String {
+        return sharedPreferences.getString(CURRENT_USER_ID, null).toString()
+    }
+
+    // Function to save the authentication token
+    fun saveCurrentUsingCompany(company: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString(CURRENT_COMPANY, company)
+        editor.apply()
+    }
+
+    // Function to get the authentication token
+    fun getCurrentCompany(): String {
+        return sharedPreferences.getString(CURRENT_COMPANY, null).toString()
     }
 
     fun saveWireguardKeyPair(company: String, encodedPk: String, encodedSk: String, daemonName: String)  {

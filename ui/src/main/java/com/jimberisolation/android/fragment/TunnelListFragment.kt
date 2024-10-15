@@ -24,12 +24,9 @@ import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.qrcode.QRCodeReader
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.activity.SignInActivity
-import com.jimberisolation.android.activity.TunnelCreatorActivity
 import com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler
 import com.jimberisolation.android.databinding.TunnelListFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
@@ -39,6 +36,7 @@ import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.QrCodeFromFileScanner
 import com.jimberisolation.android.util.TunnelImporter
 import com.jimberisolation.android.widget.MultiselectableRelativeLayout
+import com.journeyapps.barcodescanner.ScanContract
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -52,37 +50,6 @@ class TunnelListFragment : BaseFragment() {
     private var actionMode: ActionMode? = null
     private var backPressedCallback: OnBackPressedCallback? = null
     private var binding: TunnelListFragmentBinding? = null
-    private val tunnelFileImportResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { data ->
-        if (data == null) return@registerForActivityResult
-        val activity = activity ?: return@registerForActivityResult
-        val contentResolver = activity.contentResolver ?: return@registerForActivityResult
-        activity.lifecycleScope.launch {
-            if (QrCodeFromFileScanner.validContentType(contentResolver, data)) {
-                try {
-                    val qrCodeFromFileScanner = QrCodeFromFileScanner(contentResolver, QRCodeReader())
-                    val result = qrCodeFromFileScanner.scan(data)
-                    TunnelImporter.importTunnel(result.text) { showSnackbar(it) }
-                } catch (e: Exception) {
-                    val error = ErrorMessages[e]
-                    val message = Application.get().resources.getString(R.string.import_error, error)
-                    Log.e(TAG, message, e)
-                    showSnackbar(message)
-                }
-            } else {
-                TunnelImporter.importTunnel(contentResolver, data) { showSnackbar(it) }
-            }
-        }
-    }
-
-    private val qrImportResultLauncher = registerForActivityResult(ScanContract()) { result ->
-        val qrCode = result.contents
-        val activity = activity
-        if (qrCode != null && activity != null) {
-            activity.lifecycleScope.launch { TunnelImporter.importTunnel(qrCode) { showSnackbar(it) } }
-        }
-    }
-
-    private val snackbarUpdateShower = SnackbarUpdateShower(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,36 +67,7 @@ class TunnelListFragment : BaseFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = TunnelListFragmentBinding.inflate(inflater, container, false)
-        val bottomSheet = AddTunnelsSheet()
-        binding?.apply {
-            createFab.setOnClickListener {
-                if (childFragmentManager.findFragmentByTag("BOTTOM_SHEET") != null)
-                    return@setOnClickListener
-                childFragmentManager.setFragmentResultListener(AddTunnelsSheet.REQUEST_KEY_NEW_TUNNEL, viewLifecycleOwner) { _, bundle ->
-                    when (bundle.getString(AddTunnelsSheet.REQUEST_METHOD)) {
-                        AddTunnelsSheet.REQUEST_CREATE -> {
-                            startActivity(Intent(requireActivity(), TunnelCreatorActivity::class.java))
-                        }
 
-                        AddTunnelsSheet.REQUEST_IMPORT -> {
-                            tunnelFileImportResultLauncher.launch("*/*")
-                        }
-
-                        AddTunnelsSheet.REQUEST_SCAN -> {
-                            qrImportResultLauncher.launch(
-                                ScanOptions()
-                                    .setOrientationLocked(false)
-                                    .setBeepEnabled(false)
-                                    .setPrompt(getString(R.string.qr_code_hint))
-                            )
-                        }
-                    }
-                }
-                bottomSheet.showNow(childFragmentManager, "BOTTOM_SHEET")
-            }
-            executePendingBindings()
-            snackbarUpdateShower.attach(mainContainer, createFab)
-        }
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(this) { actionMode?.finish() }
         backPressedCallback?.isEnabled = false
 

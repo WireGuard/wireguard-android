@@ -57,34 +57,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class TvMainActivity : AppCompatActivity() {
-    private val tunnelFileImportResultLauncher = registerForActivityResult(object : ActivityResultContracts.GetContent() {
-        override fun createIntent(context: Context, input: String): Intent {
-            val intent = super.createIntent(context, input)
-
-            /* AndroidTV now comes with stubs that do nothing but display a Toast less helpful than
-             * what we can do, so detect this and throw an exception that we can catch later. */
-            val activitiesToResolveIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.packageManager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
-            } else {
-                @Suppress("DEPRECATION")
-                context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            }
-            if (activitiesToResolveIntent.all {
-                    val name = it.activityInfo.packageName
-                    name.startsWith("com.google.android.tv.frameworkpackagestubs") || name.startsWith("com.android.tv.frameworkpackagestubs")
-                }) {
-                throw ActivityNotFoundException()
-            }
-            return intent
-        }
-    }) { data ->
-        if (data == null) return@registerForActivityResult
-        lifecycleScope.launch {
-            TunnelImporter.importTunnel(contentResolver, data) {
-                Toast.makeText(this@TvMainActivity, it, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
     private var pendingTunnel: ObservableTunnel? = null
     private val permissionActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         val tunnel = pendingTunnel
@@ -167,57 +139,6 @@ class TvMainActivity : AppCompatActivity() {
                             setTunnelStateWithPermissionsResult(item)
                         }
                     }
-                }
-            }
-        }
-
-        binding.filesRowConfigurationHandler = object : ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler<TvFileListItemBinding, KeyedFile> {
-            override fun onConfigureRow(binding: TvFileListItemBinding, item: KeyedFile, position: Int) {
-                binding.root.setOnClickListener {
-                    if (item.file.isDirectory)
-                        navigateTo(item.file)
-                    else {
-                        val uri = Uri.fromFile(item.file)
-                        files.clear()
-                        filesRoot.set("")
-                        lifecycleScope.launch {
-                            TunnelImporter.importTunnel(contentResolver, uri) {
-                                Toast.makeText(this@TvMainActivity, it, Toast.LENGTH_LONG).show()
-                            }
-                        }
-                        runOnUiThread {
-                            this@TvMainActivity.binding.tunnelList.requestFocus()
-                        }
-                    }
-                }
-            }
-        }
-
-        binding.importButton.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                if (filesRoot.get()?.isEmpty() != false) {
-                    navigateTo(File("/"))
-                    runOnUiThread {
-                        binding.filesList.requestFocus()
-                    }
-                } else {
-                    files.clear()
-                    filesRoot.set("")
-                    runOnUiThread {
-                        binding.tunnelList.requestFocus()
-                    }
-                }
-            } else {
-                try {
-                    tunnelFileImportResultLauncher.launch("*/*")
-                } catch (_: Throwable) {
-                    MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false)
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            try {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://webstoreredirect")))
-                            } catch (_: Throwable) {
-                            }
-                        }.show()
                 }
             }
         }

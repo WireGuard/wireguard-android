@@ -188,7 +188,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig, companyName)
+                importTunnelAndNavigate(wireguardConfig, result.daemonId, companyName)
 
             } catch (e: Exception) {
                 Log.e("Authentication", "An error occurred", e)
@@ -198,12 +198,12 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun importTunnelAndNavigate(result: String, companyName: String) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Number, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
         if(alreadyExistingTunnel == null) {
-            importTunnel(result) { }
+            importTunnel(result, daemonId) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)

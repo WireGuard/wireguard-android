@@ -4,6 +4,7 @@
  */
 package com.jimberisolation.android.configStore
 
+import com.jimberisolation.android.model.ObservableTunnel
 import com.jimberisolation.config.Config
 
 /**
@@ -19,7 +20,7 @@ interface ConfigStore {
      * @return The configuration that was actually saved to persistent storage.
      */
     @Throws(Exception::class)
-    fun create(name: String, config: Config): Config
+    fun create(name: String, daemonId: Number, config: Config): Config
 
     /**
      * Delete a persistent tunnel.
@@ -27,14 +28,14 @@ interface ConfigStore {
      * @param name The name of the tunnel to delete.
      */
     @Throws(Exception::class)
-    fun delete(name: String)
+    fun delete(tunnel: ObservableTunnel)
 
     /**
      * Enumerate the names of tunnels present in persistent storage.
      *
      * @return The set of present tunnel names.
      */
-    fun enumerate(): Set<String>
+    fun enumerate(): Set<TunnelInfo>
 
     /**
      * Load the configuration for the tunnel given by `name`.

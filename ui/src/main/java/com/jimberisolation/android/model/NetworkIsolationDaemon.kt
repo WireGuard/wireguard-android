@@ -23,11 +23,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
     val ed25519Keys = generateEd25519KeyPair()
 
     val userId = userAuthenticationResult.id.toString()
-    val email = userAuthenticationResult.email
     val companyName = userAuthenticationResult.company.name
-
-    // Save active email in SharedStorage
-    SharedStorage.getInstance().saveCurrentUsingEmail(email)
 
     // Fetch public key from cloud controller
     val cloudControllerResult = getCloudControllerPublicKeyV2(companyName)
@@ -50,8 +46,9 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
 
     val localDaemonKeys = existingKeysOnDeviceForCompany(companyName)
 
-    var daemonPrivateKey = ""
-    var daemonIpAddress = ""
+    val daemonPrivateKey: String
+    val daemonIpAddress: String
+    val daemonId: Number;
 
     val existingDaemons = existingDaemonsResult.getOrThrow()
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
@@ -70,12 +67,14 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
 
         daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
+        daemonId = createdDaemonResult.getOrThrow().id;
 
         SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
     } else {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519
         daemonIpAddress = matchingDaemon?.ipAddress ?: ""
+        daemonId = matchingDaemon!!.id
     }
 
     // Build WireGuard configuration
@@ -86,7 +85,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
-    return Result.success(CreateDaemonResult(wireguardConfig, companyName))
+    return Result.success(CreateDaemonResult(wireguardConfig, companyName, daemonId))
 }
 
 
@@ -114,8 +113,9 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val localDaemonKeys = existingKeysOnDeviceForCompany(companyName)
 
-    var daemonPrivateKey = ""
-    var daemonIpAddress = ""
+    val daemonPrivateKey: String
+    val daemonIpAddress: String
+    val daemonId: Number;
 
     val existingDaemons = existingDaemonsResult.getOrThrow()
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
@@ -134,12 +134,14 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
         daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
+        daemonId = createdDaemonResult.getOrThrow().id;
 
         SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
     } else {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519
         daemonIpAddress = matchingDaemon?.ipAddress ?: ""
+        daemonId = matchingDaemon!!.id
     }
 
     // Build WireGuard configuration
@@ -150,5 +152,5 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
-    return Result.success(CreateDaemonResult(wireguardConfig, companyName))
+    return Result.success(CreateDaemonResult(wireguardConfig, companyName, daemonId))
 }

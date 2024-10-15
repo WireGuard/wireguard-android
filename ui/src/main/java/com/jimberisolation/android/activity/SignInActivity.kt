@@ -212,9 +212,11 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
+
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig, companyName)
+                importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
             } catch (e: ApiException) {
                 Log.e("Authentication", "An error occurred", e)
             }
@@ -222,12 +224,12 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun importTunnelAndNavigate(result: String, companyName: String) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Number, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
         if(alreadyExistingTunnel == null) {
-            importTunnel(result) { }
+            importTunnel(result, daemonId) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)
@@ -270,9 +272,11 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                    val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
+
                     Log.d("Configuration", wireguardConfig)
 
-                    importTunnelAndNavigate(wireguardConfig, companyName)
+                    importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
                 }
             }
 
