@@ -107,7 +107,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         }
 
     suspend fun getTunnelConfig(tunnel: ObservableTunnel): Config = withContext(Dispatchers.Main.immediate) {
-        tunnel.onConfigChanged(withContext(Dispatchers.IO) { configStore.load(tunnel.name) })!!
+        tunnel.onConfigChanged(withContext(Dispatchers.IO) { configStore.load(tunnel) })!!
     }
 
     fun onCreate() {
@@ -168,7 +168,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     suspend fun setTunnelConfig(tunnel: ObservableTunnel, config: Config): Config = withContext(Dispatchers.Main.immediate) {
         tunnel.onConfigChanged(withContext(Dispatchers.IO) {
             getBackend().setState(tunnel, tunnel.state, config)
-            configStore.save(tunnel.name, config)
+            configStore.save(tunnel, config)
         })!!
     }
 
@@ -189,7 +189,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         try {
             if (originalState == Tunnel.State.UP)
                 withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.DOWN, null) }
-            withContext(Dispatchers.IO) { configStore.rename(tunnel.name, name) }
+            withContext(Dispatchers.IO) { configStore.rename(tunnel, name) }
             newName = tunnel.onNameChanged(name)
             if (originalState == Tunnel.State.UP)
                 withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }

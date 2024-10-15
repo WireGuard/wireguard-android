@@ -45,7 +45,7 @@ interface ConfigStore {
      * @return An in-memory representation of the configuration loaded from persistent storage.
      */
     @Throws(Exception::class)
-    fun load(name: String): Config
+    fun load(tunnel: ObservableTunnel): Config
 
     /**
      * Rename the configuration for the tunnel given by `name`.
@@ -54,7 +54,7 @@ interface ConfigStore {
      * @param replacement The new identifier for the configuration in persistent storage.
      */
     @Throws(Exception::class)
-    fun rename(name: String, replacement: String)
+    fun rename(tunnel: ObservableTunnel, replacement: String)
 
     /**
      * Save the configuration for an existing tunnel given by `name`.
@@ -65,5 +65,5 @@ interface ConfigStore {
      * @return The configuration that was actually saved to persistent storage.
      */
     @Throws(Exception::class)
-    fun save(name: String, config: Config): Config
+    fun save(tunnel: ObservableTunnel, config: Config): Config
 }

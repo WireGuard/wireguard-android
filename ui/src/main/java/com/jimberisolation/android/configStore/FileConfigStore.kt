@@ -66,14 +66,14 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     }
 
     @Throws(BadConfigException::class, IOException::class)
-    override fun load(name: String): Config {
-        FileInputStream(fileFor(name)).use { stream -> return Config.parse(stream) }
+    override fun load(tunnel: ObservableTunnel): Config {
+        FileInputStream(fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")).use { stream -> return Config.parse(stream) }
     }
 
     @Throws(IOException::class)
-    override fun rename(name: String, replacement: String) {
-        Log.d(TAG, "Renaming configuration for tunnel $name to $replacement")
-        val file = fileFor(name)
+    override fun rename(tunnel: ObservableTunnel, replacement: String) {
+        Log.d(TAG, "Renaming configuration for tunnel ${tunnel.name} to $replacement")
+        val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
         val replacementFile = fileFor(replacement)
         if (!replacementFile.createNewFile()) throw IOException(context.getString(R.string.config_exists_error, replacement))
         if (!file.renameTo(replacementFile)) {
@@ -83,9 +83,9 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     }
 
     @Throws(IOException::class)
-    override fun save(name: String, config: Config): Config {
-        Log.d(TAG, "Saving configuration for tunnel $name")
-        val file = fileFor(name)
+    override fun save(tunnel: ObservableTunnel, config: Config): Config {
+        Log.d(TAG, "Saving configuration for tunnel ${tunnel.name}")
+        val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
         if (!file.isFile)
             throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.name))
         FileOutputStream(file, false).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }
