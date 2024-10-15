@@ -107,8 +107,6 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
 
-        <activity android:name=".activity.WelcomeActivity" />
-
         <activity android:name=".activity.SignInActivity" />
         <activity android:name=".activity.EmailRegistrationActivity" />
         <activity android:name=".activity.EmailVerificationActivity" />

@@ -89,7 +89,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         AuthEventManager.authFailedEvent.observe(this) { authFailed ->
             if (authFailed) {
                 // Navigate to the login screen
-                val intent = Intent(this, WelcomeActivity::class.java)
+                val intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)
                 finish() // Optionally finish the current activity
             }
@@ -99,14 +99,14 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     private suspend fun navigateToScreen(tunnelsAvailable: Boolean) {
         val newAccessToken = refreshToken()
         if (newAccessToken.isFailure) {
-            val intent = Intent(this, WelcomeActivity::class.java)
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
             finish()
             return;
         }
 
         if (!tunnelsAvailable) {
-            val intent = Intent(this, WelcomeActivity::class.java)
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
             finish()
             return;
