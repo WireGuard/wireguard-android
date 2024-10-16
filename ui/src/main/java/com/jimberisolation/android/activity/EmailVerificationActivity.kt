@@ -165,13 +165,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val companyName = userAuthenticationResult.company.name
-                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPair(companyName)
-                if(daemonAlreadyInStorage == null) {
-                    daemonName = showNameInputDialog() ?: return@launch
-                }
-                else {
-                    daemonName = daemonAlreadyInStorage.daemonName
-                }
+                daemonName = showNameInputDialog() ?: return@launch
 
                 val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult, daemonName!!)
 

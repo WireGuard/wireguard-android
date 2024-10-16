@@ -1,0 +1,10 @@
+<!--
+  ~ Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="36dp" android:viewportHeight="960" android:viewportWidth="960" android:width="36dp">
+      
+    <path android:fillColor="@color/jimber_primary" android:pathData="M446.67,513.33L200,513.33v-66.66h246.67L446.67,200h66.66v246.67L760,446.67v66.66L513.33,513.33L513.33,760h-66.66v-246.67Z"/>
+    
+</vector>

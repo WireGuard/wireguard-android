@@ -193,13 +193,7 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 val companyName = userAuthenticationResult.getOrThrow().company.name
-                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPair(companyName)
-                if(daemonAlreadyInStorage == null) {
-                    daemonName = showNameInputDialog() ?: return@launch
-                }
-                else {
-                    daemonName = daemonAlreadyInStorage.daemonName
-                }
+                daemonName = showNameInputDialog() ?: return@launch
 
                 // Proceed with the WireGuard config
                 val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
@@ -253,13 +247,7 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     val companyName = userAuthenticationResult.getOrThrow().company.name
-                    val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPair(companyName)
-                    if(daemonAlreadyInStorage == null) {
-                        daemonName = showNameInputDialog() ?: return@launch
-                    }
-                    else {
-                        daemonName = daemonAlreadyInStorage.daemonName
-                    }
+                    daemonName = showNameInputDialog() ?: return@launch
 
                     // Proceed with the WireGuard config
                     val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)

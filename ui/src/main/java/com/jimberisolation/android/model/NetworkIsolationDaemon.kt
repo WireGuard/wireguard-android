@@ -1,3 +1,4 @@
+import android.util.Log
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.CreateDaemonData
 import com.jimberisolation.android.util.CreateDaemonResult
@@ -54,7 +55,6 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
     if (localDaemonKeys == null) {
-        // Create a new daemon
         val createDaemonData = CreateDaemonData(
             publicKey = ed25519Keys.pk,
             name = daemonName
@@ -71,10 +71,15 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
 
         SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
-    } else {
+    } else if(matchingDaemon != null) {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519
-        daemonIpAddress = matchingDaemon?.ipAddress ?: ""
-        daemonId = matchingDaemon!!.id
+        daemonIpAddress = matchingDaemon.ipAddress
+        daemonId = matchingDaemon.id
+    }
+
+    else {
+        Log.e("NO_MATCHING_DAEMON", "Keys were found but there is no matching daemon")
+        return Result.failure(Exception("Something went wrong, please contact support (100)"))
     }
 
     // Build WireGuard configuration
@@ -121,7 +126,6 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
     if (localDaemonKeys == null) {
-        // Create a new daemon
         val createDaemonData = CreateDaemonData(
             publicKey = ed25519Keys.pk,
             name = daemonName
@@ -138,10 +142,15 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
 
         SharedStorage.getInstance().saveWireguardKeyPair(companyName, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519, daemonName)
 
-    } else {
+    } else if(matchingDaemon != null) {
         daemonPrivateKey = localDaemonKeys.baseEncodedPrivateKeyInX25519
-        daemonIpAddress = matchingDaemon?.ipAddress ?: ""
-        daemonId = matchingDaemon!!.id
+        daemonIpAddress = matchingDaemon.ipAddress
+        daemonId = matchingDaemon.id
+    }
+
+    else {
+        Log.e("NO_MATCHING_DAEMON", "Keys were found but there is no matching daemon")
+        return Result.failure(Exception("Something went wrong, please contact support (100)"))
     }
 
     // Build WireGuard configuration

@@ -127,4 +127,11 @@ class SharedStorage private constructor() {
 
         return null;
     }
+
+    // Function to get the authentication token
+    fun clearAll() {
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply();
+    }
 }

@@ -110,6 +110,10 @@ interface ApiService {
 
     @GET("auth/refresh")
     suspend fun refreshToken(@Header("Cookie") cookies: String): retrofit2.Response<RefreshResult>
+
+    @POST("auth/logout")
+    suspend fun logout(@Header("Cookie") cookies: String): retrofit2.Response<Boolean>
+
 }
 
 // Data class for AuthRequest

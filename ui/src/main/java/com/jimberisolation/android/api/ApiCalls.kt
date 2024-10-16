@@ -92,7 +92,25 @@ suspend fun deleteDaemonV2(userId: String, company: String, daemonId: String): R
         return Result.failure(Exception(result.errorBody().toString()))
 
     } catch (e: Exception) {
-        Log.e("CREATE_DAEMON", "ERROR IN CREATE DAEMON", e)
+        Log.e("CREATE_DAEMON", "ERROR IN DELETE DAEMON", e)
+        Result.failure(e)
+    }
+}
+
+suspend fun logout(): Result<Boolean> {
+    return try {
+        val cookies = getCookieString()
+        val result = ApiClient.apiService.logout(cookies)
+
+        if(result.isSuccessful) {
+            val data = result.body();
+            return Result.success(data!!)
+        }
+
+        return Result.failure(Exception(result.errorBody().toString()))
+
+    } catch (e: Exception) {
+        Log.e("LOGOUT", "ERROR IN LOGOUT", e)
         Result.failure(e)
     }
 }

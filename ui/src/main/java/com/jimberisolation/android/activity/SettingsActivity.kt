@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.service.quicksettings.TileService
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.AdminKnobs
+import com.jimberisolation.android.util.lifecycleScope
 import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,15 +57,22 @@ class SettingsActivity : AppCompatActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
             preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
-            preferenceScreen.initialExpandedChildrenCount = 6
+            preferenceScreen.initialExpandedChildrenCount = 4
 
-            val deAuthorizePreference: Preference? = findPreference("deauthorize")
+            val clearCachePreference: Preference? = findPreference("clear_cache")
             val changePublicIpPreference: Preference? = findPreference("change_public_ip")
 
             // Set an onClick listener
-            deAuthorizePreference?.setOnPreferenceClickListener {
-                SharedStorage.getInstance().saveRefreshToken("");
-                SharedStorage.getInstance().saveAuthenticationToken("");
+            clearCachePreference?.setOnPreferenceClickListener {
+                lifecycleScope.launch {
+                    SharedStorage.getInstance().clearAll()
+                    val tunnels = getTunnelManager().getTunnels()
+                    tunnels.forEach { tunnel ->
+                        tunnel.deleteAsync()
+                    }
+                }
+
+                Toast.makeText(activity ?: Application.get(), "Cache cleared", Toast.LENGTH_SHORT).show()
                 true
             }
 

@@ -83,6 +83,8 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 if(deletedTunnel.isFailure) {
                     throw Exception(deletedTunnel.exceptionOrNull())
                 }
+
+                SharedStorage.getInstance().clearAll()
             } catch (e: Throwable) {
                 if (originalState == Tunnel.State.UP)
                     withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }
