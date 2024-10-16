@@ -1,8 +1,8 @@
 import android.util.Log
+import com.jimberisolation.android.api.CreateDaemonData
+import com.jimberisolation.android.api.CreateDaemonResult
+import com.jimberisolation.android.api.UserAuthenticationResult
 import com.jimberisolation.android.storage.SharedStorage
-import com.jimberisolation.android.util.CreateDaemonData
-import com.jimberisolation.android.util.CreateDaemonResult
-import com.jimberisolation.android.util.UserAuthenticationResult
 import com.jimberisolation.android.util.generateEd25519KeyPair
 import com.jimberisolation.android.util.generateWireguardKeys
 

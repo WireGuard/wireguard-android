@@ -1,5 +1,9 @@
-package com.jimberisolation.android.util
+/*
+ * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
+package com.jimberisolation.android.api
 
 data class Company(
     val name: String

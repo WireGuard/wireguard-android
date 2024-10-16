@@ -22,10 +22,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
+import com.jimberisolation.android.api.EmailVerificationData
+import com.jimberisolation.android.api.UserAuthenticationResult
 import com.jimberisolation.android.storage.SharedStorage
-import com.jimberisolation.android.util.EmailVerificationData
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
-import com.jimberisolation.android.util.UserAuthenticationResult
 import createNetworkIsolationDaemonConfigFromEmailVerification
 import getDeviceHostname
 import kotlinx.coroutines.CompletableDeferred

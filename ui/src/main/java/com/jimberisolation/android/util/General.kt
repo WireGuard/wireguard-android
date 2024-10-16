@@ -1,8 +1,7 @@
 import android.os.Build
+import com.jimberisolation.android.api.GetDaemonsNameResult
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.storage.WireguardKeyPair
-import com.jimberisolation.android.util.GetDaemonsNameResult
-import java.net.InetAddress
 import java.net.UnknownHostException
 
 

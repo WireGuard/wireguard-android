@@ -1,14 +1,14 @@
 import android.util.Log
+import com.jimberisolation.android.api.CreateDaemonData
+import com.jimberisolation.android.api.CreatedDaemonResult
+import com.jimberisolation.android.api.DeleteDaemonResult
+import com.jimberisolation.android.api.EmailVerificationData
+import com.jimberisolation.android.api.GetDaemonsNameResult
+import com.jimberisolation.android.api.GetEmailVerificationCodeData
+import com.jimberisolation.android.api.RefreshResult
+import com.jimberisolation.android.api.RouterPublicKeyResult
+import com.jimberisolation.android.api.UserAuthenticationResult
 import com.jimberisolation.android.storage.SharedStorage
-import com.jimberisolation.android.util.CreateDaemonData
-import com.jimberisolation.android.util.CreatedDaemonResult
-import com.jimberisolation.android.util.DeleteDaemonResult
-import com.jimberisolation.android.util.EmailVerificationData
-import com.jimberisolation.android.util.GetDaemonsNameResult
-import com.jimberisolation.android.util.GetEmailVerificationCodeData
-import com.jimberisolation.android.util.RefreshResult
-import com.jimberisolation.android.util.RouterPublicKeyResult
-import com.jimberisolation.android.util.UserAuthenticationResult
 import org.json.JSONObject
 
 suspend fun getUserAuthenticationV2(idToken: String, authenticationType: AuthenticationType): Result<UserAuthenticationResult> {

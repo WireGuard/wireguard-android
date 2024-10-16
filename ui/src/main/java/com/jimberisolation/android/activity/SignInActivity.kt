@@ -3,10 +3,7 @@ package com.jimberisolation.android.activity
 import AuthenticationType
 import Config
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
