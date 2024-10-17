@@ -33,6 +33,12 @@
         android:title="Clear Cache" />
 
     <Preference
+        android:key="deauthorize"
+        android:singleLineTitle="false"
+        android:summary="Deauthorize"
+        android:title="Remove refresh and authentication token" />
+
+    <Preference
         android:key="get_shared_storage"
         android:singleLineTitle="false"
         android:summary="Get shared storage to clipboard"

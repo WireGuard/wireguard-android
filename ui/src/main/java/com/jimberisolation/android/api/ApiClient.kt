@@ -50,9 +50,7 @@ class AuthInterceptor : Interceptor {
                 val newToken = renewJwt()
                 if (newToken != null) {
                     // Retry original request with the new token
-                    val newRequest = originalRequest.newBuilder()
-                        .header("Authorization", "Bearer $newToken")
-                        .build()
+                    val newRequest = originalRequest.newBuilder().header("Authorization", "Bearer $newToken").build()
                     response = chain.proceed(newRequest)
                 } else {
                     // Broadcast event that user needs to log in again

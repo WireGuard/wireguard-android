@@ -68,15 +68,13 @@ class SettingsActivity : AppCompatActivity() {
             val clearCachePreference: Preference? = findPreference("clear_cache")
             val changePublicIpPreference: Preference? = findPreference("change_public_ip")
             val getSharedStorage: Preference? = findPreference("get_shared_storage")
+            val deauthorizePreference: Preference? = findPreference("deauthorize")
 
             // Set an onClick listener
             clearCachePreference?.setOnPreferenceClickListener {
                 lifecycleScope.launch {
                     SharedStorage.getInstance().clearAll()
-                    val tunnels = getTunnelManager().getTunnels()
-                    tunnels.forEach { tunnel ->
-                        tunnel.deleteAsync()
-                    }
+                    SharedStorage.getInstance().clearAuthenticationToken()
                 }
 
                 Toast.makeText(activity ?: Application.get(), "Cache cleared", Toast.LENGTH_SHORT).show()
@@ -93,6 +91,14 @@ class SettingsActivity : AppCompatActivity() {
 
                 val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
                 clipboard!!.setPrimaryClip(clip)
+
+                true
+            }
+
+            // Set an onClick listener
+            deauthorizePreference?.setOnPreferenceClickListener {
+                SharedStorage.getInstance().clearRefreshToken()
+                SharedStorage.getInstance().clearAuthenticationToken()
 
                 true
             }

@@ -197,9 +197,6 @@ class SignInActivity : AppCompatActivity() {
                     showNameInputDialog() ?: return@launch
                 }
 
-                Log.e("TEST", "LENNERT_TEST")
-                Log.e("err", daemonAlreadyInStorage.toString())
-
                 // Proceed with the WireGuard config
                 val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
 

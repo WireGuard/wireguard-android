@@ -71,7 +71,7 @@ class SharedStorage private constructor() {
 
     fun clearRefreshToken() {
         val editor = sharedPreferences.edit()
-        editor.putString(REFRESH_TOKEN_KEY, null)
+        editor.putString(REFRESH_TOKEN_KEY, "")
         editor.apply()
     }
 
@@ -88,7 +88,7 @@ class SharedStorage private constructor() {
 
     fun clearAuthenticationToken() {
         val editor = sharedPreferences.edit()
-        editor.putString(AUTHENTICATION_TOKEN_KEY, null)
+        editor.putString(AUTHENTICATION_TOKEN_KEY, "")
         editor.apply()
     }
 
@@ -131,27 +131,40 @@ class SharedStorage private constructor() {
         return sharedPreferences.getString(CURRENT_COMPANY, null).toString()
     }
 
-    fun saveWireguardKeyPair(keyPair: DaemonKeyPair)  {
+    fun saveWireguardKeyPair(keyPair: DaemonKeyPair) {
         val editor = sharedPreferences.edit()
 
         val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, "[]")
         val jsonArray = JSONArray(jsonString!!)
 
-        // Create a new key pair object
-        val newKeyPair = JSONObject()
-        newKeyPair.put(WIREGUARD_PK, keyPair.pk)
-        newKeyPair.put(WIREGUARD_SK, keyPair.sk)
-        newKeyPair.put(WIREGUARD_DAEMON_NAME, keyPair.daemonName)
-        newKeyPair.put(WIREGUARD_DAEMON_ID, keyPair.daemonId)
-        newKeyPair.put(WIREGUARD_COMPANY, keyPair.company)
-        newKeyPair.put(WIREGUARD_USER_ID, keyPair.userId)
+        val newKeyPair = JSONObject().apply {
+            put(WIREGUARD_PK, keyPair.pk)
+            put(WIREGUARD_SK, keyPair.sk)
+            put(WIREGUARD_DAEMON_NAME, keyPair.daemonName)
+            put(WIREGUARD_DAEMON_ID, keyPair.daemonId)
+            put(WIREGUARD_COMPANY, keyPair.company)
+            put(WIREGUARD_USER_ID, keyPair.userId)
+        }
 
-        jsonArray.put(newKeyPair)
+        var found = false
 
-        // Save the updated JSON back to SharedPreferences
+        for (i in 0 until jsonArray.length()) {
+            val existingKeyPair = jsonArray.getJSONObject(i)
+            if (existingKeyPair[WIREGUARD_DAEMON_ID] == keyPair.daemonId) {
+                jsonArray.put(i, newKeyPair)
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            jsonArray.put(newKeyPair)
+        }
+
         editor.putString(WIREGUARD_KEYPAIR, jsonArray.toString())
         editor.apply()
     }
+
 
     fun getWireguardKeyPairOfDaemonId(company: String, daemonId: Int): DaemonKeyPair? {
         val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, "[]") ?: return null
@@ -232,9 +245,9 @@ class SharedStorage private constructor() {
 
     // Function to get the authentication token
     fun clearAll() {
-//        val editor = sharedPreferences.edit()
-//        editor.clear()
-//        editor.apply();
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply();
     }
 
     // Function to get the authentication token

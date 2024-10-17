@@ -119,7 +119,6 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     fun onCreate() {
         SharedStorage.initialize(context);
         val currentUserId = SharedStorage.getInstance().getCurrentUserId();
-
         applicationScope.launch {
             try {
                 onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate(currentUserId) }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
