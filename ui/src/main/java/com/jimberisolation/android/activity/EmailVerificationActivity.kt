@@ -165,7 +165,13 @@ class EmailVerificationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val companyName = userAuthenticationResult.company.name
-                daemonName = showNameInputDialog() ?: return@launch
+                val userId = userAuthenticationResult.id
+
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
+
+                daemonName = daemonAlreadyInStorage?.firstOrNull()?.daemonName ?: run {
+                    showNameInputDialog() ?: return@launch
+                }
 
                 val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult, daemonName!!)
 
@@ -192,7 +198,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun importTunnelAndNavigate(result: String, daemonId: Number, companyName: String) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }

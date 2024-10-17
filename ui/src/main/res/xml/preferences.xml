@@ -32,4 +32,11 @@
         android:summary="Clear cache of app completely"
         android:title="Clear Cache" />
 
+    <Preference
+        android:key="get_shared_storage"
+        android:singleLineTitle="false"
+        android:summary="Get shared storage to clipboard"
+        android:title="Get shared storage" />
+
+
 </androidx.preference.PreferenceScreen>

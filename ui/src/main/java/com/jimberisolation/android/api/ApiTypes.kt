@@ -26,7 +26,7 @@ data class RouterPublicKeyResult(
 )
 
 data class GetDaemonsNameResult(
-    val id: Number,
+    val id: Int,
     val name: String,
     val ipAddress: String
 )
@@ -37,12 +37,12 @@ data class CreateDaemonData(
 )
 
 data class CreatedDaemonResult(
-    val id: Number,
+    val id: Int,
     val ipAddress: String,
 )
 
 data class DeleteDaemonResult(
-    val id: Number,
+    val id: Int,
 )
 
 data class GetEmailVerificationCodeData(
@@ -51,11 +51,11 @@ data class GetEmailVerificationCodeData(
 
 data class EmailVerificationData(
     val email: String,
-    val token: Number
+    val token: Int
 )
 
 data class CreateDaemonResult(
     val wireguardConfig: String,
     val company: String,
-    val daemonId: Number
+    val daemonId: Int
 )

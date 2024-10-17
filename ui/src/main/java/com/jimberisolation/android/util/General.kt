@@ -1,7 +1,7 @@
 import android.os.Build
 import com.jimberisolation.android.api.GetDaemonsNameResult
+import com.jimberisolation.android.storage.DaemonKeyPair
 import com.jimberisolation.android.storage.SharedStorage
-import com.jimberisolation.android.storage.WireguardKeyPair
 import java.net.UnknownHostException
 
 
@@ -15,8 +15,8 @@ fun getDeviceHostname(): String {
 }
 
 
-fun existingKeysOnDeviceForCompany(company: String): WireguardKeyPair? {
-   return SharedStorage.getInstance().getWireguardKeyPair(company);
+fun existingKeysOnDeviceOfUserid(userId: Int): List<DaemonKeyPair>? {
+   return SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId);
 }
 
 fun getExistingDaemon(name: String, existingNames: List<GetDaemonsNameResult>): GetDaemonsNameResult? {

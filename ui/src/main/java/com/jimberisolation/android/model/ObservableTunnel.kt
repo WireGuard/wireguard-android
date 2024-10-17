@@ -23,7 +23,8 @@ import kotlinx.coroutines.withContext
 class ObservableTunnel internal constructor(
     private val manager: TunnelManager,
     private var name: String,
-    private var daemonId: Number,
+    private var daemonId: Int,
+    private var userId: Int,
     config: Config?,
     state: Tunnel.State
 ) : BaseObservable(), Keyed<String>, Tunnel {
@@ -35,6 +36,9 @@ class ObservableTunnel internal constructor(
 
     @Bindable
     fun getDaemonId() = daemonId
+
+    @Bindable
+    fun getUserId() = userId
 
     suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
         if (name != this@ObservableTunnel.name)

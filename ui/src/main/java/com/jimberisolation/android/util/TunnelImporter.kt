@@ -8,7 +8,9 @@ package com.jimberisolation.android.util
 import android.util.Log
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
+import com.jimberisolation.android.configStore.CreateTunnelData
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.config.BadConfigException
 import com.jimberisolation.config.Config
 import java.io.ByteArrayInputStream
@@ -16,7 +18,7 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 object TunnelImporter {
-    suspend fun importTunnel(configText: String, daemonId: Number, messageCallback: (CharSequence) -> Unit) {
+    suspend fun importTunnel(configText: String, daemonId: Int, messageCallback: (CharSequence) -> Unit) {
         try {
             val config = try {
                 Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
@@ -28,8 +30,12 @@ object TunnelImporter {
                 }
             }
 
+            val userId = SharedStorage.getInstance().getCurrentUserId();
             val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
-            Application.getTunnelManager().create(companyName, daemonId, config)
+
+            val createTunnelData = CreateTunnelData(companyName, daemonId, userId);
+
+            Application.getTunnelManager().create(createTunnelData, config)
 
         } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)

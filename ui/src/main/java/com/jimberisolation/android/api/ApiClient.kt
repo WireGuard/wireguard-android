@@ -91,16 +91,16 @@ interface ApiService {
     suspend fun getUserAuthentication(@Path("type") type: String, @Body request: AuthRequest): retrofit2.Response<UserAuthenticationResult>
 
     @GET("companies/{company}/daemons/user/{userId}")
-    suspend fun getExistingDaemons(@Path("userId") userId: String,  @Path("company") company: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
+    suspend fun getExistingDaemons(@Path("userId") userId: Int,  @Path("company") company: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
 
     @GET("companies/{company}/routers/cloud-network-controller")
     suspend fun getCloudControllerPublicKey(@Path("company") company: String, @Header("Cookie") cookies: String): RouterPublicKeyResult
 
     @POST("companies/{company}/daemons/user/{userId}")
-    suspend fun createDaemon(@Path("userId") userId: String, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
+    suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
 
     @DELETE("companies/{company}/daemons/user/{userId}/{daemonId}")
-    suspend fun deleteDaemon(@Path("userId") userId: String, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonResult>
+    suspend fun deleteDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonResult>
 
     @POST("auth/send-user-token-code")
     suspend fun sendVerificationEmail(@Body emailVerificationData: GetEmailVerificationCodeData): Boolean

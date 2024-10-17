@@ -17,16 +17,19 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
-data class TunnelInfo(val name: String, val daemonId: Number)
+data class TunnelInfo(val name: String, val daemonId: Int, val userId: Int)
+
+
+data class CreateTunnelData(val name: String, val daemonId: Int, val userId: Int)
 
 /**
  * Configuration store that uses a `wg-quick`-style file for each configured tunnel.
  */
 class FileConfigStore(private val context: Context) : ConfigStore {
     @Throws(IOException::class)
-    override fun create(name: String, daemonId: Number, config: Config): Config {
-        Log.d(TAG, "Creating configuration for tunnel $name")
-        val file = fileFor("daemon-$daemonId-name-$name")
+    override fun create(createTunnelData: CreateTunnelData, config: Config): Config {
+        Log.d(TAG, "Creating configuration for tunnel ${createTunnelData.name}")
+        val file = fileFor("userId-${createTunnelData.userId}-daemon-${createTunnelData.daemonId}-name-${createTunnelData.name}")
 
         if (!file.createNewFile())
             throw IOException(context.getString(R.string.config_file_exists_error, file.name))
@@ -37,28 +40,28 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     @Throws(IOException::class)
     override fun delete(tunnel: ObservableTunnel) {
         Log.d(TAG, "Deleting configuration for tunnel ${tunnel.name}")
-        val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
+        val file = fileFor("userId-${tunnel.getUserId()}-daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
         if (!file.delete())
             throw IOException(context.getString(R.string.config_delete_error, file.name))
     }
 
-    override fun enumerate(): Set<TunnelInfo> {
+    override fun enumerate(userId: Int): Set<TunnelInfo> {
         return context.fileList()
-            .filter { it.endsWith(".conf") } // Filter for configuration files
+            .filter { it.endsWith(".conf") }
             .mapNotNull { fileName ->
-                // Use a regex to extract daemonId and name
-                val regex = Regex("""daemon-(\d+)-name-(.+)\.conf""")
+                val regex = Regex("""userId-(\d+)-daemon-(\d+)-name-(.+)\.conf""")
                 val matchResult = regex.find(fileName)
                 matchResult?.let {
-                    val daemonId = it.groups[1]?.value?.toInt() // Extract daemonId and convert to Int
-                    val name = it.groups[2]?.value // Extract the name
-                    if (daemonId != null && name != null) {
-                        TunnelInfo(name, daemonId) // Return a TunnelInfo object
+                    val extractedUserId = it.groups[1]?.value?.toInt()
+                    val daemonId = it.groups[2]?.value?.toInt()
+                    val name = it.groups[3]?.value
+                    if (extractedUserId != null && extractedUserId == userId && daemonId != null && name != null) {
+                        TunnelInfo(name, daemonId, extractedUserId)
                     } else {
-                        null // In case of extraction failure, return null
+                        null
                     }
                 }
-            }.toSet() // Convert to a Set to avoid duplicates
+            }.toSet()
     }
 
     private fun fileFor(name: String): File {
@@ -73,7 +76,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     @Throws(IOException::class)
     override fun rename(tunnel: ObservableTunnel, replacement: String) {
         Log.d(TAG, "Renaming configuration for tunnel ${tunnel.name} to $replacement")
-        val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
+        val file = fileFor("userId-${tunnel.getUserId()}-daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
         val replacementFile = fileFor("daemon-${tunnel.getDaemonId()}-name-${replacement}")
         if (!replacementFile.createNewFile()) throw IOException(context.getString(R.string.config_exists_error, replacement))
         if (!file.renameTo(replacementFile)) {
@@ -85,7 +88,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
     @Throws(IOException::class)
     override fun save(tunnel: ObservableTunnel, config: Config): Config {
         Log.d(TAG, "Saving configuration for tunnel ${tunnel.name}")
-        val file = fileFor("daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
+        val file = fileFor("userId-${tunnel.getUserId()}-daemon-${tunnel.getDaemonId()}-name-${tunnel.name}")
         if (!file.isFile)
             throw FileNotFoundException(context.getString(R.string.config_not_found_error, file.name))
         FileOutputStream(file, false).use { stream -> stream.write(config.toWgQuickString().toByteArray(StandardCharsets.UTF_8)) }

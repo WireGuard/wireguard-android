@@ -4,7 +4,10 @@
  */
 package com.jimberisolation.android.activity
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,10 +15,13 @@ import android.service.quicksettings.TileService
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.gson.Gson
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.QuickTileService
@@ -61,6 +67,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val clearCachePreference: Preference? = findPreference("clear_cache")
             val changePublicIpPreference: Preference? = findPreference("change_public_ip")
+            val getSharedStorage: Preference? = findPreference("get_shared_storage")
 
             // Set an onClick listener
             clearCachePreference?.setOnPreferenceClickListener {
@@ -75,6 +82,21 @@ class SettingsActivity : AppCompatActivity() {
                 Toast.makeText(activity ?: Application.get(), "Cache cleared", Toast.LENGTH_SHORT).show()
                 true
             }
+
+            // Set an onClick listener
+            getSharedStorage?.setOnPreferenceClickListener {
+                val data = SharedStorage.getInstance().getAll();
+
+                // Convert the map to JSON
+                val jsonData = Gson().toJson(data)
+                val clip = ClipData.newPlainText("Data",jsonData)
+
+                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
+                clipboard!!.setPrimaryClip(clip)
+
+                true
+            }
+
 
             // Set an onClick listener
             changePublicIpPreference?.setOnPreferenceClickListener {

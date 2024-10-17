@@ -22,6 +22,7 @@ import com.jimberisolation.android.backend.GoBackend
 import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.configStore.FileConfigStore
 import com.jimberisolation.android.model.TunnelManager
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.updater.Updater
 import com.jimberisolation.android.util.RootShell
 import com.jimberisolation.android.util.ToolsInstaller
@@ -86,6 +87,7 @@ class Application : android.app.Application() {
         Log.i(TAG, USER_AGENT)
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
+
         rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
         preferencesDataStore = PreferenceDataStoreFactory.create { applicationContext.preferencesDataStoreFile("settings") }

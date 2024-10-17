@@ -190,7 +190,15 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 val companyName = userAuthenticationResult.getOrThrow().company.name
-                daemonName = showNameInputDialog() ?: return@launch
+                val userId = userAuthenticationResult.getOrThrow().id
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
+
+                daemonName = daemonAlreadyInStorage?.firstOrNull()?.daemonName ?: run {
+                    showNameInputDialog() ?: return@launch
+                }
+
+                Log.e("TEST", "LENNERT_TEST")
+                Log.e("err", daemonAlreadyInStorage.toString())
 
                 // Proceed with the WireGuard config
                 val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
@@ -215,7 +223,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun importTunnelAndNavigate(result: String, daemonId: Number, companyName: String) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
@@ -244,7 +252,12 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     val companyName = userAuthenticationResult.getOrThrow().company.name
-                    daemonName = showNameInputDialog() ?: return@launch
+                    val userId = userAuthenticationResult.getOrThrow().id
+                    val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
+
+                    daemonName = daemonAlreadyInStorage?.firstOrNull()?.daemonName ?: run {
+                        showNameInputDialog() ?: return@launch
+                    }
 
                     // Proceed with the WireGuard config
                     val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)

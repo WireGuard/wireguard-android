@@ -20,6 +20,7 @@ import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.Statistics
 import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.configStore.ConfigStore
+import com.jimberisolation.android.configStore.CreateTunnelData
 import com.jimberisolation.android.configStore.TunnelInfo
 import com.jimberisolation.android.databinding.ObservableSortedKeyedArrayList
 import com.jimberisolation.android.storage.SharedStorage
@@ -46,20 +47,22 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(TunnelComparator)
     private var haveLoaded = false
 
-    private fun addToList(name: String, daemonId: Number, config: Config?, state: Tunnel.State): ObservableTunnel {
-        val tunnel = ObservableTunnel(this, name, daemonId, config, state)
+    private fun addToList(createTunnelData: CreateTunnelData, config: Config?, state: Tunnel.State): ObservableTunnel {
+        val tunnel = ObservableTunnel(this, createTunnelData.name, createTunnelData.daemonId, createTunnelData.userId, config, state)
         tunnelMap.add(tunnel)
         return tunnel
     }
 
     suspend fun getTunnels(): ObservableSortedKeyedArrayList<String, ObservableTunnel> = tunnels.await()
 
-    suspend fun create(name: String, daemonId: Number, config: Config?): ObservableTunnel = withContext(Dispatchers.Main.immediate) {
+    suspend fun create(createTunnelData: CreateTunnelData, config: Config?): ObservableTunnel = withContext(Dispatchers.Main.immediate) {
+        val name = createTunnelData.name;
+
         if (Tunnel.isNameInvalid(name))
             throw IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name))
         if (tunnelMap.containsKey(name))
             throw IllegalArgumentException(context.getString(R.string.tunnel_error_already_exists, name))
-        addToList(name, daemonId, withContext(Dispatchers.IO) { configStore.create(name, daemonId, config!!) }, Tunnel.State.DOWN)
+        addToList(createTunnelData, withContext(Dispatchers.IO) { configStore.create(createTunnelData, config!!) }, Tunnel.State.DOWN)
     }
 
     suspend fun delete(tunnel: ObservableTunnel) = withContext(Dispatchers.Main.immediate) {
@@ -76,15 +79,16 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             try {
                 withContext(Dispatchers.IO) { configStore.delete(tunnel) }
 
-                val company = SharedStorage.getInstance().getCurrentCompany()
-                val userId = SharedStorage.getInstance().getCurrentUserId()
+                val sharedStorage = SharedStorage.getInstance();
+                val company = sharedStorage.getCurrentCompany()
+                val userId = sharedStorage.getCurrentUserId()
 
                 val deletedTunnel = deleteDaemonV2(userId, company, tunnel.getDaemonId().toString())
                 if(deletedTunnel.isFailure) {
                     throw Exception(deletedTunnel.exceptionOrNull())
                 }
+                sharedStorage.clearDaemonKeys(tunnel.getDaemonId());
 
-                SharedStorage.getInstance().clearAll()
             } catch (e: Throwable) {
                 if (originalState == Tunnel.State.UP)
                     withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }
@@ -113,10 +117,12 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     fun onCreate() {
+        SharedStorage.initialize(context);
+        val currentUserId = SharedStorage.getInstance().getCurrentUserId();
+
         applicationScope.launch {
             try {
-                val q = configStore.enumerate();
-                onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate() }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
+                onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate(currentUserId) }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
@@ -124,8 +130,11 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     }
 
     private fun onTunnelsLoaded(present: Iterable<TunnelInfo>, running: Collection<String>) {
-        for (info in present)
-            addToList(info.name,  info.daemonId, null, if (running.contains(info.name)) Tunnel.State.UP else Tunnel.State.DOWN)
+        for (info in present) {
+            val createTunnelData = CreateTunnelData(info.name, info.daemonId, info.userId)
+            addToList(createTunnelData,  null, if (running.contains(info.name)) Tunnel.State.UP else Tunnel.State.DOWN)
+        }
+
         applicationScope.launch {
             val lastUsedName = UserKnobs.lastUsedTunnel.first()
             if (lastUsedName != null)

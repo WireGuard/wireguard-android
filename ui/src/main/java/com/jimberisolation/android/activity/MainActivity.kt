@@ -9,9 +9,11 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
@@ -20,9 +22,9 @@ import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
 import com.jimberisolation.android.fragment.TunnelEditorFragment
+import com.jimberisolation.android.fragment.TunnelListFragment
 import com.jimberisolation.android.model.ObservableTunnel
 import com.jimberisolation.android.storage.SharedStorage
-import com.jimberisolation.android.util.applicationScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,6 +39,9 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     private var actionBar: ActionBar? = null
     private var isTwoPaneLayout = false
     private var backPressedCallback: OnBackPressedCallback? = null
+
+    private lateinit var spinner: ProgressBar
+    private lateinit var detailContainer: FragmentContainerView
 
     private fun handleBackPressed() {
         val backStackEntries = supportFragmentManager.backStackEntryCount
@@ -65,8 +70,14 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.main_activity)
+
+        spinner = findViewById(R.id.loading_spinner)
+        detailContainer = findViewById(R.id.detail_container)
 
         actionBar = supportActionBar
+
+        toggleLoading(true);
 
         SharedStorage.initialize(this)
 
@@ -98,20 +109,23 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
     private suspend fun navigateToScreen(tunnelsAvailable: Boolean) {
         val newAccessToken = refreshToken()
+        toggleLoading(false)
         if (newAccessToken.isFailure) {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
             finish()
-            return;
+            return
         }
 
         if (!tunnelsAvailable) {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
             finish()
-            return;
+            return
         } else {
-            setContentView(R.layout.main_activity)
+            supportFragmentManager.commit {
+                replace(R.id.detail_container, TunnelListFragment())
+            }
         }
     }
 
@@ -144,6 +158,18 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun toggleLoading(isLoading: Boolean) {
+        if (isLoading) {
+            // Show the spinner, hide the content
+            spinner.visibility = View.VISIBLE
+            detailContainer.visibility = View.GONE
+        } else {
+            // Hide the spinner, show the content
+            spinner.visibility = View.GONE
+            detailContainer.visibility = View.VISIBLE
         }
     }
 

@@ -34,7 +34,7 @@ suspend fun getUserAuthenticationV2(idToken: String, authenticationType: Authent
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
         val cookies = response.headers().values("Set-Cookie")
 
-        saveDataToLocalStorage(cookies.joinToString("; "), result.id.toString(), result.company.name)
+        saveDataToLocalStorage(cookies.joinToString("; "), result.id, result.company.name)
         Result.success(result)
 
     } catch (e: Exception) {
@@ -55,7 +55,7 @@ suspend fun getCloudControllerPublicKeyV2(company: String): Result<RouterPublicK
     }
 }
 
-suspend fun getExistingDaemonsV2(userId: String, company: String): Result<List<GetDaemonsNameResult>> {
+suspend fun getExistingDaemonsV2(userId: Int, company: String): Result<List<GetDaemonsNameResult>> {
     return try {
         val cookies = getCookieString();
         val result = ApiClient.apiService.getExistingDaemons(userId, company, cookies)
@@ -67,7 +67,7 @@ suspend fun getExistingDaemonsV2(userId: String, company: String): Result<List<G
     }
 }
 
-suspend fun createDaemonV2(userId: String, company: String, createDaemonData: CreateDaemonData): Result<CreatedDaemonResult> {
+suspend fun createDaemonV2(userId: Int, company: String, createDaemonData: CreateDaemonData): Result<CreatedDaemonResult> {
     return try {
         val cookies = getCookieString()
         val result = ApiClient.apiService.createDaemon(userId, company, createDaemonData, cookies)
@@ -79,7 +79,7 @@ suspend fun createDaemonV2(userId: String, company: String, createDaemonData: Cr
     }
 }
 
-suspend fun deleteDaemonV2(userId: String, company: String, daemonId: String): Result<DeleteDaemonResult> {
+suspend fun deleteDaemonV2(userId: Int, company: String, daemonId: String): Result<DeleteDaemonResult> {
     return try {
         val cookies = getCookieString()
         val result = ApiClient.apiService.deleteDaemon(userId, company, daemonId, cookies)
@@ -143,7 +143,7 @@ suspend fun verifyEmailWithToken(emailVerificationData: EmailVerificationData): 
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
         val cookies = response.headers().values("Set-Cookie")
 
-        saveDataToLocalStorage(cookies.joinToString("; "), result.id.toString(), result.company.name)
+        saveDataToLocalStorage(cookies.joinToString("; "), result.id, result.company.name)
         return Result.success(result)
 
     } catch (e: Exception) {
@@ -182,7 +182,7 @@ fun extractToken(cookieHeader: String, tokenName: String): String? {
     return null
 }
 
-private fun saveDataToLocalStorage(cookies: String, userId: String, company: String) {
+private fun saveDataToLocalStorage(cookies: String, userId: Int, company: String) {
     val authToken = extractToken(cookies, "Authentication")
     val refreshToken = extractToken(cookies, "Refresh")
 

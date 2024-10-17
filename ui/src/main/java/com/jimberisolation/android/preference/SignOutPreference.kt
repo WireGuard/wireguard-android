@@ -5,7 +5,6 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.widget.Toast
 import androidx.preference.Preference
-import com.jimberisolation.android.Application
 import com.jimberisolation.android.activity.SignInActivity
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.lifecycleScope
@@ -20,16 +19,11 @@ class SignOutPreference(context: Context, attrs: AttributeSet?) : Preference(con
             try {
                 logout()
 
-                val tunnels = Application.getTunnelManager().getTunnels()
-                tunnels.forEach { tunnel ->
-                    tunnel.deleteAsync()
-                }
-
                 val intent = Intent(context, SignInActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
 
-                SharedStorage.getInstance().clearAll()
+                SharedStorage.getInstance().clearUserLoginData()
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(context, "Logout failed", Toast.LENGTH_SHORT).show()
