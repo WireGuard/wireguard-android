@@ -65,10 +65,18 @@ class SettingsActivity : AppCompatActivity() {
             addPreferencesFromResource(R.xml.preferences)
             preferenceScreen.initialExpandedChildrenCount = 4
 
+            val signOutPreference: Preference? = findPreference("sign_out")
             val clearCachePreference: Preference? = findPreference("clear_cache")
             val changePublicIpPreference: Preference? = findPreference("change_public_ip")
             val getSharedStorage: Preference? = findPreference("get_shared_storage")
             val deauthorizePreference: Preference? = findPreference("deauthorize")
+
+
+            val userId = SharedStorage.getInstance().getCurrentUserId();
+            if(userId == 0) {
+                signOutPreference?.isVisible = false
+            }
+
 
             // Set an onClick listener
             clearCachePreference?.setOnPreferenceClickListener {
@@ -92,6 +100,8 @@ class SettingsActivity : AppCompatActivity() {
                 val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
                 clipboard!!.setPrimaryClip(clip)
 
+                Toast.makeText(activity ?: Application.get(), "Data set to clipboard", Toast.LENGTH_SHORT).show()
+
                 true
             }
 
@@ -100,6 +110,7 @@ class SettingsActivity : AppCompatActivity() {
                 SharedStorage.getInstance().clearRefreshToken()
                 SharedStorage.getInstance().clearAuthenticationToken()
 
+                Toast.makeText(activity ?: Application.get(), "Tokens cleared", Toast.LENGTH_SHORT).show()
                 true
             }
 
@@ -121,6 +132,8 @@ class SettingsActivity : AppCompatActivity() {
 
                     val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
                     tunnel.setConfigAsync(updatedConfig);
+
+                    Toast.makeText(activity ?: Application.get(), "Public IP changed", Toast.LENGTH_SHORT).show()
                 }
 
                 true
