@@ -2,7 +2,7 @@
 
 # Check if exactly one argument is provided
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 {staging|production}"
+    echo "Usage: $0 {staging|production|local}"
     exit 1
 fi
 
@@ -10,8 +10,8 @@ fi
 ENVIRONMENT=$1
 
 # Validate the argument
-if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" ]]; then
-    echo "Error: Argument must be 'staging' or 'production'."
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" ]]; then
+    echo "Error: Argument must be 'staging' or 'production' or 'local'."
     exit 1
 fi
 
@@ -29,6 +29,14 @@ elif [ "$ENVIRONMENT" = "production" ]; then
     cp ./environments/production/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
     cp ./environments/production/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/production/msal_config.json ./ui/src/main/res/raw
+
+    echo "Done"
+
+elif [ "$ENVIRONMENT" = "local" ]; then
+    echo "Changing to the production environment..."
+    cp ./environments/local/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
+    cp ./environments/local/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
+    cp ./environments/local/msal_config.json ./ui/src/main/res/raw
 
     echo "Done"
 fi
