@@ -146,7 +146,7 @@ class ObservableTunnel internal constructor(
 
 
     suspend fun deleteAsync() = manager.delete(this)
-
+    suspend fun deleteStateAsync() = manager.deleteState(this)
 
     companion object {
         private const val TAG = "WireGuard/ObservableTunnel"

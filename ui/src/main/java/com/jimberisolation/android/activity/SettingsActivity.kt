@@ -11,11 +11,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.service.quicksettings.TileService
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +29,6 @@ import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.AdminKnobs
-import com.jimberisolation.android.util.lifecycleScope
 import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,11 +79,24 @@ class SettingsActivity : AppCompatActivity() {
             // Set an onClick listener
             clearCachePreference?.setOnPreferenceClickListener {
                 lifecycleScope.launch {
+
+                    val tunnelManager = getTunnelManager();
+                    val tunnels = tunnelManager.getTunnels();
+
+                    tunnels.forEach(){
+                        val tunnel = it;
+                        Log.d("DELETE_TUNNEL", it.name)
+                        tunnel.deleteAsync()
+                        Log.d("DELETE_TUNNEL", "DONE")
+                    }
+
                     SharedStorage.getInstance().clearAll()
                     SharedStorage.getInstance().clearAuthenticationToken()
                 }
 
                 Toast.makeText(activity ?: Application.get(), "Cache cleared", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(requireContext(), SignInActivity::class.java))
+
                 true
             }
 

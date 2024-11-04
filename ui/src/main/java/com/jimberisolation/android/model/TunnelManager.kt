@@ -103,6 +103,34 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         }
     }
 
+    suspend fun deleteState(tunnel: ObservableTunnel) = withContext(Dispatchers.Main.immediate) {
+        val originalState = tunnel.state
+        val wasLastUsed = tunnel == lastUsedTunnel
+
+        // Make sure nothing touches the tunnel.
+        if (wasLastUsed)
+            lastUsedTunnel = null
+        tunnelMap.remove(tunnel)
+        try {
+            if (originalState == Tunnel.State.UP)
+                withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.DOWN, null) }
+            try {
+                withContext(Dispatchers.IO) { configStore.delete(tunnel) }
+
+            } catch (e: Throwable) {
+                if (originalState == Tunnel.State.UP)
+                    withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }
+                throw e
+            }
+        } catch (e: Throwable) {
+            // Failure, put the tunnel back.
+            tunnelMap.add(tunnel)
+            if (wasLastUsed)
+                lastUsedTunnel = tunnel
+            throw e
+        }
+    }
+
     @get:Bindable
     var lastUsedTunnel: ObservableTunnel? = null
         private set(value) {

@@ -97,10 +97,7 @@ class TvMainActivity : AppCompatActivity() {
         binding = TvActivityBinding.inflate(layoutInflater)
         lifecycleScope.launch {
             binding.tunnels = Application.getTunnelManager().getTunnels()
-            if (binding.tunnels?.isEmpty() == true)
-                binding.importButton.requestFocus()
-            else
-                binding.tunnelList.requestFocus()
+            binding.tunnelList.requestFocus()
         }
         binding.isDeleting = isDeleting
         binding.files = files
