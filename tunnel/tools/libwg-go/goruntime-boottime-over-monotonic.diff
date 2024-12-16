@@ -26,7 +26,8 @@ Change-Id: I7b2a6ca0c5bc5fce57ec0eeafe7b68270b429321
  src/runtime/sys_linux_mipsx.s   | 2 +-
  src/runtime/sys_linux_ppc64x.s  | 2 +-
  src/runtime/sys_linux_s390x.s   | 2 +-
- 8 files changed, 12 insertions(+), 12 deletions(-)
+ src/runtime/time_linux_amd64.s  | 4 ++--
+ 9 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/src/runtime/sys_linux_386.s b/src/runtime/sys_linux_386.s
 index 12a294153d..17e3524b40 100644
@@ -165,7 +166,28 @@ index 1448670b91..7d2ee3231c 100644
 +	MOVW	$7, R2			// CLOCK_BOOTTIME
  
  	MOVD	R15, R7			// Backup stack pointer
- 
--- 
-2.17.1
 
+diff --git a/src/runtime/time_linux_amd64.s b/src/runtime/time_linux_amd64.s
+index 1416d23230..8d42242505 100644
+--- a/src/runtime/time_linux_amd64.s
++++ b/src/runtime/time_linux_amd64.s
+@@ -46,7 +46,7 @@ noswitch:
+ 	JEQ	fallback
+ 	CALL	AX
+
+-	MOVL	$1, DI // CLOCK_MONOTONIC
++	MOVL	$7, DI // CLOCK_BOOTTIME
+ 	LEAQ	0(SP), SI
+ 	MOVQ	runtime·vdsoClockgettimeSym(SB), AX
+ 	CALL	AX
+@@ -79,7 +79,7 @@ fallback:
+ 	MOVQ	$SYS_clock_gettime, AX
+ 	SYSCALL
+
+-	MOVL	$1, DI // CLOCK_MONOTONIC
++	MOVL	$7, DI // CLOCK_BOOTTIME
+ 	LEAQ	0(SP), SI
+ 	MOVQ	$SYS_clock_gettime, AX
+ 	SYSCALL
+--
+2.43.0
