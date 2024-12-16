@@ -113,6 +113,17 @@ class TunnelDetailFragment : BaseFragment(), MenuProvider {
             for (i in 0 until binding.peersLayout.childCount) {
                 val peer: TunnelDetailPeerBinding = DataBindingUtil.getBinding(binding.peersLayout.getChildAt(i))
                     ?: continue
+                if (binding.config != null && i < binding.config!!.peers.size) {
+                    val endpoint = binding.config!!.peers[i].endpoint.get()
+                    val resolved = endpoint.resolved.get()
+                    if (resolved.host != endpoint.host) {
+                        if (endpoint.port != 0) {
+                            peer.endpointText.text = "${endpoint.host}:${endpoint.port}\n${resolved.host}:${resolved.port}"
+                        } else {
+                            peer.endpointText.text = "${endpoint.host}\n${resolved.host}:${resolved.port}"
+                        }
+                    }
+                }
                 val publicKey = peer.item!!.publicKey
                 val peerStats = statistics.peer(publicKey)
                 if (peerStats == null || (peerStats.rxBytes == 0L && peerStats.txBytes == 0L)) {
