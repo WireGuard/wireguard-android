@@ -78,8 +78,19 @@ class AuthInterceptor : Interceptor {
     }
 }
 
+// Custom logger that filters sensitive information
+val customLogger = HttpLoggingInterceptor.Logger { message ->
+    // Redact sensitive data
+    val filteredMessage = message
+        .replace(Regex("(accessToken\":\")\\S+")) { "${it.groupValues[1]}****\"}" }
+        .replace(Regex("(Authentication=)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(Refresh=)[^;]+")) { "${it.groupValues[1]}****" }
+
+    println(filteredMessage) // Log the filtered message
+}
+
 // Set up the logging interceptor
-val logging = HttpLoggingInterceptor().apply {
+val logging = HttpLoggingInterceptor(customLogger).apply {
     level = HttpLoggingInterceptor.Level.BODY // Log the request and response body
 }
 
