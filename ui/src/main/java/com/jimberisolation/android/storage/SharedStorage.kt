@@ -146,34 +146,29 @@ class SharedStorage private constructor() {
             put(WIREGUARD_USER_ID, keyPair.userId)
         }
 
-        var found = false
-
         for (i in 0 until jsonArray.length()) {
             val existingKeyPair = jsonArray.getJSONObject(i)
-            if (existingKeyPair[WIREGUARD_DAEMON_ID] == keyPair.daemonId) {
-                jsonArray.put(i, newKeyPair)
-                found = true
+
+            if (existingKeyPair[WIREGUARD_USER_ID] == keyPair.userId) {
+                // Remove the old one
+                jsonArray.remove(i)
+
                 break
             }
         }
-
-        if (!found) {
-            jsonArray.put(newKeyPair)
-        }
-
+        jsonArray.put(newKeyPair)
         editor.putString(WIREGUARD_KEYPAIR, jsonArray.toString())
         editor.apply()
     }
 
-
-    fun getWireguardKeyPairOfDaemonId(company: String, daemonId: Int): DaemonKeyPair? {
-        val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, "[]") ?: return null
+    fun getWireguardKeyPairsOfUserId(userId: Number): DaemonKeyPair? {
+        val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, null) ?: return null
         val jsonArray = JSONArray(jsonString)
 
         for (i in 0 until jsonArray.length()) {
             val keyPairObject = jsonArray.getJSONObject(i)
-            if(keyPairObject[WIREGUARD_DAEMON_ID] == daemonId){
-                val parsedKeyPair = DaemonKeyPair(
+            if(keyPairObject[WIREGUARD_USER_ID] == userId) {
+                val kp = DaemonKeyPair(
                     keyPairObject.getString(WIREGUARD_DAEMON_NAME),
                     keyPairObject.getInt(WIREGUARD_DAEMON_ID),
                     keyPairObject.getString(WIREGUARD_COMPANY),
@@ -181,35 +176,11 @@ class SharedStorage private constructor() {
                     keyPairObject.getString(WIREGUARD_PK),
                     keyPairObject.getString(WIREGUARD_SK))
 
-                return parsedKeyPair
-            };
+                return kp;
+            }
         }
 
         return null;
-    }
-
-
-    fun getWireguardKeyPairsOfUserId(userId: Number): List<DaemonKeyPair>? {
-        val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, null) ?: return null
-        val jsonArray = JSONArray(jsonString)
-
-        val keyPairs = mutableListOf<DaemonKeyPair>()
-        for (i in 0 until jsonArray.length()) {
-            val keyPairObject = jsonArray.getJSONObject(i)
-            if(keyPairObject[WIREGUARD_USER_ID] != userId) continue
-
-            val parsedKeyPair = DaemonKeyPair(
-                keyPairObject.getString(WIREGUARD_DAEMON_NAME),
-                keyPairObject.getInt(WIREGUARD_DAEMON_ID),
-                keyPairObject.getString(WIREGUARD_COMPANY),
-                keyPairObject.getInt(WIREGUARD_USER_ID),
-                keyPairObject.getString(WIREGUARD_PK),
-                keyPairObject.getString(WIREGUARD_SK))
-
-            keyPairs.add(parsedKeyPair)
-        }
-
-        return keyPairs
     }
 
 

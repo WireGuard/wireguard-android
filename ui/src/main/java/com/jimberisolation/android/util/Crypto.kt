@@ -52,4 +52,36 @@ fun generateWireguardKeys(sk: String, cloudControllerPk: String): WireguardKeys 
     return WireguardKeys(baseEncodedCloudcontrollerPkInX25519 = baseEncodedCurveNetworkControllerPk, baseEncodedPrivateKeyInX25519 = baseEncodedCurveSk)
 }
 
+@OptIn(ExperimentalUnsignedTypes::class)
+fun parseEdPublicKeyToX25519(pk: String): String {
+    var isInitialized = false;
+    LibsodiumInitializer.initializeWithCallback {
+        isInitialized = true;
+    }
+
+    while(!isInitialized) { }
+
+    val curveNetworkControllerPk = Signature.ed25519PkToCurve25519((Base64.decode(pk).toUByteArray()));
+    val baseEncodedCurveNetworkControllerPk = Base64.toBase64String(curveNetworkControllerPk.toByteArray());
+
+    return baseEncodedCurveNetworkControllerPk;
+}
+
+@OptIn(ExperimentalUnsignedTypes::class)
+fun parseEdPrivateKeyToX25519(sk: String): String {
+    var isInitialized = false;
+    LibsodiumInitializer.initializeWithCallback {
+        isInitialized = true;
+    }
+
+    while(!isInitialized) { }
+
+    val curveNetworkControllerPk = Signature.ed25519PkToCurve25519((Base64.decode(sk).toUByteArray()));
+    val baseEncodedCurveNetworkControllerPk = Base64.toBase64String(curveNetworkControllerPk.toByteArray());
+
+    return baseEncodedCurveNetworkControllerPk;
+}
+
+
+
 

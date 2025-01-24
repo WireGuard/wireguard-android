@@ -193,7 +193,7 @@ class SignInActivity : AppCompatActivity() {
                 val userId = userAuthenticationResult.getOrThrow().id
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
 
-                daemonName = daemonAlreadyInStorage?.firstOrNull()?.daemonName ?: run {
+                daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch
                 }
 
@@ -252,7 +252,7 @@ class SignInActivity : AppCompatActivity() {
                     val userId = userAuthenticationResult.getOrThrow().id
                     val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
 
-                    daemonName = daemonAlreadyInStorage?.firstOrNull()?.daemonName ?: run {
+                    daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                         showNameInputDialog() ?: return@launch
                     }
 

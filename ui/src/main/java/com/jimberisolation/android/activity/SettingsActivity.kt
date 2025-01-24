@@ -4,37 +4,24 @@
  */
 package com.jimberisolation.android.activity
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.google.gson.Gson
 import com.jimberisolation.android.Application
-import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.QuickTileService
 import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.WgQuickBackend
-import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
-import com.jimberisolation.android.storage.SharedStorage
+import com.jimberisolation.android.preference.PreferenceDataStore
 import com.jimberisolation.android.util.AdminKnobs
-import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayInputStream
-import java.nio.charset.StandardCharsets
 
 /**
  * Interface for changing application-global persistent settings.
@@ -59,97 +46,9 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
-            preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
+            preferenceManager.preferenceDataStore = PreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
-            preferenceScreen.initialExpandedChildrenCount = 4
-
-            val signOutPreference: Preference? = findPreference("sign_out")
-            val clearCachePreference: Preference? = findPreference("clear_cache")
-            val changePublicIpPreference: Preference? = findPreference("change_public_ip")
-            val getSharedStorage: Preference? = findPreference("get_shared_storage")
-            val deauthorizePreference: Preference? = findPreference("deauthorize")
-
-
-            val userId = SharedStorage.getInstance().getCurrentUserId();
-            if(userId == 0) {
-                signOutPreference?.isVisible = false
-            }
-
-
-            // Set an onClick listener
-            clearCachePreference?.setOnPreferenceClickListener {
-                lifecycleScope.launch {
-
-                    val tunnelManager = getTunnelManager();
-                    val tunnels = tunnelManager.getTunnels();
-
-                    tunnels.forEach(){
-                        val tunnel = it;
-                        Log.d("DELETE_TUNNEL", it.name)
-                        tunnel.deleteAsync()
-                        Log.d("DELETE_TUNNEL", "DONE")
-                    }
-
-                    SharedStorage.getInstance().clearAll()
-                    SharedStorage.getInstance().clearAuthenticationToken()
-                }
-
-                Toast.makeText(activity ?: Application.get(), "Cache cleared", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(requireContext(), SignInActivity::class.java))
-
-                true
-            }
-
-            // Set an onClick listener
-            getSharedStorage?.setOnPreferenceClickListener {
-                val data = SharedStorage.getInstance().getAll();
-
-                // Convert the map to JSON
-                val jsonData = Gson().toJson(data)
-                val clip = ClipData.newPlainText("Data",jsonData)
-
-                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-                clipboard!!.setPrimaryClip(clip)
-
-                Toast.makeText(activity ?: Application.get(), "Data set to clipboard", Toast.LENGTH_SHORT).show()
-
-                true
-            }
-
-            // Set an onClick listener
-            deauthorizePreference?.setOnPreferenceClickListener {
-                SharedStorage.getInstance().clearRefreshToken()
-                SharedStorage.getInstance().clearAuthenticationToken()
-
-                Toast.makeText(activity ?: Application.get(), "Tokens cleared", Toast.LENGTH_SHORT).show()
-                true
-            }
-
-
-            // Set an onClick listener
-            changePublicIpPreference?.setOnPreferenceClickListener {
-                val manager = getTunnelManager();
-
-                lifecycleScope.launch {
-                    val tunnel = manager.getTunnels().first();
-
-                    val currentConfig = tunnel.getConfigAsync()
-                    val currentConfigString = currentConfig.toWgQuickString();
-
-                    val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
-                    val newPublicIp = "1.1.1.1";
-
-                    val updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp)
-
-                    val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
-                    tunnel.setConfigAsync(updatedConfig);
-
-                    Toast.makeText(activity ?: Application.get(), "Public IP changed", Toast.LENGTH_SHORT).show()
-                }
-
-                true
-            }
-
+            preferenceScreen.initialExpandedChildrenCount = 5
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || QuickTileService.isAdded) {
                 val quickTile = preferenceManager.findPreference<Preference>("quick_tile")

@@ -15,7 +15,7 @@ fun getDeviceHostname(): String {
 }
 
 
-fun existingKeysOnDeviceOfUserid(userId: Int): List<DaemonKeyPair>? {
+fun existingKeyOnDeviceOfUserId(userId: Int): DaemonKeyPair? {
    return SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId);
 }
 

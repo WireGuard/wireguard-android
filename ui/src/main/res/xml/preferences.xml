@@ -1,9 +1,11 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
 
-    <com.jimberisolation.android.preference.SignOutPreference
-        android:key="sign_out"
-        android:icon="@drawable/logout"/>
+
+    <com.jimberisolation.android.preference.VersionPreference
+        android:key="version"
+        android:icon="@drawable/info"
+        />
 
     <com.jimberisolation.android.preference.QuickTilePreference
         android:key="quick_tile"
@@ -16,33 +18,36 @@
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title" />
 
-    <com.jimberisolation.android.preference.VersionPreference
-        android:key="version"
-    />
 
-    <Preference
+    <com.jimberisolation.android.preference.SignOutPreference
+        android:key="sign_out"
+        android:icon="@drawable/logout"/>
+
+    <com.jimberisolation.android.preference.ChangePublicIpPreference
         android:key="change_public_ip"
         android:singleLineTitle="false"
-        android:summary="Change Public IP of first tunnel"
-        android:title="Change Public IP" />
+        android:summary="Change Public IP of first tunnel" />
 
-    <Preference
+    <com.jimberisolation.android.preference.ChangePublicKeyPreference
+        android:key="change_public_key"
+        android:singleLineTitle="false"
+        android:summary="Change Router Public Key of first tunnel" />
+
+    <com.jimberisolation.android.preference.ClearCachePreference
         android:key="clear_cache"
         android:singleLineTitle="false"
-        android:summary="Clear cache of app completely"
-        android:title="Clear Cache" />
+        android:summary="Clear cache of app completely" />
 
-    <Preference
+    <com.jimberisolation.android.preference.DeauthorizePreference
         android:key="deauthorize"
         android:singleLineTitle="false"
-        android:summary="Deauthorize"
+        android:summary="Remove JWT tokens"
         android:title="Remove refresh and authentication token" />
 
-    <Preference
+    <com.jimberisolation.android.preference.SharedStoragePreference
         android:key="get_shared_storage"
         android:singleLineTitle="false"
-        android:summary="Get shared storage to clipboard"
-        android:title="Get shared storage" />
+        android:summary="Get shared storage to clipboard" />
 
 
 </androidx.preference.PreferenceScreen>

@@ -46,7 +46,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Failed to fetch existing daemons"))
     }
 
-    val localDaemonKeys = existingKeysOnDeviceOfUserid(userId)
+    val localDaemonKeys = existingKeyOnDeviceOfUserId(userId)
 
     val daemonPrivateKey: String
     val daemonIpAddress: String
@@ -55,7 +55,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
     val existingDaemons = existingDaemonsResult.getOrThrow()
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
-    if (localDaemonKeys.isNullOrEmpty()) {
+    if (localDaemonKeys == null) {
         val createDaemonData = CreateDaemonData(
             publicKey = ed25519Keys.pk,
             name = daemonName
@@ -75,7 +75,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
         SharedStorage.getInstance().saveWireguardKeyPair(daemonKeyPair)
 
     } else if(matchingDaemon != null) {
-        daemonPrivateKey = localDaemonKeys.first().sk
+        daemonPrivateKey = localDaemonKeys.sk
         daemonIpAddress = matchingDaemon.ipAddress
         daemonId = matchingDaemon.id
     }
@@ -119,7 +119,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
         return Result.failure(existingDaemonsResult.exceptionOrNull() ?: RuntimeException("Unknown existing daemons error"))
     }
 
-    val localDaemonKeys = existingKeysOnDeviceOfUserid(userId)
+    val localDaemonKeys = existingKeyOnDeviceOfUserId(userId)
 
     val daemonPrivateKey: String
     val daemonIpAddress: String
@@ -128,7 +128,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val existingDaemons = existingDaemonsResult.getOrThrow()
     val matchingDaemon = getExistingDaemon(daemonName, existingDaemons)
 
-    if (localDaemonKeys.isNullOrEmpty()) {
+    if (localDaemonKeys == null) {
         val createDaemonData = CreateDaemonData(
             publicKey = ed25519Keys.pk,
             name = daemonName
@@ -147,7 +147,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
         SharedStorage.getInstance().saveWireguardKeyPair(daemonKeyPair)
 
     } else if(matchingDaemon != null) {
-        daemonPrivateKey = localDaemonKeys.first().sk
+        daemonPrivateKey = localDaemonKeys.sk
         daemonIpAddress = matchingDaemon.ipAddress
         daemonId = matchingDaemon.id
     }

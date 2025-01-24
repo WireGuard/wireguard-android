@@ -34,28 +34,27 @@ class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        // Exclude the refresh token request
         if (excludedUrls.any { originalRequest.url.toString().startsWith(it) }) {
             return chain.proceed(originalRequest)
         }
 
         var response = chain.proceed(originalRequest)
 
-        // Check for 401 Unauthorized
         if (response.code == 401) {
-            response.close()
+            // Attempt to renew the JWT token
+            val newToken = runBlocking { renewJwt() } // Move to async interceptor if possible
+            response.close() // Close old response before retrying
 
-            // Attempt to renew JWT token
-            runBlocking {
-                val newToken = renewJwt()
-                if (newToken != null) {
-                    // Retry original request with the new token
-                    val newRequest = originalRequest.newBuilder().header("Authorization", "Bearer $newToken").build()
-                    response = chain.proceed(newRequest)
-                } else {
-                    // Broadcast event that user needs to log in again
-                    AuthEventManager.authFailedEvent.postValue(true)
-                }
+            return if (newToken != null) {
+                // Retry original request with new token
+                val newRequest = originalRequest.newBuilder()
+                    .header("Authorization", "Bearer $newToken")
+                    .build()
+                chain.proceed(newRequest)
+            } else {
+                // If token renewal fails, post an auth failure event
+                AuthEventManager.authFailedEvent.postValue(true)
+                response
             }
         }
 
@@ -66,9 +65,8 @@ class AuthInterceptor : Interceptor {
         return try {
             val newAccessToken = refreshToken()
             if (newAccessToken.isSuccess) {
-                return newAccessToken.getOrThrow().accessToken
-            }
-            else{
+                newAccessToken.getOrThrow().accessToken
+            } else {
                 null
             }
         } catch (e: Exception) {
