@@ -6,13 +6,15 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 
-data class DaemonKeyPair(
+data class SharedStorageKeyPair(
     val daemonName: String,
     val daemonId: Int,
     val company: String,
     val userId: Int,
-    val pk: String,
-    val sk: String,
+    val pkCurveX25519: String,
+    val skCurveX25519: String,
+    val pkEd25519: String,
+    val skEd25519: String,
 )
 
 class SharedStorage private constructor() {
@@ -27,8 +29,12 @@ class SharedStorage private constructor() {
         private const val CURRENT_COMPANY = "current_company"
 
         private const val WIREGUARD_KEYPAIR = "wireguard_keypair"
-        private const val WIREGUARD_PK = "pk"
-        private const val WIREGUARD_SK = "sk"
+        private const val WIREGUARD_PK_CURVE_X25519 = "pk_curve_x25519"
+        private const val WIREGUARD_SK_CURVE_X25519  = "sk_curve_x25519"
+
+        private const val WIREGUARD_PK_ED25519 = "pk_ed25519"
+        private const val WIREGUARD_SK_ED25519  = "sk_ed25519"
+
         private const val WIREGUARD_DAEMON_NAME = "name"
         private const val WIREGUARD_DAEMON_ID = "id"
         private const val WIREGUARD_USER_ID = "userId"
@@ -131,19 +137,21 @@ class SharedStorage private constructor() {
         return sharedPreferences.getString(CURRENT_COMPANY, null).toString()
     }
 
-    fun saveWireguardKeyPair(keyPair: DaemonKeyPair) {
+    fun saveSharedStorageKeyPair(keyPair: SharedStorageKeyPair) {
         val editor = sharedPreferences.edit()
 
         val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, "[]")
         val jsonArray = JSONArray(jsonString!!)
 
         val newKeyPair = JSONObject().apply {
-            put(WIREGUARD_PK, keyPair.pk)
-            put(WIREGUARD_SK, keyPair.sk)
+            put(WIREGUARD_PK_CURVE_X25519, keyPair.pkCurveX25519)
+            put(WIREGUARD_SK_CURVE_X25519, keyPair.skCurveX25519)
             put(WIREGUARD_DAEMON_NAME, keyPair.daemonName)
             put(WIREGUARD_DAEMON_ID, keyPair.daemonId)
             put(WIREGUARD_COMPANY, keyPair.company)
             put(WIREGUARD_USER_ID, keyPair.userId)
+            put(WIREGUARD_PK_ED25519, keyPair.pkEd25519)
+            put(WIREGUARD_SK_ED25519, keyPair.skEd25519)
         }
 
         for (i in 0 until jsonArray.length()) {
@@ -161,20 +169,22 @@ class SharedStorage private constructor() {
         editor.apply()
     }
 
-    fun getWireguardKeyPairsOfUserId(userId: Number): DaemonKeyPair? {
+    fun getWireguardKeyPairOfUserId(userId: Number): SharedStorageKeyPair? {
         val jsonString = sharedPreferences.getString(WIREGUARD_KEYPAIR, null) ?: return null
         val jsonArray = JSONArray(jsonString)
 
         for (i in 0 until jsonArray.length()) {
             val keyPairObject = jsonArray.getJSONObject(i)
             if(keyPairObject[WIREGUARD_USER_ID] == userId) {
-                val kp = DaemonKeyPair(
+                val kp = SharedStorageKeyPair(
                     keyPairObject.getString(WIREGUARD_DAEMON_NAME),
                     keyPairObject.getInt(WIREGUARD_DAEMON_ID),
                     keyPairObject.getString(WIREGUARD_COMPANY),
                     keyPairObject.getInt(WIREGUARD_USER_ID),
-                    keyPairObject.getString(WIREGUARD_PK),
-                    keyPairObject.getString(WIREGUARD_SK))
+                    keyPairObject.getString(WIREGUARD_PK_CURVE_X25519),
+                    keyPairObject.getString(WIREGUARD_SK_CURVE_X25519),
+                    keyPairObject.getString(WIREGUARD_PK_ED25519),
+                    keyPairObject.getString(WIREGUARD_SK_ED25519))
 
                 return kp;
             }

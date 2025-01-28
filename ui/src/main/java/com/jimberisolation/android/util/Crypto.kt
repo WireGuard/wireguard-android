@@ -1,13 +1,17 @@
 package com.jimberisolation.android.util
 
-import com.ionspin.kotlin.crypto.LibsodiumInitializer
+import android.util.Log
+import com.ionspin.kotlin.crypto.box.Box
 import com.ionspin.kotlin.crypto.signature.Signature
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator
 import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters
+import org.bouncycastle.crypto.params.X25519PrivateKeyParameters
 import org.bouncycastle.util.encoders.Base64
+import java.nio.charset.Charset
+
 import java.security.SecureRandom
 
 data class EdKeyPair(
@@ -15,8 +19,9 @@ data class EdKeyPair(
     val sk: String,
 )
 data class WireguardKeys(
-    val baseEncodedCloudcontrollerPkInX25519: String,
-    val baseEncodedPrivateKeyInX25519: String,
+    val base64EncodedPkCurveX25519: String,
+    val base64EncodedSkCurveX25519: String,
+    val base64EncodedNetworkControllerPkCurveX25519: String,
 )
 
 
@@ -34,52 +39,54 @@ fun generateEd25519KeyPair(): EdKeyPair {
     return EdKeyPair(Base64.toBase64String(publicKey.encoded), Base64.toBase64String(privateKey.encoded))
 }
 
-@OptIn(ExperimentalUnsignedTypes::class)
-fun generateWireguardKeys(sk: String, cloudControllerPk: String): WireguardKeys {
-    var isInitialized = false;
-    LibsodiumInitializer.initializeWithCallback {
-        isInitialized = true;
-    }
+fun generateWireguardConfigurationKeys(pk: String, sk: String, cloudControllerPk: String): WireguardKeys {
+    val base64EncodedCurveNetworkControllerPk = parseEdPublicKeyToCurveX25519(cloudControllerPk)
 
-    while(!isInitialized) { }
+    val base64EncodedCurveSk = parseEdPrivateKeyToCurveX25519(sk)
+    val base64EncodedCurvePk = parseEdPublicKeyToCurveX25519(pk)
 
-    val curveNetworkControllerPk = Signature.ed25519PkToCurve25519((Base64.decode(cloudControllerPk).toUByteArray()));
-    val baseEncodedCurveNetworkControllerPk = Base64.toBase64String(curveNetworkControllerPk.toByteArray());
-
-    val curveSK = Signature.ed25519SkToCurve25519((Base64.decode(sk).toUByteArray()));
-    val baseEncodedCurveSk = Base64.toBase64String(curveSK.toByteArray());
-
-    return WireguardKeys(baseEncodedCloudcontrollerPkInX25519 = baseEncodedCurveNetworkControllerPk, baseEncodedPrivateKeyInX25519 = baseEncodedCurveSk)
+    return WireguardKeys(
+        base64EncodedPkCurveX25519 = base64EncodedCurvePk,
+        base64EncodedSkCurveX25519 = base64EncodedCurveSk,
+        base64EncodedNetworkControllerPkCurveX25519 = base64EncodedCurveNetworkControllerPk
+    )
 }
 
 @OptIn(ExperimentalUnsignedTypes::class)
-fun parseEdPublicKeyToX25519(pk: String): String {
-    var isInitialized = false;
-    LibsodiumInitializer.initializeWithCallback {
-        isInitialized = true;
-    }
+fun parseEdPublicKeyToCurveX25519(pk: String): String {
+    val curvePk = Signature.ed25519PkToCurve25519((Base64.decode(pk).toUByteArray()));
+    val baseEncodedCurvePk = Base64.toBase64String(curvePk.toByteArray());
 
-    while(!isInitialized) { }
-
-    val curveNetworkControllerPk = Signature.ed25519PkToCurve25519((Base64.decode(pk).toUByteArray()));
-    val baseEncodedCurveNetworkControllerPk = Base64.toBase64String(curveNetworkControllerPk.toByteArray());
-
-    return baseEncodedCurveNetworkControllerPk;
+    return baseEncodedCurvePk;
 }
 
 @OptIn(ExperimentalUnsignedTypes::class)
-fun parseEdPrivateKeyToX25519(sk: String): String {
-    var isInitialized = false;
-    LibsodiumInitializer.initializeWithCallback {
-        isInitialized = true;
+fun parseEdPrivateKeyToCurveX25519(sk: String): String {
+    val curveSk= Signature.ed25519SkToCurve25519((Base64.decode(sk).toUByteArray()));
+    val baseEncodedCurveSk = Base64.toBase64String(curveSk.toByteArray());
+
+    return baseEncodedCurveSk;
+}
+
+@OptIn(ExperimentalUnsignedTypes::class)
+fun decryptData(encryptedData: String, secretKeyBase64: String): String? {
+    try {
+        val privateKeyBytes = Base64.decode(secretKeyBase64);
+        val privateKeyX25519 =  X25519PrivateKeyParameters(privateKeyBytes, 0)
+
+        val privateKey = privateKeyX25519.encoded.toUByteArray();
+        val publicKey = privateKeyX25519.generatePublicKey().encoded.toUByteArray()
+
+        val decodedData = Base64.decode(encryptedData).toUByteArray();
+
+        val decryptedMessage = Box.sealOpen(decodedData, publicKey, privateKey)
+        return String(decryptedMessage.toByteArray(), Charset.forName("UTF-8"))
+    }
+    catch (e: Exception) {
+        Log.i("DECRYPTION", "ERROR IN DECRYPTION", e)
+        return null;
     }
 
-    while(!isInitialized) { }
-
-    val curveNetworkControllerPk = Signature.ed25519PkToCurve25519((Base64.decode(sk).toUByteArray()));
-    val baseEncodedCurveNetworkControllerPk = Base64.toBase64String(curveNetworkControllerPk.toByteArray());
-
-    return baseEncodedCurveNetworkControllerPk;
 }
 
 

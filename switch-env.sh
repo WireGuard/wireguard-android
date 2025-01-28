@@ -33,7 +33,7 @@ elif [ "$ENVIRONMENT" = "production" ]; then
     echo "Done"
 
 elif [ "$ENVIRONMENT" = "local" ]; then
-    echo "Changing to the production environment..."
+    echo "Changing to the local environment..."
     cp ./environments/local/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
     cp ./environments/local/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/local/msal_config.json ./ui/src/main/res/raw

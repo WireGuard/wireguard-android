@@ -49,5 +49,10 @@
         android:singleLineTitle="false"
         android:summary="Get shared storage to clipboard" />
 
+    <com.jimberisolation.android.preference.TestingPreference
+        android:key="testing"
+        android:singleLineTitle="false"
+        android:summary="Testing purposes" />
+
 
 </androidx.preference.PreferenceScreen>

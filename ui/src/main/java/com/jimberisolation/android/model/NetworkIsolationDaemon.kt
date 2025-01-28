@@ -2,10 +2,10 @@ import android.util.Log
 import com.jimberisolation.android.api.CreateDaemonData
 import com.jimberisolation.android.api.CreateDaemonResult
 import com.jimberisolation.android.api.UserAuthenticationResult
-import com.jimberisolation.android.storage.DaemonKeyPair
 import com.jimberisolation.android.storage.SharedStorage
+import com.jimberisolation.android.storage.SharedStorageKeyPair
 import com.jimberisolation.android.util.generateEd25519KeyPair
-import com.jimberisolation.android.util.generateWireguardKeys
+import com.jimberisolation.android.util.generateWireguardConfigurationKeys
 
 enum class AuthenticationType {
     Google,
@@ -38,7 +38,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
     val endpointAddress = cloudControllerData.endpointAddress
     val cloudIpAddress = cloudControllerData.ipAddress
 
-    val wireguardKeyPair = generateWireguardKeys(ed25519Keys.sk, routerPublicKey)
+    val wireguardConfigurationKeys = generateWireguardConfigurationKeys(ed25519Keys.pk, ed25519Keys.sk, routerPublicKey)
 
     // Fetch existing daemons
     val existingDaemonsResult = getExistingDaemonsV2(userId, companyName)
@@ -66,16 +66,15 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
             return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Failed to create daemon"))
         }
 
-        daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
+        daemonPrivateKey = wireguardConfigurationKeys.base64EncodedSkCurveX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
         daemonId = createdDaemonResult.getOrThrow().id;
 
-
-        val daemonKeyPair = DaemonKeyPair(daemonName, daemonId, companyName, userId, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519)
-        SharedStorage.getInstance().saveWireguardKeyPair(daemonKeyPair)
+        val sharedStorageKeyPair = SharedStorageKeyPair(daemonName, daemonId, companyName, userId, wireguardConfigurationKeys.base64EncodedPkCurveX25519, wireguardConfigurationKeys.base64EncodedSkCurveX25519, ed25519Keys.pk, ed25519Keys.sk)
+        SharedStorage.getInstance().saveSharedStorageKeyPair(sharedStorageKeyPair)
 
     } else if(matchingDaemon != null) {
-        daemonPrivateKey = localDaemonKeys.sk
+        daemonPrivateKey = wireguardConfigurationKeys.base64EncodedSkCurveX25519
         daemonIpAddress = matchingDaemon.ipAddress
         daemonId = matchingDaemon.id
     }
@@ -89,7 +88,7 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthenticationResult: UserAut
     val company = Company(companyName)
     val daemon = Daemon(daemonPrivateKey, daemonIpAddress)
     val dnsServer = DnsServer(cloudIpAddress)
-    val networkController = NetworkController(wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, endpointAddress, 51820)
+    val networkController = NetworkController(wireguardConfigurationKeys.base64EncodedNetworkControllerPkCurveX25519, endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 
@@ -112,7 +111,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val endpointAddress = cloudControllerResult.getOrThrow().endpointAddress
     val cloudIpAddress = cloudControllerResult.getOrThrow().ipAddress
 
-    val wireguardKeyPair = generateWireguardKeys(ed25519Keys.sk, routerPublicKey)
+    val wireguardKeyPair = generateWireguardConfigurationKeys(ed25519Keys.pk, ed25519Keys.sk, routerPublicKey)
 
     val existingDaemonsResult = getExistingDaemonsV2(userId, companyName);
     if (existingDaemonsResult.isFailure) {
@@ -139,15 +138,15 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
             return Result.failure(createdDaemonResult.exceptionOrNull() ?: RuntimeException("Failed to create daemon"))
         }
 
-        daemonPrivateKey = wireguardKeyPair.baseEncodedPrivateKeyInX25519
+        daemonPrivateKey = wireguardKeyPair.base64EncodedSkCurveX25519
         daemonIpAddress = createdDaemonResult.getOrThrow().ipAddress
         daemonId = createdDaemonResult.getOrThrow().id;
 
-        val daemonKeyPair = DaemonKeyPair(daemonName, daemonId, companyName, userId, wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, wireguardKeyPair.baseEncodedPrivateKeyInX25519)
-        SharedStorage.getInstance().saveWireguardKeyPair(daemonKeyPair)
+        val daemonKeyPair = SharedStorageKeyPair(daemonName, daemonId, companyName, userId, wireguardKeyPair.base64EncodedPkCurveX25519, wireguardKeyPair.base64EncodedSkCurveX25519, ed25519Keys.pk, ed25519Keys.sk)
+        SharedStorage.getInstance().saveSharedStorageKeyPair(daemonKeyPair)
 
     } else if(matchingDaemon != null) {
-        daemonPrivateKey = localDaemonKeys.sk
+        daemonPrivateKey = localDaemonKeys.skCurveX25519
         daemonIpAddress = matchingDaemon.ipAddress
         daemonId = matchingDaemon.id
     }
@@ -161,7 +160,7 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(authenticati
     val company = Company(companyName)
     val daemon = Daemon(daemonPrivateKey, daemonIpAddress)
     val dnsServer = DnsServer(cloudIpAddress)
-    val networkController = NetworkController(wireguardKeyPair.baseEncodedCloudcontrollerPkInX25519, endpointAddress, 51820)
+    val networkController = NetworkController(wireguardKeyPair.base64EncodedNetworkControllerPkCurveX25519, endpointAddress, 51820)
 
     val wireguardConfig = GenerateWireguardConfig(company, daemon, dnsServer, networkController)
 

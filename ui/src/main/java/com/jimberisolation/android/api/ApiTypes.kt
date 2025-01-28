@@ -19,7 +19,12 @@ data class UserAuthenticationResult(
     val company: Company
 )
 
-data class RouterPublicKeyResult(
+data class CloudControllerResult(
+    // NC information encrypted with the public key of the daemon
+    val ncInformation: String,
+)
+
+data class CloudControllerData(
     val routerPublicKey: String,
     val ipAddress: String,
     val endpointAddress: String

@@ -167,7 +167,7 @@ class EmailVerificationActivity : AppCompatActivity() {
                 val companyName = userAuthenticationResult.company.name
                 val userId = userAuthenticationResult.id
 
-                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairsOfUserId(userId)
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairOfUserId(userId)
 
                 daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch

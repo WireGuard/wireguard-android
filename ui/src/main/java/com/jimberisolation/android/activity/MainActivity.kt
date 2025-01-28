@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import com.ionspin.kotlin.crypto.LibsodiumInitializer
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
@@ -71,6 +72,13 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        var isInitialized = false;
+        LibsodiumInitializer.initializeWithCallback {
+            isInitialized = true;
+        }
+
+        while(!isInitialized) { }
 
         spinner = findViewById(R.id.loading_spinner)
         detailContainer = findViewById(R.id.detail_container)

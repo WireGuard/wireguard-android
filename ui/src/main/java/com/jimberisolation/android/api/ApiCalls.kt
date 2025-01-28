@@ -1,13 +1,5 @@
 import android.util.Log
-import com.jimberisolation.android.api.CreateDaemonData
-import com.jimberisolation.android.api.CreatedDaemonResult
-import com.jimberisolation.android.api.DeleteDaemonResult
-import com.jimberisolation.android.api.EmailVerificationData
-import com.jimberisolation.android.api.GetDaemonsNameResult
-import com.jimberisolation.android.api.GetEmailVerificationCodeData
-import com.jimberisolation.android.api.RefreshResult
-import com.jimberisolation.android.api.RouterPublicKeyResult
-import com.jimberisolation.android.api.UserAuthenticationResult
+import com.jimberisolation.android.api.*
 import com.jimberisolation.android.storage.SharedStorage
 import org.json.JSONObject
 
@@ -43,11 +35,22 @@ suspend fun getUserAuthenticationV2(idToken: String, authenticationType: Authent
     }
 }
 
-suspend fun getCloudControllerPublicKeyV2(company: String): Result<RouterPublicKeyResult> {
+suspend fun getCloudControllerPublicKeyV2(company: String): Result<CloudControllerData> {
     return try {
-        val cookies = getCookieString();
-        val result = ApiClient.apiService.getCloudControllerPublicKey(company, cookies)
+        val result = ApiClient.apiService.getCloudControllerInformation(company, 1)
 
+        val b = CloudControllerData("7xNLKlbYZJ/FljXNm9Rxdy7PWDfbcijtmJz1Q3fifXc=", "100.64.0.1", "185.69.165.125")
+
+        Result.success(b)
+    } catch (e: Exception) {
+        Log.e("GET_CLOUD_CONTROLLER_PUBLIC_KEY", "ERROR IN GET_CLOUD_CONTROLLER_PUBLIC_KEY", e)
+        Result.failure(e)
+    }
+}
+
+suspend fun getCloudControllerPublicKeyV3(company: String, daemonId: Number): Result<CloudControllerResult> {
+    return try {
+        val result = ApiClient.apiService.getCloudControllerInformation(company, daemonId)
         Result.success(result)
     } catch (e: Exception) {
         Log.e("GET_CLOUD_CONTROLLER_PUBLIC_KEY", "ERROR IN GET_CLOUD_CONTROLLER_PUBLIC_KEY", e)

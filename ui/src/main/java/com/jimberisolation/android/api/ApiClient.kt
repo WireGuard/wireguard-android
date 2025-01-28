@@ -1,12 +1,4 @@
-import com.jimberisolation.android.api.CreateDaemonData
-import com.jimberisolation.android.api.CreatedDaemonResult
-import com.jimberisolation.android.api.DeleteDaemonResult
-import com.jimberisolation.android.api.EmailVerificationData
-import com.jimberisolation.android.api.GetDaemonsNameResult
-import com.jimberisolation.android.api.GetEmailVerificationCodeData
-import com.jimberisolation.android.api.RefreshResult
-import com.jimberisolation.android.api.RouterPublicKeyResult
-import com.jimberisolation.android.api.UserAuthenticationResult
+import com.jimberisolation.android.api.*
 import com.jimberisolation.android.util.SingleLiveEvent
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -99,9 +91,6 @@ interface ApiService {
     @GET("companies/{company}/daemons/user/{userId}")
     suspend fun getExistingDaemons(@Path("userId") userId: Int,  @Path("company") company: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
 
-    @GET("companies/{company}/routers/cloud-network-controller")
-    suspend fun getCloudControllerPublicKey(@Path("company") company: String, @Header("Cookie") cookies: String): RouterPublicKeyResult
-
     @POST("companies/{company}/daemons/user/{userId}")
     suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
 
@@ -119,6 +108,9 @@ interface ApiService {
 
     @POST("auth/logout")
     suspend fun logout(@Header("Cookie") cookies: String): retrofit2.Response<Boolean>
+
+    @GET("companies/{company}/daemons/public/{daemonId}")
+    suspend fun getCloudControllerInformation(@Path("company") company: String, @Path("daemonId") daemonId: Number): CloudControllerResult
 
 }
 

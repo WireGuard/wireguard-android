@@ -23,7 +23,7 @@ import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
 import com.jimberisolation.android.util.ErrorMessages
-import com.jimberisolation.android.util.parseEdPublicKeyToX25519
+import com.jimberisolation.android.util.parseEdPublicKeyToCurveX25519
 import com.jimberisolation.config.Config
 import getCloudControllerPublicKeyV2
 import kotlinx.coroutines.launch
@@ -87,7 +87,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                         val newPublicIp = result?.endpointAddress;
 
                         val oldPublicKey = currentConfig.peers.first().publicKey.toBase64();
-                        val newPublicKey = parseEdPublicKeyToX25519(result!!.routerPublicKey);
+                        val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
 
                         var updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp.toString())
                         updatedConfigString = updatedConfigString.replace(Regex("(?<=PublicKey = )$oldPublicKey"), newPublicKey)
