@@ -4,7 +4,6 @@
  */
 package com.jimberisolation.android.fragment
 
-import ApiService
 import android.content.Context
 import android.util.Log
 import android.view.View
@@ -14,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.activity.BaseActivity
@@ -24,9 +22,7 @@ import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
-import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.ErrorMessages
-import com.jimberisolation.android.util.generateWireguardKeys
 import com.jimberisolation.android.util.parseEdPublicKeyToX25519
 import com.jimberisolation.config.Config
 import getCloudControllerPublicKeyV2
@@ -84,7 +80,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     val currentConfigString = currentConfig.toWgQuickString();
 
                     val newEndpoint = getCloudControllerPublicKeyV2(tunnel.name)
-
                     if(newEndpoint.isSuccess) {
                         val result = newEndpoint.getOrNull();
 
@@ -99,6 +94,10 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
 
                         val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
                         tunnel.setConfigAsync(updatedConfig);
+                    }
+                    else {
+                        tunnel.setStateAsync(Tunnel.State.DOWN)
+                        return@launch;
                     }
                 }
 

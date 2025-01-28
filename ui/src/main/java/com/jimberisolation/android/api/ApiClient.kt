@@ -1,4 +1,3 @@
-import androidx.lifecycle.MutableLiveData
 import com.jimberisolation.android.api.CreateDaemonData
 import com.jimberisolation.android.api.CreatedDaemonResult
 import com.jimberisolation.android.api.DeleteDaemonResult
@@ -8,6 +7,7 @@ import com.jimberisolation.android.api.GetEmailVerificationCodeData
 import com.jimberisolation.android.api.RefreshResult
 import com.jimberisolation.android.api.RouterPublicKeyResult
 import com.jimberisolation.android.api.UserAuthenticationResult
+import com.jimberisolation.android.util.SingleLiveEvent
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -23,7 +23,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 object AuthEventManager {
-    val authFailedEvent = MutableLiveData<Boolean>()
+    val authFailedEvent = SingleLiveEvent<Boolean>()
 }
 
 class AuthInterceptor : Interceptor {
@@ -38,23 +38,22 @@ class AuthInterceptor : Interceptor {
             return chain.proceed(originalRequest)
         }
 
-        var response = chain.proceed(originalRequest)
+        val response = chain.proceed(originalRequest)
 
         if (response.code == 401) {
-            // Attempt to renew the JWT token
-            val newToken = runBlocking { renewJwt() } // Move to async interceptor if possible
-            response.close() // Close old response before retrying
+            synchronized(this) {
+                val newToken = runBlocking { renewJwt() }
 
-            return if (newToken != null) {
-                // Retry original request with new token
-                val newRequest = originalRequest.newBuilder()
-                    .header("Authorization", "Bearer $newToken")
-                    .build()
-                chain.proceed(newRequest)
-            } else {
-                // If token renewal fails, post an auth failure event
-                AuthEventManager.authFailedEvent.postValue(true)
-                response
+                // If the token is unchanged, attempt renewal
+                return if (newToken != null) {
+                        // Retry the original request with the new token
+                        val newRequest = originalRequest.newBuilder().header("Authorization", "Bearer $newToken").build()
+                        chain.proceed(newRequest)
+                }
+                else {
+                    AuthEventManager.authFailedEvent.postValue(true)
+                    response
+                }
             }
         }
 
