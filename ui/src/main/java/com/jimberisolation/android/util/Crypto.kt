@@ -1,16 +1,13 @@
 package com.jimberisolation.android.util
 
-import android.util.Log
-import com.ionspin.kotlin.crypto.box.Box
 import com.ionspin.kotlin.crypto.signature.Signature
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator
 import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters
-import org.bouncycastle.crypto.params.X25519PrivateKeyParameters
+import org.bouncycastle.crypto.signers.Ed25519Signer
 import org.bouncycastle.util.encoders.Base64
-import java.nio.charset.Charset
 
 import java.security.SecureRandom
 
@@ -21,7 +18,6 @@ data class EdKeyPair(
 data class WireguardKeys(
     val base64EncodedPkCurveX25519: String,
     val base64EncodedSkCurveX25519: String,
-    val base64EncodedNetworkControllerPkCurveX25519: String,
 )
 
 
@@ -39,16 +35,13 @@ fun generateEd25519KeyPair(): EdKeyPair {
     return EdKeyPair(Base64.toBase64String(publicKey.encoded), Base64.toBase64String(privateKey.encoded))
 }
 
-fun generateWireguardConfigurationKeys(pk: String, sk: String, cloudControllerPk: String): WireguardKeys {
-    val base64EncodedCurveNetworkControllerPk = parseEdPublicKeyToCurveX25519(cloudControllerPk)
-
+fun generateWireguardConfigurationKeys(pk: String, sk: String): WireguardKeys {
     val base64EncodedCurveSk = parseEdPrivateKeyToCurveX25519(sk)
     val base64EncodedCurvePk = parseEdPublicKeyToCurveX25519(pk)
 
     return WireguardKeys(
         base64EncodedPkCurveX25519 = base64EncodedCurvePk,
         base64EncodedSkCurveX25519 = base64EncodedCurveSk,
-        base64EncodedNetworkControllerPkCurveX25519 = base64EncodedCurveNetworkControllerPk
     )
 }
 
@@ -69,25 +62,25 @@ fun parseEdPrivateKeyToCurveX25519(sk: String): String {
 }
 
 @OptIn(ExperimentalUnsignedTypes::class)
-fun decryptData(encryptedData: String, secretKeyBase64: String): String? {
-    try {
-        val privateKeyBytes = Base64.decode(secretKeyBase64);
-        val privateKeyX25519 =  X25519PrivateKeyParameters(privateKeyBytes, 0)
+fun generateSign(message: ByteArray, sk: String): ByteArray {
+    val privateKeyBytes = Base64.decode(sk)
+    val privateKeyEd25519 =  Ed25519PrivateKeyParameters(privateKeyBytes, 0)
 
-        val privateKey = privateKeyX25519.encoded.toUByteArray();
-        val publicKey = privateKeyX25519.generatePublicKey().encoded.toUByteArray()
+    val signer = Ed25519Signer()
+    signer.init(true, privateKeyEd25519)
 
-        val decodedData = Base64.decode(encryptedData).toUByteArray();
+    signer.update(message, 0, message.size)
 
-        val decryptedMessage = Box.sealOpen(decodedData, publicKey, privateKey)
-        return String(decryptedMessage.toByteArray(), Charset.forName("UTF-8"))
-    }
-    catch (e: Exception) {
-        Log.i("DECRYPTION", "ERROR IN DECRYPTION", e)
-        return null;
-    }
-
+    return signer.generateSignature()
 }
+
+fun generateSignedMessage(message: ByteArray, privateKey: String): String {
+    val signature = generateSign(message, privateKey)
+
+    val payload = signature + message
+    return Base64.toBase64String(payload)
+}
+
 
 
 

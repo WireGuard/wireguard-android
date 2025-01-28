@@ -22,13 +22,13 @@ import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.configStore.ConfigStore
 import com.jimberisolation.android.configStore.CreateTunnelData
 import com.jimberisolation.android.configStore.TunnelInfo
+import com.jimberisolation.android.daemon.deleteDaemon
 import com.jimberisolation.android.databinding.ObservableSortedKeyedArrayList
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.UserKnobs
 import com.jimberisolation.android.util.applicationScope
 import com.jimberisolation.config.Config
-import deleteDaemonV2
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -80,10 +80,12 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 withContext(Dispatchers.IO) { configStore.delete(tunnel) }
 
                 val sharedStorage = SharedStorage.getInstance();
-                val company = sharedStorage.getCurrentCompany()
+                val daemonId =  tunnel.getDaemonId()
+
+                val kp = sharedStorage.getDaemonKeyPairByDaemonId(daemonId)
                 val userId = sharedStorage.getCurrentUserId()
 
-                val deletedTunnel = deleteDaemonV2(userId, company, tunnel.getDaemonId().toString())
+                val deletedTunnel = deleteDaemon(userId, kp!!.companyName, tunnel.getDaemonId().toString())
                 if(deletedTunnel.isFailure) {
                     throw Exception(deletedTunnel.exceptionOrNull())
                 }

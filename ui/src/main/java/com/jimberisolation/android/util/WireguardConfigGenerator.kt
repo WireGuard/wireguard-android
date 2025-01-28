@@ -1,9 +1,10 @@
-data class Company(val name: String)
-data class Daemon(val privateKey: String, val ipAddress: String)
-data class DnsServer(val ipAddress: String)
-data class NetworkController(val routerPublicKey: String, val endpointAddress: String, val port: Int)
+import com.jimberisolation.android.authentication.Company
+import com.jimberisolation.android.daemon.Daemon
+import com.jimberisolation.android.networkcontroller.NetworkController
 
-fun GenerateWireguardConfig(company: Company, daemon: Daemon, dnsServer: DnsServer, networkController: NetworkController): String {
+data class DnsServer(val ipAddress: String)
+
+fun generateWireguardConfig(company: Company, daemon: Daemon, dnsServer: DnsServer, networkController: NetworkController): String {
     return """
         [Interface]
         #company ${company.name}
@@ -14,7 +15,7 @@ fun GenerateWireguardConfig(company: Company, daemon: Daemon, dnsServer: DnsServ
         [Peer]
         PublicKey = ${networkController.routerPublicKey}
         AllowedIPs = 0.0.0.0/0
-        Endpoint = ${networkController.endpointAddress}:${networkController.port}
+        Endpoint = ${networkController.endpointAddress}:51820
         PersistentKeepalive = 15
     """.trimIndent()
 }

@@ -6,6 +6,7 @@ package com.jimberisolation.android.activity
 
 import android.os.Bundle
 import android.content.Intent
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,7 +30,6 @@ import com.jimberisolation.android.storage.SharedStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import refreshToken
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -115,16 +115,8 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         }
     }
 
-    private suspend fun navigateToScreen(tunnelsAvailable: Boolean) {
-        val newAccessToken = refreshToken()
+    private fun navigateToScreen(tunnelsAvailable: Boolean) {
         toggleLoading(false)
-        if (newAccessToken.isFailure) {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
-
         if (!tunnelsAvailable) {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)

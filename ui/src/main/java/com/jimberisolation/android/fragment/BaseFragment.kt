@@ -22,10 +22,11 @@ import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.networkcontroller.getNetworkControllerPublicKey
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.parseEdPublicKeyToCurveX25519
 import com.jimberisolation.config.Config
-import getCloudControllerPublicKeyV2
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
@@ -79,26 +80,28 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     val currentConfig = tunnel.getConfigAsync()
                     val currentConfigString = currentConfig.toWgQuickString();
 
-                    val newEndpoint = getCloudControllerPublicKeyV2(tunnel.name)
-                    if(newEndpoint.isSuccess) {
-                        val result = newEndpoint.getOrNull();
+                    val daemonId = tunnel.getDaemonId()
+                    val kp = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
 
-                        val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
-                        val newPublicIp = result?.endpointAddress;
-
-                        val oldPublicKey = currentConfig.peers.first().publicKey.toBase64();
-                        val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
-
-                        var updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp.toString())
-                        updatedConfigString = updatedConfigString.replace(Regex("(?<=PublicKey = )$oldPublicKey"), newPublicKey)
-
-                        val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
-                        tunnel.setConfigAsync(updatedConfig);
-                    }
-                    else {
+                    val networkController = getNetworkControllerPublicKey(daemonId, kp!!.companyName)
+                    if(!networkController.isSuccess) {
                         tunnel.setStateAsync(Tunnel.State.DOWN)
                         return@launch;
                     }
+
+                    val result = networkController.getOrNull();
+
+                    val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
+                    val newPublicIp = result?.endpointAddress;
+
+                    val oldPublicKey = currentConfig.peers.first().publicKey.toBase64();
+                    val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
+
+                    var updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp.toString())
+                    updatedConfigString = updatedConfigString.replace(Regex("(?<=PublicKey = )$oldPublicKey"), newPublicKey)
+
+                    val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
+                    tunnel.setConfigAsync(updatedConfig);
                 }
 
                 // Proceed with permission handling if GoBackend is being used

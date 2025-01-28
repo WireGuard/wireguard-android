@@ -1,6 +1,5 @@
 package com.jimberisolation.android.activity
 
-import AuthenticationType
 import Config
 import android.content.Intent
 import android.os.Bundle
@@ -31,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.BuildConfig
 import com.jimberisolation.android.R
+import com.jimberisolation.android.authentication.AuthenticationType
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import com.microsoft.identity.client.AuthenticationCallback
@@ -189,9 +189,9 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val companyName = userAuthenticationResult.getOrThrow().company.name
-                val userId = userAuthenticationResult.getOrThrow().id
-                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairOfUserId(userId)
+                val companyName = userAuthenticationResult.getOrThrow().companyName
+                val userId = userAuthenticationResult.getOrThrow().userId
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
 
                 daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch
@@ -207,7 +207,7 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                val wireguardConfig = wireguardConfigResult.getOrThrow()?.configurationString!!
                 val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
 
                 Log.d("Configuration", wireguardConfig)
@@ -248,9 +248,9 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val companyName = userAuthenticationResult.getOrThrow().company.name
-                    val userId = userAuthenticationResult.getOrThrow().id
-                    val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairOfUserId(userId)
+                    val companyName = userAuthenticationResult.getOrThrow().companyName
+                    val userId = userAuthenticationResult.getOrThrow().userId
+                    val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
 
                     daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                         showNameInputDialog() ?: return@launch
@@ -266,7 +266,7 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.wireguardConfig!!
+                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.configurationString!!
                     val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
 
                     Log.d("Configuration", wireguardConfig)

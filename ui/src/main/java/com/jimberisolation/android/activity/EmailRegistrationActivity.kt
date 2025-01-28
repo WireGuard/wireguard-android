@@ -12,8 +12,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.jimberisolation.android.R
+import com.jimberisolation.android.authentication.sendVerificationEmail
 import kotlinx.coroutines.launch
-import sendVerificationEmail
 
 class EmailRegistrationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null

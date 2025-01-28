@@ -1,4 +1,15 @@
-import com.jimberisolation.android.api.*
+import android.util.Log
+import com.jimberisolation.android.authentication.AuthenticationApiRequest
+import com.jimberisolation.android.authentication.AuthenticationWithVerificationCodeApiRequest
+import com.jimberisolation.android.authentication.RefreshTokenApiResult
+import com.jimberisolation.android.authentication.UserAuthenticationApiResult
+import com.jimberisolation.android.authentication.VerificationCodeApiRequest
+import com.jimberisolation.android.authentication.refreshToken
+import com.jimberisolation.android.daemon.CreateDaemonApiRequest
+import com.jimberisolation.android.daemon.CreateDaemonApiResult
+import com.jimberisolation.android.daemon.DeleteDaemonApiResult
+import com.jimberisolation.android.daemon.GetDaemonApiResult
+import com.jimberisolation.android.networkcontroller.NetworkControllerApiResult
 import com.jimberisolation.android.util.SingleLiveEvent
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -73,6 +84,7 @@ val customLogger = HttpLoggingInterceptor.Logger { message ->
     val filteredMessage = message
         .replace(Regex("(accessToken\":\")\\S+")) { "${it.groupValues[1]}****\"}" }
         .replace(Regex("(Authentication=)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(Authorization:)[^;]+")) { "${it.groupValues[1]}****" }
         .replace(Regex("(Refresh=)[^;]+")) { "${it.groupValues[1]}****" }
 
     println(filteredMessage) // Log the filtered message
@@ -86,38 +98,33 @@ val logging = HttpLoggingInterceptor(customLogger).apply {
 // Retrofit API service interface
 interface ApiService {
     @POST("auth/verify-{type}-id")
-    suspend fun getUserAuthentication(@Path("type") type: String, @Body request: AuthRequest): retrofit2.Response<UserAuthenticationResult>
+    suspend fun getUserAuthentication(@Path("type") type: String, @Body data: AuthenticationApiRequest): retrofit2.Response<UserAuthenticationApiResult>
 
     @GET("companies/{company}/daemons/user/{userId}")
-    suspend fun getExistingDaemons(@Path("userId") userId: Int,  @Path("company") company: String, @Header("Cookie") cookies: String): List<GetDaemonsNameResult>
+    suspend fun getExistingDaemons(@Path("userId") userId: Int,  @Path("company") company: String, @Header("Cookie") cookies: String): retrofit2.Response<List<GetDaemonApiResult>>
 
     @POST("companies/{company}/daemons/user/{userId}")
-    suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body createDaemonData: CreateDaemonData, @Header("Cookie") cookies: String): CreatedDaemonResult
+    suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body data: CreateDaemonApiRequest, @Header("Cookie") cookies: String): retrofit2.Response<CreateDaemonApiResult>
 
     @DELETE("companies/{company}/daemons/user/{userId}/{daemonId}")
-    suspend fun deleteDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonResult>
+    suspend fun deleteDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonApiResult>
 
     @POST("auth/send-user-token-code")
-    suspend fun sendVerificationEmail(@Body emailVerificationData: GetEmailVerificationCodeData): Boolean
+    suspend fun sendVerificationEmail(@Body data: VerificationCodeApiRequest): retrofit2.Response<Boolean>
 
     @POST("auth/verify-email-token")
-    suspend fun verifyEmailWithToken(@Body emailVerificationData: EmailVerificationData): retrofit2.Response<UserAuthenticationResult>
+    suspend fun verifyEmailWithToken(@Body data: AuthenticationWithVerificationCodeApiRequest): retrofit2.Response<UserAuthenticationApiResult>
 
     @GET("auth/refresh")
-    suspend fun refreshToken(@Header("Cookie") cookies: String): retrofit2.Response<RefreshResult>
+    suspend fun refreshToken(@Header("Cookie") cookies: String): retrofit2.Response<RefreshTokenApiResult>
 
     @POST("auth/logout")
     suspend fun logout(@Header("Cookie") cookies: String): retrofit2.Response<Boolean>
 
-    @GET("companies/{company}/daemons/public/{daemonId}")
-    suspend fun getCloudControllerInformation(@Path("company") company: String, @Path("daemonId") daemonId: Number): CloudControllerResult
+    @GET("companies/{company}/daemons/{daemonId}/nc-information")
+    suspend fun getCloudControllerInformation(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<NetworkControllerApiResult>
 
 }
-
-// Data class for AuthRequest
-data class AuthRequest(
-    val idToken: String
-)
 
 // ApiClient class
 object ApiClient {

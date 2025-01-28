@@ -22,8 +22,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
-import com.jimberisolation.android.api.EmailVerificationData
-import com.jimberisolation.android.api.UserAuthenticationResult
+import com.jimberisolation.android.authentication.AuthenticationWithVerificationCodeApiRequest
+import com.jimberisolation.android.authentication.UserAuthentication
+import com.jimberisolation.android.authentication.sendVerificationEmail
+import com.jimberisolation.android.authentication.verifyEmailWithToken
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import createNetworkIsolationDaemonConfigFromEmailVerification
@@ -32,8 +34,6 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import sendVerificationEmail
-import verifyEmailWithToken
 
 class EmailVerificationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
@@ -105,7 +105,7 @@ class EmailVerificationActivity : AppCompatActivity() {
             }
 
             CoroutineScope(Dispatchers.Main).launch {
-                val verifyResult = verifyEmailWithToken(EmailVerificationData(email.toString(), verificationCode.toInt()))
+                val verifyResult = verifyEmailWithToken(AuthenticationWithVerificationCodeApiRequest(email.toString(), verificationCode.toInt()))
                 if(verifyResult.isFailure) {
                     val verifyException = verifyResult.exceptionOrNull();
                     errorTextView.text = verifyException?.message
@@ -159,15 +159,15 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleEmailVerification(userAuthenticationResult: UserAuthenticationResult) {
+    private fun handleEmailVerification(userAuthenticationResult: UserAuthentication) {
         if(daemonName == null) return;
 
         lifecycleScope.launch {
             try {
-                val companyName = userAuthenticationResult.company.name
-                val userId = userAuthenticationResult.id
+                val companyName = userAuthenticationResult.companyName
+                val userId = userAuthenticationResult.userId
 
-                val daemonAlreadyInStorage = SharedStorage.getInstance().getWireguardKeyPairOfUserId(userId)
+                val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
 
                 daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch
@@ -184,7 +184,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                 val result = wireguardConfigResult.getOrThrow()
 
-                val wireguardConfig = result?.wireguardConfig!!
+                val wireguardConfig = result?.configurationString!!
 
                 Log.d("Configuration", wireguardConfig)
 
