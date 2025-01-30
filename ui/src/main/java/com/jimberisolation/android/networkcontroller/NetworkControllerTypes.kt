@@ -8,5 +8,6 @@ package com.jimberisolation.android.networkcontroller
 data class NetworkController(
     val routerPublicKey: String,
     val ipAddress: String,
-    val endpointAddress: String
+    val endpointAddress: String,
+    val allowedIps: String
 )

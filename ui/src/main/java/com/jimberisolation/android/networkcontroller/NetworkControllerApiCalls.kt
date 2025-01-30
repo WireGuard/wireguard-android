@@ -35,7 +35,7 @@ suspend fun getNetworkControllerPublicKey(daemonId: Int, companyName: String): R
 
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
 
-        val networkController = NetworkController(routerPublicKey = result.routerPublicKey, ipAddress = result.ipAddress, endpointAddress = result.endpointAddress)
+        val networkController = NetworkController(routerPublicKey = result.routerPublicKey, ipAddress = result.ipAddress, endpointAddress = result.endpointAddress, allowedIps = result.allowedIps)
         Result.success(networkController)
     } catch (e: Exception) {
         Log.e("GET_CLOUD_CONTROLLER_PUBLIC_KEY", "ERROR IN GET_CLOUD_CONTROLLER_PUBLIC_KEY", e)

@@ -88,12 +88,13 @@ suspend fun createNetworkIsolationDaemonConfig(userAuthentication: UserAuthentic
     val routerPublicKeyX25519 = parseEdPublicKeyToCurveX25519(cloudControllerData.routerPublicKey)
     val endpointAddress = cloudControllerData.endpointAddress
     val cloudIpAddress = cloudControllerData.ipAddress
+    val allowedIps = cloudControllerData.allowedIps
 
     // Build WireGuard configuration
     val company = Company(companyName)
     val daemon = Daemon(daemonId, daemonName, daemonIpAddress, daemonPrivateKey)
     val dnsServer = DnsServer(cloudIpAddress)
-    val networkController = NetworkController(routerPublicKeyX25519, daemonIpAddress, endpointAddress)
+    val networkController = NetworkController(routerPublicKeyX25519, daemonIpAddress, endpointAddress, allowedIps)
 
     val wireguardConfig = generateWireguardConfig(company, daemon, dnsServer, networkController)
 
@@ -161,12 +162,13 @@ suspend fun createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenti
     val routerPublicKeyX25519 = parseEdPublicKeyToCurveX25519(cloudControllerData.routerPublicKey)
     val endpointAddress = cloudControllerData.endpointAddress
     val cloudIpAddress = cloudControllerData.ipAddress
+    val allowedIps = cloudControllerData.allowedIps
 
     // Build WireGuard configuration
     val company = Company(companyName)
     val daemon = Daemon(daemonId, daemonName, daemonIpAddress, daemonPrivateKey)
     val dnsServer = DnsServer(cloudIpAddress)
-    val networkController = NetworkController(routerPublicKeyX25519, daemonIpAddress, endpointAddress)
+    val networkController = NetworkController(routerPublicKeyX25519, daemonIpAddress, endpointAddress, allowedIps)
 
     val wireguardConfig = generateWireguardConfig(company, daemon, dnsServer, networkController)
 

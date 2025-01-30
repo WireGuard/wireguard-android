@@ -14,7 +14,7 @@ fun generateWireguardConfig(company: Company, daemon: Daemon, dnsServer: DnsServ
         
         [Peer]
         PublicKey = ${networkController.routerPublicKey}
-        AllowedIPs = 0.0.0.0/0
+        AllowedIPs = ${networkController.allowedIps}
         Endpoint = ${networkController.endpointAddress}:51820
         PersistentKeepalive = 15
     """.trimIndent()
