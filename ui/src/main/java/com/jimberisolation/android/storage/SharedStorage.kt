@@ -2,6 +2,8 @@ package com.jimberisolation.android.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import com.jimberisolation.android.authentication.User
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -22,9 +24,10 @@ class SharedStorage private constructor() {
         private const val PREFS_NAME = "com.jimberisolation.android.PREFERENCE_FILE_KEY"
         private const val REFRESH_TOKEN_KEY = "refresh_token"
         private const val AUTHENTICATION_TOKEN_KEY = "authentication_token"
+
+        private const val CURRENT_USER = "current_user"
         private const val CURRENT_USER_ID = "current_user_id"
-        private const val CURRENT_COMPANY = "current_company"
-        private const val CURRENT_DAEMON_ID = "current_daemon_id"
+        private const val CURRENT_USER_EMAIL = "current_user_email"
 
         private const val WIREGUARD_KEYPAIR = "wireguard_keypair"
 
@@ -93,19 +96,36 @@ class SharedStorage private constructor() {
         editor.apply()
     }
 
-    fun saveCurrentUserId(userId: Int) {
+    fun saveCurrentUser(user: User) {
         val editor = sharedPreferences.edit()
-        editor.putInt(CURRENT_USER_ID, userId)
+
+        val usr = JSONObject().apply {
+            put(CURRENT_USER_ID, user.id)
+            put(CURRENT_USER_EMAIL, user.email)
+        }
+
+        editor.putString(CURRENT_USER, usr.toString())
         editor.apply()
     }
 
-    fun getCurrentUserId(): Int {
-        return sharedPreferences.getInt(CURRENT_USER_ID, 0)
+    fun getCurrentUser(): User? {
+        try {
+            val userString = sharedPreferences.getString(CURRENT_USER, null).toString();
+
+            val userObj = JSONObject(userString)
+
+            val usr = User(userObj[CURRENT_USER_ID] as Int, userObj[CURRENT_USER_EMAIL].toString())
+            return usr;
+        }
+        catch(e: Exception) {
+            Log.e("ERROR IN GET CURRENT USER", e.message.toString())
+            return null;
+        }
     }
 
-    private fun clearCurrentUserId() {
+    private fun clearCurrentUser() {
         val editor = sharedPreferences.edit()
-        editor.putInt(CURRENT_USER_ID, 0)
+        editor.putString(CURRENT_USER, null)
         editor.apply()
     }
 
@@ -129,8 +149,13 @@ class SharedStorage private constructor() {
 
             if (existingKeyPair[WIREGUARD_DAEMON_ID] == kp.daemonId) {
                 jsonArray.remove(i)
-                break
             }
+
+            if (existingKeyPair[WIREGUARD_USER_ID] == kp.userId) {
+                jsonArray.remove(i)
+            }
+
+            break;
         }
 
         jsonArray.put(newKeyPair)
@@ -186,7 +211,7 @@ class SharedStorage private constructor() {
     fun clearUserLoginData() {
         val editor = sharedPreferences.edit()
 
-        clearCurrentUserId();
+        clearCurrentUser();
         clearRefreshToken()
         clearAuthenticationToken()
 

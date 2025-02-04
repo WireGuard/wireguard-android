@@ -30,11 +30,10 @@ object TunnelImporter {
                 }
             }
 
-            val userId = SharedStorage.getInstance().getCurrentUserId();
+            val userId = SharedStorage.getInstance().getCurrentUser()?.id;
             val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
 
-            val createTunnelData = CreateTunnelData(companyName, daemonId, userId);
-
+            val createTunnelData = CreateTunnelData("$companyName-$daemonId", daemonId, userId!!);
             Application.getTunnelManager().create(createTunnelData, config)
 
         } catch (e: Throwable) {

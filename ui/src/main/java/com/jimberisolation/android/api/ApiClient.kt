@@ -8,7 +8,6 @@ import com.jimberisolation.android.authentication.refreshToken
 import com.jimberisolation.android.daemon.CreateDaemonApiRequest
 import com.jimberisolation.android.daemon.CreateDaemonApiResult
 import com.jimberisolation.android.daemon.DeleteDaemonApiResult
-import com.jimberisolation.android.daemon.GetDaemonApiResult
 import com.jimberisolation.android.networkcontroller.NetworkControllerApiResult
 import com.jimberisolation.android.util.SingleLiveEvent
 import kotlinx.coroutines.runBlocking
@@ -54,6 +53,7 @@ class AuthInterceptor : Interceptor {
                         chain.proceed(newRequest)
                 }
                 else {
+                    Log.e("ERROR_AUTH", "POSTING AUTH FAILED EVENT")
                     AuthEventManager.authFailedEvent.postValue(true)
                     response
                 }
@@ -100,14 +100,11 @@ interface ApiService {
     @POST("auth/verify-{type}-id")
     suspend fun getUserAuthentication(@Path("type") type: String, @Body data: AuthenticationApiRequest): retrofit2.Response<UserAuthenticationApiResult>
 
-    @GET("companies/{company}/daemons/user/{userId}")
-    suspend fun getExistingDaemons(@Path("userId") userId: Int,  @Path("company") company: String, @Header("Cookie") cookies: String): retrofit2.Response<List<GetDaemonApiResult>>
-
     @POST("companies/{company}/daemons/user/{userId}")
     suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body data: CreateDaemonApiRequest, @Header("Cookie") cookies: String): retrofit2.Response<CreateDaemonApiResult>
 
-    @DELETE("companies/{company}/daemons/user/{userId}/{daemonId}")
-    suspend fun deleteDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Path("daemonId") daemonId: String, @Header("Cookie") cookies: String): retrofit2.Response<DeleteDaemonApiResult>
+    @DELETE("companies/{company}/daemons-mobile/{daemonId}")
+    suspend fun deleteDaemon(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<DeleteDaemonApiResult>
 
     @POST("auth/send-user-token-code")
     suspend fun sendVerificationEmail(@Body data: VerificationCodeApiRequest): retrofit2.Response<Boolean>
@@ -121,7 +118,7 @@ interface ApiService {
     @POST("auth/logout")
     suspend fun logout(@Header("Cookie") cookies: String): retrofit2.Response<Boolean>
 
-    @GET("companies/{company}/daemons/{daemonId}/nc-information")
+    @GET("companies/{company}/daemons-mobile/{daemonId}/nc-information")
     suspend fun getCloudControllerInformation(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<NetworkControllerApiResult>
 
 }

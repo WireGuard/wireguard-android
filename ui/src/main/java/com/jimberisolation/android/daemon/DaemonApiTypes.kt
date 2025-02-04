@@ -5,13 +5,6 @@
 
 package com.jimberisolation.android.daemon
 
-// Daemon
-data class GetDaemonApiResult(
-    val id: Int,
-    val name: String,
-    val ipAddress: String
-)
-
 data class CreateDaemonApiResult(
     val id: Int,
     val ipAddress: String,

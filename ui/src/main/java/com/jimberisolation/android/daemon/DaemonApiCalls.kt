@@ -6,39 +6,11 @@
 package com.jimberisolation.android.daemon
 
 import android.util.Log
+import com.jimberisolation.android.util.generateSignedMessage
 import com.jimberisolation.android.util.getCookieString
 import org.json.JSONObject
-
-suspend fun getExistingDaemons(userId: Int, company: String): Result<List<Daemon>> {
-    return try {
-        val cookies = getCookieString();
-
-        val response = ApiClient.apiService.getExistingDaemons(userId, company, cookies)
-        if (!response.isSuccessful) {
-            val errorBody = response.errorBody()?.string()
-            errorBody?.let {
-                val jsonObject = JSONObject(it)
-                val message = jsonObject.getString("message")
-
-                return Result.failure(Exception(message))
-            }
-        }
-
-        val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
-        val daemons = result.map { d ->
-            Daemon(
-                daemonId = d.id,
-                name = d.name,
-                ipAddress = d.ipAddress
-            )
-        }
-
-        Result.success(daemons)
-    } catch (e: Exception) {
-        Log.e("GET_EXISTING_DAEMONS", "ERROR IN GET EXISTING DAEMONS", e)
-        Result.failure(e)
-    }
-}
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 suspend fun createDaemon(userId: Int, company: String, daemonData: CreateDaemonApiRequest): Result<Daemon> {
     return try {
@@ -65,11 +37,15 @@ suspend fun createDaemon(userId: Int, company: String, daemonData: CreateDaemonA
     }
 }
 
-suspend fun deleteDaemon(userId: Int, company: String, daemonId: String): Result<DeletedDaemon> {
+suspend fun deleteDaemon(daemonId: Number, company: String, sk: String): Result<DeletedDaemon> {
     return try {
-        val cookies = getCookieString()
+        val timestampInSeconds = (System.currentTimeMillis() / 1000)
+        val timestampBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(timestampInSeconds).array()
 
-        val response = ApiClient.apiService.deleteDaemon(userId, company, daemonId, cookies)
+        val authorizationHeader = generateSignedMessage(timestampBuffer, sk);
+
+
+        val response = ApiClient.apiService.deleteDaemon(daemonId, company, authorizationHeader)
         if (!response.isSuccessful) {
             val errorBody = response.errorBody()?.string()
             errorBody?.let {

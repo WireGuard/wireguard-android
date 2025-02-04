@@ -28,12 +28,12 @@ import com.jimberisolation.android.authentication.sendVerificationEmail
 import com.jimberisolation.android.authentication.verifyEmailWithToken
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
-import createNetworkIsolationDaemonConfigFromEmailVerification
 import getDeviceHostname
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import register
 
 class EmailVerificationActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
@@ -168,12 +168,16 @@ class EmailVerificationActivity : AppCompatActivity() {
                 val userId = userAuthenticationResult.userId
 
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
+                if(daemonAlreadyInStorage != null) {
+                    loadExistingDaemon();
+                    return@launch
+                }
 
                 daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch
                 }
 
-                val wireguardConfigResult = createNetworkIsolationDaemonConfigFromEmailVerification(userAuthenticationResult, daemonName!!)
+                val wireguardConfigResult = register(userAuthenticationResult, daemonName!!)
 
                 if (wireguardConfigResult.isFailure) {
                     val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -184,7 +188,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                 val result = wireguardConfigResult.getOrThrow()
 
-                val wireguardConfig = result?.configurationString!!
+                val wireguardConfig = result.configurationString
 
                 Log.d("Configuration", wireguardConfig)
 
@@ -198,10 +202,18 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadExistingDaemon() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
+
+
     private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
-        val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
+        val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
         if(alreadyExistingTunnel == null) {
             importTunnel(result, daemonId) { }
         }

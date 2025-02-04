@@ -13,18 +13,3 @@ fun getDeviceHostname(): String {
         "Unknown"
     }
 }
-
-
-fun existingKeyOnDeviceOfUserId(userId: Int): DaemonKeyPair? {
-   return SharedStorage.getInstance().getDaemonKeyPairByUserId(userId);
-}
-
-fun getExistingDaemon(name: String, existingNames: List<Daemon>): Daemon? {
-    val names: List<String> = existingNames.map { it.name }
-
-    if(names.contains(name)) {
-        return existingNames.find { name == it.name };
-    }
-
-    return null;
-}

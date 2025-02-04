@@ -20,12 +20,14 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.ionspin.kotlin.crypto.LibsodiumInitializer
+import com.jimberisolation.android.Application
 import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
 import com.jimberisolation.android.fragment.TunnelEditorFragment
 import com.jimberisolation.android.fragment.TunnelListFragment
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.model.TunnelManager
 import com.jimberisolation.android.storage.SharedStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,43 +91,16 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
         SharedStorage.initialize(this)
 
-        getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar()?.setCustomView(R.layout.jimber_action_bar);
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM;
+        supportActionBar?.setCustomView(R.layout.jimber_action_bar);
 
         isTwoPaneLayout = findViewById<View?>(R.id.master_detail_wrapper) != null
         supportFragmentManager.addOnBackStackChangedListener(this)
         backPressedCallback = onBackPressedDispatcher.addCallback(this) { handleBackPressed() }
         onBackStackChanged()
 
-        val manager = getTunnelManager()
-
-        // Launch a coroutine to perform the tunnel check
         lifecycleScope.launch {
-            val tunnelsAvailable = withContext(Dispatchers.IO) { manager.getTunnels() }
-            navigateToScreen(tunnelsAvailable.size > 0)
-        }
-
-        AuthEventManager.authFailedEvent.observe(this) { authFailed ->
-            if (authFailed) {
-                // Navigate to the login screen
-                val intent = Intent(this, SignInActivity::class.java)
-                startActivity(intent)
-                finish() // Optionally finish the current activity
-            }
-        }
-    }
-
-    private fun navigateToScreen(tunnelsAvailable: Boolean) {
-        toggleLoading(false)
-        if (!tunnelsAvailable) {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        } else {
-            supportFragmentManager.commit {
-                replace(R.id.detail_container, TunnelListFragment())
-            }
+            startScreen()
         }
     }
 
@@ -161,17 +136,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         }
     }
 
-    private fun toggleLoading(isLoading: Boolean) {
-        if (isLoading) {
-            // Show the spinner, hide the content
-            spinner.visibility = View.VISIBLE
-            detailContainer.visibility = View.GONE
-        } else {
-            // Hide the spinner, show the content
-            spinner.visibility = View.GONE
-            detailContainer.visibility = View.VISIBLE
-        }
-    }
 
     override fun onSelectedTunnelChanged(
         oldTunnel: ObservableTunnel?,
@@ -201,5 +165,45 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             }
         }
         return true
+    }
+
+    private suspend fun startScreen() {
+        toggleLoading(false)
+
+        val userId = SharedStorage.getInstance().getCurrentUser()?.id
+        if (userId == null) {
+            withContext(Dispatchers.Main) {
+                startActivity(Intent(this@MainActivity, SignInActivity::class.java))
+                finish()
+            }
+            return
+        }
+
+        val tunnelManager = getTunnelManager();
+        val tunnels = tunnelManager.getTunnelsOfUser();
+
+        if (tunnels.isEmpty()) {
+            withContext(Dispatchers.Main) {
+                startActivity(Intent(this@MainActivity, SignInActivity::class.java))
+                finish()
+            }
+            return
+        }
+
+        withContext(Dispatchers.Main) {
+            supportFragmentManager.commit {
+                replace(R.id.detail_container, TunnelListFragment())
+            }
+        }
+    }
+
+    private fun toggleLoading(isLoading: Boolean) {
+        if (isLoading) {
+            spinner.visibility = View.VISIBLE
+            detailContainer.visibility = View.GONE
+        } else {
+            spinner.visibility = View.GONE
+            detailContainer.visibility = View.VISIBLE
+        }
     }
 }

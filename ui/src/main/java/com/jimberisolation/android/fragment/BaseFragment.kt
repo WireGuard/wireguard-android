@@ -22,7 +22,7 @@ import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
-import com.jimberisolation.android.networkcontroller.getNetworkControllerPublicKey
+import com.jimberisolation.android.networkcontroller.getDaemonConnectionData
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.parseEdPublicKeyToCurveX25519
@@ -83,7 +83,7 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     val daemonId = tunnel.getDaemonId()
                     val kp = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
 
-                    val networkController = getNetworkControllerPublicKey(daemonId, kp!!.companyName)
+                    val networkController = getDaemonConnectionData(daemonId, kp!!.companyName, kp.baseEncodedSkEd25519)
                     if(!networkController.isSuccess) {
                         tunnel.setStateAsync(Tunnel.State.DOWN)
                         return@launch;

@@ -45,7 +45,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
             throw IOException(context.getString(R.string.config_delete_error, file.name))
     }
 
-    override fun enumerate(userId: Int): Set<TunnelInfo> {
+    override fun enumerate(): Set<TunnelInfo> {
         return context.fileList()
             .filter { it.endsWith(".conf") }
             .mapNotNull { fileName ->
@@ -55,7 +55,7 @@ class FileConfigStore(private val context: Context) : ConfigStore {
                     val extractedUserId = it.groups[1]?.value?.toInt()
                     val daemonId = it.groups[2]?.value?.toInt()
                     val name = it.groups[3]?.value
-                    if (extractedUserId != null && extractedUserId == userId && daemonId != null && name != null) {
+                    if (extractedUserId != null && daemonId != null && name != null) {
                         TunnelInfo(name, daemonId, extractedUserId)
                     } else {
                         null

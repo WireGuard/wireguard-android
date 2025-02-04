@@ -41,10 +41,10 @@ import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
-import createNetworkIsolationDaemonConfig
 import getDeviceHostname
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
+import register
 import java.util.Arrays
 
 
@@ -72,7 +72,7 @@ class SignInActivity : AppCompatActivity() {
         actionBar?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar?.setCustomView(R.layout.jimber_action_bar)
 
-        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(false);
 
         backPressedCallback = onBackPressedDispatcher.addCallback(this) { handleBackPressed() }
 
@@ -191,14 +191,19 @@ class SignInActivity : AppCompatActivity() {
 
                 val companyName = userAuthenticationResult.getOrThrow().companyName
                 val userId = userAuthenticationResult.getOrThrow().userId
+
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
+                if(daemonAlreadyInStorage != null) {
+                    loadExistingDaemon();
+                    return@launch
+                }
 
                 daemonName = daemonAlreadyInStorage?.daemonName ?: run {
                     showNameInputDialog() ?: return@launch
                 }
 
                 // Proceed with the WireGuard config
-                val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
+                val wireguardConfigResult = register(userAuthenticationResult.getOrThrow(), daemonName!!)
 
                 if (wireguardConfigResult.isFailure) {
                     val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -207,10 +212,8 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val wireguardConfig = wireguardConfigResult.getOrThrow()?.configurationString!!
-                val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
-
-                Log.d("Configuration", wireguardConfig)
+                val wireguardConfig = wireguardConfigResult.getOrThrow().configurationString
+                val daemonId = wireguardConfigResult.getOrThrow().daemonId
 
                 importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
             } catch (e: ApiException) {
@@ -219,11 +222,18 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadExistingDaemon() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
 
     private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
-        val alreadyExistingTunnel = manager.getTunnels().find { it.name == companyName }
+        val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
+
         if(alreadyExistingTunnel == null) {
             importTunnel(result, daemonId) { }
         }
@@ -257,7 +267,7 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     // Proceed with the WireGuard config
-                    val wireguardConfigResult = createNetworkIsolationDaemonConfig(userAuthenticationResult.getOrThrow(), daemonName!!)
+                    val wireguardConfigResult = register(userAuthenticationResult.getOrThrow(), daemonName!!)
 
                     if (wireguardConfigResult.isFailure) {
                         val createDaemonException = wireguardConfigResult.exceptionOrNull()
@@ -266,8 +276,8 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val wireguardConfig = wireguardConfigResult.getOrThrow()?.configurationString!!
-                    val daemonId = wireguardConfigResult.getOrThrow()?.daemonId!!
+                    val wireguardConfig = wireguardConfigResult.getOrThrow().configurationString
+                    val daemonId = wireguardConfigResult.getOrThrow().daemonId
 
                     Log.d("Configuration", wireguardConfig)
 

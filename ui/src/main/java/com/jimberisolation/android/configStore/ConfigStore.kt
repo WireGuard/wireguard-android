@@ -35,7 +35,7 @@ interface ConfigStore {
      *
      * @return The set of present tunnel names.
      */
-    fun enumerate(userId: Int): Set<TunnelInfo>
+    fun enumerate(): Set<TunnelInfo>
 
     /**
      * Load the configuration for the tunnel given by `name`.

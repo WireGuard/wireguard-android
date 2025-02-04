@@ -22,3 +22,8 @@ data class UserAuthentication(
 data class Company(
     val name: String
 )
+
+data class User(
+    val id: Int,
+    val email: String
+)

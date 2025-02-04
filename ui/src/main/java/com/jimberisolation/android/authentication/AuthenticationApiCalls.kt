@@ -34,7 +34,8 @@ suspend fun getUserAuthentication(idToken: String, authenticationType: Authentic
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
         val cookies = response.headers().values("Set-Cookie")
 
-        saveDataToLocalStorage(cookies.joinToString("; "), result.id, result.company.name)
+        val user = User(result.id, result.email)
+        saveDataToLocalStorage(cookies.joinToString("; "), user)
 
         val userAuthentication = UserAuthentication(userId = result.id, companyName = result.company.name)
         Result.success(userAuthentication)

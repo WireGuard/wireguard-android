@@ -32,7 +32,6 @@ class ClearCachePreference(context: Context, attrs: AttributeSet?) : Preference(
                 }
 
                 SharedStorage.getInstance().clearAll()
-                SharedStorage.getInstance().clearAuthenticationToken()
 
                 Toast.makeText(activity, "Cache cleared", Toast.LENGTH_SHORT).show()
 
@@ -40,7 +39,17 @@ class ClearCachePreference(context: Context, attrs: AttributeSet?) : Preference(
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 context.startActivity(intent)
             }
-            catch (_: Exception) {
+            catch (e: Exception) {
+                Log.e("CLEAR_CACHE", "Exception in clear cache", e)
+
+                SharedStorage.getInstance().clearAll()
+
+                Toast.makeText(activity, "Cache cleared", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(context, SignInActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                context.startActivity(intent)
+
             }
         }
     }

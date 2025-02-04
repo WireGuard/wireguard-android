@@ -6,21 +6,18 @@
 package com.jimberisolation.android.networkcontroller
 
 import android.util.Log
-import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.generateSignedMessage
 import org.json.JSONObject
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 
-suspend fun getNetworkControllerPublicKey(daemonId: Int, companyName: String): Result<NetworkController> {
+suspend fun getDaemonConnectionData(daemonId: Int, companyName: String, sk: String): Result<NetworkController> {
     return try {
-        val keypair = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
-
         val timestampInSeconds = (System.currentTimeMillis() / 1000)
         val timestampBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(timestampInSeconds).array()
 
-        val authorizationHeader = generateSignedMessage(timestampBuffer, keypair!!.baseEncodedSkEd25519);
+        val authorizationHeader = generateSignedMessage(timestampBuffer, sk);
 
         val response = ApiClient.apiService.getCloudControllerInformation(daemonId, companyName, authorizationHeader)
         if (!response.isSuccessful) {

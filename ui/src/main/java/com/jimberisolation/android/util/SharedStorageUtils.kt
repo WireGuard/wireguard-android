@@ -5,16 +5,17 @@
 
 package com.jimberisolation.android.util
 
+import com.jimberisolation.android.authentication.User
 import com.jimberisolation.android.authentication.extractToken
 import com.jimberisolation.android.storage.SharedStorage
 
-fun saveDataToLocalStorage(cookies: String, userId: Int, company: String) {
+fun saveDataToLocalStorage(cookies: String, user: User) {
     val authToken = extractToken(cookies, "Authentication")
     val refreshToken = extractToken(cookies, "Refresh")
 
     val sharedStorage = SharedStorage.getInstance()
 
-    sharedStorage.saveCurrentUserId(userId)
+    sharedStorage.saveCurrentUser(user)
     sharedStorage.saveRefreshToken(refreshToken ?: "")
     sharedStorage.saveAuthenticationToken(authToken ?: "")
 }

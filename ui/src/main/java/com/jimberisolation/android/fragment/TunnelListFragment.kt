@@ -18,12 +18,9 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
-import com.google.zxing.qrcode.QRCodeReader
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.activity.SignInActivity
@@ -31,12 +28,8 @@ import com.jimberisolation.android.databinding.ObservableKeyedRecyclerViewAdapte
 import com.jimberisolation.android.databinding.TunnelListFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
-import com.jimberisolation.android.updater.SnackbarUpdateShower
 import com.jimberisolation.android.util.ErrorMessages
-import com.jimberisolation.android.util.QrCodeFromFileScanner
-import com.jimberisolation.android.util.TunnelImporter
 import com.jimberisolation.android.widget.MultiselectableRelativeLayout
-import com.journeyapps.barcodescanner.ScanContract
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -87,7 +80,7 @@ class TunnelListFragment : BaseFragment() {
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?) {
         binding ?: return
         lifecycleScope.launch {
-            val tunnels = Application.getTunnelManager().getTunnels()
+            val tunnels = Application.getTunnelManager().getTunnelsOfUser()
             if (newTunnel != null) viewForTunnel(newTunnel, tunnels)?.setSingleSelected(true)
             if (oldTunnel != null) viewForTunnel(oldTunnel, tunnels)?.setSingleSelected(false)
         }
@@ -110,7 +103,7 @@ class TunnelListFragment : BaseFragment() {
         super.onViewStateRestored(savedInstanceState)
         binding ?: return
         binding!!.fragment = this
-        lifecycleScope.launch { binding!!.tunnels = Application.getTunnelManager().getTunnels() }
+        lifecycleScope.launch { binding!!.tunnels = Application.getTunnelManager().getTunnelsOfUser() }
         binding!!.rowConfigurationHandler = object : RowConfigurationHandler<TunnelListItemBinding, ObservableTunnel> {
             override fun onConfigureRow(binding: TunnelListItemBinding, item: ObservableTunnel, position: Int) {
                 binding.fragment = this@TunnelListFragment
@@ -157,13 +150,12 @@ class TunnelListFragment : BaseFragment() {
 
                     activity.lifecycleScope.launch {
                         try {
-                            val tunnels = Application.getTunnelManager().getTunnels()
+                            val tunnels = Application.getTunnelManager().getTunnelsOfUser()
                             val tunnelsToDelete = ArrayList<ObservableTunnel>()
                             for (position in copyCheckedItems) tunnelsToDelete.add(tunnels[position])
                             val futures = tunnelsToDelete.map { async(SupervisorJob()) { it.deleteAsync() } }
                             onTunnelDeletionFinished(futures.awaitAll().size, null)
 
-                            // Redirect to WelcomeActivity and clear back stack
                             val intent = Intent(activity, SignInActivity::class.java).apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             }
@@ -247,26 +239,6 @@ class TunnelListFragment : BaseFragment() {
             } else {
                 mode.title = resources!!.getQuantityString(R.plurals.delete_title, count, count)
             }
-        }
-
-        private fun animateFab(view: View?, show: Boolean) {
-            view ?: return
-            val animation = AnimationUtils.loadAnimation(
-                context, if (show) R.anim.scale_up else R.anim.scale_down
-            )
-            animation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationRepeat(animation: Animation?) {
-                }
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    if (!show) view.visibility = View.GONE
-                }
-
-                override fun onAnimationStart(animation: Animation?) {
-                    if (show) view.visibility = View.VISIBLE
-                }
-            })
-            view.startAnimation(animation)
         }
     }
 
