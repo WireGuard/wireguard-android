@@ -225,11 +225,14 @@ class SharedStorage private constructor() {
 
         val editor = sharedPreferences.edit()
 
-        for (i in 0 until jsonArray.length()) {
+        var i = 0
+        while (i < jsonArray.length()) {
             val keyPairObject = jsonArray.getJSONObject(i)
-            if(keyPairObject[WIREGUARD_DAEMON_ID] == daemonId){
+            if (keyPairObject[WIREGUARD_DAEMON_ID] == daemonId) {
                 jsonArray.remove(i)
-            };
+                break;
+            }
+            i++;
         }
 
         editor.putString(WIREGUARD_KEYPAIR, jsonArray.toString()).apply()
