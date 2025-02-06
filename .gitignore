@@ -18,3 +18,5 @@ gradlew.bat
 maint/
 ui/release
 *.aab
+
+build.log

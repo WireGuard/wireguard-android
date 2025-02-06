@@ -17,7 +17,7 @@ fi
 
 # Perform actions based on the environment
 if [ "$ENVIRONMENT" = "staging" ]; then
-    echo "Deploying to the staging environment..."
+    echo "Changing configs to the staging environment..."
     cp ./environments/staging/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
     cp ./environments/staging/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/staging/msal_config.json ./ui/src/main/res/raw
