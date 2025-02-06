@@ -4,8 +4,8 @@
 TELEGRAM_BOT_TOKEN="868129294:AAEd-UDDSru9zGeGklzWL6mPO33NovuXYqo"
 TELEGRAM_CHAT_ID="-1001186043363"
 
-APK_PATH="./ui/build/outputs/apk/release/ui-release-unsigned.apk"
-SANITZED_APK_PATH="./ui/build/outputs/apk/release/jimberfw.apk"
+APK_PATH="./ui/build/outputs/apk/release/ui-release.apk"
+SANITZED_APK_PATH="./ui/build/outputs/apk/release/jimber-network-isolation.apk"
 
 PROJECT_DIR="$(pwd)"
 BUILD_LOG="build.log"
@@ -42,7 +42,7 @@ send_telegram_message() {
 }
 
 # Build the APK
-./gradlew assembleRelease > "$BUILD_LOG" 2>&1
+./gradlew assembleRelease
 
 mv $APK_PATH $SANITZED_APK_PATH
 
@@ -50,5 +50,7 @@ mv $APK_PATH $SANITZED_APK_PATH
 if [ -f "$SANITZED_APK_PATH" ]; then    
     send_telegram_message "Hoera, er is een nieuwe build beschikbaar!"
 else
-    echo "Could not build, please check build.log"
+    echo "Failed"
 fi
+
+rm $SANITZED_APK_PATH

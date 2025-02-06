@@ -22,6 +22,7 @@ if [ "$ENVIRONMENT" = "staging" ]; then
     cp ./environments/staging/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/staging/msal_config.json ./ui/src/main/res/raw
 
+    echo "staging" > ./environments/current_environment
     echo "Done"
 
 elif [ "$ENVIRONMENT" = "production" ]; then
@@ -30,6 +31,7 @@ elif [ "$ENVIRONMENT" = "production" ]; then
     cp ./environments/production/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/production/msal_config.json ./ui/src/main/res/raw
 
+    echo "production" > ./environments/current_environment
     echo "Done"
 
 elif [ "$ENVIRONMENT" = "local" ]; then
@@ -38,5 +40,6 @@ elif [ "$ENVIRONMENT" = "local" ]; then
     cp ./environments/local/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
     cp ./environments/local/msal_config.json ./ui/src/main/res/raw
 
+    echo "local" > ./environments/current_environment
     echo "Done"
 fi

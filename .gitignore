@@ -19,4 +19,5 @@ maint/
 ui/release
 *.aab
 
-build.log
+keystore/
+environments/current_environment

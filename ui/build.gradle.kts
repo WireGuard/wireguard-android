@@ -2,8 +2,13 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
 
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+
+val keystorePropertiesFile = file("../keystore/keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(keystorePropertiesFile.inputStream())
 
 plugins {
     alias(libs.plugins.android.application)
@@ -32,8 +37,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles("proguard-android-optimize.txt")
@@ -42,6 +56,22 @@ android {
                     excludes += "DebugProbesKt.bin"
                     excludes += "kotlin-tooling-metadata.json"
                     excludes += "META-INF/*.version"
+                }
+            }
+
+            // Read the current environment from the file
+            val environmentFile = File("./environments/current_environment")
+            if (environmentFile.exists()) {
+                val environment = environmentFile.readText().trim()
+                when (environment) {
+                    "staging" -> {
+                        applicationIdSuffix = ".staging"
+                        versionNameSuffix = "-staging"
+                    }
+                    "local" -> {
+                        applicationIdSuffix = ".local"
+                        versionNameSuffix = "-local"
+                    }
                 }
             }
         }
