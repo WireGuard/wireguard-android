@@ -218,6 +218,8 @@ class SignInActivity : AppCompatActivity() {
                 importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
             } catch (e: ApiException) {
                 Log.e("Authentication", "An error occurred", e)
+                val view = findViewById<View>(android.R.id.content) // or some other view in your layout
+                Snackbar.make(view, "Could not login. Errorcode: ${e.message}", Snackbar.LENGTH_LONG).show()
             }
         }
     }
