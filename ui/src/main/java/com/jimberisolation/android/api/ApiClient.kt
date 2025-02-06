@@ -86,6 +86,7 @@ val customLogger = HttpLoggingInterceptor.Logger { message ->
         .replace(Regex("(Authentication=)[^;]+")) { "${it.groupValues[1]}****" }
         .replace(Regex("(Authorization:)[^;]+")) { "${it.groupValues[1]}****" }
         .replace(Regex("(Refresh=)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(idToken\":\")\\S+")) { "${it.groupValues[1]}****\"}" }
 
     println(filteredMessage) // Log the filtered message
 }
