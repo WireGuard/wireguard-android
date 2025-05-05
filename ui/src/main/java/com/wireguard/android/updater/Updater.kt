@@ -376,12 +376,12 @@ object Updater {
         if (installerIsGooglePlay(context))
             return
 
-        if (!if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        if (if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                 @Suppress("DEPRECATION")
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS)
             } else {
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
-            }.requestedPermissions.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)
+            }.requestedPermissions?.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES) != true
         ) {
             if (installer(context).isNotEmpty()) {
                 updaterScope.launch {
