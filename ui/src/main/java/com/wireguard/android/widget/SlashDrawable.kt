@@ -69,6 +69,7 @@ class SlashDrawable(private val mDrawable: Drawable) : Drawable() {
 
     override fun getIntrinsicWidth() = mDrawable.intrinsicWidth
 
+    @Deprecated("Deprecated in API level 29")
     override fun getOpacity() = PixelFormat.OPAQUE
 
     override fun onBoundsChange(bounds: Rect) {
