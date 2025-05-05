@@ -90,15 +90,27 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     }
 
                     val result = networkController.getOrNull();
+                    print(result)
 
-                    val oldPublicIp = currentConfig.peers.first().endpoint.get().host;
                     val newPublicIp = result?.endpointAddress;
-
-                    val oldPublicKey = currentConfig.peers.first().publicKey.toBase64();
                     val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
+                    val newAllowedIps = result?.allowedIps
 
-                    var updatedConfigString = currentConfigString.replace(Regex("(?<=Endpoint = )$oldPublicIp"), newPublicIp.toString())
-                    updatedConfigString = updatedConfigString.replace(Regex("(?<=PublicKey = )$oldPublicKey"), newPublicKey)
+                    // Build the replacement strings
+                    val newPublicKeyLine = "PublicKey = $newPublicKey"
+                    val newAllowedIpsLine = "AllowedIPs = ${newAllowedIps.toString()}"
+                    val newEndpointLine = "Endpoint = ${newPublicIp.toString()}"
+
+                    Log.e("CURRENT CONFIG", currentConfigString)
+
+
+                    // Remove old lines completely
+                    var updatedConfigString = currentConfigString
+                        .replace(Regex("(?m)^\\s*PublicKey\\s*=.*$", RegexOption.MULTILINE), newPublicKeyLine)
+                        .replace(Regex("(?m)^\\s*AllowedIPs\\s*=.*$", RegexOption.MULTILINE), newAllowedIpsLine)
+                        .replace(Regex("(?m)^\\s*Endpoint\\s*=.*$", RegexOption.MULTILINE), "$newEndpointLine:51820")
+
+                    Log.e("UPDATED CONFIG", updatedConfigString)
 
                     val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
                     tunnel.setConfigAsync(updatedConfig);
