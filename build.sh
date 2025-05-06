@@ -16,41 +16,69 @@ GIT_HASH=$(git log --pretty=format:'%h' -n 1)
 
 CURRENT_TIME=$(date "+%H:%M:%S %d.%m.%Y")
 
-# Check if exactly one argument is provided
+# ================
+# Argument Handling
+# ================
+
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 {staging|production|local}"
     exit 1
 fi
 
-# Assign the first argument to the ENVIRONMENT variable
 ENVIRONMENT=$1
-
-# Validate the argument
 if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" ]]; then
-    echo "Error: Argument must be 'staging' or 'production' or 'local'."
+    echo "Error: Argument must be 'staging', 'production', or 'local'."
     exit 1
 fi
 
 ./switch-env.sh "$ENVIRONMENT"
 
-# Function to send messages to Telegram
+# ========================
+# Telegram Message Function
+# ========================
+
 send_telegram_message() {
     local MESSAGE="$1"
 
-    curl --http1.1 -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d parse_mode=markdown -d chat_id=$TELEGRAM_CHAT_ID -d parse_mode=markdown -d text="App: *JimberNetworkIsolation* %0AType: *$ENVIRONMENT* %0AGit user: *$GIT_USER* %0AGit branch: *$GIT_BRANCH* %0AGit hash: *$GIT_HASH* %0ATime: *$CURRENT_TIME* %0AMessage: *$MESSAGE*"
-    curl --http1.1 -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" -F chat_id=$TELEGRAM_CHAT_ID -F document="@$SANITZED_APK_PATH"
+    curl --http1.1 -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+        -d chat_id="$TELEGRAM_CHAT_ID" \
+        -d parse_mode=markdown \
+        -d text="App: *JimberNetworkIsolation*%0AType: *$ENVIRONMENT*%0AGit user: *$GIT_USER*%0AGit branch: *$GIT_BRANCH*%0AGit hash: *$GIT_HASH*%0ATime: *$CURRENT_TIME*%0AMessage: *$MESSAGE*"
+
+    curl --http1.1 -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" \
+        -F chat_id="$TELEGRAM_CHAT_ID" \
+        -F document="@$SANITZED_APK_PATH"
 }
 
-# Build the APK
-./gradlew assembleRelease
+# ============
+# Build Process
+# ============
 
-mv $APK_PATH $SANITZED_APK_PATH
+echo "Cleaning previous builds..."
+./gradlew clean
 
-# Check if build succeeded
-if [ -f "$SANITZED_APK_PATH" ]; then    
-    send_telegram_message "Hoera, er is een nieuwe build beschikbaar!"
+echo "Removing stale APK if it exists..."
+rm -f "$APK_PATH" "$SANITZED_APK_PATH"
+
+echo "Starting APK build..."
+if ./gradlew assembleRelease > "$BUILD_LOG" 2>&1; then
+    if [ -f "$APK_PATH" ]; then
+        if [ ! -s "$APK_PATH" ]; then
+            echo "Error: APK file is empty."
+            send_telegram_message "❌ APK exists but is empty or corrupt."
+            exit 1
+        fi
+
+        mv -f "$APK_PATH" "$SANITZED_APK_PATH"
+        send_telegram_message "✅ Hoera, er is een nieuwe build beschikbaar!"
+        rm -f "$SANITZED_APK_PATH"
+    else
+        echo "Error: APK not found after successful build."
+        send_telegram_message "❌ Build succeeded but APK not found!"
+        exit 1
+    fi
 else
-    echo "Failed"
+    echo "Build failed. Check $BUILD_LOG for details."
+    send_telegram_message "❌ Build failed. Check logs!"
+    exit 1
 fi
-
-rm $SANITZED_APK_PATH
