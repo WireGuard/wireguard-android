@@ -16,6 +16,7 @@ import com.jimberisolation.config.Config
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+import kotlin.math.min
 
 object TunnelImporter {
     suspend fun importTunnel(configText: String, daemonId: Int, messageCallback: (CharSequence) -> Unit) {
@@ -33,12 +34,20 @@ object TunnelImporter {
             val userId = SharedStorage.getInstance().getCurrentUser()?.id;
             val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
 
-            val createTunnelData = CreateTunnelData("$companyName-$daemonId", daemonId, userId!!);
+
+            val sanitizedName = buildName(companyName, daemonId.toString())
+
+            val createTunnelData = CreateTunnelData(sanitizedName, daemonId, userId!!);
             Application.getTunnelManager().create(createTunnelData, config)
 
         } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)
         }
+    }
+
+    private fun buildName(companyName: String, daemonId: String): String {
+        val suffix = "-$daemonId"
+        return companyName.substring(0, min(companyName.length.toDouble(), (15 - suffix.length).toDouble()).toInt()) + suffix
     }
 
     private fun getCompanyName(text: String) : String? {

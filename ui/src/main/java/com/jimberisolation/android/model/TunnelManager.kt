@@ -90,6 +90,8 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     suspend fun create(createTunnelData: CreateTunnelData, config: Config?): ObservableTunnel = withContext(Dispatchers.Main.immediate) {
         val name = createTunnelData.name;
 
+        Log.i("TUNNEL", "IMPORTING TUNNEL WITH NAME ${name}")
+
         if (Tunnel.isNameInvalid(name))
             throw IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name))
         if (tunnelMap.containsKey(name))
