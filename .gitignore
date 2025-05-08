@@ -21,3 +21,4 @@ ui/release
 
 keystore/
 environments/current_environment
+build.log
