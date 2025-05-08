@@ -95,19 +95,19 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     val newPublicIp = result?.endpointAddress;
                     val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
                     val newAllowedIps = result?.allowedIps
+                    val newDNSServer = result?.ipAddress
 
                     // Build the replacement strings
                     val newPublicKeyLine = "PublicKey = $newPublicKey"
                     val newAllowedIpsLine = "AllowedIPs = ${newAllowedIps.toString()}"
                     val newEndpointLine = "Endpoint = ${newPublicIp.toString()}"
-
-                    Log.e("CURRENT ALLOWED IPS", tunnel.config!!.peers.first().allowedIps.toString())
-                    Log.e("NEW ALLOWED IPS", newAllowedIps.toString())
+                    val newDNSServerLine = "DNS = ${newDNSServer.toString()}"
 
                     // Remove old lines completely
                     var updatedConfigString = currentConfigString
                         .replace(Regex("(?m)^\\s*PublicKey\\s*=.*$", RegexOption.MULTILINE), newPublicKeyLine)
                         .replace(Regex("(?m)^\\s*AllowedIPs\\s*=.*$", RegexOption.MULTILINE), newAllowedIpsLine)
+                        .replace(Regex("(?m)^\\s*DNS\\s*=.*$", RegexOption.MULTILINE), newDNSServerLine)
                         .replace(Regex("(?m)^\\s*Endpoint\\s*=.*$", RegexOption.MULTILINE), "$newEndpointLine:51820")
 
                     val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
