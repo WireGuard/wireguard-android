@@ -57,8 +57,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class TvMainActivity : AppCompatActivity() {
-    private val tunnelFileImportResultLauncher = registerForActivityResult(object : ActivityResultContracts.GetContent() {
-        override fun createIntent(context: Context, input: String): Intent {
+    private val tunnelFileImportResultLauncher = registerForActivityResult(object : ActivityResultContracts.OpenDocument() {
+        override fun createIntent(context: Context, input: Array<String>): Intent {
             val intent = super.createIntent(context, input)
 
             /* AndroidTV now comes with stubs that do nothing but display a Toast less helpful than
@@ -209,7 +209,7 @@ class TvMainActivity : AppCompatActivity() {
                 }
             } else {
                 try {
-                    tunnelFileImportResultLauncher.launch("*/*")
+                    tunnelFileImportResultLauncher.launch(arrayOf("*/*"))
                 } catch (_: Throwable) {
                     MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
