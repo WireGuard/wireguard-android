@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2022 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/star_full"
+        android:drawable="@drawable/ic_baseline_star"
+        android:state_checked="true"/>
+    <item
+        android:id="@+id/star_border"
+        android:drawable="@drawable/ic_baseline_star_border"
+        android:state_checked="false"/>
+
+    <transition
+        android:drawable="@drawable/avd_star_to_full"
+        android:fromId="@id/star_border"
+        android:toId="@id/star_full"/>
+
+    <transition
+        android:drawable="@drawable/avd_star_to_border"
+        android:fromId="@id/star_full"
+        android:toId="@id/star_border"/>
+
+</animated-selector>
