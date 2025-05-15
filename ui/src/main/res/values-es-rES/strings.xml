@@ -2,7 +2,7 @@
 <resources>
     <plurals name="delete_error">
         <item quantity="one">Imposible eliminar %d túnel: %s</item>
-        <item quantity="other">Imposible eliminar %d túnels: %s</item>
+        <item quantity="other">Imposible eliminar %d túneles: %s</item>
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">Túnel eliminado correctamente %d</item>
@@ -29,12 +29,12 @@
         <item quantity="other">%d Aplicaciones Incluidas</item>
     </plurals>
     <plurals name="n_excluded_applications">
-        <item quantity="one">%d excluido</item>
-        <item quantity="other">%d excluidos</item>
+        <item quantity="one">%d excluida</item>
+        <item quantity="other">%d excluidas</item>
     </plurals>
     <plurals name="n_included_applications">
-        <item quantity="one">%d incluído</item>
-        <item quantity="other">%d incluidos</item>
+        <item quantity="one">%d Incluida</item>
+        <item quantity="other">%d incluidas</item>
     </plurals>
     <string name="all_applications">Todas las Aplicaciones</string>
     <string name="exclude_from_tunnel">Excluir</string>
@@ -49,7 +49,7 @@
     </plurals>
     <plurals name="persistent_keepalive_seconds_unit">
         <item quantity="one">cada segundo</item>
-        <item quantity="other">cada  %d segundos</item>
+        <item quantity="other">cada %d segundos</item>
     </plurals>
     <plurals name="persistent_keepalive_seconds_suffix">
         <item quantity="one">segundo</item>
@@ -184,6 +184,10 @@
     <string name="private_key">Clave privada</string>
     <string name="public_key">Clave pública</string>
     <string name="qr_code_hint">Consejo: generar con `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Añadir mosaico al panel de configuración rápida</string>
+    <string name="quick_settings_tile_add_summary">El acceso directo de mosaico alterna al túnel más reciente</string>
+    <string name="quick_settings_tile_add_failure">No se puede agregar el título del acceso directo: error %d</string>
+    <string name="quick_settings_tile_action">Alternar túnel</string>
     <string name="restore_on_boot_summary_off">No mostrará túneles habilitados al arrancar</string>
     <string name="restore_on_boot_summary_on">Mostrará túneles habilitados al arrancar</string>
     <string name="restore_on_boot_title">Restaurar al arrancar</string>
@@ -228,6 +232,16 @@
     <string name="type_name_go_userspace">Ir al espacio de usuario</string>
     <string name="type_name_kernel_module">Módulo Kernel</string>
     <string name="unknown_error">Error desconocido</string>
+    <string name="updater_avalable">Una actualización de la aplicación está disponible. Por favor, actualice ahora.</string>
+    <string name="updater_action">Descargar &amp; Actualizar</string>
+    <string name="updater_rechecking">Obteniendo metadatos de actualización…</string>
+    <string name="updater_download_progress">Descargando actualización: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Descargando actualización: %s</string>
+    <string name="updater_installing">Instalando actualización…</string>
+    <string name="updater_failure">Error de actualización: %s. Se volverá a intentar en un momento…</string>
+    <string name="updater_corrupt_title">Aplicación dañada</string>
+    <string name="updater_corrupt_message">Esta aplicación está dañada. Por favor, vuelva a descargar el APK desde el sitio web enlazado a continuación. Después, desinstale esta aplicación y vuelva a instalarla desde el APK descargado.</string>
+    <string name="updater_corrupt_navigate">Abrir sitio web</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Comprobando versión de backend %s</string>
     <string name="version_summary_unknown">Versión %s desconocida</string>

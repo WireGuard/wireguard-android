@@ -82,7 +82,7 @@
         <item quantity="other">sekundy</item>
     </plurals>
     <string name="use_all_applications">Użyj wszystkich</string>
-    <string name="add_peer">Dodaj klienta</string>
+    <string name="add_peer">Dodaj peera</string>
     <string name="addresses">Adresy</string>
     <string name="applications">Aplikacje</string>
     <string name="allow_remote_control_intents_summary_off">Zewnętrzne aplikacje nie mogą przełączać tuneli (zalecane)</string>
@@ -133,6 +133,9 @@
     <string name="tv_select_a_storage_drive">Wybierz dysk pamięci</string>
     <string name="tv_no_file_picker">Zainstaluj narzędzie do zarządzania plikami, aby przeglądać pliki</string>
     <string name="tv_add_tunnel_get_started">Dodaj tunel, aby rozpocząć</string>
+    <string name="donate_title">♥ Wpłać na rzecz projektu WireGuard</string>
+    <string name="donate_summary">Każdy wkład pomaga</string>
+    <string name="donate_google_play_disappointment">Dziękujemy za wsparcie projektu WireGuard!\n\nNiestety, ze względu na zasady Google, nie możemy umieszczać linków do części strony projektu, w której możesz przekazać darowiznę. Mamy nadzieję, że uda Ci się to rozgryźć!\n\nJeszcze raz dziękujemy za Twój wkład.</string>
     <string name="disable_config_export_title">Wyłącz eksportowanie konfiguracji</string>
     <string name="disable_config_export_description">Wyłączenie eksportowania konfiguracji sprawi, że klucze prywatne będą mniej dostępne</string>
     <string name="dns_servers">Serwery DNS</string>
@@ -141,7 +144,8 @@
     <string name="endpoint">Punkt końcowy</string>
     <string name="error_down">Błąd podczas zamykania tunelu: %s</string>
     <string name="error_fetching_apps">Błąd podczas pobierania listy aplikacji: %s</string>
-    <string name="error_root">Proszę uzyskać dostęp do root-a i spróbować ponownie</string>
+    <string name="error_root">Uzyskaj dostęp do roota i spróbuj ponownie</string>
+    <string name="error_prepare">Błąd podczas przygotowywania tunelu: %s</string>
     <string name="error_up">Błąd podczas otwierania tunelu: %s</string>
     <string name="exclude_private_ips">Wyklucz prywatne adresy IP</string>
     <string name="generate_new_private_key">Wygeneruj nowy klucz prywatny</string>
@@ -158,9 +162,11 @@
     <string name="interface_title">Interfejs</string>
     <string name="key_contents_error">Nieprawidłowe znaki w kluczu</string>
     <string name="key_length_error">Nieprawidłowa długość klucza</string>
-    <string name="key_length_explanation_base64">: Klucze Base64 WireGuard-a muszą mieć długość 44 znaków (32 bajty)</string>
-    <string name="key_length_explanation_binary">: Klucze WireGuard-a muszą mieć wielkość 32 bajtów</string>
-    <string name="key_length_explanation_hex">: Klucze Hex WireGuard-a muszą mieć długość 64 znaków (32 bajty)</string>
+    <string name="key_length_explanation_base64">: Klucze base64 WireGuard muszą mieć długość 44 znaków (32 bajty)</string>
+    <string name="key_length_explanation_binary">: Klucze WireGuard muszą mieć wielkość 32 bajtów</string>
+    <string name="key_length_explanation_hex">: Klucze hex WireGuard muszą mieć długość 64 znaków (32 bajty)</string>
+    <string name="latest_handshake">Ostatnie uzgadnianie</string>
+    <string name="latest_handshake_ago">%s temu</string>
     <string name="listen_port">Port nasłuchu</string>
     <string name="log_export_error">Nie można wyeksportować logu: %s</string>
     <string name="log_export_subject">Plik logu programu WireGuard dla systemu Android</string>
@@ -195,7 +201,7 @@
     <string name="parse_error_inet_network">Sieć IP</string>
     <string name="parse_error_integer">liczba</string>
     <string name="parse_error_reason">Nie można przetworzyć %1$s „%2$s”</string>
-    <string name="peer">Klient</string>
+    <string name="peer">Peer</string>
     <string name="permission_description">kontrolowanie tuneli WireGuard, włączanie i wyłączanie tuneli, potencjalnie błędne kierowanie ruchem internetowym</string>
     <string name="permission_label">sterowanie tunelami WireGuard</string>
     <string name="persistent_keepalive">Utrzymanie połączenia</string>
@@ -204,6 +210,10 @@
     <string name="private_key">Klucz prywatny</string>
     <string name="public_key">Klucz publiczny</string>
     <string name="qr_code_hint">Wskazówka: wygeneruj za pomocą `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Dodaj kafelek do panelu szybkich ustawień</string>
+    <string name="quick_settings_tile_add_summary">Kafelek skrótu przełącza najnowszy tunel</string>
+    <string name="quick_settings_tile_add_failure">Nie można dodać kafelka skrótu: błąd %d</string>
+    <string name="quick_settings_tile_action">Przełącz tunel</string>
     <string name="restore_on_boot_summary_off">Włączone tunele nie zostaną przywrócone podczas uruchamiania</string>
     <string name="restore_on_boot_summary_on">Włączone tunele zostaną przywrócone podczas uruchamiania</string>
     <string name="restore_on_boot_title">Przywróć podczas uruchamiania</string>
@@ -217,7 +227,7 @@
     <string name="toggle_all">Przełącz wszystkie</string>
     <string name="toggle_error">Błąd podczas przełączania tunelu WireGuard: %s</string>
     <string name="tools_installer_already">Narzędzia wg i wg-quick są już zainstalowane</string>
-    <string name="tools_installer_failure">Nie można zainstalować narzędzi wiersza poleceń (brak root-a?)</string>
+    <string name="tools_installer_failure">Nie można zainstalować narzędzi wiersza poleceń (brak roota?)</string>
     <string name="tools_installer_initial">Zainstaluj opcjonalne narzędzia do tworzenia skryptów</string>
     <string name="tools_installer_initial_magisk">Zainstaluj opcjonalne narzędzia do tworzenia skryptów jako moduł Magisk</string>
     <string name="tools_installer_initial_system">Zainstaluj opcjonalne narzędzia do tworzenia skryptów na partycji systemowej</string>
@@ -239,6 +249,7 @@
     <string name="tunnel_create_success">Pomyślnie utworzono tunel „%s”</string>
     <string name="tunnel_error_already_exists">Tunel \"%s\" już istnieje</string>
     <string name="tunnel_error_invalid_name">Nieprawidłowa nazwa</string>
+    <string name="tunnel_list_placeholder">Dodaj tunel za pomocą przycisku poniżej</string>
     <string name="tunnel_name">Nazwa tunelu</string>
     <string name="tunnel_on_error">Nie można włączyć tunelu (wgTurnOn zwróciło %d)</string>
     <string name="tunnel_dns_failure">Nie można odnaleźć nazwy hosta DNS: “%s”</string>
@@ -247,6 +258,16 @@
     <string name="type_name_go_userspace">Przestrzeń użytkownika Go</string>
     <string name="type_name_kernel_module">Moduł jądra</string>
     <string name="unknown_error">Nieznany błąd</string>
+    <string name="updater_avalable">Dostępna jest aktualizacja aplikacji. Zaktualizuj teraz.</string>
+    <string name="updater_action">Pobierz i zaktualizuj</string>
+    <string name="updater_rechecking">Pobieranie metadanych aktualizacji…</string>
+    <string name="updater_download_progress">Pobieranie aktualizacji: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Pobieranie aktualizacji: %s</string>
+    <string name="updater_installing">Instalowanie aktualizacji…</string>
+    <string name="updater_failure">Błąd aktualizacji: %s. Ponowienie próby za chwilę…</string>
+    <string name="updater_corrupt_title">Aplikacja uszkodzona</string>
+    <string name="updater_corrupt_message">Ta aplikacja jest uszkodzona. Pobierz ponownie plik APK z witryny, do której link znajduje się poniżej. Następnie odinstaluj tę aplikację i zainstaluj ją ponownie z pobranego pliku APK.</string>
+    <string name="updater_corrupt_navigate">Otwórz witrynę</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Sprawdzanie wersji implementacji: %s</string>
     <string name="version_summary_unknown">Nieznana wersja %s</string>

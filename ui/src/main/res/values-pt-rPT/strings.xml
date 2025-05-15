@@ -79,6 +79,7 @@
     <string name="bad_config_reason_unknown_section">Secção desconhecida</string>
     <string name="bad_config_reason_value_out_of_range">Valor fora do intervalo</string>
     <string name="bad_extension_error">O ficheiro tem que ser do tipo .conf ou .zip</string>
+    <string name="error_no_qr_found">Código QR não encontrado na imagem</string>
     <string name="cancel">Cancelar</string>
     <string name="config_delete_error">Não é possível apagar arquivo de configuração %s</string>
     <string name="config_exists_error">A configuração para \"%s\" já existe</string>

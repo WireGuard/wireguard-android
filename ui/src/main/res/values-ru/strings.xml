@@ -8,7 +8,7 @@
     </plurals>
     <plurals name="delete_success">
         <item quantity="one">Успешно удален %d туннель</item>
-        <item quantity="few">Успешно удалено %d туннеля</item>
+        <item quantity="few">Успешно удалены %d туннеля</item>
         <item quantity="many">Успешно удалено %d туннелей</item>
         <item quantity="other">Успешно удалено %d туннелей</item>
     </plurals>
@@ -70,7 +70,7 @@
         <item quantity="other">Исключить %d приложений</item>
     </plurals>
     <plurals name="persistent_keepalive_seconds_unit">
-        <item quantity="one">каждую секунду</item>
+        <item quantity="one">каждую %d секунду</item>
         <item quantity="few">каждые %d секунды</item>
         <item quantity="many">каждые %d секунд</item>
         <item quantity="other">каждые %d секунд</item>
@@ -88,8 +88,8 @@
     <string name="allow_remote_control_intents_summary_off">Внешние приложения не могут переключать туннели (рекомендуется)</string>
     <string name="allow_remote_control_intents_summary_on">Внешние приложения могут переключать туннели (продвинутые)</string>
     <string name="allow_remote_control_intents_title">Разрешить управление через внешние приложения</string>
-    <string name="allowed_ips">Разрешенные IP</string>
-    <string name="bad_config_context">%1$s из %2$s</string>
+    <string name="allowed_ips">Разрешенные IP-адреса</string>
+    <string name="bad_config_context">%2$s в %1$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s в %2$s</string>
     <string name="bad_config_explanation_pka">: Значение должно быть больше нуля, но меньше 65535</string>
@@ -135,7 +135,7 @@
     <string name="tv_add_tunnel_get_started">Добавьте туннель, чтобы начать</string>
     <string name="donate_title">♥ Пожертвовать проекту WireGuard</string>
     <string name="donate_summary">Каждое пожертвование помогает</string>
-    <string name="donate_google_play_disappointment">Спасибо за поддержку проекта WireGuard!\n\nК сожалению, из-за политики Google, нельзя размещать ссылку на тот раздел сайта проекта, где можно сделать пожертвование. Надеемся, вы сможете разобраться самостоятельно!\n\nЕщераз спасибо за ваш вклад.</string>
+    <string name="donate_google_play_disappointment">Спасибо за поддержку проекта WireGuard!\n\nК сожалению, из-за политики Google, нельзя размещать ссылку на тот раздел сайта проекта, где можно сделать пожертвование. Надеемся, вы сможете разобраться самостоятельно!\n\nЕщё раз спасибо за ваш вклад.</string>
     <string name="disable_config_export_title">Отключить экспорт конфигурации</string>
     <string name="disable_config_export_description">Отключение экспорта конфигурации делает приватные ключи менее доступными</string>
     <string name="dns_servers">DNS-серверы</string>

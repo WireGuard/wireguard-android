@@ -135,6 +135,7 @@
     <string name="tv_add_tunnel_get_started">Додайте тунель, щоб почати</string>
     <string name="donate_title">♥️ Пожертвуйте на проект WireGuard</string>
     <string name="donate_summary">Кожен внесок допомагає</string>
+    <string name="donate_google_play_disappointment">Дякуємо за підтримку проекту WireGuard!\n\nНа жаль, через політику Google нам заборонено розміщувати посилання на веб-сторінку проекту, де можна зробити пожертву. Сподіваємося на розуміння!\n\nЩе раз дякую за ваш внесок.</string>
     <string name="disable_config_export_title">Вимкнути експорт конфігурації</string>
     <string name="disable_config_export_description">Вимкнення експорту налаштувань робить приватні ключі менш доступними</string>
     <string name="dns_servers">DNS-сервери</string>
@@ -209,6 +210,10 @@
     <string name="private_key">Приватний ключ</string>
     <string name="public_key">Публічний ключ</string>
     <string name="qr_code_hint">Порада: згенеруйте за допомогою `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Додати плитку для панелі швидких налаштувань</string>
+    <string name="quick_settings_tile_add_summary">Плитка швидкого доступу перемикає останній тунель</string>
+    <string name="quick_settings_tile_add_failure">Неможливо додати плитку (ярлик) швидкого доступу. Код помилки: %d</string>
+    <string name="quick_settings_tile_action">Перемкнути тунель</string>
     <string name="restore_on_boot_summary_off">Не піднімати увімкнені тунелі при запуску</string>
     <string name="restore_on_boot_summary_on">Піднімати увімкнені тунелі при запуску</string>
     <string name="restore_on_boot_title">Відновлювати при запуску</string>
@@ -253,6 +258,16 @@
     <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Модуль ядра</string>
     <string name="unknown_error">Невідома помилка</string>
+    <string name="updater_avalable">Доступне оновлення додатка. Будь ласка, оновіть.</string>
+    <string name="updater_action">Завантажити та оновити</string>
+    <string name="updater_rechecking">Отримання оновлених метаданих…</string>
+    <string name="updater_download_progress">Завантаження оновлення: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Завантаження оновлення: %s</string>
+    <string name="updater_installing">Встановдення оновлення…</string>
+    <string name="updater_failure">Помилка оновлення: %s. За мить спробуємо знову…</string>
+    <string name="updater_corrupt_title">Додаток пошкоджено</string>
+    <string name="updater_corrupt_message">Цей додаток пошкоджений. Будь ласка, повторно завантажте APK-файл із сайту нижче. Після цього, видаліть цей додаток і перевстановіть його з завантаженого APK.</string>
+    <string name="updater_corrupt_navigate">Перейти на сайт</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Перевірка %s backend версії</string>
     <string name="version_summary_unknown">Невідома версія %s</string>

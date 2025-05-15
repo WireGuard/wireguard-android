@@ -139,6 +139,8 @@
     <string name="key_length_explanation_base64">: WireGuard base64-nøkler må være 44 tegn (32 byte)</string>
     <string name="key_length_explanation_binary">: WireGuard nøkler må være 32 byte</string>
     <string name="key_length_explanation_hex">: WireGuard hex-nøkler må være 64 tegn (32 byte)</string>
+    <string name="latest_handshake">Siste håndtrykk</string>
+    <string name="latest_handshake_ago">for %s siden</string>
     <string name="listen_port">Lytt på port</string>
     <string name="log_export_error">Kan ikke eksportere logg: %s</string>
     <string name="log_export_subject">WireGuard Android loggfil</string>
@@ -182,6 +184,10 @@
     <string name="private_key">Privat Nøkkel</string>
     <string name="public_key">Offentlig nøkkel</string>
     <string name="qr_code_hint">Tips: generer med `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Legge til i hurtiginnstillingspanelet</string>
+    <string name="quick_settings_tile_add_summary">Snarveien i hurtiginstillinger viser den siste tilkoblede tunnelen</string>
+    <string name="quick_settings_tile_add_failure">Kunne ikke legge til snarveis: feil %d</string>
+    <string name="quick_settings_tile_action">Koble til tunnel</string>
     <string name="restore_on_boot_summary_off">Vil ikke ta opp aktive tunneler ved oppstart</string>
     <string name="restore_on_boot_summary_on">Vil ta opp aktive tunneler ved oppstart</string>
     <string name="restore_on_boot_title">Gjenopprett ved oppstart</string>
@@ -226,6 +232,16 @@
     <string name="type_name_go_userspace">Bruk userspace</string>
     <string name="type_name_kernel_module">Kjernemodul</string>
     <string name="unknown_error">Ukjent feil</string>
+    <string name="updater_avalable">En programoppdatering er tilgjengelig. Oppdater nå.</string>
+    <string name="updater_action">Last ned &amp; oppdatering</string>
+    <string name="updater_rechecking">Henter metadata for oppdatering…</string>
+    <string name="updater_download_progress">Laster ned oppdatering: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Laster ned oppdatering: %s</string>
+    <string name="updater_installing">Installler oppdatering…</string>
+    <string name="updater_failure">Oppdateringen feilet: %s. Vil prøve igjen øyeblikkelig…</string>
+    <string name="updater_corrupt_title">Applikasjonen feilet</string>
+    <string name="updater_corrupt_message">Dette programmet feilet. Last ned APK på nytt fra nettstedet koblet til nedenfor. Avinstaller dette programmet og installer den nedlastede APK.</string>
+    <string name="updater_corrupt_navigate">Åpne nettsiden</string>
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Sjekker %s backend versjon</string>
     <string name="version_summary_unknown">Ukjent %s versjon</string>

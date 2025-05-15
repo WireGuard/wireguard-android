@@ -107,9 +107,9 @@
     <string name="tv_select_a_storage_drive">Välj en lagringsenhet</string>
     <string name="tv_no_file_picker">Installera ett filhanteringsverktyg för att bläddra bland filer</string>
     <string name="tv_add_tunnel_get_started">Lägg till en tunnel för att komma igång</string>
-    <string name="donate_title">♥ Donera till WireGuard Projektet</string>
+    <string name="donate_title">♥ Donera till WireGuard projektet</string>
     <string name="donate_summary">Varje bidrag hjälper</string>
-    <string name="donate_google_play_disappointment">Tack för att du stödjer WireGuard Projektet!\n\nPå grund av Googles policyer får vi dessvärre inte till den del av projektets webbsida där du kan göra en donation. Förhoppningsvis kan du hitta dit ändå!\n\nTack igen för ditt bidrag.</string>
+    <string name="donate_google_play_disappointment">Tack för att du stödjer WireGuard projektet!\n\nPå grund av Googles policyer får vi dessvärre inte länka till den del av projektets webbsida där du kan göra en donation. Förhoppningsvis kan du hitta dit ändå!\n\nTack igen för ditt bidrag.</string>
     <string name="disable_config_export_title">Inaktivera export av konfiguration</string>
     <string name="disable_config_export_description">Inaktivering av konfigurationsexport gör privata nycklar mindre tillgängliga</string>
     <string name="dns_servers">DNS-servrar</string>
@@ -153,7 +153,7 @@
     <string name="logcat_error">Kunde inte köra logcat: </string>
     <string name="module_enabler_disabled_summary">Den experimentella kärnmodulen kan förbättra prestanda</string>
     <string name="module_enabler_disabled_title">Aktivera backend för kärnmodul</string>
-    <string name="module_enabler_enabled_summary">Den långsammare backend för användarrymden kan förbättra stabiliteten</string>
+    <string name="module_enabler_enabled_summary">Det långsammare icke-kernel implementationen kan förbättra stabiliteten</string>
     <string name="module_enabler_enabled_title">Inaktivera backend för kärnmodul</string>
     <string name="module_installer_error">Något gick fel. Vänligen försök igen</string>
     <string name="module_installer_initial">Den experimentella kärnmodulen kan förbättra prestanda</string>
@@ -229,7 +229,7 @@
     <string name="tunnel_dns_failure">Det går inte att lösa DNS-värdnamn: ”%s”</string>
     <string name="tunnel_rename_error">Kan inte byta namn på tunnel: %s</string>
     <string name="tunnel_rename_success">Lyckades döpa om tunnel till “%s”</string>
-    <string name="type_name_go_userspace">Användarutrymme för Go</string>
+    <string name="type_name_go_userspace">Go userspace</string>
     <string name="type_name_kernel_module">Kärnmodul</string>
     <string name="unknown_error">Okänt fel</string>
     <string name="updater_avalable">Det finns en uppdatering till appen. Vänligen uppdatera nu.</string>

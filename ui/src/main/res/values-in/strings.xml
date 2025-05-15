@@ -94,6 +94,9 @@
     <string name="tv_select_a_storage_drive">Pilih lokasi penyimpanan</string>
     <string name="tv_no_file_picker">Silakan instal aplikasi file manajer untuk memilih file</string>
     <string name="tv_add_tunnel_get_started">Tambahkan tunnel untuk memulai</string>
+    <string name="donate_title">Donasi ke Proyek WireGuard</string>
+    <string name="donate_summary">Setiap kontribusi anda sangat membantu</string>
+    <string name="donate_google_play_disappointment">Terima kasih telah mendung Proyek WireGuard!\n\nAkan tetapi, dikarenakan kebijakan Google, Kami tidak diizinkan untuk menautkan bagian halaman website yang dapat digunakan untuk melakukan donasi. Semoga anda dapat menemukan solusi untuk kendala ini!\n\nTerima kasih sekali lagi atas kontribusi anda.</string>
     <string name="disable_config_export_title">Nonaktifkan ekspor konfigurasi</string>
     <string name="disable_config_export_description">Menonaktifkan ekspor konfigurasi akan membuat kunci pribadi sulit diakses</string>
     <string name="dns_servers">Server DNS</string>
@@ -103,6 +106,7 @@
     <string name="error_down">Kesalahan pada tunel: %s</string>
     <string name="error_fetching_apps">Kesalahan mengambil daftar aplikasi: %s</string>
     <string name="error_root">Izinkan akses root dan coba lagi</string>
+    <string name="error_prepare">Kesalahan mempersiapkan tunel: %s</string>
     <string name="error_up">Kesalahan pada tunel: %s</string>
     <string name="exclude_private_ips">Kecualikan IP pribadi</string>
     <string name="generate_new_private_key">Buat kunci privat baru</string>
@@ -122,6 +126,8 @@
     <string name="key_length_explanation_base64">: Kunci WireGuard base64 harus terdiri dari 44 karakter (32 bit)</string>
     <string name="key_length_explanation_binary">: Kunci WireGuard harus terdiri dari 32 bit</string>
     <string name="key_length_explanation_hex">: Kunci hex WireGuard Harus terdiri dari 64 karakter (32 bit)</string>
+    <string name="latest_handshake">Handshake terakhir</string>
+    <string name="latest_handshake_ago">%s yang lalu</string>
     <string name="listen_port">Isi port</string>
     <string name="log_export_error">Log tidak bisa diekspor: %s</string>
     <string name="log_export_subject">Berkas Log WireGuard Android</string>
@@ -165,6 +171,10 @@
     <string name="private_key">Kunci pribadi</string>
     <string name="public_key">Kunci publik</string>
     <string name="qr_code_hint">Tips: generate dengan `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Tambah ubin untuk akses panel pengaturan cepat</string>
+    <string name="quick_settings_tile_add_summary">Pintasan ubin mengalihkan ke tunel terbaru</string>
+    <string name="quick_settings_tile_add_failure">Tidak dapat menambahkan pintasan: error %d</string>
+    <string name="quick_settings_tile_action">Beralih tunel</string>
     <string name="restore_on_boot_summary_off">Tunel yang diaktifkan tidak akan ditampilkan saat boot</string>
     <string name="restore_on_boot_summary_on">Tunel yang diaktifkan akan dimunculkan saat boot</string>
     <string name="restore_on_boot_title">Pulihkan saat boot</string>
@@ -200,6 +210,7 @@
     <string name="tunnel_create_success">Tunel “%s” Berhasil dibuat</string>
     <string name="tunnel_error_already_exists">Tunel “%s” sudah ada</string>
     <string name="tunnel_error_invalid_name">Nama tidak valid</string>
+    <string name="tunnel_list_placeholder">Tambah tunel menggunakan tombol di bawah</string>
     <string name="tunnel_name">Nama tunel</string>
     <string name="tunnel_on_error">Tidak dapat mengaktifkan tunel (wgTurnOn %d dikembalikan)</string>
     <string name="tunnel_dns_failure">Tidak bisa mencari nama host DNS \"%s\"</string>
@@ -208,6 +219,16 @@
     <string name="type_name_go_userspace">Ke userspace</string>
     <string name="type_name_kernel_module">Modul kernel</string>
     <string name="unknown_error">Eror tidak diketahui</string>
+    <string name="updater_avalable">Pembaruan aplikasi tersedia. Perbarui sekarang.</string>
+    <string name="updater_action">Unduh &amp; Pembaruan</string>
+    <string name="updater_rechecking">Mengambil pembaharuan metadata…</string>
+    <string name="updater_download_progress">Mengunduh pembaruan: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Mengunduh pembaruan: %s</string>
+    <string name="updater_installing">Gagal menginstall…</string>
+    <string name="updater_failure">Pembaruan gagal. %s. akan dicoba kembali sementara waktu…</string>
+    <string name="updater_corrupt_title">Aplikasi Rusak</string>
+    <string name="updater_corrupt_message">Aplikasi ini rusak. Silahkan unduh ulang APK-nya di website bawah ini. Setelah itu, Hapus instalan aplikasi ini dan install ulang dari APK yang telah diunduh.</string>
+    <string name="updater_corrupt_navigate">Buka Website</string>
     <string name="version_summary">%1$s dengan v%2$s</string>
     <string name="version_summary_checking">Mengecek versi backend %s</string>
     <string name="version_summary_unknown">Versi %s Tidak diketahui</string>

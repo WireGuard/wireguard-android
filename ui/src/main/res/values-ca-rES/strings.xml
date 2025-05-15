@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="delete_error">
-        <item quantity="one">No s\'ha pogut esborrar %d túnel: %s</item>
+        <item quantity="one">No s\'han pogut esborrar els túnels:</item>
         <item quantity="other">No s\'han pogut esborrar %d túnels: %s</item>
     </plurals>
     <plurals name="delete_success">
@@ -79,6 +79,8 @@
     <string name="bad_config_reason_unknown_section">Secció desconeguda</string>
     <string name="bad_config_reason_value_out_of_range">Valor fora de rang</string>
     <string name="bad_extension_error">El fitxer ha de ser .conf o .zip</string>
+    <string name="error_no_qr_found">No s\'ha trobat cap codi QR en la imatge</string>
+    <string name="error_qr_checksum">Ha fallat la verificació de la suma de comprovació del codi QR</string>
     <string name="cancel">Cancel·la</string>
     <string name="config_delete_error">No es pot esborrar fitxer de configuració %s</string>
     <string name="config_exists_error">Configuració per \"%s\" ja existeix</string>
@@ -105,14 +107,19 @@
     <string name="tv_select_a_storage_drive">Seleccioneu un disc d\'emmagatzematge</string>
     <string name="tv_no_file_picker">Si us plau, instsleu un gestor de fitxers per navegar pels arxius</string>
     <string name="tv_add_tunnel_get_started">Afegeix un túnel per començar</string>
+    <string name="donate_title">♥ Donar al Projecte WireGuard</string>
+    <string name="donate_summary">Totes les contribucions ajuden</string>
+    <string name="donate_google_play_disappointment">Gràcies per donar suport al Projecte WireGuard!\n\nMalauradament, a causa de les polítiques de Google, no estem permesos a enllaçar a la part del web del projecte on pots realitzar una donació. Esperem que puguis trobar-ho!\n\nGràcies de nou per la teva contribució.</string>
     <string name="disable_config_export_title">Desactiva l\'exportació de configuracions</string>
     <string name="disable_config_export_description">Desactivar l\'exportacio de configuracions fa que les claus privades siguin menys accessibles</string>
     <string name="dns_servers">Servidors DNS</string>
+    <string name="dns_search_domains">Cercar dominis</string>
     <string name="edit">Edita</string>
     <string name="endpoint">Extrem</string>
     <string name="error_down">Error desactivant el túnel: %s</string>
     <string name="error_fetching_apps">Error obtenint llista d\'aplicacions: %s</string>
     <string name="error_root">Si us plau, obteniu accés root i torneu a intentar</string>
+    <string name="error_prepare">Error preparant el túnel: %s</string>
     <string name="error_up">Error activant túnel: %s</string>
     <string name="exclude_private_ips">Exclou IPs privades</string>
     <string name="generate_new_private_key">Genera nova clau privada</string>
@@ -132,6 +139,8 @@
     <string name="key_length_explanation_base64">: Les claus en base64 a WireGuard han de tenir 44 caràcters (32 bytes)</string>
     <string name="key_length_explanation_binary">: Les claus WireGuard han de ser de 32 bytes</string>
     <string name="key_length_explanation_hex">: Les claus en hexadecimal a WireGuard han de tenir 64 caràcters (32 bytes)</string>
+    <string name="latest_handshake">Últim handshake</string>
+    <string name="latest_handshake_ago">fa %s</string>
     <string name="listen_port">Port d\'escolta</string>
     <string name="log_export_error">No s\'ha estat capaç d\'exportar el registre: %s</string>
     <string name="log_export_subject">WireGuard Android Log File</string>
@@ -144,8 +153,10 @@
     <string name="logcat_error">No es pot executar logcat: </string>
     <string name="module_enabler_disabled_summary">El mòdul experimental del kernel pot millorar el rendiment</string>
     <string name="module_enabler_disabled_title">Activa el backend del mòdul del kernel</string>
+    <string name="module_enabler_enabled_summary">El backend més lent de l\'espai d\'usuari pot millorar l\'estabilitat</string>
     <string name="module_enabler_enabled_title">Desactiva el backend del mòdul del kernel</string>
     <string name="module_installer_error">Alguna cosa ha anat malament. Si us plau, prova de nou</string>
+    <string name="module_installer_initial">El mòdul experimental del kernel pot millorar el rendiment</string>
     <string name="module_installer_not_found">El vostre dispositiu no té mòduls disponibles</string>
     <string name="module_installer_title">Descàrega i instala el mòdul kernel</string>
     <string name="module_installer_working">Descarregant i instalant…</string>
@@ -158,6 +169,7 @@
     <string name="no_config_error">Intentant activar un túnel que no té configuració</string>
     <string name="no_configs_error">No s\'ha trobat cap configuració</string>
     <string name="no_tunnels_error">No existeixen túnels</string>
+    <string name="parse_error_generic">cadena</string>
     <string name="parse_error_inet_address">Adreça IP</string>
     <string name="parse_error_inet_endpoint">extrem</string>
     <string name="parse_error_inet_network">Xarxa IP</string>
@@ -172,6 +184,10 @@
     <string name="private_key">Clau privada</string>
     <string name="public_key">Clau pública</string>
     <string name="qr_code_hint">Consell: generar amb `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Afegir mosaic al tauler de configuració ràpida</string>
+    <string name="quick_settings_tile_add_summary">L\'accés directe al mosaic alterna el túnel més recent</string>
+    <string name="quick_settings_tile_add_failure">No s\'ha pogut afegir el mosaic de l\'accés directe: error %d</string>
+    <string name="quick_settings_tile_action">Alternar túnel</string>
     <string name="restore_on_boot_summary_off">No s\'activaran els túnels seleccionats al arrancar el sistema</string>
     <string name="restore_on_boot_summary_on">S\'activaran els túnels seleccionats al arrancar el sistema</string>
     <string name="restore_on_boot_title">Restableix a l\'inici</string>
@@ -186,6 +202,9 @@
     <string name="toggle_error">Error al canviar el túnel WireGuard: %s</string>
     <string name="tools_installer_already">wg i wg-quick ja estan instalats</string>
     <string name="tools_installer_failure">No s\'ha pogut instalar les eines de linia de comandes (ets root?)</string>
+    <string name="tools_installer_initial">Instal·lar eines opcionals per l\'scripting</string>
+    <string name="tools_installer_initial_magisk">Instal·lar eines opcionals per l\'scripting com el mòdul Magisk</string>
+    <string name="tools_installer_initial_system">Instal·lar eines opcionals per l\'scripting a la partició del sistema</string>
     <string name="tools_installer_success_magisk">wg i wg-quick instalats com a mòdul de Magisk (es necessita reinicar)</string>
     <string name="tools_installer_success_system">wg i wg-quick instalats a la partició de sistema</string>
     <string name="tools_installer_title">Instala les eines de la línia d\'ordres</string>
@@ -204,13 +223,27 @@
     <string name="tunnel_create_success">El túnel \"%s\" s\'ha creat correctament</string>
     <string name="tunnel_error_already_exists">El túnel \"%s\" ja existeix</string>
     <string name="tunnel_error_invalid_name">Nom no vàlid</string>
+    <string name="tunnel_list_placeholder">Afegiu un túnel utilitzant el botó inferior</string>
     <string name="tunnel_name">Nom del túnel</string>
     <string name="tunnel_on_error">No s\'ha estat capaç d\'activar el túnel (wgTurnOn ha retornat %d)</string>
     <string name="tunnel_dns_failure">Impossible resoldre el nom del domini \"%s\"</string>
     <string name="tunnel_rename_error">No s\'ha pogut renombrar el túnel: %s</string>
     <string name="tunnel_rename_success">El nom del túnel s\'ha canviat correctament a \"%s\"</string>
+    <string name="type_name_go_userspace">Anar a l\'espai d\'usuari</string>
     <string name="type_name_kernel_module">Mòdul del kernel</string>
     <string name="unknown_error">Error desconegut</string>
+    <string name="updater_avalable">Hi ha una actualització disponible. Si us plau, actualitzi ara.</string>
+    <string name="updater_action">Descarregar &amp; Actualitzar</string>
+    <string name="updater_rechecking">Obtenint metadades de l\'actualització…</string>
+    <string name="updater_download_progress">Descarregant actualització: %1$s / %2$s (%3$.2f%%)</string>
+    <string name="updater_download_progress_nototal">Descarregant actualització: %s</string>
+    <string name="updater_installing">Instal·lant actualització…</string>
+    <string name="updater_failure">Error en actualitzar: %s. S\'intentarà de nou en uns instants…</string>
+    <string name="updater_corrupt_title">Aplicació corrupta</string>
+    <string name="updater_corrupt_message">L\'aplicació és corrupta. Si us plau, descarregui de nou l\'APK des del lloc web enllaçat a continuació. A continuació, desinstal·li i reinstal·li-la de l\'APK descarregat.</string>
+    <string name="updater_corrupt_navigate">Obrir el lloc web</string>
+    <string name="version_summary">%1$s backend %2$s</string>
+    <string name="version_summary_checking">Comprovant la versió de backend %s</string>
     <string name="version_summary_unknown">Versió de %s desconeguda</string>
     <string name="version_title">WireGuard per a Android v%s</string>
     <string name="vpn_not_authorized_error">Servei de VPN no autoritzat per l\'usuari</string>

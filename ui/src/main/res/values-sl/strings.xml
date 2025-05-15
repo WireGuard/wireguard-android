@@ -105,6 +105,8 @@
     <string name="bad_config_reason_unknown_section">Neznani odsek</string>
     <string name="bad_config_reason_value_out_of_range">Vrednost je zunaj veljavnega območja</string>
     <string name="bad_extension_error">Datoteka mora biti .conf ali .zip</string>
+    <string name="error_no_qr_found">Ne najdem kode QR v sliki</string>
+    <string name="error_qr_checksum">Napaka pri preverjanju kontrolne vsote kode QR</string>
     <string name="cancel">Prekliči</string>
     <string name="config_delete_error">Konfiguracijske datoteke %s ni bilo mogoče izbrisati</string>
     <string name="config_exists_error">Konfiguracija za „%s“ že obstaja</string>
@@ -131,6 +133,9 @@
     <string name="tv_select_a_storage_drive">Izberite podatkovni pogon</string>
     <string name="tv_no_file_picker">Prosim namesti orodje za upravljanje datotek za njihov ogled</string>
     <string name="tv_add_tunnel_get_started">Za začetek dodaj tunel</string>
+    <string name="donate_title">♥ Doniraj za projekt WireGuard</string>
+    <string name="donate_summary">Vsak prispevek šteje</string>
+    <string name="donate_google_play_disappointment">Hvala, ker podpirate projekt WireGuard!\n\nŽal zaradi Googlove politike ne smemo objaviti povezave na del spletne strani projekta, kjer lahko opravite donacijo. Upamo, da se boste lahko znašli sami!\n\nŠe enkrat hvala za vaš prispevek.</string>
     <string name="disable_config_export_title">Onemogoči izvoz nastavitev</string>
     <string name="disable_config_export_description">Onemogočenje nastavitev za izvoz nastavitev naredi zasebne ključe manj dostopne</string>
     <string name="dns_servers">Strežniki DNS</string>
@@ -140,6 +145,7 @@
     <string name="error_down">Napaka pri zaključevanju tunela: %s</string>
     <string name="error_fetching_apps">Napaka pri poizvedovanju seznama aplikacij: %s</string>
     <string name="error_root">Prosim omogočite dostop root in poskusite ponovno</string>
+    <string name="error_prepare">Napaka pri pripravi tunela: %s</string>
     <string name="error_up">Napaka pri vzpostavitvi tunela: %s</string>
     <string name="exclude_private_ips">Izvzemi zasebne naslove IP</string>
     <string name="generate_new_private_key">Izdelaj nov zasebni ključ</string>
@@ -159,6 +165,8 @@
     <string name="key_length_explanation_base64">: WireGuardovi ključi base64 morajo vsebovati 44 znakov (32 bajtov)</string>
     <string name="key_length_explanation_binary">: WireGuardovi ključi morajo biti veliki 32 bajtov</string>
     <string name="key_length_explanation_hex">: WireGuardovi ključi hex morajo biti veliki 64 znakov (32 bajtov)</string>
+    <string name="latest_handshake">Zadnje rokovanje</string>
+    <string name="latest_handshake_ago">%s nazaj</string>
     <string name="listen_port">Vrata poslušanja</string>
     <string name="log_export_error">Dnevnika ni bilo mogoče izvoziti: %s</string>
     <string name="log_export_subject">Dnevniška datoteka WireGuard za Android</string>
@@ -202,6 +210,10 @@
     <string name="private_key">Zasebni ključ</string>
     <string name="public_key">Javni ključ</string>
     <string name="qr_code_hint">Namig: izdelajte z `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
+    <string name="quick_settings_tile_add_title">Dodaj ikono v panel hitrih nastavitev</string>
+    <string name="quick_settings_tile_add_summary">Bližnjica z ikono preklopi zadnji uporabljani tunel</string>
+    <string name="quick_settings_tile_add_failure">Napaka pri dodajanju ikone z bližnjico: napaka %d</string>
+    <string name="quick_settings_tile_action">Preklopi tunel</string>
     <string name="restore_on_boot_summary_off">Pri zagonu telefona omogočeni tuneli ne bodo aktivirani</string>
     <string name="restore_on_boot_summary_on">Pri zagonu telefona bodo omogočeni tuneli aktivirani</string>
     <string name="restore_on_boot_title">Ponovna vzpostavitev ob zagonu</string>
@@ -237,6 +249,7 @@
     <string name="tunnel_create_success">Tunel „%s“ uspešno ustvarjen</string>
     <string name="tunnel_error_already_exists">Tunel „%s“ že obstaja</string>
     <string name="tunnel_error_invalid_name">Neveljavno ime</string>
+    <string name="tunnel_list_placeholder">Dodaj tunel s spodnjim gumbom</string>
     <string name="tunnel_name">Ime tunela</string>
     <string name="tunnel_on_error">Tunela ni bilo mogoče vključiti (wgTurnOn je vrnil %d)</string>
     <string name="tunnel_dns_failure">Imena DNS gostitelja ni bilo mogoče razrešiti: \"%s\"</string>
@@ -245,6 +258,16 @@
     <string name="type_name_go_userspace">Uporabniški prostor Go</string>
     <string name="type_name_kernel_module">Modul jedra</string>
     <string name="unknown_error">Neznana napaka</string>
+    <string name="updater_avalable">Na voljo je posodobitev aplikacije. Prosimo, posodobite zdaj.</string>
+    <string name="updater_action">Prenesi in posodobi</string>
+    <string name="updater_rechecking">Pridobivanje metapodatkov o posodobitvi …</string>
+    <string name="updater_download_progress">Prenašanje posodobitve: %1$s / %2$s (%3$.2f %%)</string>
+    <string name="updater_download_progress_nototal">Prenašanje posodobitve: %s</string>
+    <string name="updater_installing">Nameščanje posodobitve …</string>
+    <string name="updater_failure">Posodobitev ni uspela: %s. Ponovni poskus kmalu …</string>
+    <string name="updater_corrupt_title">Pokvarjena aplikacija</string>
+    <string name="updater_corrupt_message">Ta aplikacija je pokvarjena. Prosimo, ponovno prenesite APK s spletne strani na spodnji povezavi. Po tem odstranite to aplikacijo in jo ponovno namestite s prenesenim APK-jem.</string>
+    <string name="updater_corrupt_navigate">Odpri spletno stran</string>
     <string name="version_summary">Zaledje %1$s %2$s</string>
     <string name="version_summary_checking">Preverjam verzijo zaledja %s</string>
     <string name="version_summary_unknown">Neznana verzija %s</string>

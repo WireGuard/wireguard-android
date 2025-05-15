@@ -24,9 +24,33 @@
         <item quantity="one">Aplicação %d Excluída</item>
         <item quantity="other">Aplicações %d Excluídas</item>
     </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="one">%d Aplicação Incluída</item>
+        <item quantity="other">%d Aplicações Incluídas</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="one">%d retirada</item>
+        <item quantity="other">%d retiradas</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="one">%d incluída</item>
+        <item quantity="other">%d incluídas</item>
+    </plurals>
     <string name="all_applications">Todos as aplicativos</string>
     <string name="exclude_from_tunnel">Retirar</string>
     <string name="include_in_tunnel">Incluir somente</string>
+    <plurals name="include_n_applications">
+        <item quantity="one">Incluir %d app</item>
+        <item quantity="other">Incluir %d aplicações</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="one">Retirar %d app</item>
+        <item quantity="other">Retirar %d apps</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="one">a cada segundo</item>
+        <item quantity="other">a cada %d segundos</item>
+    </plurals>
     <plurals name="persistent_keepalive_seconds_suffix">
         <item quantity="one">segundo</item>
         <item quantity="other">segundos</item>
@@ -149,7 +173,9 @@
     <string name="parse_error_inet_address">Endereço IP</string>
     <string name="parse_error_inet_endpoint">endpoint</string>
     <string name="parse_error_inet_network">Rede IP</string>
+    <string name="parse_error_integer">número</string>
     <string name="parse_error_reason">Não é possível analisar %1$s “%2$s”</string>
+    <string name="peer">Par</string>
     <string name="permission_description">permite controlar túneis do WireGuard, ativando e desativando túneis a vontade, potencialmente desviando o tráfego na Internet</string>
     <string name="permission_label">controlar túneis do WireGuard</string>
     <string name="persistent_keepalive">Keepalive persistente</string>
@@ -161,6 +187,9 @@
     <string name="quick_settings_tile_add_title">Adicionar botão ao painel de configurações rápidas</string>
     <string name="quick_settings_tile_add_summary">A tecla de atalho alterna o túnel mais recente</string>
     <string name="quick_settings_tile_add_failure">Não foi possível adicionar o atalho de botão: erro %d</string>
+    <string name="quick_settings_tile_action">Ativar/Desativar túnel</string>
+    <string name="restore_on_boot_summary_off">Não irá criar túneis habilitados na inicialização</string>
+    <string name="restore_on_boot_summary_on">Irá criar túneis habilitados na inicialização</string>
     <string name="restore_on_boot_title">Restaurar na inicialização</string>
     <string name="save">Salvar</string>
     <string name="select_all">Selecionar tudo</string>
@@ -169,6 +198,7 @@
     <string name="shell_marker_count_error">Shell esperava 4 marcadores, mas recebeu apenas %d</string>
     <string name="shell_start_error">Shell falhou ao iniciar: %d</string>
     <string name="success_application_will_restart">Sucesso. O aplicativo irá reiniciar agora…</string>
+    <string name="toggle_all">Alternar Todos</string>
     <string name="toggle_error">Erro ao ativar o túnel do WireGuard: %s</string>
     <string name="tools_installer_already">wg e wg-quick já estão instalados</string>
     <string name="tools_installer_failure">Não foi possível instalar ferramentas de linha de comando (sem root?)</string>
@@ -180,6 +210,7 @@
     <string name="tools_installer_title">Instalar ferramentas de linha de comando</string>
     <string name="tools_installer_working">Instalando wg e wg-quick</string>
     <string name="tools_unavailable_error">Ferramentas necessárias indisponíveis</string>
+    <string name="transfer">Transferir</string>
     <string name="transfer_bytes">%d B</string>
     <string name="transfer_gibibytes">%.2f GiB</string>
     <string name="transfer_kibibytes">%.2f KiB</string>
@@ -198,6 +229,7 @@
     <string name="tunnel_dns_failure">Não foi possível resolver host DNS: \"%s\"</string>
     <string name="tunnel_rename_error">Não foi possível renomear o túnel: %s</string>
     <string name="tunnel_rename_success">Renomeado com sucesso o túnel para “%s”</string>
+    <string name="type_name_go_userspace">Espaço do usuário Go</string>
     <string name="type_name_kernel_module">Modo de Kernel</string>
     <string name="unknown_error">Erro desconhecido</string>
     <string name="updater_avalable">Uma atualização do aplicativo está disponível. Pôr favor atualize agora.</string>
@@ -210,6 +242,7 @@
     <string name="updater_corrupt_title">Aplicativo corrompido</string>
     <string name="updater_corrupt_message">Este aplicativo está corrompido. Por favor, baixe novamente o APK do site vinculado abaixo. Depois disso, desinstale o aplicativo e reinstale-o a partir do APK baixado.</string>
     <string name="updater_corrupt_navigate">Abrir site</string>
+    <string name="version_summary">Backend do %1$s %2$s</string>
     <string name="version_summary_checking">Verificando a versão do backend %s</string>
     <string name="version_summary_unknown">Versão %s desconhecida</string>
     <string name="version_title">WireGuard para Android v%s</string>
