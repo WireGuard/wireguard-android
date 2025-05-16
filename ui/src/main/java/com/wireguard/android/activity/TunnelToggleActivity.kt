@@ -50,10 +50,14 @@ class TunnelToggleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
             if (Application.getBackend() is GoBackend) {
-                val intent = GoBackend.VpnService.prepare(this@TunnelToggleActivity)
-                if (intent != null) {
-                    permissionActivityResultLauncher.launch(intent)
-                    return@launch
+                try {
+                    val intent = GoBackend.VpnService.prepare(this@TunnelToggleActivity)
+                    if (intent != null) {
+                        permissionActivityResultLauncher.launch(intent)
+                        return@launch
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this@TunnelToggleActivity, ErrorMessages[e], Toast.LENGTH_LONG).show()
                 }
             }
             toggleTunnelWithPermissionsResult()
