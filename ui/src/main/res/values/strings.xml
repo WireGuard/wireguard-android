@@ -257,4 +257,14 @@
     <string name="biometric_prompt_private_key_title">Authenticate to view private key</string>
     <string name="biometric_auth_error">Authentication failure</string>
     <string name="biometric_auth_error_reason">Authentication failure: %s</string>
+    <string name="wifi_settings">Wi-Fi Settings</string>
+    <string name="wifi_auto_disconnect_checkbox">Disconnect when using to one of these networks:</string>
+    <string name="auto_disconnect_networks_hint">Network1, Network2, Network3</string>
+    <string name="auto_disconnect_networks_label">Networks</string>
+    <string name="blacklisted_wifi_networks">Blacklisted Wi-Fi networks</string>
+    <string name="wifi_auto_disconnect_disabled">&lt;Disabled&gt;</string>
+    <string name="wifi_location_needed_message">To use the auto-disconnect feature, you need to enable fine location access for this application.</string>
+    <string name="wifi_location_needed_title">Location permissions needed</string>
+    <string name="wifi_location_ok">Ok</string>
+    <string name="wifi_location_cancel">Cancel</string>
 </resources>

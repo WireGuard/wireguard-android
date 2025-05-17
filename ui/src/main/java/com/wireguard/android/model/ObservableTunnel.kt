@@ -63,7 +63,7 @@ class ObservableTunnel internal constructor(
 
     suspend fun setStateAsync(state: Tunnel.State): Tunnel.State = withContext(Dispatchers.Main.immediate) {
         if (state != this@ObservableTunnel.state)
-            manager.setTunnelState(this@ObservableTunnel, state)
+            manager.setTunnelState(this@ObservableTunnel, state, Tunnel.StateChangeReason.USER_INTERACTION)
         else
             this@ObservableTunnel.state
     }
