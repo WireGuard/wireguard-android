@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
+# Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
 
 cmake_minimum_required(VERSION 3.4.1)
 project("WireGuard")
