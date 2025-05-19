@@ -80,7 +80,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
             R.id.menu_action_edit -> {
                 supportFragmentManager.commit {
-                    replace(R.id.detail_container, TunnelEditorFragment())
+                    replace(if (isTwoPaneLayout) R.id.detail_container else R.id.list_detail_container, TunnelEditorFragment())
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     addToBackStack(null)
                 }
@@ -119,7 +119,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         } else if (backStackEntries == 0) {
             // Create and show a new detail fragment.
             fragmentManager.commit {
-                add(R.id.detail_container, TunnelDetailFragment())
+                add(if (isTwoPaneLayout) R.id.detail_container else R.id.list_detail_container, TunnelDetailFragment())
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 addToBackStack(null)
             }
