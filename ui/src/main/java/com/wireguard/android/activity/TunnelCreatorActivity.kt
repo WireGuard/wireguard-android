@@ -5,11 +5,7 @@
 package com.wireguard.android.activity
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.children
-import androidx.fragment.app.commit
-import com.wireguard.android.fragment.TunnelEditorFragment
+import com.wireguard.android.R
 import com.wireguard.android.model.ObservableTunnel
 
 /**
@@ -18,20 +14,11 @@ import com.wireguard.android.model.ObservableTunnel
 class TunnelCreatorActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (supportFragmentManager.findFragmentById(android.R.id.content) == null) {
-            supportFragmentManager.commit {
-                add(android.R.id.content, TunnelEditorFragment())
-            }
-        }
+        setContentView(R.layout.tunnel_creator_activity)
     }
 
     override fun onSelectedTunnelChanged(oldTunnel: ObservableTunnel?, newTunnel: ObservableTunnel?): Boolean {
         finish()
         return true
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        (findViewById<View?>(android.R.id.content) as? ViewGroup)?.children?.firstOrNull()?.fitsSystemWindows = true
     }
 }
