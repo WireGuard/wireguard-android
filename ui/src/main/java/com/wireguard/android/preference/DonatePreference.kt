@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wireguard.android.R
 import com.wireguard.android.updater.Updater
 import com.wireguard.android.util.ErrorMessages
+import androidx.core.net.toUri
 
 class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
     override fun getSummary() = context.getString(R.string.donate_summary)
@@ -32,7 +33,7 @@ class DonatePreference(context: Context, attrs: AttributeSet?) : Preference(cont
         }
 
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("https://www.wireguard.com/donations/")
+        intent.data = "https://www.wireguard.com/donations/".toUri()
         try {
             context.startActivity(intent)
         } catch (e: Throwable) {
