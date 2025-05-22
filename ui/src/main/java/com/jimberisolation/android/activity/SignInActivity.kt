@@ -82,13 +82,19 @@ class SignInActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.microsoft_sign_in)?.setOnClickListener {
+            if (mSingleAccountApp == null) {
+                Toast.makeText(this, "Microsoft Sign-In is still initializing. Please try again shortly.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val signInParameters = SignInParameters.builder()
                 .withActivity(this)
                 .withLoginHint(null)
                 .withScopes(Arrays.asList("f1373772-6623-4090-9204-3cb04b9d46c9/.default"))
                 .withCallback(getAuthInteractiveCallback())
                 .build()
-            mSingleAccountApp!!.signIn(signInParameters)
+
+            mSingleAccountApp?.signIn(signInParameters)
         }
 
         findViewById<View>(R.id.email_sign_in)?.setOnClickListener {
@@ -139,7 +145,7 @@ class SignInActivity : AppCompatActivity() {
         mSingleAccountApp?.getCurrentAccountAsync(object : ISingleAccountPublicClientApplication.CurrentAccountCallback {
             override fun onAccountLoaded(activeAccount: IAccount?) {
                 if (activeAccount != null) {
-                     mSingleAccountApp?.signOut(object : ISingleAccountPublicClientApplication.SignOutCallback {
+                    mSingleAccountApp?.signOut(object : ISingleAccountPublicClientApplication.SignOutCallback {
                         override fun onSignOut() {
                             println("Successfully signed out.")
                         }

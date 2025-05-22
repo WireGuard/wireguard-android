@@ -10,8 +10,8 @@ fi
 ENVIRONMENT=$1
 
 # Validate the argument
-if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" ]]; then
-    echo "Error: Argument must be 'staging' or 'production' or 'local'."
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" && "$ENVIRONMENT" != "dc" ]]; then
+    echo "Error: Argument must be 'staging' or 'production' or 'local' or 'dc'."
     exit 1
 fi
 
@@ -41,5 +41,14 @@ elif [ "$ENVIRONMENT" = "local" ]; then
     cp ./environments/local/msal_config.json ./ui/src/main/res/raw
 
     echo "local" > ./environments/current_environment
+    echo "Done"
+
+elif [ "$ENVIRONMENT" = "dc" ]; then
+    echo "Changing to the DC environment..."
+    cp ./environments/dc/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
+    cp ./environments/dc/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
+    cp ./environments/dc/msal_config.json ./ui/src/main/res/raw
+
+    echo "dc" > ./environments/current_environment
     echo "Done"
 fi

@@ -41,7 +41,7 @@
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Staging Jimber SASE"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -75,8 +75,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.jimberisolation.android.debug"
-                    android:path="/MCB8+E3n89VFqq8DF3GqGdoMllI="
+                    android:host="com.jimberisolation.android.staging"
+                    android:path="/BAhPO5r6+gArwttJYkjO2isMw1A="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

@@ -72,6 +72,10 @@ android {
                         applicationIdSuffix = ".local"
                         versionNameSuffix = "-local"
                     }
+                    "dc" -> {
+                        applicationIdSuffix = ".dc"
+                        versionNameSuffix = "-dc"
+                    }
                 }
             }
         }

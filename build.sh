@@ -21,13 +21,13 @@ CURRENT_TIME=$(date "+%H:%M:%S %d.%m.%Y")
 # ================
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 {staging|production|local}"
+    echo "Usage: $0 {staging|production|local|dc}"
     exit 1
 fi
 
 ENVIRONMENT=$1
-if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" ]]; then
-    echo "Error: Argument must be 'staging', 'production', or 'local'."
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" && "$ENVIRONMENT" != "dc" ]]; then
+    echo "Error: Argument must be 'staging', 'production', or 'local' or 'dc'."
     exit 1
 fi
 

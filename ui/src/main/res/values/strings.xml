@@ -63,7 +63,7 @@
     <string name="allow_remote_control_intents_summary_on">External apps may toggle connections (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>
     <string name="allowed_ips">Allowed IPs</string>
-    <string name="app_name" translatable="false">Jimber Network Isolation</string>
+    <string name="app_name" translatable="false">Jimber SASE</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
