@@ -214,7 +214,10 @@ class TvMainActivity : AppCompatActivity() {
                     MaterialAlertDialogBuilder(binding.root.context).setMessage(R.string.tv_no_file_picker).setCancelable(false)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             try {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://webstoreredirect")))
+                                startActivity(Intent(Intent.ACTION_VIEW).apply {
+                                    data = Uri.parse("https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer")
+                                    setPackage("com.android.vending")
+                                })
                             } catch (_: Throwable) {
                             }
                         }.show()
