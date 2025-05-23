@@ -53,6 +53,28 @@ public interface Backend {
     String getVersion() throws Exception;
 
     /**
+     * Determines whether the service is running in always-on VPN mode.
+     * In this mode the system ensures that the service is always running by restarting it when necessary,
+     * e.g. after reboot.
+     *
+     * @return A boolean indicating whether the service is running in always-on VPN mode.
+     * @throws Exception Exception raised while retrieving the always-on status.
+     */
+
+    boolean isAlwaysOn() throws Exception;
+
+    /**
+     * Determines whether the service is running in always-on VPN lockdown mode.
+     * In this mode the system ensures that the service is always running and that the apps
+     * aren't allowed to bypass the VPN.
+     *
+     * @return A boolean indicating whether the service is running in always-on VPN lockdown mode.
+     * @throws Exception Exception raised while retrieving the lockdown status.
+     */
+
+    boolean isLockdownEnabled() throws Exception;
+
+    /**
      * Set the state of a tunnel, updating it's configuration. If the tunnel is already up, config
      * may update the running configuration; config may be null when setting the tunnel down.
      *

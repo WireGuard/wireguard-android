@@ -189,6 +189,24 @@ public final class GoBackend implements Backend {
     }
 
     /**
+     * Determines if the service is running in always-on VPN mode.
+     * @return {@link boolean} whether the service is running in always-on VPN mode.
+     */
+    @Override
+    public boolean isAlwaysOn() throws ExecutionException, InterruptedException, TimeoutException {
+        return vpnService.get(0, TimeUnit.NANOSECONDS).isAlwaysOn();
+    }
+
+    /**
+     * Determines if the service is running in always-on VPN lockdown mode.
+     * @return {@link boolean} whether the service is running in always-on VPN lockdown mode.
+     */
+    @Override
+    public boolean isLockdownEnabled() throws ExecutionException, InterruptedException, TimeoutException {
+        return vpnService.get(0, TimeUnit.NANOSECONDS).isLockdownEnabled();
+    }
+
+    /**
      * Change the state of a given {@link Tunnel}, optionally applying a given {@link Config}.
      *
      * @param tunnel The tunnel to control the state of.

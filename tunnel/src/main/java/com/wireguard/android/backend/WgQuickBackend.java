@@ -109,6 +109,16 @@ public final class WgQuickBackend implements Backend {
         return output.get(0);
     }
 
+    @Override
+    public boolean isAlwaysOn() {
+        return false;
+    }
+
+    @Override
+    public boolean isLockdownEnabled() {
+        return false;
+    }
+
     public void setMultipleTunnels(final boolean on) {
         multipleTunnels = on;
     }
