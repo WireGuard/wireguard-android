@@ -8,15 +8,33 @@ import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.core.os.ParcelCompat
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
+import com.wireguard.android.BR
 import com.wireguard.config.BadConfigException
 import com.wireguard.config.Config
 import com.wireguard.config.Peer
 
-class ConfigProxy : Parcelable {
+class ConfigProxy : BaseObservable, Parcelable {
     val `interface`: InterfaceProxy
     val peers: ObservableList<PeerProxy> = ObservableArrayList()
+
+    @get:Bindable
+    var enableAutoDisconnect = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.enableAutoDisconnect)
+        }
+
+    @get:Bindable
+    var autoDisconnectNetworks: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.autoDisconnectNetworks)
+        }
+
 
     private constructor(parcel: Parcel) {
         `interface` = ParcelCompat.readParcelable(parcel, InterfaceProxy::class.java.classLoader, InterfaceProxy::class.java) ?: InterfaceProxy()
@@ -25,6 +43,8 @@ class ConfigProxy : Parcelable {
         } else {
             parcel.readTypedList(peers, PeerProxy.CREATOR)
         }
+        enableAutoDisconnect = ParcelCompat.readSerializable(parcel, Boolean::class.java.classLoader, Boolean::class.java) ?: false
+        autoDisconnectNetworks = ParcelCompat.readSerializable(parcel, String::class.java.classLoader, String::class.java) ?: String()
         peers.forEach { it.bind(this) }
     }
 
@@ -35,6 +55,8 @@ class ConfigProxy : Parcelable {
             peers.add(proxy)
             proxy.bind(this)
         }
+        enableAutoDisconnect = other.isAutoDisconnectEnabled
+        autoDisconnectNetworks = other.autoDisconnectNetworks
     }
 
     constructor() {
@@ -57,6 +79,8 @@ class ConfigProxy : Parcelable {
         return Config.Builder()
             .setInterface(`interface`.resolve())
             .addPeers(resolvedPeers)
+            .setAutoDisconnect(enableAutoDisconnect)
+            .setAutoDisconnectNetworks(autoDisconnectNetworks)
             .build()
     }
 
@@ -67,6 +91,8 @@ class ConfigProxy : Parcelable {
         } else {
             dest.writeTypedList(peers)
         }
+        dest.writeSerializable(enableAutoDisconnect)
+        dest.writeSerializable(autoDisconnectNetworks)
     }
 
     private class ConfigProxyCreator : Parcelable.Creator<ConfigProxy> {
