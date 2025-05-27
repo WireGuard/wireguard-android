@@ -10,8 +10,8 @@ fi
 ENVIRONMENT=$1
 
 # Validate the argument
-if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" && "$ENVIRONMENT" != "dc" ]]; then
-    echo "Error: Argument must be 'staging' or 'production' or 'local' or 'dc'."
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "local" && "$ENVIRONMENT" != "dc" && "$ENVIRONMENT" != "beta" ]]; then
+    echo "Error: Argument must be 'staging' or 'production' or 'local' or 'dc' or 'beta'."
     exit 1
 fi
 
@@ -51,4 +51,14 @@ elif [ "$ENVIRONMENT" = "dc" ]; then
 
     echo "dc" > ./environments/current_environment
     echo "Done"
+
+elif [ "$ENVIRONMENT" = "beta" ]; then
+    echo "Changing to the Beta environment..."
+    cp ./environments/beta/AndroidManifest.xml ./ui/src/main/AndroidManifest.xml
+    cp ./environments/beta/Config.kt ./ui/src/main/java/com/jimberisolation/android/configStore
+    cp ./environments/beta/msal_config.json ./ui/src/main/res/raw
+
+    echo "beta" > ./environments/current_environment
+    echo "Done"
+
 fi

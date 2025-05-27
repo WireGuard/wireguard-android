@@ -76,6 +76,10 @@ android {
                         applicationIdSuffix = ".dc"
                         versionNameSuffix = "-dc"
                     }
+                    "beta" -> {
+                        applicationIdSuffix = ".beta"
+                        versionNameSuffix = "-beta"
+                    }
                 }
             }
         }
