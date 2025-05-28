@@ -52,33 +52,46 @@ class QuickTileService : TileService() {
     }
 
     override fun onClick() {
-        when (val tunnel = tunnel) {
-            null -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    startActivityAndCollapse(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
-                } else {
-                    @Suppress("DEPRECATION")
-                    startActivityAndCollapse(intent)
+        applicationScope.launch {
+            when (val tunnel = tunnel) {
+                null -> {
+                    Log.d(TAG, "No tunnel set, so launching main activity")
+                    val intent = Intent(this@QuickTileService, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        startActivityAndCollapse(PendingIntent.getActivity(this@QuickTileService, 0, intent, PendingIntent.FLAG_IMMUTABLE))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        startActivityAndCollapse(intent)
+                    }
                 }
-            }
-            else -> {
-                unlockAndRun {
-                    applicationScope.launch {
-                        try {
-                            tunnel.setStateAsync(Tunnel.State.TOGGLE)
-                            updateTile()
-                        } catch (_: Throwable) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !Settings.canDrawOverlays(this@QuickTileService)) {
-                                val permissionIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-                                permissionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivityAndCollapse(PendingIntent.getActivity(this@QuickTileService, 0, permissionIntent, PendingIntent.FLAG_IMMUTABLE))
-                                return@launch
+
+                else -> {
+                    unlockAndRun {
+                        applicationScope.launch {
+                            try {
+                                tunnel.setStateAsync(Tunnel.State.TOGGLE)
+                                updateTile()
+                            } catch (e: Throwable) {
+                                Log.d(TAG, "Failed to set state, so falling back", e)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !Settings.canDrawOverlays(this@QuickTileService)) {
+                                    Log.d(TAG, "Need overlay permissions")
+                                    val permissionIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                                    permissionIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivityAndCollapse(
+                                        PendingIntent.getActivity(
+                                            this@QuickTileService,
+                                            0,
+                                            permissionIntent,
+                                            PendingIntent.FLAG_IMMUTABLE
+                                        )
+                                    )
+                                    return@launch
+                                }
+                                val toggleIntent = Intent(this@QuickTileService, TunnelToggleActivity::class.java)
+                                toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(toggleIntent)
                             }
-                            val toggleIntent = Intent(this@QuickTileService, TunnelToggleActivity::class.java)
-                            toggleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(toggleIntent)
                         }
                     }
                 }
