@@ -80,7 +80,7 @@ class QrCodeFromFileScanner(
                 scanBitmapForResult(originalBitmap).also {
                     Log.d(TAG, "Found result in original image")
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e(TAG, "Original image scan finished with error: $e, will try downscaled image")
                 val scaleBitmap = downscaleBitmap(originalBitmap, 500)
                 scanBitmapForResult(originalBitmap).also { scaleBitmap.recycle() }
