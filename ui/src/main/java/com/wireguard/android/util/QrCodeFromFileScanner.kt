@@ -29,7 +29,6 @@ class QrCodeFromFileScanner(
     private val contentResolver: ContentResolver,
     private val reader: Reader,
 ) {
-
     private fun scanBitmapForResult(source: Bitmap): Result {
         val width = source.width
         val height = source.height
@@ -40,55 +39,28 @@ class QrCodeFromFileScanner(
         return reader.decode(bBitmap, mapOf(DecodeHintType.TRY_HARDER to true))
     }
 
-    private fun downscaleBitmap(source: Bitmap, scaledSize: Int): Bitmap {
-
-        val originalWidth = source.width
-        val originalHeight = source.height
-
-        var newWidth = -1
-        var newHeight = -1
-        val multFactor: Float
-
-        when {
-            originalHeight > originalWidth -> {
-                newHeight = scaledSize
-                multFactor = originalWidth.toFloat() / originalHeight.toFloat()
-                newWidth = (newHeight * multFactor).toInt()
-            }
-
-            originalWidth > originalHeight -> {
-                newWidth = scaledSize
-                multFactor = originalHeight.toFloat() / originalWidth.toFloat()
-                newHeight = (newWidth * multFactor).toInt()
-            }
-
-            originalHeight == originalWidth -> {
-                newHeight = scaledSize
-                newWidth = scaledSize
-            }
-        }
-        return Bitmap.createScaledBitmap(source, newWidth, newHeight, false)
-    }
-
     private fun doScan(data: Uri): Result {
         Log.d(TAG, "Starting to scan an image: $data")
         contentResolver.openInputStream(data).use { inputStream ->
-            val originalBitmap = BitmapFactory.decodeStream(inputStream)
-                ?: throw IllegalArgumentException("Can't decode stream to Bitmap")
-
-            return try {
-                scanBitmapForResult(originalBitmap).also {
-                    Log.d(TAG, "Found result in original image")
+            var bitmap: Bitmap? = null
+            var firstException: Throwable? = null
+            for (i in arrayOf(1, 2, 4, 8, 16, 32, 64, 128)) {
+                try {
+                    val options = BitmapFactory.Options()
+                    options.inSampleSize = i
+                    bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+                        ?: throw IllegalArgumentException("Can't decode stream for bitmap")
+                    return scanBitmapForResult(bitmap)
+                } catch (e: Throwable) {
+                    bitmap?.recycle()
+                    System.gc()
+                    Log.e(TAG, "Original image scan at scale factor $i finished with error: $e")
+                    if (firstException == null)
+                        firstException = e
                 }
-            } catch (e: Throwable) {
-                Log.e(TAG, "Original image scan finished with error: $e, will try downscaled image")
-                val scaleBitmap = downscaleBitmap(originalBitmap, 500)
-                scanBitmapForResult(originalBitmap).also { scaleBitmap.recycle() }
-            } finally {
-                originalBitmap.recycle()
             }
+            throw Exception(firstException)
         }
-
     }
 
     /**
