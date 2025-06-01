@@ -18,7 +18,7 @@ android {
     }
     namespace = "${pkg}.tunnel"
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
     }
     externalNativeBuild {
         cmake {
