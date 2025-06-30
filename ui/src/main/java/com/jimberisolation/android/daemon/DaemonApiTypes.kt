@@ -19,3 +19,9 @@ data class CreateDaemonApiRequest(
     val publicKey: String,
     val name: String
 )
+
+data class GetDaemonApiResult(
+    val id: Int,
+    val name: String,
+    val approvalStatus: String,
+)

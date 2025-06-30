@@ -8,6 +8,7 @@ import com.jimberisolation.android.authentication.refreshToken
 import com.jimberisolation.android.daemon.CreateDaemonApiRequest
 import com.jimberisolation.android.daemon.CreateDaemonApiResult
 import com.jimberisolation.android.daemon.DeleteDaemonApiResult
+import com.jimberisolation.android.daemon.GetDaemonApiResult
 import com.jimberisolation.android.networkcontroller.NetworkControllerApiResult
 import com.jimberisolation.android.util.SingleLiveEvent
 import kotlinx.coroutines.runBlocking
@@ -121,6 +122,9 @@ interface ApiService {
 
     @GET("companies/{company}/daemons-mobile/{daemonId}/nc-information")
     suspend fun getCloudControllerInformation(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<NetworkControllerApiResult>
+
+    @GET("companies/{company}/daemons-mobile/{daemonId}")
+    suspend fun getDaemonInformation(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<GetDaemonApiResult>
 
 }
 

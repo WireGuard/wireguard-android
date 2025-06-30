@@ -69,3 +69,31 @@ suspend fun deleteDaemon(daemonId: Number, company: String, sk: String): Result<
         Result.failure(e)
     }
 }
+
+suspend fun getDaemonInfo(daemonId: Number, company: String, sk: String): Result<DaemonInfo> {
+    return try {
+        val timestampInSeconds = (System.currentTimeMillis() / 1000)
+        val timestampBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(timestampInSeconds).array()
+
+        val authorizationHeader = generateSignedMessage(timestampBuffer, sk);
+
+        val response = ApiClient.apiService.getDaemonInformation(daemonId, company, authorizationHeader)
+        if (!response.isSuccessful) {
+            val errorBody = response.errorBody()?.string()
+            errorBody?.let {
+                val jsonObject = JSONObject(it)
+                val message = jsonObject.getString("message")
+
+                return Result.failure(Exception(message))
+            }
+        }
+
+        val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
+        val daemon =  DaemonInfo(daemonId = result.id, name = result.name, approvalStatus = result.approvalStatus)
+
+        Result.success(daemon)
+    } catch (e: Exception) {
+        Log.e("CREATE_DAEMON", "ERROR IN DELETE DAEMON", e)
+        Result.failure(e)
+    }
+}
