@@ -24,6 +24,6 @@ data class NetworkIsolationDaemon(
 
 data class DaemonInfo(
     val daemonId: Int,
-    val approvalStatus: String,
+    val isApproved: Boolean,
     val name: String
 )

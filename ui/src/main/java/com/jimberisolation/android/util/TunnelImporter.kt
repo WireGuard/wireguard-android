@@ -9,6 +9,7 @@ import android.util.Log
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.configStore.CreateTunnelData
+import com.jimberisolation.android.daemon.getDaemonInfo
 import com.jimberisolation.android.model.ObservableTunnel
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.config.BadConfigException
@@ -36,6 +37,10 @@ object TunnelImporter {
             val createTunnelData = CreateTunnelData(daemonName, daemonId, userId!!);
             Application.getTunnelManager().create(createTunnelData, config)
 
+            val kp = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
+            val daemonInfo = getDaemonInfo(daemonId, companyName, kp!!.baseEncodedSkEd25519).getOrThrow();
+
+            createdTunnel.setIsApproved(daemonInfo.isApproved)
         } catch (e: Throwable) {
             onTunnelImportFinished(emptyList(), listOf(e), messageCallback)
         }

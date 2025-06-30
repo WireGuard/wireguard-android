@@ -19,6 +19,7 @@ import com.jimberisolation.android.activity.BaseActivity
 import com.jimberisolation.android.activity.BaseActivity.OnSelectedTunnelChangedListener
 import com.jimberisolation.android.backend.GoBackend
 import com.jimberisolation.android.backend.Tunnel
+import com.jimberisolation.android.daemon.getDaemonInfo
 import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
@@ -75,6 +76,31 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         // Use lifecycleScope to launch a coroutine and handle the async call
         activity.lifecycleScope.launch {
             try {
+                if(!tunnel.isApproved()) {
+                    val storageTunnel = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(tunnel.getDaemonId())
+
+                    val result = getDaemonInfo(storageTunnel!!.daemonId, storageTunnel.companyName, storageTunnel.baseEncodedSkEd25519).getOrNull()
+                    if(result == null) {
+                        Toast.makeText(activity, "The daemon is still not approved, could not fetch data", Toast.LENGTH_SHORT).show()
+
+                        // Hack to avoid blocked button??
+                        tunnel.setStateAsync(Tunnel.State.UP)
+                        tunnel.setStateAsync(Tunnel.State.DOWN)
+                        return@launch;
+                    }
+
+                    if(!result.isApproved) {
+                        Toast.makeText(activity, "The daemon is still not approved, no connection is possible", Toast.LENGTH_SHORT).show()
+
+                        // Hack to avoid blocked button??
+                        tunnel.setStateAsync(Tunnel.State.UP)
+                        tunnel.setStateAsync(Tunnel.State.DOWN)
+                        return@launch;
+                    }
+
+                    tunnel.setIsApproved(true)
+                }
+
                 if(isChecked) {
                     // Await the result of the asynchronous configuration
                     val currentConfig = tunnel.getConfigAsync()
@@ -90,18 +116,17 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                     }
 
                     val result = networkController.getOrNull();
-                    print(result)
 
                     val newPublicIp = result?.endpointAddress;
                     val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
-                    val newAllowedIps = result?.allowedIps
-                    val newDNSServer = result?.ipAddress
+                    val newAllowedIps = result.allowedIps
+                    val newDNSServer = result.ipAddress
 
                     // Build the replacement strings
                     val newPublicKeyLine = "PublicKey = $newPublicKey"
-                    val newAllowedIpsLine = "AllowedIPs = ${newAllowedIps.toString()}"
+                    val newAllowedIpsLine = "AllowedIPs = $newAllowedIps"
                     val newEndpointLine = "Endpoint = ${newPublicIp.toString()}"
-                    val newDNSServerLine = "DNS = ${newDNSServer.toString()}"
+                    val newDNSServerLine = "DNS = $newDNSServer"
 
                     // Remove old lines completely
                     var updatedConfigString = currentConfigString

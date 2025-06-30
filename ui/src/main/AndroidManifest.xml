@@ -40,9 +40,10 @@
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Jimber SASE"
+        android:label="Local Jimber SASE"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
             android:name=".activity.TunnelToggleActivity"
@@ -74,8 +75,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.jimberisolation.android"
-                    android:path="/HZxcpyHnYFiwBvLl/vVFCzUOYzU="
+                    android:host="com.jimberisolation.android.debug"
+                    android:path="/MCB8+E3n89VFqq8DF3GqGdoMllI="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

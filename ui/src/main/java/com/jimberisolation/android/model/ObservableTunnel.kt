@@ -28,6 +28,8 @@ class ObservableTunnel internal constructor(
     config: Config?,
     state: Tunnel.State
 ) : BaseObservable(), Keyed<String>, Tunnel {
+    private var isApproved = false;
+
     override val key
         get() = name
 
@@ -39,6 +41,14 @@ class ObservableTunnel internal constructor(
 
     @Bindable
     fun getUserId() = userId
+
+    @Bindable
+    fun isApproved() = isApproved
+
+    @Bindable
+    fun setIsApproved(isApproved: Boolean) {
+        this.isApproved = isApproved
+    }
 
     suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
         if (name != this@ObservableTunnel.name)

@@ -89,7 +89,13 @@ suspend fun getDaemonInfo(daemonId: Number, company: String, sk: String): Result
         }
 
         val result = response.body() ?: return Result.failure(NullPointerException("Response body is null"))
-        val daemon =  DaemonInfo(daemonId = result.id, name = result.name, approvalStatus = result.approvalStatus)
+
+        var isApproved = false;
+        if(result.approvalStatus == "approved") {
+            isApproved = true;
+        }
+
+        val daemon =  DaemonInfo(daemonId = result.id, name = result.name, isApproved = isApproved)
 
         Result.success(daemon)
     } catch (e: Exception) {
