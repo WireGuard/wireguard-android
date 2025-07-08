@@ -23,36 +23,16 @@
         android:key="sign_out"
         android:icon="@drawable/logout"/>
 
-    <com.jimberisolation.android.preference.ChangePublicIpPreference
-        android:key="change_public_ip"
-        android:singleLineTitle="false"
-        android:summary="Change Public IP of first tunnel" />
-
-    <com.jimberisolation.android.preference.ChangePublicKeyPreference
-        android:key="change_public_key"
-        android:singleLineTitle="false"
-        android:summary="Change Router Public Key of first tunnel" />
-
     <com.jimberisolation.android.preference.ClearCachePreference
         android:key="clear_cache"
         android:singleLineTitle="false"
         android:summary="Clear cache of app completely" />
-
-    <com.jimberisolation.android.preference.DeauthorizePreference
-        android:key="deauthorize"
-        android:singleLineTitle="false"
-        android:summary="Remove JWT tokens"
-        android:title="Remove refresh and authentication token" />
 
     <com.jimberisolation.android.preference.SharedStoragePreference
         android:key="get_shared_storage"
         android:singleLineTitle="false"
         android:summary="Get shared storage to clipboard" />
 
-    <com.jimberisolation.android.preference.TestingPreference
-        android:key="testing"
-        android:singleLineTitle="false"
-        android:summary="Testing purposes" />
 
 
 </androidx.preference.PreferenceScreen>
