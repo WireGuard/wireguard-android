@@ -42,6 +42,7 @@ import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.SignInParameters
 import com.microsoft.identity.client.exception.MsalException
 import getDeviceHostname
+import isValidMobileHostname
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import register
@@ -195,7 +196,6 @@ class SignInActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val companyName = userAuthenticationResult.getOrThrow().companyName
                 val userId = userAuthenticationResult.getOrThrow().userId
 
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
@@ -221,7 +221,7 @@ class SignInActivity : AppCompatActivity() {
                 val wireguardConfig = wireguardConfigResult.getOrThrow().configurationString
                 val daemonId = wireguardConfigResult.getOrThrow().daemonId
 
-                importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
+                importTunnelAndNavigate(wireguardConfig, daemonId)
             } catch (e: ApiException) {
                 Log.e("Authentication", "An error occurred", e)
                 val view = findViewById<View>(android.R.id.content) // or some other view in your layout
@@ -237,13 +237,13 @@ class SignInActivity : AppCompatActivity() {
         finish()
     }
 
-    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
+    private suspend fun importTunnelAndNavigate(configResult: String, daemonId: Int) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
 
         if(alreadyExistingTunnel == null) {
-            importTunnel(result, daemonId) { }
+            importTunnel(configResult, daemonId, daemonName!!) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)
@@ -266,7 +266,6 @@ class SignInActivity : AppCompatActivity() {
                         return@launch
                     }
 
-                    val companyName = userAuthenticationResult.getOrThrow().companyName
                     val userId = userAuthenticationResult.getOrThrow().userId
                     val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
 
@@ -289,7 +288,7 @@ class SignInActivity : AppCompatActivity() {
 
                     Log.d("Configuration", wireguardConfig)
 
-                    importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
+                    importTunnelAndNavigate(wireguardConfig, daemonId)
                 }
             }
 
@@ -358,11 +357,13 @@ class SignInActivity : AppCompatActivity() {
         btnSubmit.setOnClickListener {
             val name = nameInput.text.toString().trim()
 
-            if (name.isNotEmpty()) {
+            val (isValid, errorMessage) = isValidMobileHostname(name)
+
+            if (isValid) {
                 result.complete(name)  // Pass the entered name to the result
                 dialog.dismiss()
             } else {
-                Toast.makeText(this, "Please enter a valid name.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
 

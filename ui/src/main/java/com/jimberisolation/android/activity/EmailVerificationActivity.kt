@@ -29,6 +29,7 @@ import com.jimberisolation.android.authentication.verifyEmailWithToken
 import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.TunnelImporter.importTunnel
 import getDeviceHostname
+import isValidMobileHostname
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -164,7 +165,6 @@ class EmailVerificationActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val companyName = userAuthenticationResult.companyName
                 val userId = userAuthenticationResult.userId
 
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
@@ -192,7 +192,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig, result.daemonId, companyName)
+                importTunnelAndNavigate(wireguardConfig, result.daemonId)
 
             } catch (e: Exception) {
                 Log.e("Authentication", "An error occurred", e)
@@ -210,12 +210,12 @@ class EmailVerificationActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
         if(alreadyExistingTunnel == null) {
-            importTunnel(result, daemonId) { }
+            importTunnel(result, daemonId, daemonName!!) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)
@@ -260,11 +260,13 @@ class EmailVerificationActivity : AppCompatActivity() {
         btnSubmit.setOnClickListener {
             val name = nameInput.text.toString().trim()
 
-            if (name.isNotEmpty()) {
+            val (isValid, errorMessage) = isValidMobileHostname(name)
+
+            if (isValid) {
                 result.complete(name)  // Pass the entered name to the result
                 dialog.dismiss()
             } else {
-                Toast.makeText(this, "Please enter a valid name.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
 

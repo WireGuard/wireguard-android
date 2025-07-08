@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets
 import kotlin.math.min
 
 object TunnelImporter {
-    suspend fun importTunnel(configText: String, daemonId: Int, messageCallback: (CharSequence) -> Unit) {
+    suspend fun importTunnel(configText: String, daemonId: Int, daemonName: String, messageCallback: (CharSequence) -> Unit) {
         try {
             val config = try {
                 Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
@@ -32,31 +32,13 @@ object TunnelImporter {
             }
 
             val userId = SharedStorage.getInstance().getCurrentUser()?.id;
-            val companyName = getCompanyName(configText) ?: throw IllegalArgumentException("Invalid config - company name is not present")
 
-
-            val sanitizedName = buildName(companyName, daemonId.toString())
-
-            val createTunnelData = CreateTunnelData(sanitizedName, daemonId, userId!!);
+            val createTunnelData = CreateTunnelData(daemonName, daemonId, userId!!);
             Application.getTunnelManager().create(createTunnelData, config)
 
         } catch (e: Throwable) {
-            onTunnelImportFinished(emptyList(), listOf<Throwable>(e), messageCallback)
+            onTunnelImportFinished(emptyList(), listOf(e), messageCallback)
         }
-    }
-
-    private fun buildName(companyName: String, daemonId: String): String {
-        val suffix = "-$daemonId"
-        return companyName.substring(0, min(companyName.length.toDouble(), (15 - suffix.length).toDouble()).toInt()) + suffix
-    }
-
-    private fun getCompanyName(text: String) : String? {
-        val pattern = "#company (.+)".toRegex()
-
-        val matchResult = pattern.find(text)
-        matchResult?.groupValues?.get(1)?.let {
-            return it
-        } ?: return null;
     }
 
     private fun onTunnelImportFinished(tunnels: List<ObservableTunnel>, throwables: Collection<Throwable>, messageCallback: (CharSequence) -> Unit) {
