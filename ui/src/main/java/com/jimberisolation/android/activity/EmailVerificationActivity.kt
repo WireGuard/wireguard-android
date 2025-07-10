@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -121,20 +122,30 @@ class EmailVerificationActivity : AppCompatActivity() {
         }
 
         for (i in tokenInputs.indices) {
-            tokenInputs[i].addTextChangedListener(object : TextWatcher {
+            val currentEditText = tokenInputs[i]
+
+            currentEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    if (s?.length == 1) {
-                        if (i < tokenInputs.size - 1) {
-                            tokenInputs[i + 1].requestFocus()  // Move to next input field
-                        }
-                    } else if (s?.length == 0 && i > 0) {
-                        tokenInputs[i - 1].requestFocus()  // Move to previous input field
+                    if (s?.length == 1 && i < tokenInputs.size - 1) {
+                        tokenInputs[i + 1].requestFocus()
                     }
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
+
+            currentEditText.setOnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
+                    if (currentEditText.text.isEmpty() && i > 0) {
+                        val previousEditText = tokenInputs[i - 1]
+                        previousEditText.requestFocus()
+                        previousEditText.text?.clear()
+                        return@setOnKeyListener true
+                    }
+                }
+                false
+            }
         }
 
     }
