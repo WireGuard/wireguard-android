@@ -50,7 +50,7 @@ class AppListDialogFragment : DialogFragment() {
                         val packageName = it.packageName
                         val appInfo = it.applicationInfo
                         val appData =
-                            ApplicationData(appInfo.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
+                            ApplicationData(appInfo!!.loadIcon(pm), appInfo.loadLabel(pm).toString(), packageName, currentlySelectedApps.contains(packageName))
                         applicationData.add(appData)
                         appData.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
                             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
