@@ -1,17 +1,20 @@
 package com.jimberisolation.android.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.jimberisolation.android.R
 import com.jimberisolation.android.authentication.sendVerificationEmail
@@ -38,7 +41,9 @@ class EmailRegistrationActivity : AppCompatActivity() {
         }
 
         val emailInput = findViewById<EditText>(R.id.email_input)
-        val submitButton = findViewById<View>(R.id.proceed)
+        val submitButton = findViewById<Button>(R.id.proceed)
+        submitButton.isEnabled = false;
+        submitButton.setBackgroundColor(Color.GRAY)
 
         emailInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -48,6 +53,12 @@ class EmailRegistrationActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val email = s?.toString() ?: ""
                 val isValid = isValidEmail(email)
+
+                submitButton.setBackgroundColor(
+                    if (isValid) ContextCompat.getColor(this@EmailRegistrationActivity, R.color.jimber_primary) else Color.GRAY
+                )
+
+
                 submitButton.isEnabled = isValid
             }
         })
