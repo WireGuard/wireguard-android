@@ -118,7 +118,7 @@ class Application : android.app.Application() {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
         }
-        Updater.monitorForUpdates()
+        // Updater.monitorForUpdates()
 
         StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
         val policy = ThreadPolicy.Builder().permitAll().build()

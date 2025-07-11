@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.SYSTEM_ALERT_WINDOW"
         android:minSdkVersion="34" />
@@ -41,7 +40,7 @@
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Beta Jimber SASE"
+        android:label="Jimber SASE"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -75,8 +74,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.jimberisolation.android.beta"
-                    android:path="/BAhPO5r6+gArwttJYkjO2isMw1A="
+                    android:host="com.jimberisolation.android"
+                    android:path="/HZxcpyHnYFiwBvLl/vVFCzUOYzU="
                     android:scheme="msauth" />
             </intent-filter>
         </activity>
