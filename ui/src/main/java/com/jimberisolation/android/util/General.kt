@@ -41,4 +41,7 @@ fun isValidMobileHostname(hostname: String): Pair<Boolean, String?> {
     return true to null
 }
 
-
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", RegexOption.IGNORE_CASE)
+    return emailRegex.matches(email)
+}

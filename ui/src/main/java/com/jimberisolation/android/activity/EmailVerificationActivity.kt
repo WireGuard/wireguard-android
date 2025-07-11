@@ -109,8 +109,7 @@ class EmailVerificationActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
                 val verifyResult = verifyEmailWithToken(AuthenticationWithVerificationCodeApiRequest(email.toString(), verificationCode.toInt()))
                 if(verifyResult.isFailure) {
-                    val verifyException = verifyResult.exceptionOrNull();
-                    errorTextView.text = verifyException?.message
+                    errorTextView.text = "Unauthorized"
 
                     return@launch;
                 }

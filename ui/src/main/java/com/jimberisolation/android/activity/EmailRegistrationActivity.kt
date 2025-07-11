@@ -2,6 +2,8 @@ package com.jimberisolation.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.jimberisolation.android.R
 import com.jimberisolation.android.authentication.sendVerificationEmail
+import isValidEmail
 import kotlinx.coroutines.launch
 
 class EmailRegistrationActivity : AppCompatActivity() {
@@ -34,9 +37,23 @@ class EmailRegistrationActivity : AppCompatActivity() {
             handleBackPressed()
         }
 
-        findViewById<View>(R.id.proceed)?.setOnClickListener {
-            val editText = findViewById<EditText>(R.id.email_input)
-            val emailAddress = editText.text.toString()
+        val emailInput = findViewById<EditText>(R.id.email_input)
+        val submitButton = findViewById<View>(R.id.proceed)
+
+        emailInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val email = s?.toString() ?: ""
+                val isValid = isValidEmail(email)
+                submitButton.isEnabled = isValid
+            }
+        })
+
+        submitButton?.setOnClickListener {
+            val emailAddress = emailInput.text.toString()
 
             lifecycleScope.launch {
                 sendVerificationEmail(emailAddress)
