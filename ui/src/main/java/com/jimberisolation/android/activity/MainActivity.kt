@@ -4,21 +4,34 @@
  */
 package com.jimberisolation.android.activity
 
-import android.content.Intent
 import android.os.Bundle
+import android.content.Intent
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBar
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import com.ionspin.kotlin.crypto.LibsodiumInitializer
+import com.jimberisolation.android.Application
+import com.jimberisolation.android.Application.Companion.getTunnelManager
 import com.jimberisolation.android.R
 import com.jimberisolation.android.fragment.TunnelDetailFragment
 import com.jimberisolation.android.fragment.TunnelEditorFragment
+import com.jimberisolation.android.fragment.TunnelListFragment
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.model.TunnelManager
+import com.jimberisolation.android.storage.SharedStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
@@ -29,6 +42,9 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     private var actionBar: ActionBar? = null
     private var isTwoPaneLayout = false
     private var backPressedCallback: OnBackPressedCallback? = null
+
+    private lateinit var spinner: ProgressBar
+    private lateinit var detailContainer: FragmentContainerView
 
     private fun handleBackPressed() {
         val backStackEntries = supportFragmentManager.backStackEntryCount
@@ -58,15 +74,34 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
+        var isInitialized = false;
+        LibsodiumInitializer.initializeWithCallback {
+            isInitialized = true;
+        }
+
+        while(!isInitialized) { }
+
+        spinner = findViewById(R.id.loading_spinner)
+        detailContainer = findViewById(R.id.detail_container)
+
         actionBar = supportActionBar
 
-        getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar()?.setCustomView(R.layout.jimber_action_bar);
+        toggleLoading(true);
+
+        SharedStorage.initialize(this)
+
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM;
+        supportActionBar?.setCustomView(R.layout.jimber_action_bar);
 
         isTwoPaneLayout = findViewById<View?>(R.id.master_detail_wrapper) != null
         supportFragmentManager.addOnBackStackChangedListener(this)
         backPressedCallback = onBackPressedDispatcher.addCallback(this) { handleBackPressed() }
         onBackStackChanged()
+
+        lifecycleScope.launch {
+            startScreen()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -101,6 +136,7 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         }
     }
 
+
     override fun onSelectedTunnelChanged(
         oldTunnel: ObservableTunnel?,
         newTunnel: ObservableTunnel?
@@ -129,5 +165,45 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
             }
         }
         return true
+    }
+
+    private suspend fun startScreen() {
+        toggleLoading(false)
+
+        val userId = SharedStorage.getInstance().getCurrentUser()?.id
+        if (userId == null) {
+            withContext(Dispatchers.Main) {
+                startActivity(Intent(this@MainActivity, SignInActivity::class.java))
+                finish()
+            }
+            return
+        }
+
+        val tunnelManager = getTunnelManager();
+        val tunnels = tunnelManager.getTunnelsOfUser();
+
+        if (tunnels.isEmpty()) {
+            withContext(Dispatchers.Main) {
+                startActivity(Intent(this@MainActivity, SignInActivity::class.java))
+                finish()
+            }
+            return
+        }
+
+        withContext(Dispatchers.Main) {
+            supportFragmentManager.commit {
+                replace(R.id.detail_container, TunnelListFragment())
+            }
+        }
+    }
+
+    private fun toggleLoading(isLoading: Boolean) {
+        if (isLoading) {
+            spinner.visibility = View.VISIBLE
+            detailContainer.visibility = View.GONE
+        } else {
+            spinner.visibility = View.GONE
+            detailContainer.visibility = View.VISIBLE
+        }
     }
 }

@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.activity.BaseActivity
@@ -23,8 +22,14 @@ import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.TunnelDetailFragmentBinding
 import com.jimberisolation.android.databinding.TunnelListItemBinding
 import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.android.networkcontroller.getDaemonConnectionData
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.ErrorMessages
+import com.jimberisolation.android.util.parseEdPublicKeyToCurveX25519
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Base class for fragments that need to know the currently-selected tunnel. Only does anything when
@@ -58,34 +63,81 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
         super.onDetach()
     }
 
-    fun setTunnelState(view: View, checked: Boolean) {
+    fun setTunnelState(view: View, isChecked: Boolean) {
         val tunnel = when (val binding = DataBindingUtil.findBinding<ViewDataBinding>(view)) {
             is TunnelDetailFragmentBinding -> binding.tunnel
             is TunnelListItemBinding -> binding.item
             else -> return
         } ?: return
+
         val activity = activity ?: return
+
+        // Use lifecycleScope to launch a coroutine and handle the async call
         activity.lifecycleScope.launch {
-            if (Application.getBackend() is GoBackend) {
-                try {
-                    val intent = GoBackend.VpnService.prepare(activity)
-                    if (intent != null) {
-                        pendingTunnel = tunnel
-                        pendingTunnelUp = checked
-                        permissionActivityResultLauncher.launch(intent)
-                        return@launch
+            try {
+                if(isChecked) {
+                    // Await the result of the asynchronous configuration
+                    val currentConfig = tunnel.getConfigAsync()
+                    val currentConfigString = currentConfig.toWgQuickString();
+
+                    val daemonId = tunnel.getDaemonId()
+                    val kp = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
+
+                    val networkController = getDaemonConnectionData(daemonId, kp!!.companyName, kp.baseEncodedSkEd25519)
+                    if(!networkController.isSuccess) {
+                        tunnel.setStateAsync(Tunnel.State.DOWN)
+                        return@launch;
                     }
-                } catch (e: Throwable) {
-                    val message = activity.getString(R.string.error_prepare, ErrorMessages[e])
-                    Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-                        .setAnchorView(view.findViewById(R.id.create_fab))
-                        .show()
-                    Log.e(TAG, message, e)
+
+                    val result = networkController.getOrNull();
+                    print(result)
+
+                    val newPublicIp = result?.endpointAddress;
+                    val newPublicKey = parseEdPublicKeyToCurveX25519(result!!.routerPublicKey);
+                    val newAllowedIps = result?.allowedIps
+                    val newDNSServer = result?.ipAddress
+
+                    // Build the replacement strings
+                    val newPublicKeyLine = "PublicKey = $newPublicKey"
+                    val newAllowedIpsLine = "AllowedIPs = ${newAllowedIps.toString()}"
+                    val newEndpointLine = "Endpoint = ${newPublicIp.toString()}"
+                    val newDNSServerLine = "DNS = ${newDNSServer.toString()}"
+
+                    // Remove old lines completely
+                    var updatedConfigString = currentConfigString
+                        .replace(Regex("(?m)^\\s*PublicKey\\s*=.*$", RegexOption.MULTILINE), newPublicKeyLine)
+                        .replace(Regex("(?m)^\\s*AllowedIPs\\s*=.*$", RegexOption.MULTILINE), newAllowedIpsLine)
+                        .replace(Regex("(?m)^\\s*DNS\\s*=.*$", RegexOption.MULTILINE), newDNSServerLine)
+                        .replace(Regex("(?m)^\\s*Endpoint\\s*=.*$", RegexOption.MULTILINE), "$newEndpointLine:51820")
+
+                    val updatedConfig = Config.parse(ByteArrayInputStream(updatedConfigString.toByteArray(StandardCharsets.UTF_8)))
+                    tunnel.setConfigAsync(updatedConfig);
                 }
+
+                // Proceed with permission handling if GoBackend is being used
+                if (Application.getBackend() is GoBackend) {
+                    try {
+                        val intent = GoBackend.VpnService.prepare(activity)
+                        if (intent != null) {
+                            pendingTunnel = tunnel
+                            pendingTunnelUp = isChecked
+                            permissionActivityResultLauncher.launch(intent)
+                            return@launch
+                        }
+                    } catch (e: Throwable) {
+                        val message = activity.getString(R.string.error_prepare, ErrorMessages[e])
+                        Log.e(TAG, message, e)
+                    }
+                }
+
+                // Set the tunnel state with permissions
+                setTunnelStateWithPermissionsResult(tunnel, isChecked)
+            } catch (e: Throwable) {
+                Log.e(TAG, "Failed to get or update tunnel config", e)
             }
-            setTunnelStateWithPermissionsResult(tunnel, checked)
         }
     }
+
 
     private fun setTunnelStateWithPermissionsResult(tunnel: ObservableTunnel, checked: Boolean) {
         val activity = activity ?: return
@@ -98,9 +150,6 @@ abstract class BaseFragment : Fragment(), OnSelectedTunnelChangedListener {
                 val message = activity.getString(messageResId, error)
                 val view = view
                 if (view != null)
-                    Snackbar.make(view, message, Snackbar.LENGTH_LONG)
-                        .setAnchorView(view.findViewById(R.id.create_fab))
-                        .show()
                 else
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message, e)

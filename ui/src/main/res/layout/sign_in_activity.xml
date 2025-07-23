@@ -1,0 +1,72 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/base_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                style="@style/LogoStyle"
+                android:layout_width="280dp"
+                android:layout_height="111dp"
+                android:src="@drawable/jimber_logo_full" />
+
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/jimber_primary"
+                android:textAlignment="center"
+                android:layout_width="230dp"
+                android:layout_height="40dp"
+                android:text="@string/sign_in_to_your_account"
+                android:textSize="20sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/google_sign_in"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:text="@string/sign_in_with_google"
+                android:layout_margin="8dp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/jimber_primary"
+                android:drawableLeft="@drawable/ic_google_login"
+                app:cornerRadius="4dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/microsoft_sign_in"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:text="@string/sign_in_with_microsoft"
+                android:layout_margin="8dp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/jimber_primary"
+                android:drawableLeft="@drawable/ic_microsoft_login"
+                app:cornerRadius="4dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/email_sign_in"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:text="@string/sign_in_with_email"
+                android:layout_margin="8dp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/jimber_primary"
+                android:drawableLeft="@drawable/ic_email_login"
+                app:cornerRadius="4dp"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

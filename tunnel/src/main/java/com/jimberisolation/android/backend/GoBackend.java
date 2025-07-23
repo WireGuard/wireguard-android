@@ -15,12 +15,12 @@ import android.util.Log;
 import com.jimberisolation.android.backend.BackendException.Reason;
 import com.jimberisolation.android.backend.Tunnel.State;
 import com.jimberisolation.android.util.SharedLibraryLoader;
-import com.wireguard.config.Config;
-import com.wireguard.config.InetEndpoint;
-import com.wireguard.config.InetNetwork;
-import com.wireguard.config.Peer;
-import com.wireguard.crypto.Key;
-import com.wireguard.crypto.KeyFormatException;
+import com.jimberisolation.config.Config;
+import com.jimberisolation.config.InetEndpoint;
+import com.jimberisolation.config.InetNetwork;
+import com.jimberisolation.config.Peer;
+import com.jimberisolation.crypto.Key;
+import com.jimberisolation.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;

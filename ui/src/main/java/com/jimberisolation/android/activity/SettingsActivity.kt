@@ -4,11 +4,9 @@
  */
 package com.jimberisolation.android.activity
 
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.service.quicksettings.TileService
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
@@ -19,7 +17,8 @@ import com.jimberisolation.android.Application
 import com.jimberisolation.android.QuickTileService
 import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.WgQuickBackend
-import com.jimberisolation.android.preference.PreferencesPreferenceDataStore
+import com.jimberisolation.android.preference.PreferenceDataStore
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.util.AdminKnobs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,9 +47,15 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
-            preferenceManager.preferenceDataStore = PreferencesPreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
+            preferenceManager.preferenceDataStore = PreferenceDataStore(lifecycleScope, Application.getPreferencesDataStore())
             addPreferencesFromResource(R.xml.preferences)
             preferenceScreen.initialExpandedChildrenCount = 5
+
+            val signOutPreference = findPreference<Preference>("sign_out")
+
+            val loggedIn = SharedStorage.getInstance().getCurrentUser() != null
+
+            signOutPreference?.isVisible = loggedIn
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || QuickTileService.isAdded) {
                 val quickTile = preferenceManager.findPreference<Preference>("quick_tile")

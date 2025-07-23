@@ -1,15 +1,16 @@
 /*
- * Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.config;
+package com.jimberisolation.config;
 
-import com.wireguard.config.BadConfigException.Location;
-import com.wireguard.config.BadConfigException.Reason;
-import com.wireguard.config.BadConfigException.Section;
-import com.wireguard.crypto.Key;
-import com.wireguard.crypto.KeyFormatException;
+import com.jimberisolation.config.Attribute;
+import com.jimberisolation.config.BadConfigException.Location;
+import com.jimberisolation.config.BadConfigException.Reason;
+import com.jimberisolation.config.BadConfigException.Section;
+import com.jimberisolation.crypto.Key;
+import com.jimberisolation.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.util.Collection;

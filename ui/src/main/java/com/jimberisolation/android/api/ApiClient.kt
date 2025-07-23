@@ -1,0 +1,143 @@
+import android.util.Log
+import com.jimberisolation.android.authentication.AuthenticationApiRequest
+import com.jimberisolation.android.authentication.AuthenticationWithVerificationCodeApiRequest
+import com.jimberisolation.android.authentication.RefreshTokenApiResult
+import com.jimberisolation.android.authentication.UserAuthenticationApiResult
+import com.jimberisolation.android.authentication.VerificationCodeApiRequest
+import com.jimberisolation.android.authentication.refreshToken
+import com.jimberisolation.android.daemon.CreateDaemonApiRequest
+import com.jimberisolation.android.daemon.CreateDaemonApiResult
+import com.jimberisolation.android.daemon.DeleteDaemonApiResult
+import com.jimberisolation.android.networkcontroller.NetworkControllerApiResult
+import com.jimberisolation.android.util.SingleLiveEvent
+import kotlinx.coroutines.runBlocking
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+
+object AuthEventManager {
+    val authFailedEvent = SingleLiveEvent<Boolean>()
+}
+
+class AuthInterceptor : Interceptor {
+    private val excludedUrls = listOf(
+        Config.BASE_URL + "auth/refresh",
+    )
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val originalRequest = chain.request()
+
+        if (excludedUrls.any { originalRequest.url.toString().startsWith(it) }) {
+            return chain.proceed(originalRequest)
+        }
+
+        val response = chain.proceed(originalRequest)
+
+        if (response.code == 401) {
+            synchronized(this) {
+                val newToken = runBlocking { renewJwt() }
+
+                // If the token is unchanged, attempt renewal
+                return if (newToken != null) {
+                        // Retry the original request with the new token
+                        val newRequest = originalRequest.newBuilder().header("Authorization", "Bearer $newToken").build()
+                        chain.proceed(newRequest)
+                }
+                else {
+                    Log.e("ERROR_AUTH", "POSTING AUTH FAILED EVENT")
+                    AuthEventManager.authFailedEvent.postValue(true)
+                    response
+                }
+            }
+        }
+
+        return response
+    }
+
+    private suspend fun renewJwt(): String? {
+        return try {
+            val newAccessToken = refreshToken()
+            if (newAccessToken.isSuccess) {
+                newAccessToken.getOrThrow().accessToken
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            println("Error renewing JWT: ${e.message}")
+            null
+        }
+    }
+}
+
+// Custom logger that filters sensitive information
+val customLogger = HttpLoggingInterceptor.Logger { message ->
+    // Redact sensitive data
+    val filteredMessage = message
+        .replace(Regex("(accessToken\":\")\\S+")) { "${it.groupValues[1]}****\"}" }
+        .replace(Regex("(Authentication=)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(Authorization:)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(Refresh=)[^;]+")) { "${it.groupValues[1]}****" }
+        .replace(Regex("(idToken\":\")\\S+")) { "${it.groupValues[1]}****\"}" }
+
+    println(filteredMessage) // Log the filtered message
+}
+
+// Set up the logging interceptor
+val logging = HttpLoggingInterceptor(customLogger).apply {
+    level = HttpLoggingInterceptor.Level.BODY // Log the request and response body
+}
+
+// Retrofit API service interface
+interface ApiService {
+    @POST("auth/verify-{type}-id")
+    suspend fun getUserAuthentication(@Path("type") type: String, @Body data: AuthenticationApiRequest): retrofit2.Response<UserAuthenticationApiResult>
+
+    @POST("companies/{company}/daemons/user/{userId}")
+    suspend fun createDaemon(@Path("userId") userId: Int, @Path("company") company: String, @Body data: CreateDaemonApiRequest, @Header("Cookie") cookies: String): retrofit2.Response<CreateDaemonApiResult>
+
+    @DELETE("companies/{company}/daemons-mobile/{daemonId}")
+    suspend fun deleteDaemon(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<DeleteDaemonApiResult>
+
+    @POST("auth/send-user-token-code")
+    suspend fun sendVerificationEmail(@Body data: VerificationCodeApiRequest): retrofit2.Response<Boolean>
+
+    @POST("auth/verify-email-token")
+    suspend fun verifyEmailWithToken(@Body data: AuthenticationWithVerificationCodeApiRequest): retrofit2.Response<UserAuthenticationApiResult>
+
+    @GET("auth/refresh")
+    suspend fun refreshToken(@Header("Cookie") cookies: String): retrofit2.Response<RefreshTokenApiResult>
+
+    @POST("auth/logout")
+    suspend fun logout(@Header("Cookie") cookies: String): retrofit2.Response<Boolean>
+
+    @GET("companies/{company}/daemons-mobile/{daemonId}/nc-information")
+    suspend fun getCloudControllerInformation(@Path("daemonId") daemonId: Number, @Path("company") company: String, @Header("Authorization") authorization: String): retrofit2.Response<NetworkControllerApiResult>
+
+}
+
+// ApiClient class
+object ApiClient {
+    private const val BASE_URL = Config.BASE_URL
+
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .addInterceptor(AuthInterceptor())
+        .build()
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val apiService: ApiService = retrofit.create(ApiService::class.java)
+}

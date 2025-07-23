@@ -1,0 +1,15 @@
+{
+    "client_id" : "f1373772-6623-4090-9204-3cb04b9d46c9",
+    "authorization_user_agent" : "DEFAULT",
+    "account_mode": "SINGLE",
+    "redirect_uri" : "msauth://com.jimberisolation.android.beta/BAhPO5r6%2BgArwttJYkjO2isMw1A%3D",
+    "authorities" : [
+      {
+        "type": "AAD",
+        "audience": {
+          "type": "AzureADandPersonalMicrosoftAccount",
+          "tenant_id": "common"
+        }
+      }
+    ]
+  }

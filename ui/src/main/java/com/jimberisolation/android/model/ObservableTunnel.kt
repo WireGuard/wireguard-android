@@ -12,7 +12,7 @@ import com.jimberisolation.android.backend.Statistics
 import com.jimberisolation.android.backend.Tunnel
 import com.jimberisolation.android.databinding.Keyed
 import com.jimberisolation.android.util.applicationScope
-import com.wireguard.config.Config
+import com.jimberisolation.config.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,6 +23,8 @@ import kotlinx.coroutines.withContext
 class ObservableTunnel internal constructor(
     private val manager: TunnelManager,
     private var name: String,
+    private var daemonId: Int,
+    private var userId: Int,
     config: Config?,
     state: Tunnel.State
 ) : BaseObservable(), Keyed<String>, Tunnel {
@@ -31,6 +33,12 @@ class ObservableTunnel internal constructor(
 
     @Bindable
     override fun getName() = name
+
+    @Bindable
+    fun getDaemonId() = daemonId
+
+    @Bindable
+    fun getUserId() = userId
 
     suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
         if (name != this@ObservableTunnel.name)
@@ -138,7 +146,7 @@ class ObservableTunnel internal constructor(
 
 
     suspend fun deleteAsync() = manager.delete(this)
-
+    suspend fun deleteStateAsync() = manager.deleteState(this)
 
     companion object {
         private const val TAG = "WireGuard/ObservableTunnel"

@@ -1,9 +1,9 @@
 /*
- * Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.config;
+package com.jimberisolation.config;
 
 import com.wireguard.util.NonNullForAll;
 

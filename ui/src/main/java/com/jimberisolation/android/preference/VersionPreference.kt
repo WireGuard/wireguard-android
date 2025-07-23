@@ -6,13 +6,9 @@ package com.jimberisolation.android.preference
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.preference.Preference
 import com.jimberisolation.android.Application
 import com.jimberisolation.android.BuildConfig
@@ -46,7 +42,7 @@ class VersionPreference(context: Context, attrs: AttributeSet?) : Preference(con
     companion object {
         private fun getBackendPrettyName(context: Context, backend: Backend) = when (backend) {
             is WgQuickBackend -> context.getString(R.string.type_name_kernel_module)
-            is GoBackend -> context.getString(R.string.type_name_go_userspace)
+            is GoBackend -> "Build version " + BuildConfig.VERSION_CODE + " |"
             else -> ""
         }
     }

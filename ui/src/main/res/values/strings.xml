@@ -63,7 +63,7 @@
     <string name="allow_remote_control_intents_summary_on">External apps may toggle connections (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>
     <string name="allowed_ips">Allowed IPs</string>
-    <string name="app_name" translatable="false">Jimber Network Isolation</string>
+    <string name="app_name" translatable="false">Jimber SASE</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
@@ -224,7 +224,7 @@
     <string name="tunnel_create_success">Successfully created connection “%s”</string>
     <string name="tunnel_error_already_exists">Connection “%s” already exists</string>
     <string name="tunnel_error_invalid_name">Invalid name</string>
-    <string name="tunnel_list_placeholder">Add a connection using the button below</string>
+    <string name="tunnel_list_placeholder">Sign in to your account</string>
     <string name="tunnel_name">Connection Name</string>
     <string name="tunnel_on_error">Unable to turn connection on (wgTurnOn returned %d)</string>
     <string name="tunnel_dns_failure">Unable to resolve DNS hostname: “%s”</string>
@@ -257,4 +257,15 @@
     <string name="biometric_prompt_private_key_title">Authenticate to view private key</string>
     <string name="biometric_auth_error">Authentication failure</string>
     <string name="biometric_auth_error_reason">Authentication failure: %s</string>
+    <string name="sign_in_to_your_account">Sign in to your account</string>
+    <string name="menu">menu</string>
+    <string name="jimber_logo">Jimber logo</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="sign_in_with_microsoft">Sign in with Microsoft</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="back">Back</string>
+    <string name="email">Email</string>
+    <string name="your_verification_code_has_been_sent_to_your_email_address">Your verification code has been sent to your email address</string>
+    <string name="verification_token">Verification token</string>
 </resources>

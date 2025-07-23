@@ -1,9 +1,9 @@
 /*
- * Copyright © 2017-2023 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2024 WireGuard LLC. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.config;
+package com.jimberisolation.config;
 
 import com.wireguard.util.NonNullForAll;
 
@@ -45,20 +45,20 @@ public final class InetEndpoint {
 
     public static InetEndpoint parse(final String endpoint) throws ParseException {
         if (FORBIDDEN_CHARACTERS.matcher(endpoint).find())
-            throw new ParseException(InetEndpoint.class, endpoint, "Forbidden characters");
+            throw new com.jimberisolation.config.ParseException(InetEndpoint.class, endpoint, "Forbidden characters");
         final URI uri;
         try {
             uri = new URI("wg://" + endpoint);
         } catch (final URISyntaxException e) {
-            throw new ParseException(InetEndpoint.class, endpoint, e);
+            throw new com.jimberisolation.config.ParseException(InetEndpoint.class, endpoint, e);
         }
         if (uri.getPort() < 0 || uri.getPort() > 65535)
-            throw new ParseException(InetEndpoint.class, endpoint, "Missing/invalid port number");
+            throw new com.jimberisolation.config.ParseException(InetEndpoint.class, endpoint, "Missing/invalid port number");
         try {
             InetAddresses.parse(uri.getHost());
             // Parsing ths host as a numeric address worked, so we don't need to do DNS lookups.
             return new InetEndpoint(uri.getHost(), true, uri.getPort());
-        } catch (final ParseException ignored) {
+        } catch (final com.jimberisolation.config.ParseException ignored) {
             // Failed to parse the host as a numeric address, so it must be a DNS hostname/FQDN.
             return new InetEndpoint(uri.getHost(), false, uri.getPort());
         }

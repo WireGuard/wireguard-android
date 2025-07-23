@@ -9,7 +9,7 @@
 
         <variable
             name="item"
-            type="com.wireguard.config.Peer" />
+            type="com.jimberisolation.config.Peer" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

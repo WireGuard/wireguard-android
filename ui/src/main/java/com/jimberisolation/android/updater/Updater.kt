@@ -381,7 +381,7 @@ object Updater {
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS)
             } else {
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
-            }.requestedPermissions.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)
+            }.requestedPermissions!!.contains(Manifest.permission.REQUEST_INSTALL_PACKAGES)
         ) {
             if (installer(context).isNotEmpty()) {
                 updaterScope.launch {

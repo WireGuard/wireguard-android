@@ -16,3 +16,11 @@ build/
 *.jks
 gradlew.bat
 maint/
+ui/release
+*.aab
+
+logs
+
+keystore/
+environments/current_environment
+build.log

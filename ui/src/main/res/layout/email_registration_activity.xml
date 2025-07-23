@@ -1,0 +1,93 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/base_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                style="@style/LogoStyle"
+                android:layout_width="280dp"
+                android:layout_height="111dp"
+                android:src="@drawable/jimber_logo_full" />
+
+            <!-- TextView for the title -->
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/jimber_primary"
+                android:textAlignment="center"
+                android:layout_width="230dp"
+                android:layout_height="40dp"
+                android:text="@string/sign_in_to_your_account"
+                android:textSize="20sp" />
+
+            <!-- Label for Email Input Field -->
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/email_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="14sp"
+                android:textColor="@color/jimber_primary"
+                android:layout_marginHorizontal="20dp" />
+
+            <!-- Email Input Field -->
+            <EditText
+                android:id="@+id/email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/border_around_edit"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textColor="@color/jimber_edit_text_color"
+                />
+
+            <!-- Back and Continue Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="20dp"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/back"
+                    android:layout_margin="8dp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/jimber_primary"
+                    app:cornerRadius="4dp"
+                    />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/proceed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Continue"
+                    android:layout_margin="8dp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/jimber_primary"
+                    app:cornerRadius="4dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.wireguard.config;
+package com.jimberisolation.config;
 
 import com.wireguard.util.NonNullForAll;
 

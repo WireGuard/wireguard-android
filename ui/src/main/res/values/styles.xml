@@ -8,7 +8,8 @@
         <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
         <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
         <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
-        <item name="android:statusBarColor">@null</item>
+        <item name="android:statusBarColor">@null</item>\
+        <item name="colorControlHighlight">#000000</item> <!-- Highlight color -->
     </style>
 
     <!-- Various additional API-specific features in values-v*/styles.xml -->
@@ -41,4 +42,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="Button.Colored" parent="ThemeOverlay.AppCompat">
+        <item name="background">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
 </resources>

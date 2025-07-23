@@ -10,9 +10,9 @@ import android.os.Parcelable
 import androidx.core.os.ParcelCompat
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.Config
-import com.wireguard.config.Peer
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.Config
+import com.jimberisolation.config.Peer
 
 class ConfigProxy : Parcelable {
     val `interface`: InterfaceProxy

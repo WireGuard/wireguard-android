@@ -7,7 +7,7 @@ package com.jimberisolation.android.widget
 import android.text.InputFilter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import com.wireguard.crypto.Key
+import com.jimberisolation.crypto.Key
 
 /**
  * InputFilter for entering WireGuard private/public keys encoded with base64.

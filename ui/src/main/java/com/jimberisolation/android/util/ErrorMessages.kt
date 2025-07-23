@@ -12,12 +12,12 @@ import com.jimberisolation.android.Application
 import com.jimberisolation.android.R
 import com.jimberisolation.android.backend.BackendException
 import com.jimberisolation.android.util.RootShell.RootShellException
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.InetEndpoint
-import com.wireguard.config.InetNetwork
-import com.wireguard.config.ParseException
-import com.wireguard.crypto.Key
-import com.wireguard.crypto.KeyFormatException
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.InetEndpoint
+import com.jimberisolation.config.InetNetwork
+import com.jimberisolation.config.ParseException
+import com.jimberisolation.crypto.Key
+import com.jimberisolation.crypto.KeyFormatException
 import java.net.InetAddress
 
 object ErrorMessages {

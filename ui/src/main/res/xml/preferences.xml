@@ -1,13 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
+
+
     <com.jimberisolation.android.preference.VersionPreference
         android:key="version"
-        android:icon="@drawable/ic_launcher_foreground"/>
-    <com.jimberisolation.android.preference.QuickTilePreference android:key="quick_tile" />
+        android:icon="@drawable/info"
+        />
+
+    <com.jimberisolation.android.preference.QuickTilePreference
+        android:key="quick_tile"
+        android:icon="@drawable/add_tile"/>
+
     <Preference
         android:key="log_viewer"
         android:singleLineTitle="false"
+        android:icon="@drawable/log_icon"
         android:summary="@string/log_viewer_pref_summary"
         android:title="@string/log_viewer_pref_title" />
+
+
+    <com.jimberisolation.android.preference.SignOutPreference
+        android:key="sign_out"
+        android:icon="@drawable/logout"/>
+
+    <com.jimberisolation.android.preference.ClearCachePreference
+        android:key="clear_cache"
+        android:singleLineTitle="false"
+        android:summary="Clear cache of app completely" />
+
+    <com.jimberisolation.android.preference.SharedStoragePreference
+        android:key="get_shared_storage"
+        android:singleLineTitle="false"
+        android:summary="Get shared storage to clipboard" />
+
+
+
 </androidx.preference.PreferenceScreen>

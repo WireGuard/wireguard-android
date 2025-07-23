@@ -4,7 +4,8 @@
  */
 package com.jimberisolation.android.configStore
 
-import com.wireguard.config.Config
+import com.jimberisolation.android.model.ObservableTunnel
+import com.jimberisolation.config.Config
 
 /**
  * Interface for persistent storage providers for WireGuard configurations.
@@ -19,7 +20,7 @@ interface ConfigStore {
      * @return The configuration that was actually saved to persistent storage.
      */
     @Throws(Exception::class)
-    fun create(name: String, config: Config): Config
+    fun create(createTunnelData: CreateTunnelData, config: Config): Config
 
     /**
      * Delete a persistent tunnel.
@@ -27,14 +28,14 @@ interface ConfigStore {
      * @param name The name of the tunnel to delete.
      */
     @Throws(Exception::class)
-    fun delete(name: String)
+    fun delete(tunnel: ObservableTunnel)
 
     /**
      * Enumerate the names of tunnels present in persistent storage.
      *
      * @return The set of present tunnel names.
      */
-    fun enumerate(): Set<String>
+    fun enumerate(): Set<TunnelInfo>
 
     /**
      * Load the configuration for the tunnel given by `name`.
@@ -44,7 +45,7 @@ interface ConfigStore {
      * @return An in-memory representation of the configuration loaded from persistent storage.
      */
     @Throws(Exception::class)
-    fun load(name: String): Config
+    fun load(tunnel: ObservableTunnel): Config
 
     /**
      * Rename the configuration for the tunnel given by `name`.
@@ -53,7 +54,7 @@ interface ConfigStore {
      * @param replacement The new identifier for the configuration in persistent storage.
      */
     @Throws(Exception::class)
-    fun rename(name: String, replacement: String)
+    fun rename(tunnel: ObservableTunnel, replacement: String)
 
     /**
      * Save the configuration for an existing tunnel given by `name`.
@@ -64,5 +65,5 @@ interface ConfigStore {
      * @return The configuration that was actually saved to persistent storage.
      */
     @Throws(Exception::class)
-    fun save(name: String, config: Config): Config
+    fun save(tunnel: ObservableTunnel, config: Config): Config
 }

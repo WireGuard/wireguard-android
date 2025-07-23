@@ -10,6 +10,7 @@ import androidx.databinding.CallbackRegistry
 import androidx.databinding.CallbackRegistry.NotifierCallback
 import androidx.lifecycle.lifecycleScope
 import com.jimberisolation.android.Application
+import com.jimberisolation.android.R
 import com.jimberisolation.android.model.ObservableTunnel
 import kotlinx.coroutines.launch
 

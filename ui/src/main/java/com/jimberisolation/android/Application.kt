@@ -22,6 +22,7 @@ import com.jimberisolation.android.backend.GoBackend
 import com.jimberisolation.android.backend.WgQuickBackend
 import com.jimberisolation.android.configStore.FileConfigStore
 import com.jimberisolation.android.model.TunnelManager
+import com.jimberisolation.android.storage.SharedStorage
 import com.jimberisolation.android.updater.Updater
 import com.jimberisolation.android.util.RootShell
 import com.jimberisolation.android.util.ToolsInstaller
@@ -86,6 +87,7 @@ class Application : android.app.Application() {
         Log.i(TAG, USER_AGENT)
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
+
         rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
         preferencesDataStore = PreferenceDataStoreFactory.create { applicationContext.preferencesDataStoreFile("settings") }
@@ -116,11 +118,15 @@ class Application : android.app.Application() {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
         }
-        Updater.monitorForUpdates()
+        // Updater.monitorForUpdates()
+
+        StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         if (BuildConfig.DEBUG) {
-            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().penaltyLog().build())
-            StrictMode.setThreadPolicy(ThreadPolicy.Builder().detectAll().penaltyLog().build())
+            StrictMode.setVmPolicy(VmPolicy.Builder().detectAll().build())
+            StrictMode.setThreadPolicy(policy)
         }
     }
 

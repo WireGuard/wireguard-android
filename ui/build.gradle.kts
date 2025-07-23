@@ -2,8 +2,13 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
 
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+
+val keystorePropertiesFile = file("../keystore/keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(keystorePropertiesFile.inputStream())
 
 plugins {
     alias(libs.plugins.android.application)
@@ -12,7 +17,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     buildFeatures {
         buildConfig = true
         dataBinding = true
@@ -21,8 +26,8 @@ android {
     namespace = pkg
     defaultConfig {
         applicationId = pkg
-        minSdk = 21
-        targetSdk = 34
+        minSdk = 30
+        targetSdk = 35
         versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()
         versionName = providers.gradleProperty("wireguardVersionName").get()
         buildConfigField("int", "MIN_SDK_VERSION", minSdk.toString())
@@ -32,8 +37,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles("proguard-android-optimize.txt")
@@ -42,6 +56,30 @@ android {
                     excludes += "DebugProbesKt.bin"
                     excludes += "kotlin-tooling-metadata.json"
                     excludes += "META-INF/*.version"
+                }
+            }
+
+            // Read the current environment from the file
+            val environmentFile = File("./environments/current_environment")
+            if (environmentFile.exists()) {
+                val environment = environmentFile.readText().trim()
+                when (environment) {
+                    "staging" -> {
+                        applicationIdSuffix = ".staging"
+                        versionNameSuffix = "-staging"
+                    }
+                    "local" -> {
+                        applicationIdSuffix = ".local"
+                        versionNameSuffix = "-local"
+                    }
+                    "dc" -> {
+                        applicationIdSuffix = ".dc"
+                        versionNameSuffix = "-dc"
+                    }
+                    "beta" -> {
+                        applicationIdSuffix = ".beta"
+                        versionNameSuffix = "-beta"
+                    }
                 }
             }
         }
@@ -81,6 +119,24 @@ dependencies {
     implementation(libs.zxing.android.embedded)
     implementation(libs.kotlinx.coroutines.android)
     coreLibraryDesugaring(libs.desugarJdkLibs)
+
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.microsoft.identity.client:msal:4.9.0") {
+        exclude(group = "io.opentelemetry")
+    }
+    implementation("io.opentelemetry:opentelemetry-api:1.18.0")
+    implementation("io.opentelemetry:opentelemetry-context:1.18.0")
+    implementation("io.ktor:ktor-client-core:2.2.3") // Check for the latest version
+    implementation("io.ktor:ktor-client-cio:2.2.3")  // CIO engine for making requests
+    implementation("io.ktor:ktor-client-json:2.2.3")
+    implementation("io.ktor:ktor-client-serialization:2.2.3")
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+    implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.9.2")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
+    implementation("com.squareup.okhttp3:okhttp:4.9.2")
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -11,12 +11,12 @@ import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import com.jimberisolation.android.BR
-import com.wireguard.config.Attribute
-import com.wireguard.config.BadConfigException
-import com.wireguard.config.Interface
-import com.wireguard.crypto.Key
-import com.wireguard.crypto.KeyFormatException
-import com.wireguard.crypto.KeyPair
+import com.jimberisolation.config.Attribute
+import com.jimberisolation.config.BadConfigException
+import com.jimberisolation.config.Interface
+import com.jimberisolation.crypto.Key
+import com.jimberisolation.crypto.KeyFormatException
+import com.jimberisolation.crypto.KeyPair
 
 class InterfaceProxy : BaseObservable, Parcelable {
     @get:Bindable

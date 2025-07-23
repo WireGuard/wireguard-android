@@ -42,7 +42,7 @@ import com.jimberisolation.android.databinding.LogViewerActivityBinding
 import com.jimberisolation.android.util.DownloadsFileSaver
 import com.jimberisolation.android.util.ErrorMessages
 import com.jimberisolation.android.util.resolveAttribute
-import com.wireguard.crypto.KeyPair
+import com.jimberisolation.crypto.KeyPair
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

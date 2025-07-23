@@ -5,7 +5,7 @@
 
 package com.jimberisolation.android.backend;
 
-import com.wireguard.config.Config;
+import com.jimberisolation.config.Config;
 import com.wireguard.util.NonNullForAll;
 
 import java.util.Set;

@@ -1,4 +1,10 @@
 <resources>
     <color name="icon_background">#1c1b20</color>
     <color name="icon_foreground">#FFFFFF</color>
+    <color name="jimber_primary">#FFFFFF</color>
+    <color name="jimber_primary_button">#1c1b20</color>
+
+    <color name="jimber_edit_text_color">#000000</color>
+    <color name="jimber_edit_background_color">#FFFFFF</color>
+    <color name="jimber_edit_border_color">#000000</color>
 </resources>
