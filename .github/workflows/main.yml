@@ -1,4 +1,4 @@
-name: Build Android APK (ARM Only)
+name: Build Android APKs (Debug & Release)
 
 on:
   push:
@@ -29,10 +29,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build APK (release)
-        run: ./gradlew assembleRelease
+      - name: Build APKs (debug & release)
+        run: ./gradlew assembleDebug assembleRelease
 
-      - name: Upload all release APKs (for debugging)
+      - name: Upload all debug APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-debug-apks
+          path: '**/build/outputs/apk/debug/*.apk'
+
+      - name: Upload all release APKs
         uses: actions/upload-artifact@v4
         with:
           name: all-release-apks
