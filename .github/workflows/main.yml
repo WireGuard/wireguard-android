@@ -32,8 +32,8 @@ jobs:
       - name: Build APK (release)
         run: ./gradlew assembleRelease
 
-      - name: Upload APK artifact
+      - name: Upload all release APKs (for debugging)
         uses: actions/upload-artifact@v4
         with:
-          name: ui-release-arm-apk
-          path: ui/build/outputs/apk/release/ui-release.apk
+          name: all-release-apks
+          path: '**/build/outputs/apk/release/*.apk'
