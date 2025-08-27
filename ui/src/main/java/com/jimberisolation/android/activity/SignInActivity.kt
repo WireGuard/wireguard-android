@@ -197,6 +197,7 @@ class SignInActivity : AppCompatActivity() {
                 }
 
                 val userId = userAuthenticationResult.getOrThrow().userId
+                val companyName = userAuthenticationResult.getOrThrow().companyName
 
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
                 if(daemonAlreadyInStorage != null) {
@@ -221,7 +222,7 @@ class SignInActivity : AppCompatActivity() {
                 val wireguardConfig = wireguardConfigResult.getOrThrow().configurationString
                 val daemonId = wireguardConfigResult.getOrThrow().daemonId
 
-                importTunnelAndNavigate(wireguardConfig, daemonId)
+                importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
             } catch (e: ApiException) {
                 Log.e("Authentication", "An error occurred", e)
                 val view = findViewById<View>(android.R.id.content) // or some other view in your layout
@@ -237,13 +238,13 @@ class SignInActivity : AppCompatActivity() {
         finish()
     }
 
-    private suspend fun importTunnelAndNavigate(configResult: String, daemonId: Int) {
+    private suspend fun importTunnelAndNavigate(configResult: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
 
         if(alreadyExistingTunnel == null) {
-            importTunnel(configResult, daemonId, daemonName!!) { }
+            importTunnel(configResult, daemonId, daemonName!!, companyName) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)
@@ -267,6 +268,8 @@ class SignInActivity : AppCompatActivity() {
                     }
 
                     val userId = userAuthenticationResult.getOrThrow().userId
+                    val companyName = userAuthenticationResult.getOrThrow().companyName
+
                     val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
 
                     daemonName = daemonAlreadyInStorage?.daemonName ?: run {
@@ -288,7 +291,7 @@ class SignInActivity : AppCompatActivity() {
 
                     Log.d("Configuration", wireguardConfig)
 
-                    importTunnelAndNavigate(wireguardConfig, daemonId)
+                    importTunnelAndNavigate(wireguardConfig, daemonId, companyName)
                 }
             }
 

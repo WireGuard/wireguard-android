@@ -176,6 +176,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val userId = userAuthenticationResult.userId
+                val companyName = userAuthenticationResult.companyName
 
                 val daemonAlreadyInStorage = SharedStorage.getInstance().getDaemonKeyPairByUserId(userId)
                 if(daemonAlreadyInStorage != null) {
@@ -202,7 +203,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                 Log.d("Configuration", wireguardConfig)
 
-                importTunnelAndNavigate(wireguardConfig, result.daemonId)
+                importTunnelAndNavigate(wireguardConfig, result.daemonId, companyName)
 
             } catch (e: Exception) {
                 Log.e("Authentication", "An error occurred", e)
@@ -220,12 +221,12 @@ class EmailVerificationActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int) {
+    private suspend fun importTunnelAndNavigate(result: String, daemonId: Int, companyName: String) {
         val manager = getTunnelManager()
 
         val alreadyExistingTunnel = manager.getTunnels().find { it.getDaemonId() == daemonId }
         if(alreadyExistingTunnel == null) {
-            importTunnel(result, daemonId, daemonName!!) { }
+            importTunnel(result, daemonId, daemonName!!, companyName) { }
         }
 
         val intent = Intent(this, MainActivity::class.java)

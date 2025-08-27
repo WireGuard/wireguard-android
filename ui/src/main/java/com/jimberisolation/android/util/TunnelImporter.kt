@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
 import kotlin.math.min
 
 object TunnelImporter {
-    suspend fun importTunnel(configText: String, daemonId: Int, daemonName: String, messageCallback: (CharSequence) -> Unit) {
+    suspend fun importTunnel(configText: String, daemonId: Int, daemonName: String, companyName: String, messageCallback: (CharSequence) -> Unit) {
         try {
             val config = try {
                 Config.parse(ByteArrayInputStream(configText.toByteArray(StandardCharsets.UTF_8)))
@@ -35,7 +35,7 @@ object TunnelImporter {
             val userId = SharedStorage.getInstance().getCurrentUser()?.id;
 
             val createTunnelData = CreateTunnelData(daemonName, daemonId, userId!!);
-            Application.getTunnelManager().create(createTunnelData, config)
+            val createdTunnel = Application.getTunnelManager().create(createTunnelData, config)
 
             val kp = SharedStorage.getInstance().getDaemonKeyPairByDaemonId(daemonId)
             val daemonInfo = getDaemonInfo(daemonId, companyName, kp!!.baseEncodedSkEd25519).getOrThrow();
