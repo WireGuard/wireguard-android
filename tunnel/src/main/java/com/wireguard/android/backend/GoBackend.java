@@ -5,8 +5,13 @@
 
 package com.wireguard.android.backend;
 
+import android.app.ForegroundServiceStartNotAllowedException;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
@@ -24,7 +29,6 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +39,8 @@ import java.util.concurrent.TimeoutException;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 
 /**
  * Implementation of {@link Backend} that uses the wireguard-go userspace implementation to provide
@@ -392,6 +398,9 @@ public final class GoBackend implements Backend {
      * {@link android.net.VpnService} implementation for {@link GoBackend}
      */
     public static class VpnService extends android.net.VpnService {
+
+        private static final int NOTIFICATION_ID = 999;
+        private static final String CHANNEL_ID = "WireGuardChannel";
         @Nullable private GoBackend owner;
 
         public Builder getBuilder() {
@@ -423,6 +432,7 @@ public final class GoBackend implements Backend {
 
         @Override
         public int onStartCommand(@Nullable final Intent intent, final int flags, final int startId) {
+            startForeground();
             vpnService.complete(this);
             if (intent == null || intent.getComponent() == null || !intent.getComponent().getPackageName().equals(getPackageName())) {
                 Log.d(TAG, "Service started by Always-on VPN feature");
@@ -434,6 +444,43 @@ public final class GoBackend implements Backend {
 
         public void setOwner(final GoBackend owner) {
             this.owner = owner;
+        }
+
+        private void startForeground() {
+            try {
+                createNotificationChannel();
+                final Notification notification = new NotificationCompat
+                        .Builder(this, CHANNEL_ID)
+                        .build();
+                ServiceCompat.startForeground(this, NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED);
+            } catch (final Exception ex) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                        ex instanceof ForegroundServiceStartNotAllowedException
+                ) {
+                    Log.d(TAG, "App not in a valid state to start foreground service");
+                }
+            }
+        }
+
+        private void createNotificationChannel() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                final NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
+                    final NotificationChannel channel = new NotificationChannel(
+                            CHANNEL_ID,
+                            "WireGuard VPN Service",
+                            NotificationManager.IMPORTANCE_LOW
+                    );
+                    channel.setDescription("VPN connection status notifications");
+                    channel.setShowBadge(false);
+                    channel.enableLights(false);
+                    channel.enableVibration(false);
+
+                    notificationManager.createNotificationChannel(channel);
+                }
+            }
         }
     }
 }
