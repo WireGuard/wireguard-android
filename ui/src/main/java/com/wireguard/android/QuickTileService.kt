@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
  * system framework as necessary to update the appearance of the tile in the system UI, and to
  * forward click events to the application.
  */
-@RequiresApi(Build.VERSION_CODES.N)
 class QuickTileService : TileService() {
     private val onStateChangedCallback = OnStateChangedCallback()
     private val onTunnelChangedCallback = OnTunnelChangedCallback()

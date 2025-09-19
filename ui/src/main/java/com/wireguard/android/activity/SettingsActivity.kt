@@ -72,10 +72,6 @@ class SettingsActivity : AppCompatActivity() {
                 darkTheme?.parent?.removePreference(darkTheme)
                 --preferenceScreen.initialExpandedChildrenCount
             }
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                val remoteApps = preferenceManager.findPreference<Preference>("allow_remote_control_intents")
-                remoteApps?.parent?.removePreference(remoteApps)
-            }
             if (AdminKnobs.disableConfigExport) {
                 val zipExporter = preferenceManager.findPreference<Preference>("zip_exporter")
                 zipExporter?.parent?.removePreference(zipExporter)

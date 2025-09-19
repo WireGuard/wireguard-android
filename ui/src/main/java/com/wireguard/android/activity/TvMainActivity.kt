@@ -266,31 +266,14 @@ class TvMainActivity : AppCompatActivity() {
     private suspend fun makeStorageRoots(): Collection<KeyedFile> = withContext(Dispatchers.IO) {
         cachedRoots?.let { return@withContext it }
         val list = HashSet<KeyedFile>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val storageManager: StorageManager = getSystemService() ?: return@withContext list
-            list.addAll(storageManager.storageVolumes.mapNotNull { volume ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    volume.directory?.let { KeyedFile(it, volume.getDescription(this@TvMainActivity)) }
-                } else {
-                    KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File), volume.getDescription(this@TvMainActivity))
-                }
-            })
-        } else {
-            @Suppress("DEPRECATION")
-            list.add(KeyedFile(Environment.getExternalStorageDirectory()))
-            try {
-                File("/storage").listFiles()?.forEach {
-                    if (!it.isDirectory) return@forEach
-                    try {
-                        if (Environment.isExternalStorageRemovable(it)) {
-                            list.add(KeyedFile(it))
-                        }
-                    } catch (_: Throwable) {
-                    }
-                }
-            } catch (_: Throwable) {
+        val storageManager: StorageManager = getSystemService() ?: return@withContext list
+        list.addAll(storageManager.storageVolumes.mapNotNull { volume ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                volume.directory?.let { KeyedFile(it, volume.getDescription(this@TvMainActivity)) }
+            } else {
+                KeyedFile((StorageVolume::class.java.getMethod("getPathFile").invoke(volume) as File), volume.getDescription(this@TvMainActivity))
             }
-        }
+        })
         cachedRoots = list
         list
     }

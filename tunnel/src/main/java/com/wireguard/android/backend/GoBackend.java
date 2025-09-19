@@ -24,12 +24,10 @@ import com.wireguard.crypto.KeyFormatException;
 import com.wireguard.util.NonNullForAll;
 
 import java.net.InetAddress;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -45,7 +43,7 @@ public final class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
     private static final String TAG = "WireGuard/GoBackend";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
-    private static GhettoCompletableFuture<VpnService> vpnService = new GhettoCompletableFuture<>();
+    private static CompletableFuture<VpnService> vpnService = new CompletableFuture<>();
     private final Context context;
     @Nullable private Config currentConfig;
     @Nullable private Tunnel currentTunnel;
@@ -375,35 +373,6 @@ public final class GoBackend implements Backend {
      */
     public interface AlwaysOnCallback {
         void alwaysOnTriggered();
-    }
-
-    // TODO: When we finally drop API 21 and move to API 24, delete this and replace with the ordinary CompletableFuture.
-    private static final class GhettoCompletableFuture<V> {
-        private final LinkedBlockingQueue<V> completion = new LinkedBlockingQueue<>(1);
-        private final FutureTask<V> result = new FutureTask<>(completion::peek);
-
-        public boolean complete(final V value) {
-            final boolean offered = completion.offer(value);
-            if (offered)
-                result.run();
-            return offered;
-        }
-
-        public V get() throws ExecutionException, InterruptedException {
-            return result.get();
-        }
-
-        public V get(final long timeout, final TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
-            return result.get(timeout, unit);
-        }
-
-        public boolean isDone() {
-            return !completion.isEmpty();
-        }
-
-        public GhettoCompletableFuture<V> newIncompleteFuture() {
-            return new GhettoCompletableFuture<>();
-        }
     }
 
     /**

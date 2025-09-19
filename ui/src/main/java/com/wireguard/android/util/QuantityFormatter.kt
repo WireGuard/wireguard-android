@@ -31,9 +31,6 @@ object QuantityFormatter {
     fun formatEpochAgo(epochMillis: Long): String {
         var span = (System.currentTimeMillis() - epochMillis) / 1000
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-            return Application.get().applicationContext.getString(R.string.latest_handshake_ago, span.seconds.toString())
-
         if (span <= 0L)
             return RelativeDateTimeFormatter.getInstance().format(RelativeDateTimeFormatter.Direction.PLAIN, RelativeDateTimeFormatter.AbsoluteUnit.NOW)
         val measureFormat = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.WIDE)

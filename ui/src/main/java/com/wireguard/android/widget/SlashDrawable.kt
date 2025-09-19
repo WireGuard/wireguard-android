@@ -15,7 +15,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 
-@RequiresApi(Build.VERSION_CODES.N)
 class SlashDrawable(private val mDrawable: Drawable) : Drawable() {
     private val mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val mPath = Path()

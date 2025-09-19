@@ -221,10 +221,9 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     manager.refreshTunnelStates()
                     return@launch
                 }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || !UserKnobs.allowRemoteControlIntents.first())
+                if (!UserKnobs.allowRemoteControlIntents.first())
                     return@launch
-                val state: Tunnel.State
-                state = when (action) {
+                val state = when (action) {
                     "com.wireguard.android.action.SET_TUNNEL_UP" -> Tunnel.State.UP
                     "com.wireguard.android.action.SET_TUNNEL_DOWN" -> Tunnel.State.DOWN
                     else -> return@launch

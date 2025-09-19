@@ -22,7 +22,6 @@ import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.util.ErrorMessages
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.N)
 class TunnelToggleActivity : AppCompatActivity() {
     private val permissionActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }

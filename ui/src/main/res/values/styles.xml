@@ -12,7 +12,8 @@
         <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
         <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
         <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
-        <item name="android:statusBarColor">@null</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
     </style>
 
     <!-- Various additional API-specific features in values-v*/styles.xml -->
