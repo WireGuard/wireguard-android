@@ -58,6 +58,7 @@ android {
         generateLocaleConfig = true
     }
     lint {
+        baseline = file("lint-baseline.xml")
         disable += "LongLogTag"
         warning += "MissingTranslation"
         warning += "ImpliedQuantity"

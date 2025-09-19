@@ -1,0 +1,3876 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="InconsistentLayout"
+        message="The id &quot;list_detail_container&quot; in layout &quot;main_activity&quot; is missing from the following layout configurations: layout-sw600dp (present in layout)"
+        errorLine1="        android:id=&quot;@+id/list_detail_container&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/main_activity.xml"
+            line="14"
+            column="9"
+            message="Occurrence in layout"/>
+    </issue>
+
+    <issue
+        id="InconsistentLayout"
+        message="The id &quot;master_detail_wrapper&quot; in layout &quot;main_activity&quot; is missing from the following layout configurations: layout (present in layout-sw600dp)"
+        errorLine1="        android:id=&quot;@+id/master_detail_wrapper&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout-sw600dp/main_activity.xml"
+            line="14"
+            column="9"
+            message="Occurrence in layout-sw600dp"/>
+    </issue>
+
+    <issue
+        id="InconsistentLayout"
+        message="The id &quot;detail_container&quot; in layout &quot;main_activity&quot; is missing from the following layout configurations: layout (present in layout-sw600dp)"
+        errorLine1="            android:id=&quot;@+id/detail_container&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout-sw600dp/main_activity.xml"
+            line="31"
+            column="13"
+            message="Occurrence in layout-sw600dp"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="`&lt;com.wireguard.android.preference.QuickTilePreference>` requires API level 33 (current min is 24)"
+        errorLine1="    &lt;com.wireguard.android.preference.QuickTilePreference android:key=&quot;quick_tile&quot; />"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="18"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StartActivityAndCollapseDeprecated"
+        message="TileService#startActivityAndCollapse(Intent) is deprecated. Use TileService#startActivityAndCollapse(PendingIntent) instead."
+        errorLine1="                        startActivityAndCollapse(intent)"
+        errorLine2="                                                 ~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/QuickTileService.kt"
+            line="68"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `enableOnBackInvokedCallback` is only used in API level 33 and higher (current min is 24)"
+        errorLine1="        android:enableOnBackInvokedCallback=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="45"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="        android:singleLineTitle=&quot;false&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="        android:singleLineTitle=&quot;false&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="21"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="        android:singleLineTitle=&quot;false&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="        android:singleLineTitle=&quot;false&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="34"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="        android:singleLineTitle=&quot;false&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="43"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `singleLineTitle` is only used in API level 26 and higher (current min is 24)"
+        errorLine1="    &lt;com.wireguard.android.preference.DonatePreference android:singleLineTitle=&quot;false&quot; />"
+        errorLine2="                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/xml/preferences.xml"
+            line="47"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="Deprecated"
+        message="`android:editable` is deprecated: Use an `&lt;EditText>` to make it editable"
+        errorLine1="                                android:editable=&quot;false&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/tunnel_editor_fragment.xml"
+            line="133"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;fullSensor&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        val icon = SlashDrawable(resources.getDrawable(R.drawable.ic_tile, Application.get().theme))"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/QuickTileService.kt"
+            line="112"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="StringFormatInvalid"
+        message="Format string &apos;`quick_settings_tile_add_failure`&apos; is not a valid format string so it should not be passed to `String.format`"
+        errorLine1="                    Toast.makeText(context, context.getString(R.string.quick_settings_tile_add_failure, it), Toast.LENGTH_SHORT).show()"
+        errorLine2="                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/preference/QuickTilePreference.kt"
+            line="46"
+            column="45"/>
+        <location
+            file="src/main/res/values-fa-rIR/strings.xml"
+            line="190"
+            column="5"
+            message="This definition does not require arguments"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="11"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="15"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="31"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="42"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="46"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="50"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;ca&quot; (Catalan) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-ca-rES/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es-rES/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="54"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;delete_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;delete_error&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;delete_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;delete_success&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;delete_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;delete_title&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;import_partial_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;import_partial_success&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;import_total_success&quot; is not translated in &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;import_total_success&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;set_excluded_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;set_excluded_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;set_included_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;set_included_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;n_excluded_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;n_excluded_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;n_included_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;n_included_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;all_applications&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;all_applications&quot;>All Applications&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;exclude_from_tunnel&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;exclude_from_tunnel&quot;>Exclude&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;include_in_tunnel&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;include_in_tunnel&quot;>Include only&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;include_n_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;include_n_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="45"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;exclude_n_applications&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;exclude_n_applications&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;persistent_keepalive_seconds_unit&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_unit&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;persistent_keepalive_seconds_suffix&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;plurals name=&quot;persistent_keepalive_seconds_suffix&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="57"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;add_peer&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;si&quot; (Sinhala)"
+        errorLine1="    &lt;string name=&quot;add_peer&quot;>Add peer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;allow_remote_control_intents_summary_off&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala)"
+        errorLine1="    &lt;string name=&quot;allow_remote_control_intents_summary_off&quot;>External apps may not toggle tunnels (recommended)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;allow_remote_control_intents_summary_on&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala)"
+        errorLine1="    &lt;string name=&quot;allow_remote_control_intents_summary_on&quot;>External apps may toggle tunnels (advanced)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;allow_remote_control_intents_title&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;allow_remote_control_intents_title&quot;>Allow remote control apps&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;bad_config_context&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;string name=&quot;bad_config_context&quot;>%1$s\&apos;s %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;bad_config_error&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;bad_config_error&quot;>%1$s in %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;bad_config_reason_missing_attribute&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;bad_config_reason_missing_attribute&quot;>Missing attribute&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;bad_config_reason_missing_section&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;bad_config_reason_missing_section&quot;>Missing section&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;bad_config_reason_unknown_section&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;bad_config_reason_unknown_section&quot;>Unknown section&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="83"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_no_qr_found&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;string name=&quot;error_no_qr_found&quot;>QR code not found in image&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="86"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_qr_checksum&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;string name=&quot;error_qr_checksum&quot;>QR code checksum verification failed&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="87"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_delete_error&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_delete_error&quot;>Cannot delete configuration file %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="89"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_exists_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_exists_error&quot;>Configuration for “%s” already exists&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="90"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_file_exists_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_file_exists_error&quot;>Configuration file “%s” already exists&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="91"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_not_found_error&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_not_found_error&quot;>Configuration file “%s” not found&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="92"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_rename_error&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_rename_error&quot;>Cannot rename configuration file “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_save_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_save_error&quot;>Cannot save configuration for “%1$s”: %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="94"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;config_save_success&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;config_save_success&quot;>Successfully saved configuration for “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_bin_dir_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;create_bin_dir_error&quot;>Cannot create local binary directory&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="97"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_downloads_file_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;create_downloads_file_error&quot;>Cannot create file in downloads directory&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_empty&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;create_empty&quot;>Create from scratch&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="99"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_from_file&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;create_from_file&quot;>Import from file or archive&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="100"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_from_qr_code&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;create_from_qr_code&quot;>Scan from QR code&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_output_dir_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;create_output_dir_error&quot;>Cannot create output directory&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="102"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_temp_dir_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;create_temp_dir_error&quot;>Cannot create local temporary directory&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="103"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;create_tunnel&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;si&quot; (Sinhala)"
+        errorLine1="    &lt;string name=&quot;create_tunnel&quot;>Create Tunnel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="104"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;copied_to_clipboard&quot; is not translated in &quot;hi&quot; (Hindi) or &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;copied_to_clipboard&quot;>%s copied to clipboard&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;dark_theme_summary_off&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;dark_theme_summary_off&quot;>Currently using light (day) theme&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="106"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;dark_theme_summary_on&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;dark_theme_summary_on&quot;>Currently using dark (night) theme&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="107"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tv_delete&quot; is not translated in &quot;hi&quot; (Hindi) or &quot;si&quot; (Sinhala)"
+        errorLine1="    &lt;string name=&quot;tv_delete&quot;>Select tunnel to delete&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tv_select_a_storage_drive&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;tv_select_a_storage_drive&quot;>Select a storage drive&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="111"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tv_no_file_picker&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;tv_no_file_picker&quot;>Please install a file management utility to browse files&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="112"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tv_add_tunnel_get_started&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;tv_add_tunnel_get_started&quot;>Add a tunnel to get started&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="113"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;donate_title&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;donate_title&quot;>♥ Donate to the WireGuard Project&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="114"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;donate_summary&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;donate_summary&quot;>Every contribution helps&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="115"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;donate_google_play_disappointment&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;donate_google_play_disappointment&quot;>Thank you for supporting the WireGuard Project!\n\nUnfortunately, due to Google\&apos;s policies, we\&apos;re not allowed to link to the part of the project webpage where you can make a donation. Hopefully you can figure this out!\n\nThanks again for your contribution.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="116"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;disable_config_export_title&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;disable_config_export_title&quot;>Disable config exporting&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="117"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;disable_config_export_description&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;disable_config_export_description&quot;>Disabling config exporting makes private keys less accessible&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="118"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;dns_search_domains&quot; is not translated in &quot;hi&quot; (Hindi)"
+        errorLine1="    &lt;string name=&quot;dns_search_domains&quot;>Search domains&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="120"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;endpoint&quot; is not translated in &quot;si&quot; (Sinhala) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;endpoint&quot;>Endpoint&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="122"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_down&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;error_down&quot;>Error bringing down tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="123"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_fetching_apps&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;error_fetching_apps&quot;>Error fetching apps list: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="124"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_root&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;error_root&quot;>Please obtain root access and try again&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="125"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_prepare&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;error_prepare&quot;>Error preparing tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="126"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;error_up&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;error_up&quot;>Error bringing up tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="127"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;exclude_private_ips&quot; is not translated in &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;exclude_private_ips&quot;>Exclude private IPs&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="128"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;generate_new_private_key&quot; is not translated in &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;generate_new_private_key&quot;>Generate new private key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="129"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;hint_generated&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;hint_generated&quot;>(generated)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="132"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;hint_optional_discouraged&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;hint_optional_discouraged&quot;>(optional, not recommended)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="134"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;illegal_filename_error&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;illegal_filename_error&quot;>Illegal file name “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="136"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;import_error&quot; is not translated in &quot;si&quot; (Sinhala) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;import_error&quot;>Unable to import tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="137"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;import_from_qr_code&quot; is not translated in &quot;si&quot; (Sinhala) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;import_from_qr_code&quot;>Import Tunnel from QR Code&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="138"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;import_success&quot; is not translated in &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;import_success&quot;>Imported “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="139"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;interface_title&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;interface_title&quot;>Interface&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="140"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;key_contents_error&quot; is not translated in &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;key_contents_error&quot;>Bad characters in key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="141"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;key_length_error&quot; is not translated in &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;key_length_error&quot;>Incorrect key length&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="142"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;key_length_explanation_base64&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;key_length_explanation_base64&quot;>: WireGuard base64 keys must be 44 characters (32 bytes)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="143"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;key_length_explanation_binary&quot; is not translated in &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;key_length_explanation_binary&quot;>: WireGuard keys must be 32 bytes&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;key_length_explanation_hex&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;key_length_explanation_hex&quot;>: WireGuard hex keys must be 64 characters (32 bytes)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="145"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;latest_handshake&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;latest_handshake&quot;>Latest handshake&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="146"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;latest_handshake_ago&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;string name=&quot;latest_handshake_ago&quot;>%s ago&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="147"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_export_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;log_export_error&quot;>Unable to export log: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="149"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_export_subject&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;log_export_subject&quot;>WireGuard Android Log File&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="150"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_export_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek)"
+        errorLine1="    &lt;string name=&quot;log_export_success&quot;>Saved to “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="151"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_export_title&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;log_export_title&quot;>Export log file&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="152"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_saver_activity_label&quot; is not translated in &quot;fi&quot; (Finnish)"
+        errorLine1="    &lt;string name=&quot;log_saver_activity_label&quot;>Save log&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="153"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_viewer_pref_summary&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;log_viewer_pref_summary&quot;>Logs may assist with debugging&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="154"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_viewer_pref_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;log_viewer_pref_title&quot;>View application log&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="155"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;log_viewer_title&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;log_viewer_title&quot;>Log&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="156"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;logcat_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;logcat_error&quot;>Unable to run logcat: &lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="157"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_enabler_disabled_summary&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_enabler_disabled_summary&quot;>The experimental kernel module can improve performance&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="158"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_enabler_disabled_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_enabler_disabled_title&quot;>Enable kernel module backend&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="159"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_enabler_enabled_summary&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_enabler_enabled_summary&quot;>The slower userspace backend may improve stability&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="160"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_enabler_enabled_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_enabler_enabled_title&quot;>Disable kernel module backend&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="161"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_installer_error&quot; is not translated in &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_installer_error&quot;>Something went wrong. Please try again&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="162"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_installer_initial&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_installer_initial&quot;>The experimental kernel module can improve performance&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="163"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_installer_not_found&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_installer_not_found&quot;>No modules are available for your device&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="164"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_installer_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_installer_title&quot;>Download and install kernel module&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_installer_working&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_installer_working&quot;>Downloading and installing…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="166"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;module_version_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;module_version_error&quot;>Unable to determine kernel module version&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="167"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;mtu&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;mtu&quot;>MTU&lt;/string>"
+        errorLine2="            ~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="168"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;multiple_tunnels_summary_off&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;multiple_tunnels_summary_off&quot;>Turning on one tunnel will turn off others&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="169"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;multiple_tunnels_summary_on&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;multiple_tunnels_summary_on&quot;>Multiple tunnels may be turned on simultaneously&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="170"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;multiple_tunnels_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;multiple_tunnels_title&quot;>Allow multiple simultaneous tunnels&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="171"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;name&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;name&quot;>Name&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="172"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;no_config_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;no_config_error&quot;>Trying to bring up a tunnel with no config&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="173"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;no_configs_error&quot; is not translated in &quot;el&quot; (Greek) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;no_configs_error&quot;>No configurations found&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="174"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;no_tunnels_error&quot; is not translated in &quot;el&quot; (Greek) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;no_tunnels_error&quot;>No tunnels exist&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="175"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;parse_error_generic&quot; is not translated in &quot;el&quot; (Greek) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;parse_error_generic&quot;>string&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="176"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;parse_error_inet_endpoint&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;parse_error_inet_endpoint&quot;>endpoint&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="178"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;parse_error_inet_network&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;parse_error_inet_network&quot;>IP network&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="179"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;parse_error_integer&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;parse_error_integer&quot;>number&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="180"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;parse_error_reason&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;parse_error_reason&quot;>Cannot parse %1$s “%2$s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="181"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;peer&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;sk&quot; (Slovak)"
+        errorLine1="    &lt;string name=&quot;peer&quot;>Peer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="182"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;permission_description&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;permission_description&quot;>control WireGuard tunnels, enabling and disabling tunnels at will, potentially misdirecting Internet traffic&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="183"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;permission_label&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;permission_label&quot;>control WireGuard tunnels&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="184"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;persistent_keepalive&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;persistent_keepalive&quot;>Persistent keepalive&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="185"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pre_shared_key&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;pre_shared_key&quot;>Pre-shared key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="186"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pre_shared_key_enabled&quot; is not translated in &quot;el&quot; (Greek) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;pre_shared_key_enabled&quot;>enabled&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="187"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;private_key&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;private_key&quot;>Private key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="188"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;public_key&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;public_key&quot;>Public key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="189"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;qr_code_hint&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;qr_code_hint&quot;>Tip: generate with `qrencode -t ansiutf8 &amp;lt; tunnel.conf`.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="190"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quick_settings_tile_add_title&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;et&quot; (Estonian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;quick_settings_tile_add_title&quot;>Add tile to quick settings panel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="191"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quick_settings_tile_add_summary&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;et&quot; (Estonian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;quick_settings_tile_add_summary&quot;>The shortcut tile toggles the most recent tunnel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="192"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quick_settings_tile_add_failure&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;et&quot; (Estonian), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;quick_settings_tile_add_failure&quot;>Unable to add shortcut tile: error %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="193"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quick_settings_tile_action&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;quick_settings_tile_action&quot;>Toggle tunnel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="194"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;restore_on_boot_summary_off&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;restore_on_boot_summary_off&quot;>Will not bring up enabled tunnels at boot&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="195"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;restore_on_boot_summary_on&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;restore_on_boot_summary_on&quot;>Will bring up enabled tunnels at boot&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="196"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;restore_on_boot_title&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;restore_on_boot_title&quot;>Restore on boot&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="197"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;save&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;save&quot;>Save&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;select_all&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;select_all&quot;>Select all&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="199"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;settings&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;settings&quot;>Settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="200"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;shell_exit_status_read_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;shell_exit_status_read_error&quot;>Shell cannot read exit status&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="201"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;shell_marker_count_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;shell_marker_count_error&quot;>Shell expected 4 markers, received %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="202"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;shell_start_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;shell_start_error&quot;>Shell failed to start: %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="203"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;success_application_will_restart&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;success_application_will_restart&quot;>Success. The application will now restart…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="204"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;toggle_all&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;toggle_all&quot;>Toggle All&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="205"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;toggle_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;toggle_error&quot;>Error toggling WireGuard tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="206"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_already&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_already&quot;>wg and wg-quick are already installed&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="207"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_failure&quot; is not translated in &quot;fi&quot; (Finnish), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_failure&quot;>Unable to install command-line tools (no root?)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="208"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_initial&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_initial&quot;>Install optional tools for scripting&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="209"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_initial_magisk&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_initial_magisk&quot;>Install optional tools for scripting as Magisk module&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="210"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_initial_system&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_initial_system&quot;>Install optional tools for scripting into the system partition&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="211"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_success_magisk&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_success_magisk&quot;>wg and wg-quick installed as a Magisk module (reboot required)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="212"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_success_system&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_success_system&quot;>wg and wg-quick installed into the system partition&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="213"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_title&quot;>Install command line tools&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="214"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_installer_working&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_installer_working&quot;>Installing wg and wg-quick&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="215"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_unavailable_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tools_unavailable_error&quot;>Required tools unavailable&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="216"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer&quot;>Transfer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="217"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_bytes&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_bytes&quot;>%d B&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="218"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_gibibytes&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_gibibytes&quot;>%.2f GiB&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="219"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_kibibytes&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_kibibytes&quot;>%.2f KiB&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="220"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_mibibytes&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_mibibytes&quot;>%.2f MiB&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="221"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_rx_tx&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_rx_tx&quot;>rx: %1$s, tx: %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="222"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;transfer_tibibytes&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;transfer_tibibytes&quot;>%.2f TiB&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="223"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tun_create_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tun_create_error&quot;>Unable to create tun device&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="224"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_config_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;tunnel_config_error&quot;>Unable to configure tunnel (wg-quick returned %d)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="225"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_create_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_create_error&quot;>Unable to create tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="226"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_create_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_create_success&quot;>Successfully created tunnel “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="227"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_error_already_exists&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_error_already_exists&quot;>Tunnel “%s” already exists&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="228"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_error_invalid_name&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_error_invalid_name&quot;>Invalid name&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="229"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_list_placeholder&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;tunnel_list_placeholder&quot;>Add a tunnel using the button below&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="230"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_name&quot; is not translated in &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_name&quot;>Tunnel Name&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="231"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_on_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;tunnel_on_error&quot;>Unable to turn tunnel on (wgTurnOn returned %d)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="232"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_dns_failure&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;tunnel_dns_failure&quot;>Unable to resolve DNS hostname: “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="233"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_rename_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_rename_error&quot;>Unable to rename tunnel: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="234"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tunnel_rename_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;tunnel_rename_success&quot;>Successfully renamed tunnel to “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="235"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;type_name_go_userspace&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;type_name_go_userspace&quot;>Go userspace&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="236"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;type_name_kernel_module&quot; is not translated in &quot;fi&quot; (Finnish), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;type_name_kernel_module&quot;>Kernel module&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="237"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;unknown_error&quot; is not translated in &quot;fi&quot; (Finnish) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;unknown_error&quot;>Unknown error&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="238"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_avalable&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_avalable&quot;>An application update is available. Please update now.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="239"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_action&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_action&quot;>Download &amp;amp; Update&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="240"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_rechecking&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_rechecking&quot;>Fetching update metadata…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="241"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_download_progress&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_download_progress&quot;>Downloading update: %1$s / %2$s (%3$.2f%%)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="242"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_download_progress_nototal&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_download_progress_nototal&quot;>Downloading update: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="243"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_installing&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_installing&quot;>Installing update…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="244"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_failure&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_failure&quot;>Update failure: %s. Will retry momentarily…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="245"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_corrupt_title&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_corrupt_title&quot;>Application Corrupt&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="246"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_corrupt_message&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_corrupt_message&quot;>This application is corrupt. Please re-download the APK from the website linked below. After, uninstall this application, and reinstall it from the downloaded APK.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="247"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;updater_corrupt_navigate&quot; is not translated in &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;vi&quot; (Vietnamese), &quot;ro&quot; (Romanian)"
+        errorLine1="    &lt;string name=&quot;updater_corrupt_navigate&quot;>Open Website&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="248"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;version_summary&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;version_summary&quot;>%1$s backend %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="249"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;version_summary_checking&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;sk&quot; (Slovak), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;version_summary_checking&quot;>Checking %s backend version&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="250"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;version_summary_unknown&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;version_summary_unknown&quot;>Unknown %s version&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="251"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;version_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;version_title&quot;>WireGuard for Android v%s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="252"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;vpn_not_authorized_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;vpn_not_authorized_error&quot;>VPN service not authorized by user&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="253"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;vpn_start_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;vpn_start_error&quot;>Unable to start Android VPN service&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="254"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;zip_export_error&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;zip_export_error&quot;>Unable to export tunnels: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="255"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;zip_export_success&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese), &quot;nl&quot; (Dutch)"
+        errorLine1="    &lt;string name=&quot;zip_export_success&quot;>Saved to “%s”&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="256"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;zip_export_summary&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;zip_export_summary&quot;>Zip file will be saved to downloads folder&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="257"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;zip_export_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;zip_export_title&quot;>Export tunnels to zip file&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="258"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;biometric_prompt_zip_exporter_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;biometric_prompt_zip_exporter_title&quot;>Authenticate to export tunnels&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="259"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;biometric_prompt_private_key_title&quot; is not translated in &quot;fi&quot; (Finnish), &quot;hu&quot; (Hungarian), &quot;el&quot; (Greek), &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;biometric_prompt_private_key_title&quot;>Authenticate to view private key&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="260"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;biometric_auth_error&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;biometric_auth_error&quot;>Authentication failure&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="261"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;biometric_auth_error_reason&quot; is not translated in &quot;hu&quot; (Hungarian) or &quot;vi&quot; (Vietnamese)"
+        errorLine1="    &lt;string name=&quot;biometric_auth_error_reason&quot;>Authentication failure: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="262"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;hi&quot; (Hindi) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>WireGuard&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hi/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>සෑම තත්පරයකට&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-si-rLK/strings.xml"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>තත්පරය&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-si-rLK/strings.xml"
+            line="35"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>هر ثانیه&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fa-rIR/strings.xml"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>chaque seconde&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>हर सेकंड&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hi-rIN/strings.xml"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>ਹਰ ਸਕਿੰਟ&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pa-rIN/strings.xml"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>a cada segundo&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="51"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>ثانیه&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fa-rIR/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>seconde&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>सेकंड&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hi-rIN/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>ਸਕਿੰਟ&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pa-rIN/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>segundo&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>segundo&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt-rPT/strings.xml"
+            line="55"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>кожну секунду&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-uk-rUA/strings.xml"
+            line="73"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (1, 101, 201, 301, 401, 501, 601, 701, 1001, …), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>sekunda&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sl/strings.xml"
+            line="79"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>секунда&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ru/strings.xml"
+            line="79"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (1, 21, 31, 41, 51, 61, 71, 81, 101, 1001, …), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>секунда&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-uk-rUA/strings.xml"
+            line="79"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;two&apos;` matches more than one specific number in this locale (2, 102, 202, 302, 402, 502, 602, 702, 1002, …), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;two&quot;>sekundi&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sl/strings.xml"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="StringFormatCount"
+        message="Inconsistent number of arguments in formatting string `quick_settings_tile_add_failure`; found both 0 here and 1 in values/strings.xml"
+        errorLine1="    &lt;string name=&quot;quick_settings_tile_add_failure&quot;>خطا در اضافه کردن ایکون برنامه در نوار اطلاع رسانی&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fa-rIR/strings.xml"
+            line="190"
+            column="5"/>
+        <location
+            file="src/main/res/values/strings.xml"
+            line="193"
+            column="5"
+            message="Conflicting number of arguments (1) here"/>
+    </issue>
+
+    <issue
+        id="StringFormatCount"
+        message="Inconsistent number of arguments in formatting string `tun_create_error`; found both 1 here and 0 in values/strings.xml"
+        errorLine1="    &lt;string name=&quot;tun_create_error&quot;>Não foi possível criar o túnel: %s&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="220"
+            column="5"/>
+        <location
+            file="src/main/res/values/strings.xml"
+            line="224"
+            column="5"
+            message="Conflicting number of arguments (0) here"/>
+    </issue>
+
+    <issue
+        id="UnsafeImplicitIntentLaunch"
+        message="The intent action `android.intent.action.MAIN (used to start an activity)` matches the intent filter of a non-exported component `com.wireguard.android.activity.LogViewerActivity` from a manifest. If you are trying to invoke this specific component via the action then you should make the intent explicit by calling `Intent.set{Component,Class,ClassName}`."
+        errorLine1="            val intent = Intent(Intent.ACTION_MAIN)"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/Application.kt"
+            line="55"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UnsafeImplicitIntentLaunch"
+        message="The intent action `android.intent.action.MAIN (used to start an activity)` matches the intent filter of a non-exported component `com.wireguard.android.activity.LogViewerActivity` from a manifest. If you are trying to invoke this specific component via the action then you should make the intent explicit by calling `Intent.set{Component,Class,ClassName}`."
+        errorLine1="                            val intent = Intent(Intent.ACTION_MAIN)"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/updater/SnackbarUpdateShower.kt"
+            line="162"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DataExtractionRules"
+        message="The attribute `android:allowBackup` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher."
+        errorLine1="        android:allowBackup=&quot;false&quot;"
+        errorLine2="                             ~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="43"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/databinding/ObservableKeyedRecyclerViewAdapter.kt"
+            line="56"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                adapter.notifyDataSetChanged()"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/databinding/ObservableKeyedRecyclerViewAdapter.kt"
+            line="74"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            binding?.tunnelList?.adapter?.notifyDataSetChanged()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/fragment/TunnelListFragment.kt"
+            line="267"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            binding?.tunnelList?.adapter?.notifyDataSetChanged()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/fragment/TunnelListFragment.kt"
+            line="277"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 24"
+        errorLine1="        if (BuildConfig.MIN_SDK_VERSION > Build.VERSION.SDK_INT) {"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/Application.kt"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.seed` appears to be unused"
+        errorLine1="    &lt;color name=&quot;seed&quot;>#1a73e8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_shadow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_shadow&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="33"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_surfaceTint` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_surfaceTint&quot;>#005BC0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="34"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_outlineVariant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_outlineVariant&quot;>#C4C6D0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="35"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_light_scrim` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_light_scrim&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="36"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_shadow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_shadow&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="63"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_surfaceTint` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_surfaceTint&quot;>#ADC7FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="64"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_outlineVariant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_outlineVariant&quot;>#44474F&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="65"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.md_theme_dark_scrim` appears to be unused"
+        errorLine1="    &lt;color name=&quot;md_theme_dark_scrim&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="66"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.bad_config_reason_value_out_of_range` appears to be unused"
+        errorLine1="    &lt;string name=&quot;bad_config_reason_value_out_of_range&quot;>Value out of range&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="84"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.log_saver_activity_label` appears to be unused"
+        errorLine1="    &lt;string name=&quot;log_saver_activity_label&quot;>Save log&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="153"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.logcat_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;logcat_error&quot;>Unable to run logcat: &lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="157"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_installer_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_installer_error&quot;>Something went wrong. Please try again&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="162"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_installer_initial` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_installer_initial&quot;>The experimental kernel module can improve performance&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="163"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_installer_not_found` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_installer_not_found&quot;>No modules are available for your device&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="164"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_installer_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_installer_title&quot;>Download and install kernel module&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_installer_working` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_installer_working&quot;>Downloading and installing…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="166"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.tools_unavailable_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;tools_unavailable_error&quot;>Required tools unavailable&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="216"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RedundantNamespace"
+        message="This namespace declaration is redundant"
+        errorLine1="    &lt;androidx.fragment.app.FragmentContainerView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/tunnel_creator_activity.xml"
+            line="13"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_installer_working&quot;>下載並安裝中...&lt;/string>"
+        errorLine2="                                            ~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh-rTW/strings.xml"
+            line="149"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;updater_rechecking&quot;>正在下載更新描述檔...&lt;/string>"
+        errorLine2="                                      ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh-rTW/strings.xml"
+            line="224"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;updater_failure&quot;>更新失敗：%s。稍後將自動重試...&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh-rTW/strings.xml"
+            line="228"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="AlwaysShowAction"
+        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
+        errorLine1="        app:showAsAction=&quot;always&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/tunnel_list_action_mode.xml"
+            line="12"
+            column="9"/>
+        <location
+            file="src/main/res/menu/tunnel_list_action_mode.xml"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                lastUri = Uri.parse(&quot;content://${BuildConfig.APPLICATION_ID}.exported-log/$key&quot;)"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/activity/LogViewerActivity.kt"
+            line="119"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                                    val permissionIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(&quot;package:$packageName&quot;))"
+        errorLine2="                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/QuickTileService.kt"
+            line="82"
+            column="110"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        var b = Bitmap.createBitmap(icon.intrinsicWidth, icon.intrinsicHeight, Bitmap.Config.ARGB_8888)"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/QuickTileService.kt"
+            line="115"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        b = Bitmap.createBitmap(icon.intrinsicWidth, icon.intrinsicHeight, Bitmap.Config.ARGB_8888)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/QuickTileService.kt"
+            line="121"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Canvas.withSave` instead?"
+        errorLine1="        canvas.save()"
+        errorLine2="        ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/widget/SlashDrawable.kt"
+            line="30"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            intent.data = Uri.parse(progress.downloadUrl)"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/updater/SnackbarUpdateShower.kt"
+            line="155"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            intent.data = Uri.parse(progress.downloadUrl)"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/updater/SnackbarUpdateShower.kt"
+            line="155"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                                    data = Uri.parse(&quot;https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer&quot;)"
+        errorLine2="                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/activity/TvMainActivity.kt"
+            line="218"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                                    data = Uri.parse(&quot;https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer&quot;)"
+        errorLine2="                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/activity/TvMainActivity.kt"
+            line="218"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="        intent.data = Uri.parse(&quot;https://www.wireguard.com/&quot;)"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/preference/VersionPreference.kt"
+            line="34"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="        intent.data = Uri.parse(&quot;https://www.wireguard.com/&quot;)"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/wireguard/android/preference/VersionPreference.kt"
+            line="34"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/app_list_item.xml"
+            line="35"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;com.google.android.material.floatingactionbutton.FloatingActionButton"
+        errorLine2="     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/log_viewer_activity.xml"
+            line="20"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;com.google.android.material.floatingactionbutton.FloatingActionButton"
+        errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/tunnel_list_fragment.xml"
+            line="75"
+            column="10"/>
+    </issue>
+
+</issues>
