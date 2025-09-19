@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.api.tasks.bundling.Zip
 
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
@@ -113,14 +114,27 @@ publishing {
     }
     repositories {
         maven {
-            name = "sonatype"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = providers.environmentVariable("SONATYPE_USER").orNull
-                password = providers.environmentVariable("SONATYPE_PASSWORD").orNull
-            }
+            name = "SonatypeUpload"
+            setUrl(layout.buildDirectory.dir("sonatype"))
         }
     }
+}
+
+val releasePublication = publishing.publications.named("release").get() as MavenPublication
+val mavenGroupPath = releasePublication.groupId.replace('.', '/')
+val mavenArtifactId = releasePublication.artifactId
+val mavenVersion = releasePublication.version
+
+tasks.register<Zip>("zipReleasePublication") {
+    dependsOn(tasks.named("publishReleasePublicationToSonatypeUploadRepository"))
+    group = "distribution"
+    description = "Zips the release publication in Maven repository layout."
+
+    val sourceDir = layout.buildDirectory.dir("sonatype/${mavenGroupPath}/${mavenArtifactId}/${mavenVersion}")
+    from(sourceDir)
+    archiveFileName.set("${mavenArtifactId}-${mavenVersion}-maven.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("distributions"))
+    into("${mavenGroupPath}/${mavenArtifactId}/${mavenVersion}")
 }
 
 signing {
