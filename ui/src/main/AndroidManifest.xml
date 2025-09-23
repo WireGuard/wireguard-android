@@ -40,7 +40,9 @@
 
     <application
         android:name=".Application"
-        android:allowBackup="false"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup"
+        android:dataExtractionRules="@xml/dataExtractionRules"
         android:banner="@mipmap/banner"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
