@@ -3,10 +3,10 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.api.tasks.bundling.Zip
 
-val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+val pkg: String = providers.gradleProperty("wireguardPackageName").getOrElse("com.wireguard.android")
 
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.android.library")
     `maven-publish`
     signing
 }
@@ -16,10 +16,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     namespace = "${pkg}.tunnel"
     defaultConfig {
-        minSdk = 21
+        minSdk = 28
     }
     externalNativeBuild {
         cmake {
@@ -67,10 +68,12 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.collection)
+    implementation(libs.annotation)
+    implementation(libs.androidx.core)
+    compileOnly(libs.javax.annotation.api)
     compileOnly(libs.jsr305)
-    testImplementation(libs.junit)
+    testImplementation(libs.junit4)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
 publishing {
@@ -78,7 +81,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = pkg
             artifactId = "tunnel"
-            version = providers.gradleProperty("wireguardVersionName").get()
+            version = providers.gradleProperty("wireguardVersionName").getOrElse("1.0.0")
             afterEvaluate {
                 from(components["release"])
             }
