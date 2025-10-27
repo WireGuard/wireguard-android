@@ -59,6 +59,12 @@ object UserKnobs {
             it[RESTORE_ON_BOOT] ?: false
         }
 
+    private val ENABLE_DNS_RERESOLVE = booleanPreferencesKey("enable_dns_reresolve")
+    val enableDnsReresolve: Flow<Boolean>
+        get() = Application.getPreferencesDataStore().data.map {
+            it[ENABLE_DNS_RERESOLVE] ?: true  // Enabled by default
+        }
+
     private val LAST_USED_TUNNEL = stringPreferencesKey("last_used_tunnel")
     val lastUsedTunnel: Flow<String?>
         get() = Application.getPreferencesDataStore().data.map {

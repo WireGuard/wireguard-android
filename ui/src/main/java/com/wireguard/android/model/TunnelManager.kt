@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -118,6 +119,9 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             haveLoaded = true
             restoreState(true)
             tunnels.complete(tunnelMap)
+
+            // Start the handshake monitor for automatic DNS re-resolution
+            startHandshakeMonitor()
         }
     }
 
@@ -248,7 +252,81 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         tunnel.onStatisticsChanged(withContext(Dispatchers.IO) { getBackend().getStatistics(tunnel) })!!
     }
 
+    private fun startHandshakeMonitor() {
+        applicationScope.launch {
+            while (true) {
+                delay(HANDSHAKE_CHECK_INTERVAL_MS)
+                try {
+                    // Check if feature is enabled
+                    if (!UserKnobs.enableDnsReresolve.first()) {
+                        continue
+                    }
+
+                    // Get all running tunnels
+                    val runningTunnels = tunnelMap.filter { it.state == Tunnel.State.UP }
+                    if (runningTunnels.isEmpty()) {
+                        continue
+                    }
+
+                    val currentTime = System.currentTimeMillis()
+
+                    // Check each running tunnel
+                    for (tunnel in runningTunnels) {
+                        try {
+                            val statistics = withContext(Dispatchers.IO) {
+                                getBackend().getStatistics(tunnel)
+                            }
+                            val config = tunnel.getConfigAsync()
+
+                            // Check each peer for stale handshakes
+                            for (peer in config.peers) {
+                                val publicKey = peer.publicKey
+                                val peerStats = statistics.peer(publicKey)
+
+                                if (peerStats != null && peerStats.latestHandshakeEpochMillis > 0) {
+                                    val timeSinceHandshake = currentTime - peerStats.latestHandshakeEpochMillis
+
+                                    if (timeSinceHandshake > STALE_HANDSHAKE_THRESHOLD_MS) {
+                                        val endpoint = peer.endpoint.orElse(null)
+                                        if (endpoint != null && endpoint.host.isNotEmpty()) {
+                                            Log.w(TAG, "Handshake stale for tunnel '${tunnel.name}', peer ${publicKey.toBase64()} " +
+                                                    "(${timeSinceHandshake / 1000}s old). Re-resolving endpoint ${endpoint.host}...")
+
+                                            // Trigger DNS re-resolution by calling setState with current config
+                                            // This will cause GoBackend to re-resolve all peer endpoints
+                                            withContext(Dispatchers.IO) {
+                                                try {
+                                                    getBackend().setState(tunnel, Tunnel.State.UP, config)
+                                                    Log.i(TAG, "Successfully triggered DNS re-resolution for tunnel '${tunnel.name}'")
+                                                } catch (e: Exception) {
+                                                    Log.e(TAG, "Failed to re-resolve DNS for tunnel '${tunnel.name}': ${e.message}")
+                                                }
+                                            }
+
+                                            // Only re-resolve once per check cycle
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e: Throwable) {
+                            Log.e(TAG, "Error checking handshakes for tunnel '${tunnel.name}': ${Log.getStackTraceString(e)}")
+                        }
+                    }
+                } catch (e: Throwable) {
+                    Log.e(TAG, "Error in handshake monitor: ${Log.getStackTraceString(e)}")
+                }
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "WireGuard/TunnelManager"
+
+        // Check handshakes every 30 seconds (as recommended by reresolve-dns.sh)
+        private const val HANDSHAKE_CHECK_INTERVAL_MS = 30_000L
+
+        // Consider handshake stale after 135 seconds (matches reresolve-dns.sh threshold)
+        private const val STALE_HANDSHAKE_THRESHOLD_MS = 135_000L
     }
 }

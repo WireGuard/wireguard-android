@@ -65,6 +65,9 @@
     <string name="allow_remote_control_intents_summary_off">External apps may not toggle tunnels (recommended)</string>
     <string name="allow_remote_control_intents_summary_on">External apps may toggle tunnels (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>
+    <string name="enable_dns_reresolve_summary_off">DNS endpoints will not be automatically re-resolved</string>
+    <string name="enable_dns_reresolve_summary_on">DNS endpoints automatically re-resolved when handshakes stale</string>
+    <string name="enable_dns_reresolve_title">Automatic DNS re-resolution</string>
     <string name="allowed_ips">Allowed IPs</string>
     <string name="app_name" translatable="false">WireGuard</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>

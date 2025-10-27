@@ -44,5 +44,12 @@
         android:summaryOff="@string/allow_remote_control_intents_summary_off"
         android:summaryOn="@string/allow_remote_control_intents_summary_on"
         android:title="@string/allow_remote_control_intents_title" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enable_dns_reresolve"
+        android:singleLineTitle="false"
+        android:summaryOff="@string/enable_dns_reresolve_summary_off"
+        android:summaryOn="@string/enable_dns_reresolve_summary_on"
+        android:title="@string/enable_dns_reresolve_title" />
     <com.wireguard.android.preference.DonatePreference android:singleLineTitle="false" />
 </androidx.preference.PreferenceScreen>
