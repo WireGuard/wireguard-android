@@ -5,6 +5,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/log_level_filter"
+        android:title="@string/log_level_filter_title">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/log_level_verbose"
+                    android:title="@string/log_level_verbose" />
+                <item
+                    android:id="@+id/log_level_debug"
+                    android:title="@string/log_level_debug" />
+                <item
+                    android:id="@+id/log_level_info"
+                    android:title="@string/log_level_info"
+                    android:checked="true" />
+                <item
+                    android:id="@+id/log_level_warning"
+                    android:title="@string/log_level_warning" />
+                <item
+                    android:id="@+id/log_level_error"
+                    android:title="@string/log_level_error" />
+            </group>
+        </menu>
+    </item>
+    <item
         android:id="@+id/save_log"
         android:icon="@drawable/ic_action_save"
         android:title="@string/log_export_title"

@@ -67,6 +67,7 @@ class LogViewerActivity : AppCompatActivity() {
     private var rawLogLines = CircularArray<String>()
     private var recyclerView: RecyclerView? = null
     private var saveButton: MenuItem? = null
+    private var minLogLevel = "I" // Default to Info level
     private val year by lazy {
         val yearFormatter: DateFormat = SimpleDateFormat("yyyy", Locale.US)
         yearFormatter.format(Date())
@@ -149,7 +150,73 @@ class LogViewerActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.log_level_verbose -> {
+                minLogLevel = "V"
+                item.isChecked = true
+                refreshLogDisplay()
+                true
+            }
+
+            R.id.log_level_debug -> {
+                minLogLevel = "D"
+                item.isChecked = true
+                refreshLogDisplay()
+                true
+            }
+
+            R.id.log_level_info -> {
+                minLogLevel = "I"
+                item.isChecked = true
+                refreshLogDisplay()
+                true
+            }
+
+            R.id.log_level_warning -> {
+                minLogLevel = "W"
+                item.isChecked = true
+                refreshLogDisplay()
+                true
+            }
+
+            R.id.log_level_error -> {
+                minLogLevel = "E"
+                item.isChecked = true
+                refreshLogDisplay()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun shouldShowLogLevel(level: String): Boolean {
+        val levelPriority = mapOf("V" to 0, "D" to 1, "I" to 2, "W" to 3, "E" to 4)
+        val currentPriority = levelPriority[level] ?: 0
+        val minPriority = levelPriority[minLogLevel] ?: 2
+        return currentPriority >= minPriority
+    }
+
+    private fun refreshLogDisplay() {
+        logLines.clear()
+        logAdapter.notifyDataSetChanged()
+        // The streaming coroutine will repopulate filtered logs
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Re-parse all raw log lines with new filter
+            val filteredLines = mutableListOf<LogLine>()
+            for (i in 0 until rawLogLines.size()) {
+                val line = rawLogLines[i]
+                val logLine = parseLine(line)
+                if (logLine != null && shouldShowLogLevel(logLine.level)) {
+                    filteredLines.add(logLine)
+                }
+            }
+            withContext(Dispatchers.Main.immediate) {
+                for (filteredLine in filteredLines) {
+                    logLines.addLast(filteredLine)
+                }
+                logAdapter.notifyDataSetChanged()
+                recyclerView?.scrollToPosition(logLines.size() - 1)
+            }
         }
     }
 
@@ -219,7 +286,10 @@ class LogViewerActivity : AppCompatActivity() {
                 rawLogLines.addLast(line)
                 val logLine = parseLine(line)
                 if (logLine != null) {
-                    bufferedLogLines.add(logLine)
+                    // Only add to buffered lines if it passes the filter
+                    if (shouldShowLogLevel(logLine.level)) {
+                        bufferedLogLines.add(logLine)
+                    }
                 } else {
                     if (bufferedLogLines.isNotEmpty()) {
                         bufferedLogLines.last().msg += "\n$line"
@@ -299,7 +369,7 @@ class LogViewerActivity : AppCompatActivity() {
 
     private inner class LogEntryAdapter : RecyclerView.Adapter<LogEntryAdapter.ViewHolder>() {
 
-        private inner class ViewHolder(val layout: View, var isSingleLine: Boolean = true) : RecyclerView.ViewHolder(layout)
+        private inner class ViewHolder(val layout: View) : RecyclerView.ViewHolder(layout)
 
         private fun levelToColor(level: String): Int {
             return when (level) {
@@ -334,12 +404,7 @@ class LogViewerActivity : AppCompatActivity() {
             holder.layout.apply {
                 findViewById<MaterialTextView>(R.id.log_date).text = line.time.toString()
                 findViewById<MaterialTextView>(R.id.log_msg).apply {
-                    setSingleLine()
                     text = spannable
-                    setOnClickListener {
-                        isSingleLine = !holder.isSingleLine
-                        holder.isSingleLine = !holder.isSingleLine
-                    }
                 }
             }
         }

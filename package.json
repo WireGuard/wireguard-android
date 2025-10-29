@@ -1,0 +1,22 @@
+{
+  "name": "wireguard-android",
+  "version": "1.0.0",
+  "description": "**[Download from the Play Store](https://play.google.com/store/apps/details?id=com.wireguard.android)**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WireGuard/wireguard-android.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WireGuard/wireguard-android/issues"
+  },
+  "homepage": "https://github.com/WireGuard/wireguard-android#readme",
+  "dependencies": {
+    "@anthropic-ai/claude-code": "^2.0.27"
+  }
+}

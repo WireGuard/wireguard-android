@@ -278,13 +278,17 @@ public final class GoBackend implements Backend {
                     final InetEndpoint ep = peer.getEndpoint().orElse(null);
                     if (ep == null)
                         continue;
-                    if (ep.getResolved().orElse(null) == null) {
+                    final InetEndpoint resolvedEp = ep.getResolved().orElse(null);
+                    if (resolvedEp == null) {
                         if (i < DNS_RESOLUTION_RETRIES - 1) {
                             Log.w(TAG, "DNS host \"" + ep.getHost() + "\" failed to resolve; trying again");
                             Thread.sleep(1000);
                             continue dnsRetry;
                         } else
                             throw new BackendException(Reason.DNS_RESOLUTION_FAILURE, ep.getHost());
+                    } else {
+                        // Log the resolved IP address for debugging
+                        Log.i(TAG, "DNS resolved: " + ep.getHost() + " -> " + resolvedEp.getHost() + ":" + resolvedEp.getPort());
                     }
                 }
                 break;

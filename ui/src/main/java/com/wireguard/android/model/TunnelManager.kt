@@ -248,6 +248,11 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             newState = withContext(Dispatchers.IO) { getBackend().setState(tunnel, state, tunnel.getConfigAsync()) }
             if (newState == Tunnel.State.UP)
                 lastUsedTunnel = tunnel
+            else if (newState == Tunnel.State.DOWN) {
+                // Tunnel is now down - dismiss any warning notifications and clear tracking
+                dismissStaleHandshakeNotification()
+                tunnelNoHandshakeStartTime.remove(tunnel.name)
+            }
         } catch (e: Throwable) {
             throwable = e
         }
@@ -388,6 +393,10 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     // Get all running tunnels
                     val runningTunnels = tunnelMap.filter { it.state == Tunnel.State.UP }
                     if (runningTunnels.isEmpty()) {
+                        // No tunnels running - dismiss any existing warning notifications
+                        dismissStaleHandshakeNotification()
+                        // Clear tracking state
+                        tunnelNoHandshakeStartTime.clear()
                         continue
                     }
 
