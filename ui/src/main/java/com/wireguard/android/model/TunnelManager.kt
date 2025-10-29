@@ -4,12 +4,15 @@
  */
 package com.wireguard.android.model
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.wireguard.android.Application.Companion.get
@@ -43,6 +46,46 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
     private val context: Context = get()
     private val tunnelMap: ObservableSortedKeyedArrayList<String, ObservableTunnel> = ObservableSortedKeyedArrayList(TunnelComparator)
     private var haveLoaded = false
+    private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val tunnelNoHandshakeStartTime: MutableMap<String, Long> = mutableMapOf()
+
+    init {
+        // Create notification channel for stale handshake warnings
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                STALE_HANDSHAKE_CHANNEL_ID,
+                context.getString(R.string.notification_channel_stale_handshake),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = context.getString(R.string.notification_channel_stale_handshake_description)
+                setShowBadge(true)
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun showStaleHandshakeNotification(tunnelName: String, handshakeAgeSeconds: Long?, isNone: Boolean = false) {
+        val contentText = if (isNone) {
+            context.getString(R.string.notification_no_handshake_text, tunnelName)
+        } else {
+            context.getString(R.string.notification_stale_handshake_text, tunnelName, handshakeAgeSeconds!!)
+        }
+
+        val notification = NotificationCompat.Builder(context, STALE_HANDSHAKE_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.stat_notify_error) // Warning icon
+            .setContentTitle(context.getString(R.string.notification_stale_handshake_title))
+            .setContentText(contentText)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setOngoing(true) // Makes it persistent (can't be dismissed)
+            .setAutoCancel(false)
+            .build()
+
+        notificationManager.notify(STALE_HANDSHAKE_NOTIFICATION_ID, notification)
+    }
+
+    private fun dismissStaleHandshakeNotification() {
+        notificationManager.cancel(STALE_HANDSHAKE_NOTIFICATION_ID)
+    }
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel {
         val tunnel = ObservableTunnel(this, name, config, state)
@@ -225,6 +268,10 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     manager.refreshTunnelStates()
                     return@launch
                 }
+                if ("com.wireguard.android.action.DUMP_DIAGNOSTICS" == action) {
+                    manager.dumpDiagnostics()
+                    return@launch
+                }
                 if (!UserKnobs.allowRemoteControlIntents.first())
                     return@launch
                 val state = when (action) {
@@ -250,6 +297,82 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     suspend fun getTunnelStatistics(tunnel: ObservableTunnel): Statistics = withContext(Dispatchers.Main.immediate) {
         tunnel.onStatisticsChanged(withContext(Dispatchers.IO) { getBackend().getStatistics(tunnel) })!!
+    }
+
+    private suspend fun dumpDiagnostics() {
+        Log.i(TAG, "=== WIREGUARD DIAGNOSTICS DUMP ===")
+        try {
+            val allTunnels = tunnelMap
+            Log.i(TAG, "Total tunnels: ${allTunnels.size}")
+
+            for (tunnel in allTunnels) {
+                val state = tunnel.state
+                Log.i(TAG, "--- Tunnel: ${tunnel.name} ---")
+                Log.i(TAG, "  State: $state")
+
+                if (state == Tunnel.State.UP) {
+                    try {
+                        val statistics = withContext(Dispatchers.IO) {
+                            getBackend().getStatistics(tunnel)
+                        }
+                        val config = tunnel.getConfigAsync()
+                        val currentTime = System.currentTimeMillis()
+
+                        Log.i(TAG, "  Peers: ${config.peers.size}")
+                        for (peer in config.peers) {
+                            val publicKey = peer.publicKey
+                            val endpoint = peer.endpoint.orElse(null)
+                            val peerStats = statistics.peer(publicKey)
+
+                            Log.i(TAG, "  --- Peer: ${publicKey.toBase64().substring(0, 16)}... ---")
+                            if (endpoint != null) {
+                                Log.i(TAG, "    Endpoint hostname: ${endpoint.host}:${endpoint.port}")
+
+                                // Try to get resolved IP
+                                withContext(Dispatchers.IO) {
+                                    val resolved = endpoint.getResolved().orElse(null)
+                                    if (resolved != null) {
+                                        Log.i(TAG, "    Resolved IP: ${resolved.host}:${resolved.port}")
+                                    } else {
+                                        Log.i(TAG, "    Resolved IP: NOT RESOLVED")
+                                    }
+                                }
+                            } else {
+                                Log.i(TAG, "    Endpoint: NONE")
+                            }
+
+                            if (peerStats != null) {
+                                val rxBytes = peerStats.rxBytes
+                                val txBytes = peerStats.txBytes
+                                val handshakeEpoch = peerStats.latestHandshakeEpochMillis
+
+                                Log.i(TAG, "    RX bytes: $rxBytes")
+                                Log.i(TAG, "    TX bytes: $txBytes")
+
+                                if (handshakeEpoch > 0) {
+                                    val handshakeAge = (currentTime - handshakeEpoch) / 1000
+                                    Log.i(TAG, "    Last handshake: ${handshakeAge}s ago")
+                                    Log.i(TAG, "    Handshake status: ${if (handshakeAge > STALE_HANDSHAKE_THRESHOLD_MS / 1000) "STALE" else "FRESH"}")
+                                } else {
+                                    Log.i(TAG, "    Last handshake: NEVER")
+                                }
+                            } else {
+                                Log.i(TAG, "    Statistics: NOT AVAILABLE")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "  Error dumping tunnel ${tunnel.name}: ${e.message}", e)
+                    }
+                }
+            }
+
+            Log.i(TAG, "DNS re-resolve enabled: ${UserKnobs.enableDnsReresolve.first()}")
+            Log.i(TAG, "Handshake check interval: ${HANDSHAKE_CHECK_INTERVAL_MS / 1000}s")
+            Log.i(TAG, "Stale handshake threshold: ${STALE_HANDSHAKE_THRESHOLD_MS / 1000}s")
+            Log.i(TAG, "=== END DIAGNOSTICS DUMP ===")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in diagnostics dump", e)
+        }
     }
 
     private fun startHandshakeMonitor() {
@@ -282,35 +405,68 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                             for (peer in config.peers) {
                                 val publicKey = peer.publicKey
                                 val peerStats = statistics.peer(publicKey)
+                                val endpoint = peer.endpoint.orElse(null)
 
                                 if (peerStats != null && peerStats.latestHandshakeEpochMillis > 0) {
                                     val timeSinceHandshake = currentTime - peerStats.latestHandshakeEpochMillis
+                                    val handshakeAgeSeconds = timeSinceHandshake / 1000
+
+                                    // Handshake exists - clear NONE tracking
+                                    tunnelNoHandshakeStartTime.remove(tunnel.name)
+
+                                    // Log handshake age at INFO level for monitoring
+                                    if (endpoint != null) {
+                                        Log.i(TAG, "Tunnel '${tunnel.name}': peer endpoint=${endpoint.host}:${endpoint.port}, " +
+                                                "handshake_age=${handshakeAgeSeconds}s")
+                                    }
 
                                     if (timeSinceHandshake > STALE_HANDSHAKE_THRESHOLD_MS) {
-                                        val endpoint = peer.endpoint.orElse(null)
                                         if (endpoint != null && endpoint.host.isNotEmpty()) {
-                                            Log.w(TAG, "Handshake stale for tunnel '${tunnel.name}', peer ${publicKey.toBase64()} " +
-                                                    "(${timeSinceHandshake / 1000}s old). Re-resolving endpoint ${endpoint.host}...")
+                                            Log.w(TAG, "Handshake STALE for tunnel '${tunnel.name}': " +
+                                                    "endpoint=${endpoint.host}:${endpoint.port}, " +
+                                                    "handshake_age=${handshakeAgeSeconds}s, " +
+                                                    "threshold=${STALE_HANDSHAKE_THRESHOLD_MS / 1000}s. Triggering DNS re-resolution...")
+
+                                            // Show persistent notification warning about stale handshake
+                                            showStaleHandshakeNotification(tunnel.name, handshakeAgeSeconds, isNone = false)
 
                                             // Trigger DNS re-resolution by calling setState with current config
                                             // This will cause GoBackend to re-resolve all peer endpoints
                                             withContext(Dispatchers.IO) {
                                                 try {
                                                     getBackend().setState(tunnel, Tunnel.State.UP, config)
-                                                    Log.i(TAG, "Successfully triggered DNS re-resolution for tunnel '${tunnel.name}'")
+                                                    Log.i(TAG, "DNS re-resolution triggered successfully for tunnel '${tunnel.name}'")
                                                 } catch (e: Exception) {
-                                                    Log.e(TAG, "Failed to re-resolve DNS for tunnel '${tunnel.name}': ${e.message}")
+                                                    Log.e(TAG, "Failed to re-resolve DNS for tunnel '${tunnel.name}': ${e.message}", e)
                                                 }
                                             }
 
                                             // Only re-resolve once per check cycle
                                             break
                                         }
+                                    } else {
+                                        // Handshake is fresh - dismiss any existing warning notification
+                                        dismissStaleHandshakeNotification()
+                                    }
+                                } else if (endpoint != null) {
+                                    // No handshake yet - track how long this has been happening
+                                    Log.i(TAG, "Tunnel '${tunnel.name}': peer endpoint=${endpoint.host}:${endpoint.port}, " +
+                                            "handshake=NONE (waiting for first handshake)")
+
+                                    // Record the first time we saw NONE state for this tunnel
+                                    val noneStartTime = tunnelNoHandshakeStartTime.getOrPut(tunnel.name) { currentTime }
+                                    val timeSinceNone = currentTime - noneStartTime
+
+                                    // If handshake has been NONE for too long, show notification
+                                    if (timeSinceNone > NO_HANDSHAKE_THRESHOLD_MS) {
+                                        Log.w(TAG, "Handshake NONE for too long on tunnel '${tunnel.name}': " +
+                                                "${timeSinceNone / 1000}s without any handshake. Connection may be blocked.")
+                                        showStaleHandshakeNotification(tunnel.name, null, isNone = true)
                                     }
                                 }
                             }
                         } catch (e: Throwable) {
-                            Log.e(TAG, "Error checking handshakes for tunnel '${tunnel.name}': ${Log.getStackTraceString(e)}")
+                            Log.e(TAG, "Error checking handshakes for tunnel '${tunnel.name}'", e)
                         }
                     }
                 } catch (e: Throwable) {
@@ -328,5 +484,14 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
         // Consider handshake stale after 135 seconds (matches reresolve-dns.sh threshold)
         private const val STALE_HANDSHAKE_THRESHOLD_MS = 135_000L
+
+        // Alert if no handshake completes after 30 seconds of tunnel being UP
+        // This is much shorter than STALE threshold because never establishing a connection
+        // is a more immediate problem than losing an existing connection
+        private const val NO_HANDSHAKE_THRESHOLD_MS = 30_000L
+
+        // Notification constants
+        private const val STALE_HANDSHAKE_NOTIFICATION_ID = 1001
+        private const val STALE_HANDSHAKE_CHANNEL_ID = "wireguard_stale_handshake"
     }
 }
