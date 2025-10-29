@@ -32,6 +32,15 @@ class ObservableTunnel internal constructor(
     @Bindable
     override fun getName() = name
 
+    @get:Bindable
+    val displayName: String
+        get() = when (connectionState) {
+            ConnectionState.DOWN -> name
+            ConnectionState.CONNECTING -> "$name (Connecting)"
+            ConnectionState.CONNECTED -> "$name (Connected)"
+            ConnectionState.DISCONNECTED -> "$name (Not connected)"
+        }
+
     suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
         if (name != this@ObservableTunnel.name)
             manager.setTunnelName(this@ObservableTunnel, name)
@@ -42,6 +51,7 @@ class ObservableTunnel internal constructor(
     fun onNameChanged(name: String): String {
         this.name = name
         notifyPropertyChanged(BR.name)
+        notifyPropertyChanged(BR.displayName)
         return name
     }
 
@@ -136,6 +146,16 @@ class ObservableTunnel internal constructor(
         return statistics
     }
 
+    @get:Bindable
+    var connectionState: ConnectionState = ConnectionState.DOWN
+        private set
+
+    fun onConnectionStateChanged(connectionState: ConnectionState): ConnectionState {
+        this.connectionState = connectionState
+        notifyPropertyChanged(BR.connectionState)
+        notifyPropertyChanged(BR.displayName)
+        return connectionState
+    }
 
     suspend fun deleteAsync() = manager.delete(this)
 

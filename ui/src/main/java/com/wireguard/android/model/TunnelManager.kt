@@ -39,6 +39,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
+ * Represents the visual connection state of a tunnel for UI purposes
+ */
+enum class ConnectionState {
+    /** Tunnel is down - no icon should be shown */
+    DOWN,
+    /** Tunnel is up but establishing connection (first 30s or no handshake yet) */
+    CONNECTING,
+    /** Tunnel is up and has active handshakes */
+    CONNECTED,
+    /** Tunnel is up but handshakes are stale (disconnected) */
+    DISCONNECTED
+}
+
+/**
  * Maintains and mediates changes to the set of available WireGuard tunnels,
  */
 class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
@@ -72,7 +86,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         }
 
         val notification = NotificationCompat.Builder(context, STALE_HANDSHAKE_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_notify_error) // Warning icon
+            .setSmallIcon(R.drawable.ic_stat_disconnected)
             .setContentTitle(context.getString(R.string.notification_stale_handshake_title))
             .setContentText(contentText)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -85,6 +99,76 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     private fun dismissStaleHandshakeNotification() {
         notificationManager.cancel(STALE_HANDSHAKE_NOTIFICATION_ID)
+    }
+
+    /**
+     * Determines the visual connection state for a tunnel.
+     * Only returns non-DOWN states when tunnel is UP.
+     */
+    suspend fun getConnectionState(tunnel: ObservableTunnel): ConnectionState = withContext(Dispatchers.IO) {
+        // If tunnel is down, no state to show
+        if (tunnel.state != Tunnel.State.UP) {
+            return@withContext ConnectionState.DOWN
+        }
+
+        // Tunnel is UP - determine connection health
+        val currentTime = System.currentTimeMillis()
+        val backend = getBackend()
+        val config = try {
+            tunnel.config ?: getTunnelConfig(tunnel)
+        } catch (e: Exception) {
+            return@withContext ConnectionState.CONNECTING
+        }
+
+        val statistics = try {
+            backend.getStatistics(tunnel)
+        } catch (e: Exception) {
+            // If we can't get statistics, assume connecting
+            return@withContext ConnectionState.CONNECTING
+        }
+
+        // Get the first peer's statistics (most tunnels have one peer)
+        val firstPeer = config.peers.firstOrNull() ?: return@withContext ConnectionState.CONNECTING
+        val peerStats = statistics?.peer(firstPeer.publicKey)
+
+        if (peerStats == null) {
+            // No peer statistics available - connecting
+            return@withContext ConnectionState.CONNECTING
+        }
+
+        val latestHandshakeEpoch = peerStats.latestHandshakeEpochMillis
+
+        when {
+            latestHandshakeEpoch == 0L -> {
+                // Handshake is NONE/NEVER - check if we're in initial 30s
+                val noneStartTime = tunnelNoHandshakeStartTime[tunnel.name] ?: currentTime
+                val timeSinceNone = currentTime - noneStartTime
+                val timeSinceNoneSeconds = timeSinceNone / 1000
+
+                if (timeSinceNoneSeconds < 30) {
+                    ConnectionState.CONNECTING
+                } else {
+                    // Past 30 seconds with no handshake - disconnected
+                    ConnectionState.DISCONNECTED
+                }
+            }
+            else -> {
+                // We have a handshake - check if it's stale
+                val timeSinceHandshake = currentTime - latestHandshakeEpoch
+                val handshakeAgeSeconds = timeSinceHandshake / 1000
+
+                when {
+                    handshakeAgeSeconds < 135 -> {
+                        // Handshake is recent - connected
+                        ConnectionState.CONNECTED
+                    }
+                    else -> {
+                        // Handshake is stale (>135s) - disconnected
+                        ConnectionState.DISCONNECTED
+                    }
+                }
+            }
+        }
     }
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel {
@@ -257,6 +341,17 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             throwable = e
         }
         tunnel.onStateChanged(newState)
+
+        // Update connection state immediately based on new tunnel state
+        if (newState == Tunnel.State.DOWN) {
+            tunnel.onConnectionStateChanged(ConnectionState.DOWN)
+        } else if (newState == Tunnel.State.UP) {
+            // Immediately get and set connection state when tunnel goes UP
+            // This will show CONNECTING icon right away
+            val connectionState = getConnectionState(tunnel)
+            tunnel.onConnectionStateChanged(connectionState)
+        }
+
         saveState()
         if (throwable != null)
             throw throwable
@@ -304,46 +399,46 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         tunnel.onStatisticsChanged(withContext(Dispatchers.IO) { getBackend().getStatistics(tunnel) })!!
     }
 
-    private suspend fun dumpDiagnostics() {
-        Log.i(TAG, "=== WIREGUARD DIAGNOSTICS DUMP ===")
+    suspend fun getDiagnostics(): String = withContext(Dispatchers.IO) {
+        val builder = StringBuilder()
+        builder.appendLine("=== WIREGUARD DIAGNOSTICS ===")
+        builder.appendLine()
+
         try {
             val allTunnels = tunnelMap
-            Log.i(TAG, "Total tunnels: ${allTunnels.size}")
+            builder.appendLine("Total tunnels: ${allTunnels.size}")
+            builder.appendLine()
 
             for (tunnel in allTunnels) {
                 val state = tunnel.state
-                Log.i(TAG, "--- Tunnel: ${tunnel.name} ---")
-                Log.i(TAG, "  State: $state")
+                builder.appendLine("--- Tunnel: ${tunnel.name} ---")
+                builder.appendLine("  State: $state")
 
                 if (state == Tunnel.State.UP) {
                     try {
-                        val statistics = withContext(Dispatchers.IO) {
-                            getBackend().getStatistics(tunnel)
-                        }
+                        val statistics = getBackend().getStatistics(tunnel)
                         val config = tunnel.getConfigAsync()
                         val currentTime = System.currentTimeMillis()
 
-                        Log.i(TAG, "  Peers: ${config.peers.size}")
+                        builder.appendLine("  Peers: ${config.peers.size}")
                         for (peer in config.peers) {
                             val publicKey = peer.publicKey
                             val endpoint = peer.endpoint.orElse(null)
                             val peerStats = statistics.peer(publicKey)
 
-                            Log.i(TAG, "  --- Peer: ${publicKey.toBase64().substring(0, 16)}... ---")
+                            builder.appendLine("  --- Peer: ${publicKey.toBase64().substring(0, 16)}... ---")
                             if (endpoint != null) {
-                                Log.i(TAG, "    Endpoint hostname: ${endpoint.host}:${endpoint.port}")
+                                builder.appendLine("    Endpoint hostname: ${endpoint.host}:${endpoint.port}")
 
                                 // Try to get resolved IP
-                                withContext(Dispatchers.IO) {
-                                    val resolved = endpoint.getResolved().orElse(null)
-                                    if (resolved != null) {
-                                        Log.i(TAG, "    Resolved IP: ${resolved.host}:${resolved.port}")
-                                    } else {
-                                        Log.i(TAG, "    Resolved IP: NOT RESOLVED")
-                                    }
+                                val resolved = endpoint.getResolved().orElse(null)
+                                if (resolved != null) {
+                                    builder.appendLine("    Resolved IP: ${resolved.host}:${resolved.port}")
+                                } else {
+                                    builder.appendLine("    Resolved IP: NOT RESOLVED")
                                 }
                             } else {
-                                Log.i(TAG, "    Endpoint: NONE")
+                                builder.appendLine("    Endpoint: NONE")
                             }
 
                             if (peerStats != null) {
@@ -351,32 +446,48 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                                 val txBytes = peerStats.txBytes
                                 val handshakeEpoch = peerStats.latestHandshakeEpochMillis
 
-                                Log.i(TAG, "    RX bytes: $rxBytes")
-                                Log.i(TAG, "    TX bytes: $txBytes")
+                                builder.appendLine("    RX bytes: $rxBytes")
+                                builder.appendLine("    TX bytes: $txBytes")
 
                                 if (handshakeEpoch > 0) {
                                     val handshakeAge = (currentTime - handshakeEpoch) / 1000
-                                    Log.i(TAG, "    Last handshake: ${handshakeAge}s ago")
-                                    Log.i(TAG, "    Handshake status: ${if (handshakeAge > STALE_HANDSHAKE_THRESHOLD_MS / 1000) "STALE" else "FRESH"}")
+                                    builder.appendLine("    Last handshake: ${handshakeAge}s ago")
+                                    builder.appendLine("    Handshake status: ${if (handshakeAge > STALE_HANDSHAKE_THRESHOLD_MS / 1000) "STALE" else "FRESH"}")
                                 } else {
-                                    Log.i(TAG, "    Last handshake: NEVER")
+                                    builder.appendLine("    Last handshake: NEVER")
                                 }
                             } else {
-                                Log.i(TAG, "    Statistics: NOT AVAILABLE")
+                                builder.appendLine("    Statistics: NOT AVAILABLE")
                             }
                         }
+                        builder.appendLine()
                     } catch (e: Exception) {
-                        Log.e(TAG, "  Error dumping tunnel ${tunnel.name}: ${e.message}", e)
+                        builder.appendLine("  Error: ${e.message}")
+                        builder.appendLine()
                     }
+                } else {
+                    builder.appendLine()
                 }
             }
 
-            Log.i(TAG, "DNS re-resolve enabled: ${UserKnobs.enableDnsReresolve.first()}")
-            Log.i(TAG, "Handshake check interval: ${HANDSHAKE_CHECK_INTERVAL_MS / 1000}s")
-            Log.i(TAG, "Stale handshake threshold: ${STALE_HANDSHAKE_THRESHOLD_MS / 1000}s")
-            Log.i(TAG, "=== END DIAGNOSTICS DUMP ===")
+            builder.appendLine("--- Configuration ---")
+            builder.appendLine("DNS re-resolve enabled: ${UserKnobs.enableDnsReresolve.first()}")
+            builder.appendLine("Handshake check interval: ${HANDSHAKE_CHECK_INTERVAL_MS / 1000}s")
+            builder.appendLine("Stale handshake threshold: ${STALE_HANDSHAKE_THRESHOLD_MS / 1000}s")
+            builder.appendLine()
+            builder.appendLine("=== END DIAGNOSTICS ===")
         } catch (e: Exception) {
-            Log.e(TAG, "Error in diagnostics dump", e)
+            builder.appendLine("Error generating diagnostics: ${e.message}")
+        }
+
+        return@withContext builder.toString()
+    }
+
+    private suspend fun dumpDiagnostics() {
+        val diagnostics = getDiagnostics()
+        // Log each line separately for logcat
+        diagnostics.lines().forEach { line ->
+            Log.i(TAG, line)
         }
     }
 
@@ -405,6 +516,12 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                     // Check each running tunnel
                     for (tunnel in runningTunnels) {
                         try {
+                            // Update connection state for UI
+                            val connectionState = getConnectionState(tunnel)
+                            withContext(Dispatchers.Main.immediate) {
+                                tunnel.onConnectionStateChanged(connectionState)
+                            }
+
                             val statistics = withContext(Dispatchers.IO) {
                                 getBackend().getStatistics(tunnel)
                             }
