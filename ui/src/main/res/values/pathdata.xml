@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2022 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<resources>
+    <string name="vdpath_star_full" translatable="false">M 12 17.27 L 18.18 21 L 16.54 13.97 L 19.27 11.605 L 22 9.24 L 14.81 8.63 L 12 2 L 9.19 8.63 L 2 9.24 L 7.46 13.97 L 5.82 21 L 12 17.27 M 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495 L 12.005 12.495</string>
+    <string name="vdpath_star_border" translatable="false">M 12 17.27 L 18.18 21 L 16.55 13.97 L 22 9.24 L 22 9.24 L 14.81 8.62 L 12 2 L 9.19 8.63 L 2 9.24 L 7.46 13.97 L 5.82 21 L 12 17.27 M 12 15.4 L 8.24 17.67 L 9.24 13.39 L 5.92 10.51 L 10.3 10.13 L 12 6.1 L 13.71 10.14 L 18.09 10.52 L 14.77 13.4 L 15.77 17.68 L 12 15.4 L 12 15.4</string>
+</resources>

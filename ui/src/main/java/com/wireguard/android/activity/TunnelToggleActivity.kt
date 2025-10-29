@@ -27,12 +27,22 @@ class TunnelToggleActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { toggleTunnelWithPermissionsResult() }
 
     private fun toggleTunnelWithPermissionsResult() {
-        val tunnel = Application.getTunnelManager().lastUsedTunnel ?: return
         lifecycleScope.launch {
+            val tunnelAction = when(intent.action) {
+                "com.wireguard.android.action.SET_TUNNEL_UP" -> Tunnel.State.UP
+                "com.wireguard.android.action.SET_TUNNEL_DOWN" -> Tunnel.State.DOWN
+                else -> Tunnel.State.TOGGLE // Implicit toggle to keep previous behaviour
+            }
+
+            val tunnel = when(val tunnelName = intent.getStringExtra("tunnel")) {
+                null -> Application.getTunnelManager().lastUsedTunnel
+                else -> Application.getTunnelManager().getTunnels().find { it.name == tunnelName }
+            } ?: return@launch // If we failed to identify the tunnel, just return
+
             try {
-                tunnel.setStateAsync(Tunnel.State.TOGGLE)
+                tunnel.setStateAsync(tunnelAction)
             } catch (e: Throwable) {
-                TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
+                updateTileService()
                 val error = ErrorMessages[e]
                 val message = getString(R.string.toggle_error, error)
                 Log.e(TAG, message, e)
@@ -40,8 +50,18 @@ class TunnelToggleActivity : AppCompatActivity() {
                 finishAffinity()
                 return@launch
             }
-            TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
+            updateTileService()
             finishAffinity()
+        }
+    }
+
+    /**
+     * TileService is only available for API 24+, if it's available it'll be updated,
+     * otherwise it's ignored.
+     */
+    private fun updateTileService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            TileService.requestListeningState(this@TunnelToggleActivity, ComponentName(this@TunnelToggleActivity, QuickTileService::class.java))
         }
     }
 
