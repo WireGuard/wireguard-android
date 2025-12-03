@@ -331,8 +331,7 @@ public final class GoBackend implements Backend {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 builder.setMetered(false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                service.setUnderlyingNetworks(null);
+            service.setUnderlyingNetworks(null);
 
             builder.setBlocking(true);
             try (final ParcelFileDescriptor tun = builder.establish()) {
