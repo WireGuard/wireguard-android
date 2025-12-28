@@ -1,0 +1,55 @@
+name: Build WireGuard (Final Version)
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        fetch-depth: '0'
+
+    - name: Setup Go (WireGuard İçin Gerekli)
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: '12266719'
+
+    - name: Install NDK
+      run: |
+        # WireGuard'ın beklediği NDK sürümünü kuruyoruz
+        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
+        echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> $GITHUB_ENV
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17' # WireGuard şu an JDK 17 ile daha stabil
+
+    - name: Build Debug APK
+      run: |
+        # WireGuard klasör yapısına göre gradlew dosyasını bul ve çalıştır
+        echo "sdk.dir=${ANDROID_HOME}" > local.properties
+        chmod 755 gradlew
+        ./gradlew assembleDebug --stacktrace
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: WireGuard-Debug-APK
+        path: ui/build/outputs/apk/debug/*.apk
+
