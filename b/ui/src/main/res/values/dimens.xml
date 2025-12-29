@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="bottom_sheet_item_height">56dp</dimen>
+    <dimen name="normal_margin">8dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
+    <dimen name="bottom_sheet_icon_padding">16dp</dimen>
+    <dimen name="tunnel_list_placeholder_margin">16dp</dimen>
+</resources>

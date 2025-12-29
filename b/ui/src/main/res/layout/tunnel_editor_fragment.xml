@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.wireguard.android.util.ClipboardUtils" />
+
+        <import type="com.wireguard.android.widget.KeyInputFilter" />
+
+        <import type="com.wireguard.android.widget.NameInputFilter" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelEditorFragment" />
+
+        <variable
+            name="config"
+            type="com.wireguard.android.viewmodel.ConfigProxy" />
+
+        <variable
+            name="name"
+            type="String" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/interface_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_marginTop="32dp"
+                            android:text="@string/interface_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/interface_name_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/interface_title">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/interface_name_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusDown="@id/private_key_text"
+                                android:nextFocusForward="@id/private_key_text"
+                                android:text="@={name}"
+                                app:filter="@{NameInputFilter.newInstance()}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/private_key_text_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/private_key"
+                            app:endIconContentDescription="@string/generate_new_private_key"
+                            app:endIconDrawable="@drawable/ic_action_generate"
+                            app:endIconMode="custom"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/interface_name_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/private_key_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions|textPassword"
+                                android:nextFocusUp="@id/interface_name_text"
+                                android:nextFocusDown="@id/public_key_text"
+                                android:nextFocusForward="@id/public_key_text"
+                                android:onClick="@{fragment::onKeyClick}"
+                                android:text="@={config.interface.privateKey}"
+                                app:filter="@{KeyInputFilter.newInstance()}"
+                                app:onFocusChange="@{fragment::onKeyFocusChange}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/public_key_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/public_key"
+                            app:expandedHintEnabled="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/private_key_text_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/public_key_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:editable="false"
+                                android:ellipsize="end"
+                                android:focusable="false"
+                                android:hint="@string/hint_generated"
+                                android:imeOptions="actionNext"
+                                android:nextFocusUp="@id/private_key_text"
+                                android:nextFocusDown="@id/addresses_label_text"
+                                android:nextFocusForward="@id/addresses_label_text"
+                                android:onClick="@{ClipboardUtils::copyTextView}"
+                                android:singleLine="true"
+                                android:text="@{config.interface.publicKey}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/addresses_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/addresses"
+                            app:layout_constraintEnd_toStartOf="@id/listen_port_label_layout"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintHorizontal_weight="0.7"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/addresses_label_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusUp="@id/public_key_text"
+                                android:nextFocusDown="@id/dns_servers_text"
+                                android:nextFocusForward="@id/listen_port_text"
+                                android:text="@={config.interface.addresses}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/listen_port_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/listen_port"
+                            app:expandedHintEnabled="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_weight="0.3"
+                            app:layout_constraintStart_toEndOf="@id/addresses_label_layout"
+                            app:layout_constraintTop_toBottomOf="@id/public_key_label_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/listen_port_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/hint_random"
+                                android:imeOptions="actionNext"
+                                android:inputType="number"
+                                android:nextFocusUp="@id/public_key_text"
+                                android:nextFocusDown="@id/mtu_text"
+                                android:nextFocusForward="@id/dns_servers_text"
+                                android:text="@={config.interface.listenPort}"
+                                android:textAlignment="center" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/dns_servers_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/dns_servers"
+                            app:layout_constraintEnd_toStartOf="@id/mtu_label_layout"
+                            app:layout_constraintHorizontal_chainStyle="spread"
+                            app:layout_constraintHorizontal_weight="0.7"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/addresses_label_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/dns_servers_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:nextFocusUp="@id/addresses_label_text"
+                                android:nextFocusDown="@id/set_excluded_applications"
+                                android:nextFocusForward="@id/mtu_text"
+                                android:text="@={config.interface.dnsServers}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/mtu_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/mtu"
+                            app:expandedHintEnabled="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_weight="0.3"
+                            app:layout_constraintStart_toEndOf="@id/dns_servers_label_layout"
+                            app:layout_constraintTop_toBottomOf="@id/addresses_label_layout">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/mtu_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/hint_automatic"
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                android:nextFocusUp="@id/listen_port_text"
+                                android:nextFocusDown="@id/set_excluded_applications"
+                                android:nextFocusForward="@id/set_excluded_applications"
+                                android:text="@={config.interface.mtu}"
+                                android:textAlignment="center" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/set_excluded_applications"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:nextFocusUp="@id/dns_servers_text"
+                            android:nextFocusDown="@id/peers_layout"
+                            android:nextFocusForward="@id/peers_layout"
+                            android:onClick="@{fragment::onRequestSetExcludedIncludedApplications}"
+                            android:text="@{config.interface.includedApplications.size > 0 ? @plurals/set_included_applications(config.interface.includedApplications.size, config.interface.includedApplications.size) : config.interface.excludedApplications.size > 0 ? @plurals/set_excluded_applications(config.interface.excludedApplications.size, config.interface.excludedApplications.size) : @string/all_applications}"
+                            android:textColor="?attr/colorSecondary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/mtu_label_layout"
+                            app:rippleColor="?attr/colorSecondary"
+                            tools:text="4 excluded applications" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:id="@+id/peers_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:orientation="vertical"
+                    app:fragment="@{fragment}"
+                    app:items="@{config.peers}"
+                    app:layout="@{@layout/tunnel_editor_peer}"
+                    tools:ignore="UselessLeaf" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_peer_button"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="?attr/colorPrimaryDark"
+                    android:gravity="center"
+                    android:onClick="@{() -> config.addPeer()}"
+                    android:text="@string/add_peer"
+                    android:textColor="?attr/colorSecondary"
+                    app:layout_anchorGravity="bottom"
+                    app:rippleColor="?attr/colorSecondary" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

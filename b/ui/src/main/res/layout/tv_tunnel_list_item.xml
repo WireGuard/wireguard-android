@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.wireguard.android.model.ObservableTunnel" />
+
+        <import type="com.wireguard.android.backend.Tunnel.State" />
+
+        <variable
+            name="isDeleting"
+            type="androidx.databinding.ObservableBoolean" />
+
+        <variable
+            name="isFocused"
+            type="androidx.databinding.ObservableBoolean" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.model.ObservableTunnel" />
+    </data>
+
+    <com.wireguard.android.widget.TvCardView
+        android:layout_width="225dp"
+        android:layout_height="110dp"
+        android:layout_margin="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="0dp"
+        android:backgroundTint="@color/tv_list_item_tint"
+        android:checkable="true"
+        android:focusable="true"
+        app:contentPadding="8dp"
+        app:isDeleting="@{isDeleting}"
+        app:isUp="@{item.state == State.UP}">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tunnel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.name}"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@sample/interface_names.json/names/names/name" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tunnel_transfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:visibility="@{isDeleting ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="rx: 200 MB, tx: 100 MB" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tunnel_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_delete"
+                android:visibility="@{(isDeleting &amp;&amp; isFocused) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.wireguard.android.widget.TvCardView>
+
+</layout>

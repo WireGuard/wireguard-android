@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.wireguard.android.widget.KeyInputFilter" />
+
+        <import type="com.wireguard.android.databinding.BindingAdapters" />
+
+        <variable
+            name="collection"
+            type="androidx.databinding.ObservableList&lt;com.wireguard.android.viewmodel.PeerProxy&gt;" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.viewmodel.PeerProxy" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelEditorFragment" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/peer_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/peer"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                app:layout_constraintBottom_toTopOf="@+id/public_key_label_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:nextFocusDown="@id/public_key_text"
+                android:nextFocusForward="@id/public_key_text"
+                android:onClick="@{() -> item.unbind()}"
+                android:padding="8dp"
+                android:src="@drawable/ic_action_delete"
+                app:layout_constraintBaseline_toBaselineOf="@id/peer_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/peer_title" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/public_key_label_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/public_key"
+                app:layout_constraintBottom_toTopOf="@+id/pre_shared_key_label_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/peer_title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/public_key_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:nextFocusUp="@id/delete"
+                    android:nextFocusDown="@id/pre_shared_key_text"
+                    android:nextFocusForward="@id/pre_shared_key_text"
+                    android:text="@={item.publicKey}"
+                    app:filter="@{KeyInputFilter.newInstance()}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pre_shared_key_label_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/pre_shared_key"
+                app:expandedHintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/pre_shared_key_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_optional"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions|textPassword"
+                    android:nextFocusUp="@id/public_key_text"
+                    android:nextFocusDown="@id/persistent_keepalive_text"
+                    android:nextFocusForward="@id/persistent_keepalive_text"
+                    android:onClick="@{fragment::onKeyClick}"
+                    android:text="@={item.preSharedKey}"
+                    app:filter="@{KeyInputFilter.newInstance()}"
+                    app:onFocusChange="@{fragment::onKeyFocusChange}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/persistent_keepalive_label_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/persistent_keepalive"
+                app:expandedHintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pre_shared_key_label_layout"
+                app:suffixText="@{@plurals/persistent_keepalive_seconds_suffix(BindingAdapters.tryParseInt(item.persistentKeepalive))}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/persistent_keepalive_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_optional_discouraged"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:nextFocusUp="@id/persistent_keepalive_text"
+                    android:nextFocusDown="@id/endpoint_text"
+                    android:nextFocusForward="@id/endpoint_text"
+                    android:text="@={item.persistentKeepalive}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/endpoint_label_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/endpoint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/persistent_keepalive_label_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/endpoint_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:nextFocusUp="@id/persistent_keepalive_text"
+                    android:nextFocusDown="@id/allowed_ips_text"
+                    android:nextFocusForward="@id/allowed_ips_text"
+                    android:text="@={item.endpoint}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/allowed_ips_label_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:hint="@string/allowed_ips"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/endpoint_label_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/allowed_ips_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:imeOptions="actionDone"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:nextFocusUp="@id/endpoint_text"
+                    android:nextFocusDown="@id/selected_checkbox"
+                    android:nextFocusForward="@id/selected_checkbox"
+                    android:text="@={item.allowedIps}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/selected_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="0dp"
+                android:checked="@={item.excludingPrivateIps}"
+                android:nextFocusDown="@id/add_peer_button"
+                android:nextFocusForward="@id/add_peer_button"
+                android:text="@string/exclude_private_ips"
+                android:visibility="@{item.ableToExcludePrivateIps ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/allowed_ips_label_layout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

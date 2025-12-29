@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<resources>
+    <declare-styleable name="Multiselected">
+        <attr name="state_multiselected" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="TvCardView">
+        <attr name="state_isUp" format="boolean" />
+        <attr name="state_isDeleting" format="boolean" />
+    </declare-styleable>
+</resources>

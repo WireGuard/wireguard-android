@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="delete_error">
+        <item quantity="other">Không thể xóa %d tunnel(s): %s</item>
+    </plurals>
+    <plurals name="delete_success">
+        <item quantity="other">Đã xóa thành công %d tunnel(s)</item>
+    </plurals>
+    <plurals name="delete_title">
+        <item quantity="other">Đã chọn %d tunnel(s)</item>
+    </plurals>
+    <plurals name="import_partial_success">
+        <item quantity="other">Đã nhập %1$d trong số %2$d tunnel(s)</item>
+    </plurals>
+    <plurals name="import_total_success">
+        <item quantity="other">Đã nhập %d tunnel(s)</item>
+    </plurals>
+    <plurals name="set_excluded_applications">
+        <item quantity="other">%d Ứng dụng được loại trừ</item>
+    </plurals>
+    <plurals name="set_included_applications">
+        <item quantity="other">%d Ứng dụng được bao gồm</item>
+    </plurals>
+    <plurals name="n_excluded_applications">
+        <item quantity="other">Đã loại trừ %d</item>
+    </plurals>
+    <plurals name="n_included_applications">
+        <item quantity="other">Đã thêm vào %d</item>
+    </plurals>
+    <string name="all_applications">Tất cả các ứng dụng</string>
+    <string name="exclude_from_tunnel">Ngoại trừ</string>
+    <string name="include_in_tunnel">Chỉ bao gồm</string>
+    <plurals name="include_n_applications">
+        <item quantity="other">Thêm vào %d ứng dụng</item>
+    </plurals>
+    <plurals name="exclude_n_applications">
+        <item quantity="other">Loại trừ %d ứng dụng</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_unit">
+        <item quantity="other">Mỗi %d giây</item>
+    </plurals>
+    <plurals name="persistent_keepalive_seconds_suffix">
+        <item quantity="other">Giây</item>
+    </plurals>
+    <string name="use_all_applications">Xài dùng tất cả app</string>
+    <string name="add_peer">Thêm cộng tác viên</string>
+    <string name="addresses">Địa chỉ</string>
+    <string name="applications">Ứng dụng</string>
+    <string name="allow_remote_control_intents_summary_off">Các ứng dụng bên ngoài không thể bật/tắt tunnels (khuyến nghị)</string>
+    <string name="allow_remote_control_intents_summary_on">Các ứng dụng bên ngoài có thể bật/tắt tunnels (nâng cao)</string>
+    <string name="allow_remote_control_intents_title">Cho phép điều khiển ứng dụng từ xa</string>
+    <string name="allowed_ips">IP Cho phép </string>
+    <string name="bad_config_context">%1$s / %2$s</string>
+    <string name="bad_config_context_top_level">%s</string>
+    <string name="bad_config_error">%1$s trong %2$s</string>
+    <string name="bad_config_explanation_pka">: Phải là số dương và không lớn hơn 65535</string>
+    <string name="bad_config_explanation_positive_number">Giá trị phải là số dương</string>
+    <string name="bad_config_explanation_udp_port">: Phải là port UDP hợp lý</string>
+    <string name="bad_config_reason_invalid_key">Khoá không hợp lệ</string>
+    <string name="bad_config_reason_invalid_number">Số không hợp lệ</string>
+    <string name="bad_config_reason_invalid_value">Giá trị không hợp lệ</string>
+    <string name="bad_config_reason_missing_attribute">Thuộc tính bị thiếu</string>
+    <string name="bad_config_reason_missing_section">Phần bị thiếu</string>
+    <string name="bad_config_reason_syntax_error">Lỗi cú pháp</string>
+    <string name="bad_config_reason_unknown_attribute">Thuộc tính không tồn tại</string>
+    <string name="bad_config_reason_unknown_section">Mục không xác định</string>
+    <string name="bad_config_reason_value_out_of_range">Giá trị vượt ngoài khoảng cho phép</string>
+    <string name="bad_extension_error">File phải là .conf hoặc .zip</string>
+    <string name="error_no_qr_found">Không tìm thấy QR code trong ảnh</string>
+    <string name="error_qr_checksum">Kiểm tra checksum QR code không thành công</string>
+    <string name="cancel">Hủy</string>
+    <string name="config_delete_error">Không thể xóa file cấu hình \"%s\"</string>
+    <string name="config_exists_error">Cấu hình cho \"%s\" đã tồn tại</string>
+    <string name="config_file_exists_error">File cấu hình cho \"%s\" đã tồn tại</string>
+    <string name="config_not_found_error">Không tìm thấy file cấu hình \"%s\"</string>
+    <string name="config_rename_error">Không thể xóa file cấu hình \"%s\"</string>
+    <string name="config_save_error">Không thể lưu cấu hình cho \"%1$s\": %2$s</string>
+    <string name="config_save_success">Đã lưu cấu hình thành công cho \"%s\"</string>
+    <string name="create_activity_title">Tạo ra Wireguard VPN</string>
+    <string name="create_bin_dir_error">Không thế tạo local binary directory</string>
+    <string name="create_downloads_file_error">Không thể tạo file trong thư mục download</string>
+    <string name="create_empty">Làm lại từ đầu</string>
+    <string name="create_from_file">Nhập từ file hoặc archive</string>
+    <string name="create_from_qr_code">Quét mã QR</string>
+    <string name="create_output_dir_error">Không thể tạo tập tin xuất ra</string>
+    <string name="create_temp_dir_error">Không thế tạo local binary directory</string>
+    <string name="create_tunnel">Tạo VPN</string>
+    <string name="copied_to_clipboard">%s đã sao chép vào bộ nhớ tạm</string>
+    <string name="dark_theme_summary_off">Đang sử dụng ánh sáng (ngày)</string>
+    <string name="dark_theme_summary_on">Đang sử dụng đề tối (ban đêm)</string>
+    <string name="dark_theme_title">Sử dụng đề tối</string>
+    <string name="delete">Xóa</string>
+    <string name="tv_delete">Chọn tunnel để xóa</string>
+    <string name="tv_select_a_storage_drive">Chọn bộ lưu trữ</string>
+    <string name="tv_no_file_picker">Vui lòng cài đặt tệp tiện ích lưu trữ để tìm kiếm các tệp</string>
+    <string name="tv_add_tunnel_get_started">Thêm một tunnel để bắt đầu</string>
+    <string name="donate_title">❤️ Đóng góp cho Dự án Wireguard</string>
+    <string name="donate_summary">Mọi đóng góp đều giúp ích</string>
+    <string name="donate_google_play_disappointment">Cảm ơn bạn đã ủng hộ HEZWIN!\n\nThật tiếc, dựa trên điều khoản của Google, chúng tôi không thể đưa vào liên kết dẫn đến trang đóng góp ở trang chủ của dự án. Mong rằng bạn có thể tìm cách cho việc này!\n\nXin cảm ơn bạn một lần nữa vì đã đóng góp.</string>
+    <string name="disable_config_export_title">Vô hiệu hóa xuất cấu hình</string>
+    <string name="disable_config_export_description">Vô hiệu hóa xuất cấu hình sẽ giúp giảm khả năng truy cập vào private keys</string>
+    <string name="dns_servers">DNS servers</string>
+    <string name="dns_search_domains">Tên miền của DNS tìm kiếm</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="endpoint">Đầu cuối</string>
+    <string name="error_down">Có lỗi khi tắt tunnel: %s</string>
+    <string name="error_fetching_apps">Lỗi khi lấy danh sách ứng dụng: %s</string>
+    <string name="error_root">Vui lòng truy cập bằng quyền root và thử lại</string>
+    <string name="error_prepare">Lỗi khi chuẩn bị tunnel: %s</string>
+    <string name="error_up">Có lỗi khi bật tunnel: %s</string>
+    <string name="exclude_private_ips">Loại trừ IPs private</string>
+    <string name="generate_new_private_key">Tạo private key mới</string>
+    <string name="generic_error">Lỗi \"%s\" không xác định</string>
+    <string name="hint_automatic">(tự động)</string>
+    <string name="hint_generated">(được tạo tự động)</string>
+    <string name="hint_optional">(tùy chọn)</string>
+    <string name="hint_optional_discouraged">(tùy chọn, không khuyến khích)</string>
+    <string name="hint_random">(ngẫu nhiên)</string>
+    <string name="illegal_filename_error">Tên file không hợp lệ \"%s\"</string>
+    <string name="import_error">Không thể nhập tunnel: %s</string>
+    <string name="import_from_qr_code">Nhập tunnel từ mã QR</string>
+    <string name="import_success">Đã nhập \"%s\"</string>
+    <string name="interface_title">Giao diện</string>
+    <string name="key_contents_error">Kí tự không hợp lệ trong khoá</string>
+    <string name="key_length_error">Độ dài khoá không hợp lệ</string>
+    <string name="key_length_explanation_base64">: Khoá HEZWIN base64 phải đủ 44 ký tự (32 bytes)</string>
+    <string name="key_length_explanation_binary">: Khoá HEZWIN phải đủ 32 bytes</string>
+    <string name="key_length_explanation_hex">: Khoá HEZWIN hex phải đủ 64 ký tự (32 bytes)</string>
+    <string name="latest_handshake">Lần bắt tay cuối</string>
+    <string name="latest_handshake_ago">%s giây trước</string>
+    <string name="listen_port">Cổng</string>
+    <string name="log_export_error">Không thể xuất nhật ký: %s</string>
+    <string name="log_export_subject">File nhật ký HEZWIN Android</string>
+    <string name="log_export_success">Đã lưu vào \"%s\"</string>
+    <string name="log_export_title">Xuất file nhật ký</string>
+    <string name="log_saver_activity_label">Lưu nhật ký</string>
+    <string name="parse_error_inet_address">Địa chỉ IP</string>
+    <string name="peer">Đồng trang lứa</string>
+</resources>

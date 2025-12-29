@@ -1,0 +1,6 @@
+[submodule "tunnel/tools/wireguard-tools"]
+	path = tunnel/tools/wireguard-tools
+	url = https://git.zx2c4.com/wireguard-tools
+[submodule "tunnel/tools/elf-cleaner"]
+	path = tunnel/tools/elf-cleaner
+	url = https://github.com/termux/termux-elf-cleaner

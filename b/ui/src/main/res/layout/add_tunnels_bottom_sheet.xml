@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/bottom_sheet_top_padding">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_from_file"
+        style="@style/Widget.Material3.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_item_height"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginRight="@dimen/normal_margin"
+        android:nextFocusDown="@id/create_from_qrcode"
+        android:nextFocusForward="@id/create_from_qrcode"
+        android:text="@string/create_from_file"
+        android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurface"
+        app:icon="@drawable/ic_action_open"
+        app:iconPadding="@dimen/bottom_sheet_icon_padding"
+        app:iconTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toTopOf="@+id/create_from_qrcode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:rippleColor="?attr/colorSecondary" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_from_qrcode"
+        style="@style/Widget.Material3.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_item_height"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginRight="@dimen/normal_margin"
+        android:nextFocusUp="@id/create_from_file"
+        android:nextFocusDown="@id/create_empty"
+        android:nextFocusForward="@id/create_empty"
+        android:text="@string/create_from_qr_code"
+        android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurface"
+        app:icon="@drawable/ic_action_scan_qr_code"
+        app:iconPadding="@dimen/bottom_sheet_icon_padding"
+        app:iconTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/create_empty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_from_file"
+        app:rippleColor="?attr/colorSecondary" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/create_empty"
+        style="@style/Widget.Material3.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_item_height"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginRight="@dimen/normal_margin"
+        android:nextFocusUp="@id/create_from_qrcode"
+        android:text="@string/create_empty"
+        android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurface"
+        app:icon="@drawable/ic_action_edit"
+        app:iconPadding="@dimen/bottom_sheet_icon_padding"
+        app:iconTint="?attr/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_from_qrcode"
+        app:rippleColor="?attr/colorSecondary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
