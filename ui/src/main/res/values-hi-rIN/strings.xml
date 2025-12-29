@@ -125,7 +125,7 @@
     <string name="key_length_explanation_hex">: वायरगार्ड हेक्स कीज़ 64 अक्षरों की होनी चाहिए (32 बाइट्स)</string>
     <string name="listen_port">पोर्ट सूने</string>
     <string name="log_export_error">लॉग निर्यात करने में असमर्थ: %s</string>
-    <string name="log_export_subject">WireGuard एंड्राइड लॉग फ़ाइल</string>
+    <string name="log_export_subject">HEZWIN एंड्राइड लॉग फ़ाइल</string>
     <string name="log_export_success">“%s” में सहेजा गया</string>
     <string name="log_export_title">लॉग फ़ाइल निर्यात करें</string>
     <string name="log_saver_activity_label">लॉग सहेजे</string>
@@ -205,7 +205,7 @@
     <string name="version_summary">%1$s बैकएंड %2$s</string>
     <string name="version_summary_checking">%s बैकएंड संस्करण की जाँच कर रहा है</string>
     <string name="version_summary_unknown">अज्ञात %s संस्करण</string>
-    <string name="version_title">WireGuard for Android v%s</string>
+    <string name="version_title">HEZWIN for Android v%s</string>
     <string name="vpn_not_authorized_error">वीपीएन सेवा उपयोगकर्ता द्वारा अधिकृत नहीं है</string>
     <string name="vpn_start_error">एंड्रॉयड वीपीएन सेवा प्रारंभ करने में असमर्थ</string>
     <string name="zip_export_error">टनल का निर्यात करने में असमर्थ: %s</string>

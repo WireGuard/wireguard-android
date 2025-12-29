@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+val pkg: String = providers.gradleProperty("hezwinPackageName").get()
 
 plugins {
     alias(libs.plugins.android.application)
@@ -23,8 +23,8 @@ android {
         applicationId = pkg
         minSdk = 24
         targetSdk = 36
-        versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()
-        versionName = providers.gradleProperty("wireguardVersionName").get()
+        versionCode = providers.gradleProperty("hezwinVersionCode").get().toInt()
+        versionName = providers.gradleProperty("hezwinVersionName").get()
         buildConfigField("int", "MIN_SDK_VERSION", minSdk.toString())
     }
     compileOptions {

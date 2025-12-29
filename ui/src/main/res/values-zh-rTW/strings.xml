@@ -76,7 +76,7 @@
     <string name="config_rename_error">無法重新命名設定檔「%s」</string>
     <string name="config_save_error">無法儲存設定「%1$s」: %2$s</string>
     <string name="config_save_success">成功儲存設定「%s」</string>
-    <string name="create_activity_title">新建 WireGuard 通道</string>
+    <string name="create_activity_title">新建 HEZWIN 通道</string>
     <string name="create_bin_dir_error">無法建立本地二進位目錄</string>
     <string name="create_downloads_file_error">無法在下載目錄建立檔案</string>
     <string name="create_empty">從空白開始建立</string>
@@ -94,7 +94,7 @@
     <string name="tv_select_a_storage_drive">選擇一個儲存裝置</string>
     <string name="tv_no_file_picker">請安裝一個檔案管理程式以便瀏覽檔案</string>
     <string name="tv_add_tunnel_get_started">新增第一個通道</string>
-    <string name="donate_title">♥ 捐贈給 WireGuard 專案</string>
+    <string name="donate_title">♥ 捐贈給 HEZWIN 專案</string>
     <string name="donate_summary">任何的貢獻都能幫助我們</string>
     <string name="donate_google_play_disappointment">感謝您支援 Wireguard 計畫！\n\n由於 Google 的政策不允許我們將計畫官網的捐款連結放在應用程式中，希望您能自行造訪我們的官網來進行捐款！\n\n再次感謝您的貢獻。</string>
     <string name="disable_config_export_title">禁止匯出設定檔</string>
@@ -123,14 +123,14 @@
     <string name="interface_title">界面</string>
     <string name="key_contents_error">密鑰包含錯誤的字元</string>
     <string name="key_length_error">密鑰長度不正確</string>
-    <string name="key_length_explanation_base64">: WireGuard 的 base64 密鑰必須是 44 個字元 (32 個位元組)</string>
-    <string name="key_length_explanation_binary">: WireGuard 密鑰必須是 32 個位元組</string>
-    <string name="key_length_explanation_hex">: WireGuard 的16進位密鑰必須是 64 個字元 (32 個位元組)</string>
+    <string name="key_length_explanation_base64">: HEZWIN 的 base64 密鑰必須是 44 個字元 (32 個位元組)</string>
+    <string name="key_length_explanation_binary">: HEZWIN 密鑰必須是 32 個位元組</string>
+    <string name="key_length_explanation_hex">: HEZWIN 的16進位密鑰必須是 64 個字元 (32 個位元組)</string>
     <string name="latest_handshake">上次交握時間</string>
     <string name="latest_handshake_ago">%s 之前</string>
     <string name="listen_port">監聽連接埠</string>
     <string name="log_export_error">無法匯出日誌: %s</string>
-    <string name="log_export_subject">WireGuard Android 日誌檔</string>
+    <string name="log_export_subject">HEZWIN Android 日誌檔</string>
     <string name="log_export_success">儲存到「%s」</string>
     <string name="log_export_title">匯出日誌檔</string>
     <string name="log_saver_activity_label">儲存日誌</string>
@@ -163,8 +163,8 @@
     <string name="parse_error_integer">號碼</string>
     <string name="parse_error_reason">無法解析 %1$s “%2$s”</string>
     <string name="peer">用戶</string>
-    <string name="permission_description">允許控制 WireGuard 隧道，這將隨意啟用和禁用隧道，可能會誤導 Internet 流量</string>
-    <string name="permission_label">控制 WireGuard 通道</string>
+    <string name="permission_description">允許控制 HEZWIN 隧道，這將隨意啟用和禁用隧道，可能會誤導 Internet 流量</string>
+    <string name="permission_label">控制 HEZWIN 通道</string>
     <string name="persistent_keepalive">保持連線</string>
     <string name="pre_shared_key">預分享金鑰</string>
     <string name="pre_shared_key_enabled">已啟用</string>
@@ -186,7 +186,7 @@
     <string name="shell_start_error">Shell 啟動失敗: %d</string>
     <string name="success_application_will_restart">成功。 應用程式即將重新啟動…</string>
     <string name="toggle_all">切換全部</string>
-    <string name="toggle_error">切換 WireGuard 通道時發生錯誤：%s</string>
+    <string name="toggle_error">切換 HEZWIN 通道時發生錯誤：%s</string>
     <string name="tools_installer_already">wg 及 wg-quick 已安裝</string>
     <string name="tools_installer_failure">無法安裝命令行工具 (沒有 root 存取權？)</string>
     <string name="tools_installer_initial">安裝額外的腳本工具</string>
@@ -232,7 +232,7 @@
     <string name="version_summary">%1$s 後端 %2$s</string>
     <string name="version_summary_checking">檢查 %s 後端版本</string>
     <string name="version_summary_unknown">未知的版本 %s</string>
-    <string name="version_title">WireGuard 於 Android 版本 %s</string>
+    <string name="version_title">HEZWIN 於 Android 版本 %s</string>
     <string name="vpn_not_authorized_error">使用者未授權 VPN 服務</string>
     <string name="vpn_start_error">無法開啟 Android VPN 服務</string>
     <string name="zip_export_error">無法匯入通道: %s</string>

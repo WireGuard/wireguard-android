@@ -90,7 +90,7 @@
     <string name="config_rename_error">نمی‌توان نام پرونده پیکربندی “%s” را تغییر داد</string>
     <string name="config_save_error">نمی‌توان پیکربندی برای “%1$s”: %2$s را ذخیره کرد</string>
     <string name="config_save_success">پیکربندی برای “%s” با موفقیت ذخیره شد</string>
-    <string name="create_activity_title">ساخت تونل WireGuard</string>
+    <string name="create_activity_title">ساخت تونل HEZWIN</string>
     <string name="create_bin_dir_error">نمی‌توان دایرکتوری باینری محلی را ایجاد کرد</string>
     <string name="create_downloads_file_error">نمی‌توان در مسیر بارگیری پرونده‌ای ساخت</string>
     <string name="create_empty">ساختن از ابتدا</string>
@@ -108,9 +108,9 @@
     <string name="tv_select_a_storage_drive">حافظه ذخیره سازی موردنظر را انتخاب کنید</string>
     <string name="tv_no_file_picker">برای مدیریت پوشه های حافظه، یک برنامه مدیریت فایل نصب کنید</string>
     <string name="tv_add_tunnel_get_started">یک پروفایل تونل برای شروع انتخاب کنید</string>
-    <string name="donate_title">♥ کمک مالی به پروژه WireGuard</string>
+    <string name="donate_title">♥ کمک مالی به پروژه HEZWIN</string>
     <string name="donate_summary">هر کمک شما تاثیرگذار است</string>
-    <string name="donate_google_play_disappointment">از اینکه از پروژه WireGuard حمایت می‌کنید متشکریم!\n\nمتأسفانه، به دلیل خط‌مشی‌های Google، ما مجاز به پیوند دادن به بخشی از صفحه وب پروژه که می‌توانید در آن کمک مالی کنید، نداریم. امیدواریم بتوانید این را درک کنید!\n\nباز هم از مشارکت شما سپاسگزاریم.</string>
+    <string name="donate_google_play_disappointment">از اینکه از پروژه HEZWIN حمایت می‌کنید متشکریم!\n\nمتأسفانه، به دلیل خط‌مشی‌های Google، ما مجاز به پیوند دادن به بخشی از صفحه وب پروژه که می‌توانید در آن کمک مالی کنید، نداریم. امیدواریم بتوانید این را درک کنید!\n\nباز هم از مشارکت شما سپاسگزاریم.</string>
     <string name="disable_config_export_title">غیرفعال سازی خروجی گرفتن از پیکربندی ها</string>
     <string name="disable_config_export_description">غیرفعال سازی خروجی گرفتن، دسترسی به کلیدهای خصوصی را کم می کند</string>
     <string name="dns_servers">سرورهای DNS</string>
@@ -137,14 +137,14 @@
     <string name="interface_title">رابط</string>
     <string name="key_contents_error">در کلید نویسه‌های بد وجود دارد</string>
     <string name="key_length_error">طول کلید نادرست است</string>
-    <string name="key_length_explanation_base64">: کلیدهای WireGuard base64 باید دارای ۴۴ نویسه باشند ( ۳۲ بایت)</string>
-    <string name="key_length_explanation_binary">: کلیدهای WireGuard باید ۳۲ بایت باشند</string>
-    <string name="key_length_explanation_hex">: کلیدهای هگز WireGuard باید دارای ۶۴ نویسه باشند ( ۳۲ بایت)</string>
+    <string name="key_length_explanation_base64">: کلیدهای HEZWIN base64 باید دارای ۴۴ نویسه باشند ( ۳۲ بایت)</string>
+    <string name="key_length_explanation_binary">: کلیدهای HEZWIN باید ۳۲ بایت باشند</string>
+    <string name="key_length_explanation_hex">: کلیدهای هگز HEZWIN باید دارای ۶۴ نویسه باشند ( ۳۲ بایت)</string>
     <string name="latest_handshake">آخرین handshake</string>
     <string name="latest_handshake_ago">%s پیش</string>
     <string name="listen_port">شنود پورت</string>
     <string name="log_export_error">نمی‌توان گزارش رویداد را برون‌برد: %s</string>
-    <string name="log_export_subject">پرونده گزارش رویداد WireGuard اندروید</string>
+    <string name="log_export_subject">پرونده گزارش رویداد HEZWIN اندروید</string>
     <string name="log_export_success">ذخیره شد در “%s”</string>
     <string name="log_export_title">برون‌برد پرونده گزارش رویداد</string>
     <string name="log_saver_activity_label">ذخیره گزارش رویداد</string>
@@ -178,7 +178,7 @@
     <string name="parse_error_reason">نمی‌توان %1$s “%2$s” تجزیه کرد</string>
     <string name="peer">همتا</string>
     <string name="permission_description">کنترل تونل های وایرگارد، فعال و غیرفعال کردن تونل ها، و حتی تغییر مسیر ترافیک اینترنت</string>
-    <string name="permission_label">کنترل تونل‌های WireGuard</string>
+    <string name="permission_label">کنترل تونل‌های HEZWIN</string>
     <string name="persistent_keepalive">زنده نگه‌داشتن پیوسته</string>
     <string name="pre_shared_key">کلید از پیش تقسیم شده</string>
     <string name="pre_shared_key_enabled">فعال شده</string>
@@ -200,7 +200,7 @@
     <string name="shell_start_error">آغاز پوسته شکست خورد: %d</string>
     <string name="success_application_will_restart">موفقیت. برنامه اکنون دوباره راه‌اندازی خواهد شد…</string>
     <string name="toggle_all">معکوس کردن همه</string>
-    <string name="toggle_error">خطا در ضامن تونل WireGuard: %s</string>
+    <string name="toggle_error">خطا در ضامن تونل HEZWIN: %s</string>
     <string name="tools_installer_already">wg و wg-quick قبلاً نصب شده اند</string>
     <string name="tools_installer_failure">ابزارهای خط-فرمان نصب نمی‌شود (روت نیستید؟)</string>
     <string name="tools_installer_initial">ابزارهای اختیاری را برای اسکریپت نویسی نصب کنید</string>
@@ -247,7 +247,7 @@
     <string name="version_summary">%1$s بک اند %2$s</string>
     <string name="version_summary_checking">در حال بررسی نگارش پس‌زمینه %s</string>
     <string name="version_summary_unknown">نگارش %s ناشناخته</string>
-    <string name="version_title">WireGuard برای اندروید نگارش %s</string>
+    <string name="version_title">HEZWIN برای اندروید نگارش %s</string>
     <string name="vpn_not_authorized_error">کاربر به سرویس VPN اجازه نداد</string>
     <string name="vpn_start_error">نمی‌توان سرویس VPN اندروید را آغاز کرد</string>
     <string name="zip_export_error">نمی‌توان تونل‌ها را برون‎برد: %s</string>

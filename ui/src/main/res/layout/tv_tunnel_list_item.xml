@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,9 +10,9 @@
 
         <import type="android.view.View" />
 
-        <import type="com.wireguard.android.model.ObservableTunnel" />
+        <import type="com.hezwin.android.model.ObservableTunnel" />
 
-        <import type="com.wireguard.android.backend.Tunnel.State" />
+        <import type="com.hezwin.android.backend.Tunnel.State" />
 
         <variable
             name="isDeleting"
@@ -28,10 +28,10 @@
 
         <variable
             name="item"
-            type="com.wireguard.android.model.ObservableTunnel" />
+            type="com.hezwin.android.model.ObservableTunnel" />
     </data>
 
-    <com.wireguard.android.widget.TvCardView
+    <com.hezwin.android.widget.TvCardView
         android:layout_width="225dp"
         android:layout_height="110dp"
         android:layout_margin="8dp"
@@ -80,6 +80,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.wireguard.android.widget.TvCardView>
+    </com.hezwin.android.widget.TvCardView>
 
 </layout>

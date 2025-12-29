@@ -1,4 +1,4 @@
-name: Build WireGuard (Final Version)
+name: Build HEZWIN (Final Version)
 
 on: 
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
         submodules: 'recursive'
         fetch-depth: '0'
 
-    - name: Setup Go (WireGuard İçin Gerekli)
+    - name: Setup Go (HEZWIN İçin Gerekli)
       uses: actions/setup-go@v5
       with:
         go-version: '1.21'
@@ -29,7 +29,7 @@ jobs:
 
     - name: Install NDK
       run: |
-        # WireGuard'ın beklediği NDK sürümünü kuruyoruz
+        # HEZWIN'ın beklediği NDK sürümünü kuruyoruz
         echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
         echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> $GITHUB_ENV
 
@@ -37,11 +37,11 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '17' # WireGuard şu an JDK 17 ile daha stabil
+        java-version: '17' # HEZWIN şu an JDK 17 ile daha stabil
 
     - name: Build Debug APK
       run: |
-        # WireGuard klasör yapısına göre gradlew dosyasını bul ve çalıştır
+        # HEZWIN klasör yapısına göre gradlew dosyasını bul ve çalıştır
         echo "sdk.dir=${ANDROID_HOME}" > local.properties
         chmod 755 gradlew
         ./gradlew assembleDebug --stacktrace
@@ -50,6 +50,6 @@ jobs:
       uses: actions/upload-artifact@v4
       if: success()
       with:
-        name: WireGuard-Debug-APK
+        name: HEZWIN-Debug-APK
         path: ui/build/outputs/apk/debug/*.apk
 

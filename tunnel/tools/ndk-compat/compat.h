@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: BSD
  *
- * Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
  *
  */
 

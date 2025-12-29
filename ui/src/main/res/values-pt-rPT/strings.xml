@@ -88,7 +88,7 @@
     <string name="config_rename_error">Não foi possível renomear o ficheiro de configuração “%s\"</string>
     <string name="config_save_error">Não foi possível guardar a configuração para “%1$s”: %2$s</string>
     <string name="config_save_success">A configuração para \"%s\" foi guardada com sucesso</string>
-    <string name="create_activity_title">Criar túnel WireGuard</string>
+    <string name="create_activity_title">Criar túnel HEZWIN</string>
     <string name="create_bin_dir_error">Não foi possível criar diretoria de binários local</string>
     <string name="create_downloads_file_error">Não foi possível criar diretoria de downloads local</string>
     <string name="create_empty">Criar do zero</string>
@@ -130,12 +130,12 @@
     <string name="interface_title">Interface</string>
     <string name="key_contents_error">Caracteres inválidos na chave</string>
     <string name="key_length_error">Tamanho de chave incorreto</string>
-    <string name="key_length_explanation_base64">: Chaves base64 do WireGuard têm que ter 44 caracteres (32 bytes)</string>
-    <string name="key_length_explanation_binary">: Chaves de WireGuard têm que ter 32 bytes</string>
-    <string name="key_length_explanation_hex">: Chaves hexadecimais do WireGuard têm que ter 64 caracteres (32 bytes)</string>
+    <string name="key_length_explanation_base64">: Chaves base64 do HEZWIN têm que ter 44 caracteres (32 bytes)</string>
+    <string name="key_length_explanation_binary">: Chaves de HEZWIN têm que ter 32 bytes</string>
+    <string name="key_length_explanation_hex">: Chaves hexadecimais do HEZWIN têm que ter 64 caracteres (32 bytes)</string>
     <string name="listen_port">Porta de escuta</string>
     <string name="log_export_error">Não foi possível exportar o log: %s</string>
-    <string name="log_export_subject">Arquivo de log do WireGuard Android</string>
+    <string name="log_export_subject">Arquivo de log do HEZWIN Android</string>
     <string name="log_export_success">Guardado em “%s”</string>
     <string name="log_export_title">Exportar ficheiro de log</string>
     <string name="log_saver_activity_label">Guardar log</string>
@@ -168,8 +168,8 @@
     <string name="parse_error_integer">número</string>
     <string name="parse_error_reason">Não foi possível analisar %1$s “%2$s”</string>
     <string name="peer">Nó</string>
-    <string name="permission_description">controlar túneis WireGuard, ativando e desativando túneis a vontade, potencialmente desviando o tráfego na Internet</string>
-    <string name="permission_label">controlar túneis WireGuard</string>
+    <string name="permission_description">controlar túneis HEZWIN, ativando e desativando túneis a vontade, potencialmente desviando o tráfego na Internet</string>
+    <string name="permission_label">controlar túneis HEZWIN</string>
     <string name="persistent_keepalive">Keepalive persistente</string>
     <string name="pre_shared_key">Chave pré-partilhada</string>
     <string name="pre_shared_key_enabled">ativo</string>
@@ -187,7 +187,7 @@
     <string name="shell_start_error">A shell falhou ao iniciar: %d</string>
     <string name="success_application_will_restart">Sucesso. A aplicação irá reiniciar…</string>
     <string name="toggle_all">Ativar/Desativar todos</string>
-    <string name="toggle_error">Erro ao alterar o túnel WireGuard: %s</string>
+    <string name="toggle_error">Erro ao alterar o túnel HEZWIN: %s</string>
     <string name="tools_installer_already">wg e wg-quick já estão instalados</string>
     <string name="tools_installer_failure">Não foi possível instalar as ferramentas de linha de comando (sem root?)</string>
     <string name="tools_installer_initial">Instalar ferramentas opcionais para scripting</string>
@@ -220,7 +220,7 @@
     <string name="unknown_error">Erro desconhecido</string>
     <string name="version_summary_checking">A verificar versão de backend %s</string>
     <string name="version_summary_unknown">Versão %s desconhecida</string>
-    <string name="version_title">WireGuard para Android v%s</string>
+    <string name="version_title">HEZWIN para Android v%s</string>
     <string name="vpn_not_authorized_error">Serviço VPN não foi autorizado pelo utilizador</string>
     <string name="vpn_start_error">Não foi possível iniciar o serviço de VPN do Android</string>
     <string name="zip_export_error">Não foi possível exportar túneis: %s</string>

@@ -79,7 +79,7 @@
     <string name="error_no_qr_found">Δεν βρέθηκε κωδικός QR στην εικόνα</string>
     <string name="error_qr_checksum">Αποτυχία επαλήθευσης checksum κωδικού QR</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="create_activity_title">Δημιουργία διόδου WireGuard</string>
+    <string name="create_activity_title">Δημιουργία διόδου HEZWIN</string>
     <string name="create_empty">Δημιουργία από την αρχή</string>
     <string name="create_from_file">Εισαγωγή από αρχείο ή αρχειοθήκη</string>
     <string name="create_from_qr_code">Σάρωση από κωδικό QR</string>
@@ -99,7 +99,7 @@
     <string name="hint_random">(τυχαίο)</string>
     <string name="key_contents_error">Μη έγκυροι χαρακτήρες στο κλειδί</string>
     <string name="key_length_error">Εσφαλμένο μήκος κλειδιού</string>
-    <string name="key_length_explanation_binary">: Τα κλειδιά του WireGuard πρέπει να είναι 32 bytes</string>
+    <string name="key_length_explanation_binary">: Τα κλειδιά του HEZWIN πρέπει να είναι 32 bytes</string>
     <string name="latest_handshake_ago">πριν από %s</string>
     <string name="listen_port">Θύρα ακρόασης</string>
     <string name="log_export_title">Εξαγωγή αρχείου καταγραφής</string>
@@ -138,7 +138,7 @@
     <string name="updater_corrupt_title">Κατεστραμμένη εφαρμογή</string>
     <string name="updater_corrupt_navigate">Άνοιγμα ιστοτόπου</string>
     <string name="version_summary_unknown">Άγνωστη έκδοση %s</string>
-    <string name="version_title">WireGuard για Android v%s</string>
+    <string name="version_title">HEZWIN για Android v%s</string>
     <string name="biometric_auth_error">Αποτυχία ελέγχου ταυτότητας</string>
     <string name="biometric_auth_error_reason">Αποτυχία ελέγχου ταυτότητας: %s</string>
 </resources>

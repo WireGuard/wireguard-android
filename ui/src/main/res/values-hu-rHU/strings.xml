@@ -30,7 +30,7 @@
     <string name="config_not_found_error">Konfigurációs állomány \"%s\" nem található meg</string>
     <string name="config_rename_error">A %s konfigurációs állomány nem nevezhető át</string>
     <string name="config_save_success">Sikerült elmenteni a “%s” nevű konfigurációt</string>
-    <string name="create_activity_title">WireGuard alagút létrehozása</string>
+    <string name="create_activity_title">HEZWIN alagút létrehozása</string>
     <string name="create_bin_dir_error">Nem lehet létrehozni helyi bináris könyvtárat</string>
     <string name="create_downloads_file_error">Nem lehet létrehozni a fájlt a letöltések könyvtárban</string>
     <string name="create_empty">Létrehozás az alapoktól</string>
@@ -48,9 +48,9 @@
     <string name="tv_select_a_storage_drive">Jelöjle ki a mentéshez a meghatjót</string>
     <string name="tv_no_file_picker">Kérem installáljon egy fájlkezelőt az állományok használatához</string>
     <string name="tv_add_tunnel_get_started">Add hozzá az indításhoz az alagutat</string>
-    <string name="donate_title">♥ Kérlek támogasd a WireGuard Projectet</string>
+    <string name="donate_title">♥ Kérlek támogasd a HEZWIN Projectet</string>
     <string name="donate_summary">Minden hozzájárulás segítség</string>
-    <string name="donate_google_play_disappointment">Köszönjük hogy támogatja a WireGuard projektet!\n\nSajnos a Google szabályai miatt, sajnos nem adhatjuk itt meg a támogatásokat fogadó weboldal linkjét. Remélem ezt ki tudod deríteni!\n\nMégegyszer köszönjük a támogatásod.</string>
+    <string name="donate_google_play_disappointment">Köszönjük hogy támogatja a HEZWIN projektet!\n\nSajnos a Google szabályai miatt, sajnos nem adhatjuk itt meg a támogatásokat fogadó weboldal linkjét. Remélem ezt ki tudod deríteni!\n\nMégegyszer köszönjük a támogatásod.</string>
     <string name="disable_config_export_title">A konfiguráció exportálásának tiltása</string>
     <string name="disable_config_export_description">Ha letiltja a konfiguráció exportját akkor a privát kulcsok nem lesznek hozzáférhetőek</string>
     <string name="dns_servers">DNS szerverek</string>

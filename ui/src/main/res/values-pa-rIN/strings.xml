@@ -109,7 +109,7 @@
     <string name="tv_add_tunnel_get_started">ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਟਨਲ ਜੋੜੋ</string>
     <string name="donate_title">♥ ਵਾਇਰਗਾਰਡ ਪਰੋਜੈਕਟ ਨੂੰ ਦਾਨ ਦਿਓ</string>
     <string name="donate_summary">ਹਰ ਯੋਗਦਾਨ ਮਦਦਗਾਰ ਹੈ</string>
-    <string name="donate_google_play_disappointment">ਵਾਇਰਗਾਰਡ (WireGuard) ਪ੍ਰੋਜੈਕਟ ਦੀ ਮਦਦ ਕਰਨ ਲਈ ਤੁਹਾਡਾ ਧੰਨਵਾਦ ਹੈ!\n\nਅਫ਼ਸੋਸ ਹੈ ਕਿ Google ਦੀਆਂ ਨੀਤੀਆਂ ਕਰਕੇ ਪ੍ਰੋਜੈਕਟ ਦੇ ਵੈੱਬ-ਸਫ਼ੇ, ਜਿੱਥੇ ਤੁਸੀਂ ਦਾਨ ਦੇ ਸਕਦੇ ਹੋ, ਸਾਨੂੰ ਇੱਥੇ ਨਹੀਂ ਲਿੰਕ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ। ਆਸ ਕਰਦੇ ਹਾਂ ਕਿ ਤੁਸੀਂ ਇਹ ਲੱਭ ਲਵੋਗੇ!\n\nਤੁਹਾਡੇ ਯੋਗਦਾਨ ਵਾਸਤੇ ਇੱਕ ਵਾਰ ਫੇਰ ਧੰਨਵਾਦ ਹੈ।</string>
+    <string name="donate_google_play_disappointment">ਵਾਇਰਗਾਰਡ (HEZWIN) ਪ੍ਰੋਜੈਕਟ ਦੀ ਮਦਦ ਕਰਨ ਲਈ ਤੁਹਾਡਾ ਧੰਨਵਾਦ ਹੈ!\n\nਅਫ਼ਸੋਸ ਹੈ ਕਿ Google ਦੀਆਂ ਨੀਤੀਆਂ ਕਰਕੇ ਪ੍ਰੋਜੈਕਟ ਦੇ ਵੈੱਬ-ਸਫ਼ੇ, ਜਿੱਥੇ ਤੁਸੀਂ ਦਾਨ ਦੇ ਸਕਦੇ ਹੋ, ਸਾਨੂੰ ਇੱਥੇ ਨਹੀਂ ਲਿੰਕ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ। ਆਸ ਕਰਦੇ ਹਾਂ ਕਿ ਤੁਸੀਂ ਇਹ ਲੱਭ ਲਵੋਗੇ!\n\nਤੁਹਾਡੇ ਯੋਗਦਾਨ ਵਾਸਤੇ ਇੱਕ ਵਾਰ ਫੇਰ ਧੰਨਵਾਦ ਹੈ।</string>
     <string name="disable_config_export_title">ਸੰਰਚਨਾ ਐਕਸਪੋਰਟ ਕਰਨ ਨੂੰ ਅਸਮਰੱਥ ਕਰੋ</string>
     <string name="disable_config_export_description">ਸੰਰਚਨਾ ਐਕਸਪੋਰਟ ਕਰਨ ਉੱਤੇ ਰੋਕ ਲਾਉਣ ਨਾਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਲਈ ਪਹੁੰਚ ਘਟੇਗੀ</string>
     <string name="dns_servers">DNS ਸਰਵਰ</string>
@@ -136,9 +136,9 @@
     <string name="interface_title">ਇੰਟਰਫੇਸ</string>
     <string name="key_contents_error">ਕੁੰਜੀ ਵਿੱਚ ਗ਼ਲਤ ਅੱਖਰ</string>
     <string name="key_length_error">ਗ਼ਲਤ ਕੁੰਜੀ ਦੀ ਲੰਬਾਈ</string>
-    <string name="key_length_explanation_base64">: WireGuard base64 ਕੁੰਜੀਆਂ ਵਿੱਚ 44 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ (32 ਬਾਈਟ)</string>
-    <string name="key_length_explanation_binary">: WireGuard ਕੁੰਜੀਆਂ 32 ਬਾਈਟ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ ਹਨ</string>
-    <string name="key_length_explanation_hex">: WireGuard ਹੈਕਸਾ ਕੁੰਜੀਆਂ ਵਿੱਚ 64 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ (32 ਬਾਈਟ)</string>
+    <string name="key_length_explanation_base64">: HEZWIN base64 ਕੁੰਜੀਆਂ ਵਿੱਚ 44 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ (32 ਬਾਈਟ)</string>
+    <string name="key_length_explanation_binary">: HEZWIN ਕੁੰਜੀਆਂ 32 ਬਾਈਟ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ ਹਨ</string>
+    <string name="key_length_explanation_hex">: HEZWIN ਹੈਕਸਾ ਕੁੰਜੀਆਂ ਵਿੱਚ 64 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ (32 ਬਾਈਟ)</string>
     <string name="latest_handshake">ਆਖਰੀ ਹੈਂਡ-ਸ਼ੇਕ</string>
     <string name="latest_handshake_ago">%s ਪਹਿਲਾਂ</string>
     <string name="listen_port">ਸੁਣਨ ਵਾਲੀ ਪੋਰਟ</string>
@@ -245,7 +245,7 @@
     <string name="version_summary">%1$s ਬੈਕਐਂਡ %2$s</string>
     <string name="version_summary_checking">%s ਬੈਕਐਂਡ ਵਰਜ਼ਨ ਦੀ ਜਾਂਚ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ</string>
     <string name="version_summary_unknown">ਅਣਪਛਾਤਾ %s ਵਰਜਨ</string>
-    <string name="version_title">Android ਲਈ WireGuard v%s</string>
+    <string name="version_title">Android ਲਈ HEZWIN v%s</string>
     <string name="vpn_not_authorized_error">VPN ਸੇਵਾ ਨੂੰ ਵਰਤੋਂਕਾਰ ਨੇ ਪਰਮਾਣਿਤ ਨਹੀਂ ਕੀਤਾ</string>
     <string name="vpn_start_error">ਐਂਡਰਾਈਡ VPN ਸੇਵਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਅਸਮਰੱਥ</string>
     <string name="zip_export_error">ਟਨਲਾਂ ਐਕਸਪੋਰਟ ਕਰਨ ਲਈ ਅਸਮਰੱਥ: %s</string>

@@ -89,7 +89,7 @@
     <string name="config_rename_error">No se puede renombrar el archivo de configuración “%s”</string>
     <string name="config_save_error">No se puede guardar la configuración para “%1$s”: %2$s</string>
     <string name="config_save_success">Configuración guardada correctamente para “%s”</string>
-    <string name="create_activity_title">Crear túnel WireGuard</string>
+    <string name="create_activity_title">Crear túnel HEZWIN</string>
     <string name="create_bin_dir_error">No se puede crear el directorio binario local</string>
     <string name="create_downloads_file_error">No se puede crear archivo en el directorio de descargas</string>
     <string name="create_empty">Crear de cero</string>
@@ -107,9 +107,9 @@
     <string name="tv_select_a_storage_drive">Selecciones un dispositivo de almacenamiento</string>
     <string name="tv_no_file_picker">Por favor, instale una herramienta de gestión de archivos para navegar por archivos</string>
     <string name="tv_add_tunnel_get_started">Agregue un túnel para empezar</string>
-    <string name="donate_title">♥ Donar al Proyecto WireGuard</string>
+    <string name="donate_title">♥ Donar al Proyecto HEZWIN</string>
     <string name="donate_summary">Todas las contribuciones ayudan</string>
-    <string name="donate_google_play_disappointment">¡Gracias por apoyar el proyecto WireGuard!\n\nLamentablemente, debido a las políticas de Google, no estamos autorizados a enlazar a la parte de la página web del proyecto donde puedes hacer una donación. ¡Esperemos que puedas averiguar esto!\n\nGracias de nuevo por tu contribución.</string>
+    <string name="donate_google_play_disappointment">¡Gracias por apoyar el proyecto HEZWIN!\n\nLamentablemente, debido a las políticas de Google, no estamos autorizados a enlazar a la parte de la página web del proyecto donde puedes hacer una donación. ¡Esperemos que puedas averiguar esto!\n\nGracias de nuevo por tu contribución.</string>
     <string name="disable_config_export_title">Inhabilitar la exportación de configuración</string>
     <string name="disable_config_export_description">Desactivar la exportación de configuración hace que las claves privadas sean menos accesibles</string>
     <string name="dns_servers">Servidores DNS</string>
@@ -136,14 +136,14 @@
     <string name="interface_title">Interfaz</string>
     <string name="key_contents_error">Caracteres incorrectos en la clave</string>
     <string name="key_length_error">Longitud de clave incorrecta</string>
-    <string name="key_length_explanation_base64">Las claves base64 de WireGuard deben tener 44 caracteres (32 bytes)</string>
-    <string name="key_length_explanation_binary">: Las claves WireGuard deben tener 32 bytes</string>
+    <string name="key_length_explanation_base64">Las claves base64 de HEZWIN deben tener 44 caracteres (32 bytes)</string>
+    <string name="key_length_explanation_binary">: Las claves HEZWIN deben tener 32 bytes</string>
     <string name="key_length_explanation_hex">: Las claves hexadecimales de Wirex deben tener 64 caracteres (32 bytes)</string>
     <string name="latest_handshake">Última comunicación</string>
     <string name="latest_handshake_ago">hace %s</string>
     <string name="listen_port">Puerto de escucha</string>
     <string name="log_export_error">No se pudo exportar el registro: %s</string>
-    <string name="log_export_subject">Archivo de registro WireGuard Android</string>
+    <string name="log_export_subject">Archivo de registro HEZWIN Android</string>
     <string name="log_export_success">Guardado en “%s”</string>
     <string name="log_export_title">Exportar archivo de registro</string>
     <string name="log_saver_activity_label">Guardar registro</string>
@@ -176,8 +176,8 @@
     <string name="parse_error_integer">número</string>
     <string name="parse_error_reason">No se puede analizar %1$s “%2$s”</string>
     <string name="peer">Pares</string>
-    <string name="permission_description">controlar túneles de WireGuard, habilitando y desactivando túneles a su antojo, lo que podría conducir mal al tráfico de Internet</string>
-    <string name="permission_label">controlar túneles de WireGuard</string>
+    <string name="permission_description">controlar túneles de HEZWIN, habilitando y desactivando túneles a su antojo, lo que podría conducir mal al tráfico de Internet</string>
+    <string name="permission_label">controlar túneles de HEZWIN</string>
     <string name="persistent_keepalive">Keepalive persistente</string>
     <string name="pre_shared_key">Clave precompartida</string>
     <string name="pre_shared_key_enabled">activado</string>
@@ -199,7 +199,7 @@
     <string name="shell_start_error">No se pudo iniciar Shell: %d</string>
     <string name="success_application_will_restart">Éxito. La aplicación se reiniciará ahora…</string>
     <string name="toggle_all">Cambiar Todos</string>
-    <string name="toggle_error">Error al cambiar el túnel WireGuard: %s</string>
+    <string name="toggle_error">Error al cambiar el túnel HEZWIN: %s</string>
     <string name="tools_installer_already">wg y wg-quick ya están instalados</string>
     <string name="tools_installer_failure">No se puede instalar herramientas de línea de comandos (sin root?)</string>
     <string name="tools_installer_initial">Instalar herramientas opcionales para el scripting</string>
@@ -245,7 +245,7 @@
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Comprobando versión de backend %s</string>
     <string name="version_summary_unknown">Versión %s desconocida</string>
-    <string name="version_title">WireGuard para Android -%s</string>
+    <string name="version_title">HEZWIN para Android -%s</string>
     <string name="vpn_not_authorized_error">Servicio VPN no autorizado por el usuario</string>
     <string name="vpn_start_error">No se puede iniciar el servicio VPN Android</string>
     <string name="zip_export_error">No se pueden exportar túneles: %s</string>

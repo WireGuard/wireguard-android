@@ -27,7 +27,7 @@
     <string name="add_peer">पीयर जोड़ें</string>
     <string name="addresses">एड्रेससैस</string>
     <string name="allowed_ips">अनुमत आईपी</string>
-    <string name="app_name">WireGuard</string>
+    <string name="app_name">HEZWIN</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
@@ -164,7 +164,7 @@
     <string name="version_summary">%1$s बैकएंड %2$s</string>
     <string name="version_summary_checking">%s बैकएंड संस्करण की जाँच कर रहा है</string>
     <string name="version_summary_unknown">अज्ञात %s संस्करण</string>
-    <string name="version_title">WireGuard for Android v%s</string>
+    <string name="version_title">HEZWIN for Android v%s</string>
     <string name="vpn_not_authorized_error">वीपीएन सेवा उपयोगकर्ता द्वारा अधिकृत नहीं है</string>
     <string name="vpn_start_error">एंड्रॉयड वीपीएन सेवा प्रारंभ करने में असमर्थ</string>
     <string name="zip_export_error">टनल का निर्यात करने में असमर्थ: %s</string>

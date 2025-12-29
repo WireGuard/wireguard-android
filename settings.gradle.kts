@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "wireguard-android"
+rootProject.name = "hezwin-android"
 
 include(":tunnel")
 include(":ui")

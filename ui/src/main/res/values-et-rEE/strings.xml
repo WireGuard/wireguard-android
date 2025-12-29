@@ -89,7 +89,7 @@
     <string name="config_rename_error">Seadistusfaili \"%s\" ümbernimetamine ebaõnnestus</string>
     <string name="config_save_error">\"%1$s\" seadistuse salvestamine ebaõnnestus: %2$s</string>
     <string name="config_save_success">\"%s\" seadistus salvestatud</string>
-    <string name="create_activity_title">Loo WireGuard tunnel</string>
+    <string name="create_activity_title">Loo HEZWIN tunnel</string>
     <string name="create_bin_dir_error">Lokaalse programmfaili kataloogi tekitamine ebaõnnestus</string>
     <string name="create_downloads_file_error">Faili loomine allalaadimiste kataloogis ebaõnnestus</string>
     <string name="create_empty">Sisesta käsitsi</string>
@@ -107,9 +107,9 @@
     <string name="tv_select_a_storage_drive">Vali salvestusseade</string>
     <string name="tv_no_file_picker">Failide vaatamiseks paigalda failide haldusvahend</string>
     <string name="tv_add_tunnel_get_started">Alustamiseks lisa uus tunnel</string>
-    <string name="donate_title">♥ Anneta WireGuard\'i projektile</string>
+    <string name="donate_title">♥ Anneta HEZWIN\'i projektile</string>
     <string name="donate_summary">Iga panus aitab</string>
-    <string name="donate_google_play_disappointment">Aitäh, et toetad WireGuard\'i projekti!\n\nKahjuks ei saa me Google\'i eeskirjade tõttu linkida projekti veebilehele, kus saab annetusi teha. Loodetavasti leiad selle ise!\n\n
+    <string name="donate_google_play_disappointment">Aitäh, et toetad HEZWIN\'i projekti!\n\nKahjuks ei saa me Google\'i eeskirjade tõttu linkida projekti veebilehele, kus saab annetusi teha. Loodetavasti leiad selle ise!\n\n
 Aitäh veelkord sinu panuse eest.</string>
     <string name="disable_config_export_title">Keela seadistuste eksportimine</string>
     <string name="disable_config_export_description">Seadistuste eksportimise keelamine teeb privaatvõtmetele ligipääsu keerulisemaks</string>
@@ -137,14 +137,14 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="interface_title">Liides</string>
     <string name="key_contents_error">Lubamatud sümbolid võtmes</string>
     <string name="key_length_error">Sobimatu võtme pikkus</string>
-    <string name="key_length_explanation_base64">: WireGuard base64 võti peab olema 44 sümbolit (32 baiti) pikk</string>
-    <string name="key_length_explanation_binary">: WireGuard võtmed peavad olema 32 baiti</string>
-    <string name="key_length_explanation_hex">: WireGuard hex võti peab olema 64 sümbolit (32 baiti) pikk</string>
+    <string name="key_length_explanation_base64">: HEZWIN base64 võti peab olema 44 sümbolit (32 baiti) pikk</string>
+    <string name="key_length_explanation_binary">: HEZWIN võtmed peavad olema 32 baiti</string>
+    <string name="key_length_explanation_hex">: HEZWIN hex võti peab olema 64 sümbolit (32 baiti) pikk</string>
     <string name="latest_handshake">Viimane kätlus</string>
     <string name="latest_handshake_ago">%s tagasi</string>
     <string name="listen_port">Kuulamisport</string>
     <string name="log_export_error">Logifaili eksportimine ebaõnnestus: %s</string>
-    <string name="log_export_subject">WireGuard Android logifail</string>
+    <string name="log_export_subject">HEZWIN Android logifail</string>
     <string name="log_export_success">Salvestatud faili \"%s\"</string>
     <string name="log_export_title">Ekspordi logifail</string>
     <string name="log_saver_activity_label">Salvesta logi</string>
@@ -177,8 +177,8 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="parse_error_integer">number</string>
     <string name="parse_error_reason">Ei saa töödelda %1$s “%2$s”</string>
     <string name="peer">Partner</string>
-    <string name="permission_description">kontrollida WireGuard tunneleid, neid sisse ja välja lülitades, potentsiaalselt võrguliiklust kõrvale juhtides</string>
-    <string name="permission_label">kontrollida WireGuard tunneleid</string>
+    <string name="permission_description">kontrollida HEZWIN tunneleid, neid sisse ja välja lülitades, potentsiaalselt võrguliiklust kõrvale juhtides</string>
+    <string name="permission_label">kontrollida HEZWIN tunneleid</string>
     <string name="persistent_keepalive">Püsiv ühendushoidik</string>
     <string name="pre_shared_key">Eeljagatud võti</string>
     <string name="pre_shared_key_enabled">lubatud</string>
@@ -197,7 +197,7 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="shell_start_error">Kesta käivitumine ebaõnnestus: %d</string>
     <string name="success_application_will_restart">Tegevus õnnestus. Rakendus taaskäivitub…</string>
     <string name="toggle_all">Vaheta kõik</string>
-    <string name="toggle_error">WireGuard tunneli lülitamine ebaõnnestus: %s</string>
+    <string name="toggle_error">HEZWIN tunneli lülitamine ebaõnnestus: %s</string>
     <string name="tools_installer_already">wg ja wg-quick on juba paigaldatud</string>
     <string name="tools_installer_failure">Käsurea tööriistade paigaldamine ebaõnnestus (juurkasutaja õigused puuduvad?)</string>
     <string name="tools_installer_initial">Paigalda täiendavad tööriistad skriptimiseks</string>
@@ -243,7 +243,7 @@ Aitäh veelkord sinu panuse eest.</string>
     <string name="version_summary">%1$s taustsüsteem %2$s</string>
     <string name="version_summary_checking">Kontrollin %s taustsüsteemi versiooni</string>
     <string name="version_summary_unknown">Tundmatu %s versioon</string>
-    <string name="version_title">WireGuard Androidile v%s</string>
+    <string name="version_title">HEZWIN Androidile v%s</string>
     <string name="vpn_not_authorized_error">Kasutaja ei lubanud VPN teenust</string>
     <string name="vpn_start_error">Androidi VPN teenuse käivitamine ebaõnnestus</string>
     <string name="zip_export_error">Tunnelite eksportimine ebaõnnestus: %s</string>

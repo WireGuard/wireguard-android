@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,9 +10,9 @@
 
         <import type="android.view.View" />
 
-        <import type="com.wireguard.android.model.ObservableTunnel" />
+        <import type="com.hezwin.android.model.ObservableTunnel" />
 
-        <import type="com.wireguard.android.activity.TvMainActivity.KeyedFile" />
+        <import type="com.hezwin.android.activity.TvMainActivity.KeyedFile" />
 
         <variable
             name="isDeleting"
@@ -20,7 +20,7 @@
 
         <variable
             name="files"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, KeyedFile&gt;" />
+            type="com.hezwin.android.databinding.ObservableKeyedArrayList&lt;String, KeyedFile&gt;" />
 
         <variable
             name="filesRoot"
@@ -28,15 +28,15 @@
 
         <variable
             name="tunnels"
-            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+            type="com.hezwin.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
 
         <variable
             name="tunnelRowConfigurationHandler"
-            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+            type="com.hezwin.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
 
         <variable
             name="filesRowConfigurationHandler"
-            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+            type="com.hezwin.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

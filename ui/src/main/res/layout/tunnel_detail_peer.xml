@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,11 +8,11 @@
 
     <data>
 
-        <import type="com.wireguard.android.util.ClipboardUtils" />
+        <import type="com.hezwin.android.util.ClipboardUtils" />
 
         <variable
             name="item"
-            type="com.wireguard.config.Peer" />
+            type="com.hezwin.config.Peer" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

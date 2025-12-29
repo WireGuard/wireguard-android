@@ -3,7 +3,7 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.api.tasks.bundling.Zip
 
-val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+val pkg: String = providers.gradleProperty("hezwinPackageName").get()
 
 plugins {
     alias(libs.plugins.android.library)
@@ -78,14 +78,14 @@ publishing {
         register<MavenPublication>("release") {
             groupId = pkg
             artifactId = "tunnel"
-            version = providers.gradleProperty("wireguardVersionName").get()
+            version = providers.gradleProperty("hezwinVersionName").get()
             afterEvaluate {
                 from(components["release"])
             }
             pom {
-                name = "WireGuard Tunnel Library"
-                description = "Embeddable tunnel library for WireGuard for Android"
-                url = "https://www.wireguard.com/"
+                name = "HEZWIN Tunnel Library"
+                description = "Embeddable tunnel library for HEZWIN for Android"
+                url = "https://www.hezwin.com/"
 
                 licenses {
                     license {
@@ -95,18 +95,18 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:https://git.zx2c4.com/wireguard-android"
-                    developerConnection = "scm:git:https://git.zx2c4.com/wireguard-android"
-                    url = "https://git.zx2c4.com/wireguard-android"
+                    connection = "scm:git:https://git.zx2c4.com/hezwin-android"
+                    developerConnection = "scm:git:https://git.zx2c4.com/hezwin-android"
+                    url = "https://git.zx2c4.com/hezwin-android"
                 }
                 developers {
                     organization {
-                        name = "WireGuard"
-                        url = "https://www.wireguard.com/"
+                        name = "HEZWIN"
+                        url = "https://www.hezwin.com/"
                     }
                     developer {
-                        name = "WireGuard"
-                        email = "team@wireguard.com"
+                        name = "HEZWIN"
+                        email = "team@hezwin.com"
                     }
                 }
             }

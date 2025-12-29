@@ -66,7 +66,7 @@
     <string name="config_rename_error">“%s” වින්‍යාස ගොනුව නැවත නම් කළ නොහැකිය</string>
     <string name="config_save_error">“%1$s”: %2$s සඳහා වින්‍යාසය සුරැකීමට නොහැකිය</string>
     <string name="config_save_success">“%s” සඳහා සාර්ථකව වින්‍යාසය සුරැකිණි</string>
-    <string name="create_activity_title">WireGuard Tunnel සාදන්න</string>
+    <string name="create_activity_title">HEZWIN Tunnel සාදන්න</string>
     <string name="create_bin_dir_error">දේශීය ද්විමය නාමාවලිය සෑදිය නොහැක</string>
     <string name="create_downloads_file_error">බාගැනීම් නාමාවලියෙහි ගොනුව සෑදීමට නොහැකිය</string>
     <string name="create_empty">මුල සිට නිර්මාණය කරන්න</string>
@@ -100,12 +100,12 @@
     <string name="interface_title">අතුරුමුහුණත</string>
     <string name="key_contents_error">යතුරේ නරක අකුරු</string>
     <string name="key_length_error">යතුරේ ආයාමය සාවද්‍යයි</string>
-    <string name="key_length_explanation_base64">: WireGuard base64 යතුරු අක්ෂර 44 (බයිට් 32) විය යුතුය.</string>
+    <string name="key_length_explanation_base64">: HEZWIN base64 යතුරු අක්ෂර 44 (බයිට් 32) විය යුතුය.</string>
     <string name="key_length_explanation_binary">: වයර්ගාඩ් යතුරු බයිට 32 ක් විය යුතුය</string>
-    <string name="key_length_explanation_hex">: WireGuard hex යතුරු අක්ෂර 64 (බයිට් 32) විය යුතුය.</string>
+    <string name="key_length_explanation_hex">: HEZWIN hex යතුරු අක්ෂර 64 (බයිට් 32) විය යුතුය.</string>
     <string name="listen_port">සවන්දීමේ කෙවෙනිය</string>
     <string name="log_export_error">ලොගය අපනයනය කළ නොහැක: %s</string>
-    <string name="log_export_subject">WireGuard Android ලොග් ගොනුව</string>
+    <string name="log_export_subject">HEZWIN Android ලොග් ගොනුව</string>
     <string name="log_export_success">“%s” ට සුරැකිණි</string>
     <string name="log_export_title">ලොග් ගොනුව අපනයනය කරන්න</string>
     <string name="log_saver_activity_label">ලොගය සුරකින්න</string>
@@ -155,7 +155,7 @@
     <string name="shell_start_error">Shell ආරම්භ කිරීමට අසමත් විය: %d</string>
     <string name="success_application_will_restart">සාර්ථකයි. යෙදුම දැන් නැවත ආරම්භ කෙරේ…</string>
     <string name="toggle_all">සියල්ල ටොගල් කරන්න</string>
-    <string name="toggle_error">WireGuard උමං ටොගල් කිරීමේ දෝෂය: %s</string>
+    <string name="toggle_error">HEZWIN උමං ටොගල් කිරීමේ දෝෂය: %s</string>
     <string name="tools_installer_already">wg සහ wg-quick දැනටමත් ස්ථාපනය කර ඇත</string>
     <string name="tools_installer_failure">විධාන රේඛා මෙවලම් ස්ථාපනය කළ නොහැක (root නැත?)</string>
     <string name="tools_installer_initial">ස්ක්‍රිප්ටින් සඳහා විකල්ප මෙවලම් ස්ථාපනය කරන්න</string>

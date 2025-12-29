@@ -96,7 +96,7 @@
     <string name="tv_add_tunnel_get_started">Thêm một tunnel để bắt đầu</string>
     <string name="donate_title">❤️ Đóng góp cho Dự án Wireguard</string>
     <string name="donate_summary">Mọi đóng góp đều giúp ích</string>
-    <string name="donate_google_play_disappointment">Cảm ơn bạn đã ủng hộ WireGuard!\n\nThật tiếc, dựa trên điều khoản của Google, chúng tôi không thể đưa vào liên kết dẫn đến trang đóng góp ở trang chủ của dự án. Mong rằng bạn có thể tìm cách cho việc này!\n\nXin cảm ơn bạn một lần nữa vì đã đóng góp.</string>
+    <string name="donate_google_play_disappointment">Cảm ơn bạn đã ủng hộ HEZWIN!\n\nThật tiếc, dựa trên điều khoản của Google, chúng tôi không thể đưa vào liên kết dẫn đến trang đóng góp ở trang chủ của dự án. Mong rằng bạn có thể tìm cách cho việc này!\n\nXin cảm ơn bạn một lần nữa vì đã đóng góp.</string>
     <string name="disable_config_export_title">Vô hiệu hóa xuất cấu hình</string>
     <string name="disable_config_export_description">Vô hiệu hóa xuất cấu hình sẽ giúp giảm khả năng truy cập vào private keys</string>
     <string name="dns_servers">DNS servers</string>
@@ -123,14 +123,14 @@
     <string name="interface_title">Giao diện</string>
     <string name="key_contents_error">Kí tự không hợp lệ trong khoá</string>
     <string name="key_length_error">Độ dài khoá không hợp lệ</string>
-    <string name="key_length_explanation_base64">: Khoá WireGuard base64 phải đủ 44 ký tự (32 bytes)</string>
-    <string name="key_length_explanation_binary">: Khoá WireGuard phải đủ 32 bytes</string>
-    <string name="key_length_explanation_hex">: Khoá WireGuard hex phải đủ 64 ký tự (32 bytes)</string>
+    <string name="key_length_explanation_base64">: Khoá HEZWIN base64 phải đủ 44 ký tự (32 bytes)</string>
+    <string name="key_length_explanation_binary">: Khoá HEZWIN phải đủ 32 bytes</string>
+    <string name="key_length_explanation_hex">: Khoá HEZWIN hex phải đủ 64 ký tự (32 bytes)</string>
     <string name="latest_handshake">Lần bắt tay cuối</string>
     <string name="latest_handshake_ago">%s giây trước</string>
     <string name="listen_port">Cổng</string>
     <string name="log_export_error">Không thể xuất nhật ký: %s</string>
-    <string name="log_export_subject">File nhật ký WireGuard Android</string>
+    <string name="log_export_subject">File nhật ký HEZWIN Android</string>
     <string name="log_export_success">Đã lưu vào \"%s\"</string>
     <string name="log_export_title">Xuất file nhật ký</string>
     <string name="log_saver_activity_label">Lưu nhật ký</string>
