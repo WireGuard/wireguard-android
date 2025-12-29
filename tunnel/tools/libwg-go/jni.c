@@ -15,7 +15,7 @@ extern int wgGetSocketV6(int handle);
 extern char *wgGetConfig(int handle);
 extern char *wgVersion();
 
-JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgTurnOn(JNIEnv *env, jclass c, jstring ifname, jint tun_fd, jstring settings)
+JNIEXPORT jint JNICALL Java_com_hezwin_android_backend_GoBackend_wgTurnOn(JNIEnv *env, jclass c, jstring ifname, jint tun_fd, jstring settings)
 {
 	const char *ifname_str = (*env)->GetStringUTFChars(env, ifname, 0);
 	size_t ifname_len = (*env)->GetStringUTFLength(env, ifname);
@@ -33,22 +33,22 @@ JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgTurnOn(JNI
 	return ret;
 }
 
-JNIEXPORT void JNICALL Java_com_wireguard_android_backend_GoBackend_wgTurnOff(JNIEnv *env, jclass c, jint handle)
+JNIEXPORT void JNICALL Java_com_hezwin_android_backend_GoBackend_wgTurnOff(JNIEnv *env, jclass c, jint handle)
 {
 	wgTurnOff(handle);
 }
 
-JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetSocketV4(JNIEnv *env, jclass c, jint handle)
+JNIEXPORT jint JNICALL Java_com_hezwin_android_backend_GoBackend_wgGetSocketV4(JNIEnv *env, jclass c, jint handle)
 {
 	return wgGetSocketV4(handle);
 }
 
-JNIEXPORT jint JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetSocketV6(JNIEnv *env, jclass c, jint handle)
+JNIEXPORT jint JNICALL Java_com_hezwin_android_backend_GoBackend_wgGetSocketV6(JNIEnv *env, jclass c, jint handle)
 {
 	return wgGetSocketV6(handle);
 }
 
-JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetConfig(JNIEnv *env, jclass c, jint handle)
+JNIEXPORT jstring JNICALL Java_com_hezwin_android_backend_GoBackend_wgGetConfig(JNIEnv *env, jclass c, jint handle)
 {
 	jstring ret;
 	char *config = wgGetConfig(handle);
@@ -59,7 +59,7 @@ JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgGetConf
 	return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_com_wireguard_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
+JNIEXPORT jstring JNICALL Java_com_hezwin_android_backend_GoBackend_wgVersion(JNIEnv *env, jclass c)
 {
 	jstring ret;
 	char *version = wgVersion();

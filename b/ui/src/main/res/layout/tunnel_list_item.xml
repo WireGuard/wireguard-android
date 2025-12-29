@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.wireguard.android.model.ObservableTunnel" />
+
+        <import type="com.wireguard.android.backend.Tunnel.State" />
+
+        <variable
+            name="collection"
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.model.ObservableTunnel" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelListFragment" />
+    </data>
+
+    <com.wireguard.android.widget.MultiselectableRelativeLayout
+        android:id="@+id/tunnel_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:descendantFocusability="beforeDescendants"
+        android:focusable="true"
+        android:nextFocusRight="@+id/tunnel_switch"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:id="@+id/tunnel_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{key}"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="@sample/interface_names.json/names/names/name" />
+
+        <com.wireguard.android.widget.ToggleSwitch
+            android:id="@+id/tunnel_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:nextFocusLeft="@+id/tunnel_list_item"
+            app:checked="@{item.state == State.UP}"
+            app:onBeforeCheckedChanged="@{fragment::setTunnelState}"
+            tools:checked="@sample/interface_names.json/names/checked/checked" />
+    </com.wireguard.android.widget.MultiselectableRelativeLayout>
+</layout>

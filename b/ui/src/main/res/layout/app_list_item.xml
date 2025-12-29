@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.wireguard.android.model.ApplicationData" />
+
+        <variable
+            name="collection"
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, com.wireguard.android.model.ApplicationData&gt;" />
+
+        <variable
+            name="key"
+            type="String" />
+
+        <variable
+            name="item"
+            type="com.wireguard.android.model.ApplicationData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:gravity="center_vertical"
+        android:onClick="@{(view) -> item.setSelected(!item.selected)}"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:src="@{item.icon}"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{key}"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="@tools:sample/full_names" />
+
+        <CheckBox
+            android:id="@+id/selected_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@={item.selected}"
+            tools:checked="true" />
+
+    </LinearLayout>
+</layout>

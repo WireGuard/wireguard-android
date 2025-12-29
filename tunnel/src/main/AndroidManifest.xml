@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
@@ -7,7 +7,7 @@
 
     <application>
         <service
-            android:name="com.wireguard.android.backend.GoBackend$VpnService"
+            android:name="com.hezwin.android.backend.GoBackend$VpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:exported="false">
             <intent-filter>

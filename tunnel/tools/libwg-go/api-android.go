@@ -21,10 +21,10 @@ import (
 	"unsafe"
 
 	"golang.org/x/sys/unix"
-	"golang.zx2c4.com/wireguard/conn"
-	"golang.zx2c4.com/wireguard/device"
-	"golang.zx2c4.com/wireguard/ipc"
-	"golang.zx2c4.com/wireguard/tun"
+	"golang.zx2c4.com/hezwin/conn"
+	"golang.zx2c4.com/hezwin/device"
+	"golang.zx2c4.com/hezwin/ipc"
+	"golang.zx2c4.com/hezwin/tun"
 )
 
 type AndroidLogger struct {
@@ -66,7 +66,7 @@ func init() {
 					n--
 				}
 				buf[n] = 0
-				C.__android_log_write(C.ANDROID_LOG_ERROR, cstring("WireGuard/GoBackend/Stacktrace"), (*C.char)(unsafe.Pointer(&buf[0])))
+				C.__android_log_write(C.ANDROID_LOG_ERROR, cstring("HEZWIN/GoBackend/Stacktrace"), (*C.char)(unsafe.Pointer(&buf[0])))
 			}
 		}
 	}()
@@ -74,7 +74,7 @@ func init() {
 
 //export wgTurnOn
 func wgTurnOn(interfaceName string, tunFd int32, settings string) int32 {
-	tag := cstring("WireGuard/GoBackend/" + interfaceName)
+	tag := cstring("HEZWIN/GoBackend/" + interfaceName)
 	logger := &device.Logger{
 		Verbosef: AndroidLogger{level: C.ANDROID_LOG_DEBUG, tag: tag}.Printf,
 		Errorf:   AndroidLogger{level: C.ANDROID_LOG_ERROR, tag: tag}.Printf,
@@ -213,7 +213,7 @@ func wgVersion() *C.char {
 		return C.CString("unknown")
 	}
 	for _, dep := range info.Deps {
-		if dep.Path == "golang.zx2c4.com/wireguard" {
+		if dep.Path == "golang.zx2c4.com/hezwin" {
 			parts := strings.Split(dep.Version, "-")
 			if len(parts) == 3 && len(parts[2]) == 12 {
 				return C.CString(parts[2][:7])

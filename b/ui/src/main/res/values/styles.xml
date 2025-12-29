@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="WireGuardTheme.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="AppThemeBase" parent="WireGuardTheme">
+        <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
+        <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
+        <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
+    </style>
+
+    <!-- Various additional API-specific features in values-v*/styles.xml -->
+    <style name="AppTheme" parent="AppThemeBase" />
+
+    <style name="WireGuardTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cornerRadius">4dp</item>
+        <item name="contentPadding">8dp</item>
+    </style>
+
+    <style name="WireGuardTheme.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="NoBackgroundTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="TvTheme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

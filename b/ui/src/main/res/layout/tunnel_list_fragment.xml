@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.wireguard.android.model.ObservableTunnel" />
+
+        <variable
+            name="fragment"
+            type="com.wireguard.android.fragment.TunnelListFragment" />
+
+        <variable
+            name="rowConfigurationHandler"
+            type="com.wireguard.android.databinding.ObservableKeyedRecyclerViewAdapter.RowConfigurationHandler" />
+
+        <variable
+            name="tunnels"
+            type="com.wireguard.android.databinding.ObservableKeyedArrayList&lt;String, ObservableTunnel&gt;" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
+        android:clipChildren="false">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tunnel_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:nextFocusDown="@id/create_fab"
+            android:nextFocusForward="@id/create_fab"
+            android:paddingBottom="@{@dimen/design_fab_size_normal * 1.1f}"
+            android:visibility="@{tunnels.size() > 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
+            app:configurationHandler="@{rowConfigurationHandler}"
+            app:items="@{tunnels}"
+            app:layout="@{@layout/tunnel_list_item}"
+            tools:itemCount="12"
+            tools:listitem="@layout/tunnel_list_item" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{tunnels.size() == 0 ? android.view.View.VISIBLE : android.view.View.GONE}"
+            tools:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo_placeholder"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:alpha="0.3333333"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/tunnel_list_placeholder_margin"
+                android:layout_marginEnd="@dimen/tunnel_list_placeholder_margin"
+                android:text="@string/tunnel_list_placeholder"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:nextFocusUp="@id/tunnel_list"
+            app:srcCompat="@drawable/ic_action_add_white" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
