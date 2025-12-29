@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="settings">
-    <com.hezwin.android.preference.VersionPreference
+    <com.wireguard.android.preference.VersionPreference
         android:icon="@mipmap/ic_launcher"
         android:key="version" />
     <CheckBoxPreference
@@ -14,8 +14,8 @@
         android:summaryOff="@string/restore_on_boot_summary_off"
         android:summaryOn="@string/restore_on_boot_summary_on"
         android:title="@string/restore_on_boot_title" />
-    <com.hezwin.android.preference.ZipExporterPreference android:key="zip_exporter" />
-    <com.hezwin.android.preference.QuickTilePreference android:key="quick_tile" />
+    <com.wireguard.android.preference.ZipExporterPreference android:key="zip_exporter" />
+    <com.wireguard.android.preference.QuickTilePreference android:key="quick_tile" />
     <Preference
         android:key="log_viewer"
         android:singleLineTitle="false"
@@ -35,8 +35,8 @@
         android:summaryOff="@string/multiple_tunnels_summary_off"
         android:summaryOn="@string/multiple_tunnels_summary_on"
         android:title="@string/multiple_tunnels_title" />
-    <com.hezwin.android.preference.ToolsInstallerPreference android:key="tools_installer" />
-    <com.hezwin.android.preference.KernelModuleEnablerPreference android:key="kernel_module_enabler" />
+    <com.wireguard.android.preference.ToolsInstallerPreference android:key="tools_installer" />
+    <com.wireguard.android.preference.KernelModuleEnablerPreference android:key="kernel_module_enabler" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="allow_remote_control_intents"
@@ -44,5 +44,5 @@
         android:summaryOff="@string/allow_remote_control_intents_summary_off"
         android:summaryOn="@string/allow_remote_control_intents_summary_on"
         android:title="@string/allow_remote_control_intents_title" />
-    <com.hezwin.android.preference.DonatePreference android:singleLineTitle="false" />
+    <com.wireguard.android.preference.DonatePreference android:singleLineTitle="false" />
 </androidx.preference.PreferenceScreen>

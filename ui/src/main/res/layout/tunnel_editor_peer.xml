@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,21 +9,21 @@
 
         <import type="android.view.View" />
 
-        <import type="com.hezwin.android.widget.KeyInputFilter" />
+        <import type="com.wireguard.android.widget.KeyInputFilter" />
 
-        <import type="com.hezwin.android.databinding.BindingAdapters" />
+        <import type="com.wireguard.android.databinding.BindingAdapters" />
 
         <variable
             name="collection"
-            type="androidx.databinding.ObservableList&lt;com.hezwin.android.viewmodel.PeerProxy&gt;" />
+            type="androidx.databinding.ObservableList&lt;com.wireguard.android.viewmodel.PeerProxy&gt;" />
 
         <variable
             name="item"
-            type="com.hezwin.android.viewmodel.PeerProxy" />
+            type="com.wireguard.android.viewmodel.PeerProxy" />
 
         <variable
             name="fragment"
-            type="com.hezwin.android.fragment.TunnelEditorFragment" />
+            type="com.wireguard.android.fragment.TunnelEditorFragment" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

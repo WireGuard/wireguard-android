@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
+    <string name="app_name" translatable="false">HEZWIN ⚡</string>
+=======
     <string name="app_name" translatable="false">HEZWIN β</string>
+>>>>>>> 41396f4d (ui tunnel gradle guncellendi)
 </resources>
+

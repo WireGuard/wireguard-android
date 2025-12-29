@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,19 +8,19 @@
 
     <data>
 
-        <import type="com.hezwin.android.util.ClipboardUtils" />
+        <import type="com.wireguard.android.util.ClipboardUtils" />
 
-        <import type="com.hezwin.android.widget.KeyInputFilter" />
+        <import type="com.wireguard.android.widget.KeyInputFilter" />
 
-        <import type="com.hezwin.android.widget.NameInputFilter" />
+        <import type="com.wireguard.android.widget.NameInputFilter" />
 
         <variable
             name="fragment"
-            type="com.hezwin.android.fragment.TunnelEditorFragment" />
+            type="com.wireguard.android.fragment.TunnelEditorFragment" />
 
         <variable
             name="config"
-            type="com.hezwin.android.viewmodel.ConfigProxy" />
+            type="com.wireguard.android.viewmodel.ConfigProxy" />
 
         <variable
             name="name"

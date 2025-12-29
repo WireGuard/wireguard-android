@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <resources>
@@ -66,7 +66,7 @@
     <string name="allow_remote_control_intents_summary_on">External apps may toggle tunnels (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>
     <string name="allowed_ips">Allowed IPs</string>
-    <string name="app_name" translatable="false">HEZWIN</string>
+    <string name="app_name" translatable="false">WireGuard</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
@@ -93,7 +93,7 @@
     <string name="config_rename_error">Cannot rename configuration file “%s”</string>
     <string name="config_save_error">Cannot save configuration for “%1$s”: %2$s</string>
     <string name="config_save_success">Successfully saved configuration for “%s”</string>
-    <string name="create_activity_title">Create HEZWIN Tunnel</string>
+    <string name="create_activity_title">Create WireGuard Tunnel</string>
     <string name="create_bin_dir_error">Cannot create local binary directory</string>
     <string name="create_downloads_file_error">Cannot create file in downloads directory</string>
     <string name="create_empty">Create from scratch</string>
@@ -111,9 +111,9 @@
     <string name="tv_select_a_storage_drive">Select a storage drive</string>
     <string name="tv_no_file_picker">Please install a file management utility to browse files</string>
     <string name="tv_add_tunnel_get_started">Add a tunnel to get started</string>
-    <string name="donate_title">♥ Donate to the HEZWIN Project</string>
+    <string name="donate_title">♥ Donate to the WireGuard Project</string>
     <string name="donate_summary">Every contribution helps</string>
-    <string name="donate_google_play_disappointment">Thank you for supporting the HEZWIN Project!\n\nUnfortunately, due to Google\'s policies, we\'re not allowed to link to the part of the project webpage where you can make a donation. Hopefully you can figure this out!\n\nThanks again for your contribution.</string>
+    <string name="donate_google_play_disappointment">Thank you for supporting the WireGuard Project!\n\nUnfortunately, due to Google\'s policies, we\'re not allowed to link to the part of the project webpage where you can make a donation. Hopefully you can figure this out!\n\nThanks again for your contribution.</string>
     <string name="disable_config_export_title">Disable config exporting</string>
     <string name="disable_config_export_description">Disabling config exporting makes private keys less accessible</string>
     <string name="dns_servers">DNS servers</string>
@@ -140,14 +140,14 @@
     <string name="interface_title">Interface</string>
     <string name="key_contents_error">Bad characters in key</string>
     <string name="key_length_error">Incorrect key length</string>
-    <string name="key_length_explanation_base64">: HEZWIN base64 keys must be 44 characters (32 bytes)</string>
-    <string name="key_length_explanation_binary">: HEZWIN keys must be 32 bytes</string>
-    <string name="key_length_explanation_hex">: HEZWIN hex keys must be 64 characters (32 bytes)</string>
+    <string name="key_length_explanation_base64">: WireGuard base64 keys must be 44 characters (32 bytes)</string>
+    <string name="key_length_explanation_binary">: WireGuard keys must be 32 bytes</string>
+    <string name="key_length_explanation_hex">: WireGuard hex keys must be 64 characters (32 bytes)</string>
     <string name="latest_handshake">Latest handshake</string>
     <string name="latest_handshake_ago">%s ago</string>
     <string name="listen_port">Listen port</string>
     <string name="log_export_error">Unable to export log: %s</string>
-    <string name="log_export_subject">HEZWIN Android Log File</string>
+    <string name="log_export_subject">WireGuard Android Log File</string>
     <string name="log_export_success">Saved to “%s”</string>
     <string name="log_export_title">Export log file</string>
     <string name="log_saver_activity_label">Save log</string>
@@ -180,8 +180,8 @@
     <string name="parse_error_integer">number</string>
     <string name="parse_error_reason">Cannot parse %1$s “%2$s”</string>
     <string name="peer">Peer</string>
-    <string name="permission_description">control HEZWIN tunnels, enabling and disabling tunnels at will, potentially misdirecting Internet traffic</string>
-    <string name="permission_label">control HEZWIN tunnels</string>
+    <string name="permission_description">control WireGuard tunnels, enabling and disabling tunnels at will, potentially misdirecting Internet traffic</string>
+    <string name="permission_label">control WireGuard tunnels</string>
     <string name="persistent_keepalive">Persistent keepalive</string>
     <string name="pre_shared_key">Pre-shared key</string>
     <string name="pre_shared_key_enabled">enabled</string>
@@ -203,7 +203,7 @@
     <string name="shell_start_error">Shell failed to start: %d</string>
     <string name="success_application_will_restart">Success. The application will now restart…</string>
     <string name="toggle_all">Toggle All</string>
-    <string name="toggle_error">Error toggling HEZWIN tunnel: %s</string>
+    <string name="toggle_error">Error toggling WireGuard tunnel: %s</string>
     <string name="tools_installer_already">wg and wg-quick are already installed</string>
     <string name="tools_installer_failure">Unable to install command-line tools (no root?)</string>
     <string name="tools_installer_initial">Install optional tools for scripting</string>
@@ -249,7 +249,7 @@
     <string name="version_summary">%1$s backend %2$s</string>
     <string name="version_summary_checking">Checking %s backend version</string>
     <string name="version_summary_unknown">Unknown %s version</string>
-    <string name="version_title">HEZWIN for Android v%s</string>
+    <string name="version_title">WireGuard for Android v%s</string>
     <string name="vpn_not_authorized_error">VPN service not authorized by user</string>
     <string name="vpn_start_error">Unable to start Android VPN service</string>
     <string name="zip_export_error">Unable to export tunnels: %s</string>

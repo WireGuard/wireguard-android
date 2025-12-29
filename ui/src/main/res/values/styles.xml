@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright © 2017-2025 HEZWIN LLC. All Rights Reserved.
+  ~ Copyright © 2017-2025 WireGuard LLC. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="HEZWINTheme.Toolbar" parent="Widget.Material3.Toolbar">
+    <style name="WireGuardTheme.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="android:background">?attr/colorSurface</item>
     </style>
 
-    <style name="AppThemeBase" parent="HEZWINTheme">
-        <item name="materialCardViewStyle">@style/HEZWINTheme.MaterialCardView</item>
-        <item name="toolbarStyle">@style/HEZWINTheme.Toolbar</item>
-        <item name="bottomSheetDialogTheme">@style/HEZWINTheme.BottomSheetDialog</item>
+    <style name="AppThemeBase" parent="WireGuardTheme">
+        <item name="materialCardViewStyle">@style/WireGuardTheme.MaterialCardView</item>
+        <item name="toolbarStyle">@style/WireGuardTheme.Toolbar</item>
+        <item name="bottomSheetDialogTheme">@style/WireGuardTheme.BottomSheetDialog</item>
         <item name="android:statusBarColor">?android:colorBackground</item>
         <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
     </style>
@@ -19,12 +19,12 @@
     <!-- Various additional API-specific features in values-v*/styles.xml -->
     <style name="AppTheme" parent="AppThemeBase" />
 
-    <style name="HEZWINTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
+    <style name="WireGuardTheme.MaterialCardView" parent="Widget.Material3.CardView.Elevated">
         <item name="cornerRadius">4dp</item>
         <item name="contentPadding">8dp</item>
     </style>
 
-    <style name="HEZWINTheme.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+    <style name="WireGuardTheme.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
