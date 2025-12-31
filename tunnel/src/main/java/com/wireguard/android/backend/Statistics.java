@@ -21,7 +21,41 @@ import androidx.annotation.Nullable;
  */
 @NonNullForAll
 public class Statistics {
-    public record PeerStats(long rxBytes, long txBytes, long latestHandshakeEpochMillis) { }
+    public static class PeerStats {
+        public final long rxBytes;
+        public final long txBytes;
+        public final long latestHandshakeEpochMillis;
+        
+        public PeerStats(long rxBytes, long txBytes, long latestHandshakeEpochMillis) {
+            this.rxBytes = rxBytes;
+            this.txBytes = txBytes;
+            this.latestHandshakeEpochMillis = latestHandshakeEpochMillis;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            PeerStats peerStats = (PeerStats) obj;
+            return rxBytes == peerStats.rxBytes &&
+                   txBytes == peerStats.txBytes &&
+                   latestHandshakeEpochMillis == peerStats.latestHandshakeEpochMillis;
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hash(rxBytes, txBytes, latestHandshakeEpochMillis);
+        }
+        
+        @Override
+        public String toString() {
+            return "PeerStats{" +
+                   "rxBytes=" + rxBytes +
+                   ", txBytes=" + txBytes +
+                   ", latestHandshakeEpochMillis=" + latestHandshakeEpochMillis +
+                   '}';
+        }
+    }
     private final Map<Key, PeerStats> stats = new HashMap<>();
     private long lastTouched = SystemClock.elapsedRealtime();
 
