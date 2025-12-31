@@ -183,7 +183,7 @@ class LogViewerActivity : AppCompatActivity() {
             return
         Snackbar.make(
             findViewById(android.R.id.content),
-            if (exception == null) getString(R.string.log_export_success, outputFile?.fileName)
+            if (exception == null) getString(R.string.log_export_success, outputFile.fileName)
             else getString(R.string.log_export_error, ErrorMessages[exception]),
             if (exception == null) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG
         )
