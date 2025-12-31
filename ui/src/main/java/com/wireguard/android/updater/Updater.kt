@@ -376,6 +376,15 @@ object Updater {
         if (installerIsGooglePlay(context))
             return
 
+        if (BuildConfig.BUILD_TYPE == "googleplay") {
+            if (installer(context).isNotEmpty()) {
+                applicationScope.launch {
+                    emitProgress(Progress.Corrupt(null))
+                }
+            }
+            return
+        }
+
         if (if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                 @Suppress("DEPRECATION")
                 context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS)
