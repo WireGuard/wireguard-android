@@ -54,4 +54,14 @@ public interface Tunnel {
             return running ? UP : DOWN;
         }
     }
+
+    /**
+     * Enum class to represent the reason for why a tunnel's state has changed
+     */
+    enum StateChangeReason {
+        USER_INTERACTION,
+        EXTERNAL_INTENT,
+        AUTO_START,
+        WIFI_WORKER;
+    }
 }

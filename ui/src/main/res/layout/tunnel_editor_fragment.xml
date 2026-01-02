@@ -264,6 +264,62 @@
                             tools:text="4 excluded applications" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/wifi_config_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_marginTop="32dp"
+                            android:text="@string/wifi_settings"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/auto_disconnect_checkbox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="@={config.enableAutoDisconnect}"
+                            android:text="@string/wifi_auto_disconnect_checkbox"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/wifi_config_title" />
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/auto_disconnect_wifi_label_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/auto_disconnect_networks_label"
+                            app:expandedHintEnabled="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/auto_disconnect_checkbox">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/auto_disconnect_networks_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:hint="@string/auto_disconnect_networks_hint"
+                                android:imeOptions="actionNext"
+                                android:nextFocusUp="@id/private_key_text"
+                                android:singleLine="true"
+                                android:enabled="@{config.enableAutoDisconnect}"
+                                android:text="@={config.autoDisconnectNetworks}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:id="@+id/peers_layout"
