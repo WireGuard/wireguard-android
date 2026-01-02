@@ -404,7 +404,10 @@ public final class GoBackend implements Backend {
                     tunnel.onStateChange(State.DOWN);
                 }
             }
-            vpnService = vpnService.newIncompleteFuture();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                vpnService = vpnService.newIncompleteFuture();
+            else
+                vpnService = new CompletableFuture<>();
             super.onDestroy();
         }
 
