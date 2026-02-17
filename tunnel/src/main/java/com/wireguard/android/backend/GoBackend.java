@@ -39,7 +39,7 @@ import androidx.collection.ArraySet;
  * WireGuard tunnels.
  */
 @NonNullForAll
-public final class GoBackend implements Backend {
+public class GoBackend implements Backend {
     private static final int DNS_RESOLUTION_RETRIES = 10;
     private static final String TAG = "WireGuard/GoBackend";
     @Nullable private static AlwaysOnCallback alwaysOnCallback;
@@ -240,6 +240,10 @@ public final class GoBackend implements Backend {
         return getState(tunnel);
     }
 
+    protected Class<? extends VpnService> getVpnServiceClass() {
+        return VpnService.class;
+    }
+
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
             throws Exception {
         Log.i(TAG, "Bringing tunnel " + tunnel.getName() + ' ' + state);
@@ -254,7 +258,7 @@ public final class GoBackend implements Backend {
             final VpnService service;
             if (!vpnService.isDone()) {
                 Log.d(TAG, "Requesting to start VpnService");
-                context.startService(new Intent(context, VpnService.class));
+                context.startService(new Intent(context, getVpnServiceClass()));
             }
 
             try {
