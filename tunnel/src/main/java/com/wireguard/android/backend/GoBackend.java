@@ -240,8 +240,8 @@ public class GoBackend implements Backend {
         return getState(tunnel);
     }
 
-    protected Class<? extends VpnService> getVpnServiceClass() {
-        return VpnService.class;
+    protected void performStartService(Context context) {
+        context.startService(new Intent(context, VpnService.class));
     }
 
     private void setStateInternal(final Tunnel tunnel, @Nullable final Config config, final State state)
@@ -258,7 +258,7 @@ public class GoBackend implements Backend {
             final VpnService service;
             if (!vpnService.isDone()) {
                 Log.d(TAG, "Requesting to start VpnService");
-                context.startService(new Intent(context, getVpnServiceClass()));
+                performStartService(context);
             }
 
             try {
