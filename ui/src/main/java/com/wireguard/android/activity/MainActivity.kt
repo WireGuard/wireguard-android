@@ -15,24 +15,47 @@ import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import com.wireguard.android.R
+import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.fragment.TunnelDetailFragment
 import com.wireguard.android.fragment.TunnelEditorFragment
 import com.wireguard.android.model.ObservableTunnel
+import com.wireguard.config.Config
+import kotlinx.coroutines.launch
 
-/**
- * CRUD interface for WireGuard tunnels. This activity serves as the main entry point to the
- * WireGuard application, and contains several fragments for listing, viewing details of, and
- * editing the configuration and interface state of WireGuard tunnels.
- */
 class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener {
     private var actionBar: ActionBar? = null
     private var isTwoPaneLayout = false
     private var backPressedCallback: OnBackPressedCallback? = null
 
+    /**
+     * ✅ Import default config from assets if no tunnel exists
+     */
+    private fun importDefaultConfigIfNeeded() {
+        val tunnelManager = application.tunnelManager
+
+        if (tunnelManager.tunnels.isEmpty()) {
+            lifecycleScope.launch {
+                try {
+                    val inputStream = assets.open("myvpn.conf")
+                    val configText = inputStream.bufferedReader().use { it.readText() }
+                    val config = Config.parse(configText.byteInputStream())
+
+                    val tunnel = tunnelManager.create("MyVPN", config)
+
+                    // 🔥 Auto connect
+                    tunnel.setState(Tunnel.State.UP)
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
     private fun handleBackPressed() {
         val backStackEntries = supportFragmentManager.backStackEntryCount
-        // If the two-pane layout does not have an editor open, going back should exit the app.
         if (isTwoPaneLayout && backStackEntries <= 1) {
             finish()
             return
@@ -41,7 +64,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         if (backStackEntries >= 1)
             supportFragmentManager.popBackStack()
 
-        // Deselect the current tunnel on navigating back from the detail pane to the one-pane list.
         if (backStackEntries == 1)
             selectedTunnel = null
     }
@@ -50,7 +72,6 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         val backStackEntries = supportFragmentManager.backStackEntryCount
         backPressedCallback?.isEnabled = backStackEntries >= 1
         if (actionBar == null) return
-        // Do not show the home menu when the two-pane layout is at the detail view (see above).
         val minBackStackEntries = if (isTwoPaneLayout) 2 else 1
         actionBar!!.setDisplayHomeAsUpEnabled(backStackEntries >= minBackStackEntries)
     }
@@ -63,6 +84,9 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
         supportFragmentManager.addOnBackStackChangedListener(this)
         backPressedCallback = onBackPressedDispatcher.addCallback(this) { handleBackPressed() }
         onBackStackChanged()
+
+        // ✅ Import & Auto Connect
+        importDefaultConfigIfNeeded()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -73,21 +97,25 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                // The back arrow in the action bar should act the same as the back button.
                 onBackPressedDispatcher.onBackPressed()
                 true
             }
 
             R.id.menu_action_edit -> {
                 supportFragmentManager.commit {
-                    replace(if (isTwoPaneLayout) R.id.detail_container else R.id.list_detail_container, TunnelEditorFragment())
+                    replace(
+                        if (isTwoPaneLayout) R.id.detail_container
+                        else R.id.list_detail_container,
+                        TunnelEditorFragment()
+                    )
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     addToBackStack(null)
                 }
                 true
             }
-            // This menu item is handled by the editor fragment.
+
             R.id.menu_action_save -> false
+
             R.id.menu_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -108,18 +136,22 @@ class MainActivity : BaseActivity(), FragmentManager.OnBackStackChangedListener 
 
         val backStackEntries = fragmentManager.backStackEntryCount
         if (newTunnel == null) {
-            // Clear everything off the back stack (all editors and detail fragments).
-            fragmentManager.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            fragmentManager.popBackStackImmediate(
+                0,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
             return true
         }
+
         if (backStackEntries == 2) {
-            // Pop the editor off the back stack to reveal the detail fragment. Use the immediate
-            // method to avoid the editor picking up the new tunnel while it is still visible.
             fragmentManager.popBackStackImmediate()
         } else if (backStackEntries == 0) {
-            // Create and show a new detail fragment.
             fragmentManager.commit {
-                add(if (isTwoPaneLayout) R.id.detail_container else R.id.list_detail_container, TunnelDetailFragment())
+                add(
+                    if (isTwoPaneLayout) R.id.detail_container
+                    else R.id.list_detail_container,
+                    TunnelDetailFragment()
+                )
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 addToBackStack(null)
             }
