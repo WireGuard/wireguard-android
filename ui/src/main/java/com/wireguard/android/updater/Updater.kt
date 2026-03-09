@@ -410,18 +410,24 @@ object Updater {
                 return@launch
 
             var waitTime = 15
+            var exceptionCount = 0
             while (true) {
                 try {
-                    val update = checkForUpdates() ?: continue
+                    val update = checkForUpdates() ?: throw Exception("No updates found")
                     if (update.version > CURRENT_VERSION) {
                         Log.i(TAG, "Update available: ${update.version}")
                         UserKnobs.setUpdaterNewerVersionSeen(update.version.toString())
                         return@launch
                     }
                 } catch (_: Throwable) {
+                    if (++exceptionCount <= 6) {
+                        delay((exceptionCount * 8).seconds)
+                        continue
+                    }
                 }
                 delay(waitTime.minutes)
                 waitTime = 45
+                exceptionCount = 0
             }
         }
 
