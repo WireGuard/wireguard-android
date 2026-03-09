@@ -27,7 +27,6 @@
     <string name="add_peer">पीयर जोड़ें</string>
     <string name="addresses">एड्रेससैस</string>
     <string name="allowed_ips">अनुमत आईपी</string>
-    <string name="app_name">WireGuard</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
