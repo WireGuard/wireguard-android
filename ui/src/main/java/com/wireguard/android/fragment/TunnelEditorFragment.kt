@@ -30,6 +30,7 @@ import com.wireguard.android.databinding.TunnelEditorFragmentBinding
 import com.wireguard.android.model.ObservableTunnel
 import com.wireguard.android.util.AdminKnobs
 import com.wireguard.android.util.BiometricAuthenticator
+import com.wireguard.android.util.DisplayNameStore
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.viewmodel.ConfigProxy
 import com.wireguard.config.Config
@@ -119,7 +120,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
                 binding!!.config!!.resolve()
             } catch (e: Throwable) {
                 val error = ErrorMessages[e]
-                val tunnelName = if (tunnel == null) binding!!.name else tunnel!!.name
+                val tunnelName = if (tunnel == null) binding!!.name else tunnel!!.displayName
                 val message = getString(R.string.config_save_error, tunnelName, error)
                 Log.e(TAG, message, e)
                 Snackbar.make(binding!!.mainContainer, error, Snackbar.LENGTH_LONG).show()
@@ -138,10 +139,10 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
                         }
                     }
 
-                    tunnel!!.name != binding!!.name -> {
+                    tunnel!!.displayName != binding!!.name -> {
                         Log.d(TAG, "Attempting to rename tunnel to " + binding!!.name)
                         try {
-                            tunnel!!.setNameAsync(binding!!.name!!)
+                            tunnel!!.setDisplayNameAsync(binding!!.name!!)
                             onTunnelRenamed(tunnel!!, newConfig, null)
                         } catch (e: Throwable) {
                             onTunnelRenamed(tunnel!!, newConfig, e)
@@ -211,7 +212,8 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         if (binding == null) return
         binding!!.config = ConfigProxy()
         if (tunnel != null) {
-            binding!!.name = tunnel!!.name
+            // Show display name in the editor, not the interface name
+            binding!!.name = tunnel!!.displayName
             lifecycleScope.launch {
                 try {
                     onConfigLoaded(tunnel!!.getConfigAsync())
@@ -227,7 +229,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         val ctx = activity ?: Application.get()
         if (throwable == null) {
             tunnel = newTunnel
-            val message = ctx.getString(R.string.tunnel_create_success, tunnel!!.name)
+            val message = ctx.getString(R.string.tunnel_create_success, tunnel!!.displayName)
             Log.d(TAG, message)
             Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
             onFinished()
@@ -249,7 +251,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
     ) {
         val ctx = activity ?: Application.get()
         if (throwable == null) {
-            val message = ctx.getString(R.string.tunnel_rename_success, renamedTunnel.name)
+            val message = ctx.getString(R.string.tunnel_rename_success, renamedTunnel.displayName)
             Log.d(TAG, message)
             // Now save the rest of configuration changes.
             Log.d(TAG, "Attempting to save config of renamed tunnel " + tunnel!!.name)

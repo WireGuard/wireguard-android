@@ -32,6 +32,17 @@ class ObservableTunnel internal constructor(
     @Bindable
     override fun getName() = name
 
+    /**
+     * User-facing display name that may contain emoji and other Unicode characters.
+     * Falls back to the interface name if no display name is set.
+     */
+    @get:Bindable
+    var displayName: String = name
+        internal set(value) {
+            field = value
+            notifyPropertyChanged(BR.displayName)
+        }
+
     suspend fun setNameAsync(name: String): String = withContext(Dispatchers.Main.immediate) {
         if (name != this@ObservableTunnel.name)
             manager.setTunnelName(this@ObservableTunnel, name)
@@ -39,10 +50,24 @@ class ObservableTunnel internal constructor(
             this@ObservableTunnel.name
     }
 
+    /**
+     * Set a new display name for this tunnel. If the display name contains characters
+     * not valid for Linux interface names, the interface name will be auto-generated.
+     */
+    suspend fun setDisplayNameAsync(newDisplayName: String): String = withContext(Dispatchers.Main.immediate) {
+        manager.setTunnelDisplayName(this@ObservableTunnel, newDisplayName)
+    }
+
     fun onNameChanged(name: String): String {
         this.name = name
         notifyPropertyChanged(BR.name)
         return name
+    }
+
+    fun onDisplayNameChanged(displayName: String): String {
+        this.displayName = displayName
+        notifyPropertyChanged(BR.displayName)
+        return displayName
     }
 
 

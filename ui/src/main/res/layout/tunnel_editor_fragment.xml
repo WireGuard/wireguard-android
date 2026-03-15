@@ -80,7 +80,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:imeOptions="actionNext"
-                                android:inputType="textNoSuggestions|textVisiblePassword"
+                                android:inputType="textNoSuggestions"
                                 android:nextFocusDown="@id/private_key_text"
                                 android:nextFocusForward="@id/private_key_text"
                                 android:text="@={name}"

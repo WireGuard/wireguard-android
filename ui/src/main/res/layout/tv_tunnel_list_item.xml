@@ -52,7 +52,7 @@
                 android:id="@+id/tunnel_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.name}"
+                android:text="@{item.displayName}"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
