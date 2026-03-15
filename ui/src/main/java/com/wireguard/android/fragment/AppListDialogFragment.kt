@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.databinding.Observable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
@@ -145,10 +144,11 @@ class AppListDialogFragment : DialogFragment() {
             }
         }
         setFragmentResult(
-            REQUEST_SELECTION, bundleOf(
-                KEY_SELECTED_APPS to selectedApps.toTypedArray(),
-                KEY_IS_EXCLUDED to (tabs?.selectedTabPosition == 0)
-            )
+            REQUEST_SELECTION,
+            Bundle().apply {
+                putStringArray(KEY_SELECTED_APPS, selectedApps.toTypedArray())
+                putBoolean(KEY_IS_EXCLUDED, tabs?.selectedTabPosition == 0)
+            }
         )
         dismiss()
     }
