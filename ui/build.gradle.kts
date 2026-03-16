@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
 
 plugins {
@@ -81,4 +84,8 @@ dependencies {
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Xlint:unchecked")
     options.isDeprecation = true
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions.jvmTarget = JvmTarget.JVM_17
 }
