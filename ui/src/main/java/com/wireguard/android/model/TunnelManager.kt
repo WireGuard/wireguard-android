@@ -7,11 +7,23 @@ package com.wireguard.android.model
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.wireguard.android.Application.Companion.get
 import com.wireguard.android.Application.Companion.getBackend
 import com.wireguard.android.Application.Companion.getTunnelManager
@@ -33,6 +45,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 /**
  * Maintains and mediates changes to the set of available WireGuard tunnels,
@@ -102,9 +115,43 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         applicationScope.launch {
             try {
                 onTunnelsLoaded(withContext(Dispatchers.IO) { configStore.enumerate() }, withContext(Dispatchers.IO) { getBackend().runningTunnelNames })
+                loadOrUnloadWifiWorker()
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
+        }
+    }
+
+    private suspend fun loadOrUnloadWifiWorker() {
+        if(!tunnels.isCompleted) return; // This should be loaded only if the tunnels have all been properly initialized
+        val workerTag = "WIFI_WORKER"
+        val hasAnyTunnelsNeedingWifi =
+            getTunnels().any { tunnel -> getTunnelState(tunnel) == Tunnel.State.UP && tunnel.getConfigAsync().isAutoDisconnectEnabled }
+        if (hasAnyTunnelsNeedingWifi) {
+            Log.d(WIFI_TAG, "There's one or more tunnels that check for Wi-Fi connectivity - (re)loading worker")
+            PeriodicWorkRequest
+                .Builder(
+                    WifiWorker::class.java, 15,
+                    TimeUnit.MINUTES, 5, TimeUnit.MINUTES
+                )
+                .addTag(workerTag)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiredNetworkType(NetworkType.UNMETERED)
+                        .build()
+                )
+                .build()
+                .also {
+                    WorkManager.getInstance(context)
+                        .enqueueUniquePeriodicWork("WIFI_WORKER", ExistingPeriodicWorkPolicy.UPDATE, it)
+                }
+            // Fire once, at the start
+            GenericWifiWorker(context).doWork()
+        } else {
+            // Kill the worker - no need to keep it running
+            Log.d(WIFI_TAG, "There's no more connected tunnels that check for Wi-Fi functionality - killing worker")
+            WorkManager.getInstance(context).cancelAllWorkByTag(workerTag)
         }
     }
 
@@ -140,7 +187,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         if (previouslyRunning.isEmpty()) return
         withContext(Dispatchers.IO) {
             try {
-                tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(Dispatchers.IO + SupervisorJob()) { setTunnelState(it, Tunnel.State.UP) } }
+                tunnelMap.filter { previouslyRunning.contains(it.name) }.map { async(Dispatchers.IO + SupervisorJob()) { setTunnelState(it, Tunnel.State.UP, Tunnel.StateChangeReason.AUTO_START) } }
                     .awaitAll()
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
@@ -194,7 +241,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         newName!!
     }
 
-    suspend fun setTunnelState(tunnel: ObservableTunnel, state: Tunnel.State): Tunnel.State = withContext(Dispatchers.Main.immediate) {
+    suspend fun setTunnelState(tunnel: ObservableTunnel, state: Tunnel.State, reason: Tunnel.StateChangeReason): Tunnel.State = withContext(Dispatchers.Main.immediate) {
         var newState = tunnel.state
         var throwable: Throwable? = null
         try {
@@ -208,6 +255,14 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         saveState()
         if (throwable != null)
             throw throwable
+        if(reason != Tunnel.StateChangeReason.AUTO_START){
+            try {
+                if (tunnel.getConfigAsync().isAutoDisconnectEnabled)
+                    loadOrUnloadWifiWorker()
+            } catch (e: Throwable) {
+                // Ignore
+            }
+        }
         newState
     }
 
@@ -232,11 +287,77 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 val tunnels = manager.getTunnels()
                 val tunnel = tunnels[tunnelName] ?: return@launch
                 try {
-                    manager.setTunnelState(tunnel, state)
+                    manager.setTunnelState(tunnel, state, Tunnel.StateChangeReason.EXTERNAL_INTENT)
                 } catch (e: Throwable) {
                     Toast.makeText(context, ErrorMessages[e], Toast.LENGTH_LONG).show()
                 }
             }
+        }
+    }
+
+    class GenericWifiWorker(val context: Context) {
+        private val initWifiName: String?;
+        init{
+            initWifiName = getCurrentWifiName()
+        }
+        private fun getCurrentWifiName(): String? {
+            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val ssid: String? = wifiManager.connectionInfo.ssid.run {
+                when {
+                    this.contains("<unknown ssid>") -> null
+                    this.startsWith("\"") -> this.substring(1, this.length - 1)
+                    else -> null
+                }
+            }
+            return ssid
+        }
+
+        private var connectivityManager =
+            context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        private var networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                val ssid = getCurrentWifiName()
+                if(ssid == initWifiName) return;
+
+                applicationScope.launch {
+                    if (ssid == null) {
+                        Log.e(WIFI_TAG, "Cannot detect Wi-Fi name - missing permissions!")
+                        return@launch
+                    }
+                    val manager = getTunnelManager()
+                    val tunnels = manager.getTunnels().filter { tunnel ->
+                        tunnel.getConfigAsync().isAutoDisconnectEnabled && tunnel.getConfigAsync().autoDisconnectNetworks.split(",").any{ it.trim() == ssid }
+                    }
+                    tunnels.forEach { tunnel ->
+                        try {
+                            manager.setTunnelState(tunnel, Tunnel.State.DOWN, Tunnel.StateChangeReason.WIFI_WORKER)
+                            Log.d(WIFI_TAG, "Disabled tunnel ${tunnel.name}")
+                        } catch (e: Throwable) {
+                            Log.d(WIFI_TAG, ErrorMessages[e])
+                        }
+                    }
+                }
+            }
+        }
+
+        fun doWork() {
+            val networkRequest = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build()
+            try {
+                connectivityManager.unregisterNetworkCallback(networkCallback)
+            } catch (_: Exception) {
+            }
+            connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+        }
+    }
+
+    class WifiWorker(val context: Context, parameters: WorkerParameters) : Worker(context, parameters) {
+        private val generic = GenericWifiWorker(context)
+        override fun doWork(): Result {
+            generic.doWork()
+            return Result.success()
         }
     }
 
@@ -250,5 +371,6 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     companion object {
         private const val TAG = "WireGuard/TunnelManager"
+        private const val WIFI_TAG = "WireGuard/TunnelManager/WIFI"
     }
 }

@@ -33,10 +33,15 @@ public final class Config {
     private final Interface interfaze;
     private final List<Peer> peers;
 
+    private final boolean enableAutoDisconnect;
+    private final String autoDisconnectNetworks;
+
     private Config(final Builder builder) {
         interfaze = Objects.requireNonNull(builder.interfaze, "An [Interface] section is required");
         // Defensively copy to ensure immutability even if the Builder is reused.
         peers = Collections.unmodifiableList(new ArrayList<>(builder.peers));
+        enableAutoDisconnect = builder.enableAutoDisconnect;
+        autoDisconnectNetworks = builder.autoDisconnectNetworks;
     }
 
     /**
@@ -71,8 +76,25 @@ public final class Config {
         @Nullable String line;
         while ((line = reader.readLine()) != null) {
             final int commentIndex = line.indexOf('#');
-            if (commentIndex != -1)
+            if (commentIndex != -1) {
+                final String commentData = line.substring(commentIndex);
+                if(commentData.startsWith("#ADD;")){
+                    final String[] tokens = commentData.split(";", 3);
+                    if(tokens.length != 3){
+                        throw new BadConfigException(Section.CONFIG, Location.TOP_LEVEL, Reason.INVALID_ADDITIONAL_CONFIG, line);
+                    }
+                    final String tokenName = tokens[1];
+                    final String tokenValue = tokens[2];
+                    switch (tokenName) {
+                        case "wifi_auto_disconnect" ->
+                                builder.setAutoDisconnect("1".equalsIgnoreCase(tokenValue));
+                        case "wifi_auto_disconnect_networks" ->
+                                builder.setAutoDisconnectNetworks(tokenValue);
+                    }
+                    continue;
+                }
                 line = line.substring(0, commentIndex);
+            }
             line = line.trim();
             if (line.isEmpty())
                 continue;
@@ -120,6 +142,27 @@ public final class Config {
         return interfaze.equals(other.interfaze) && peers.equals(other.peers);
     }
 
+
+    /**
+     * Returns whether or not the connection should be disconnected, once the user connects to a
+     * specified network.
+     *
+     * @return whether or not the connection should be disconnected, once the user connects to a
+     * specified network
+     */
+    public boolean isAutoDisconnectEnabled() {
+        return enableAutoDisconnect;
+    }
+
+    /**
+     * Returns the list of Wi-Fi networks that should cause this connection to disconnect.
+     *
+     * @return the list of Wi-Fi networks that should cause this connection to disconnect
+     */
+    public String getAutoDisconnectNetworks(){
+        return autoDisconnectNetworks;
+    }
+
     /**
      * Returns the interface section of the configuration.
      *
@@ -140,7 +183,7 @@ public final class Config {
 
     @Override
     public int hashCode() {
-        return 31 * interfaze.hashCode() + peers.hashCode();
+        return 33 * (enableAutoDisconnect ? 1 : 0) + 32 * autoDisconnectNetworks.hashCode() + 31 * interfaze.hashCode() + peers.hashCode();
     }
 
     /**
@@ -165,6 +208,8 @@ public final class Config {
         sb.append("[Interface]\n").append(interfaze.toWgQuickString());
         for (final Peer peer : peers)
             sb.append("\n[Peer]\n").append(peer.toWgQuickString());
+        sb.append("\n#ADD;wifi_auto_disconnect;").append(enableAutoDisconnect ? '1' : '0');
+        sb.append("\n#ADD;wifi_auto_disconnect_networks;").append(autoDisconnectNetworks);
         return sb.toString();
     }
 
@@ -189,8 +234,21 @@ public final class Config {
         // No default; must be provided before building.
         @Nullable private Interface interfaze;
 
+        private boolean enableAutoDisconnect = false;
+        private String autoDisconnectNetworks = "";
+
         public Builder addPeer(final Peer peer) {
             peers.add(peer);
+            return this;
+        }
+
+        public Builder setAutoDisconnect(final boolean enable){
+            enableAutoDisconnect = enable;
+            return this;
+        }
+
+        public Builder setAutoDisconnectNetworks(final String networks){
+            autoDisconnectNetworks = networks;
             return this;
         }
 
