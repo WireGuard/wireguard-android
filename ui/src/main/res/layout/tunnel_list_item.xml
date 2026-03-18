@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{key}"
+            android:text="@{item.displayName}"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="@sample/interface_names.json/names/names/name" />
 

@@ -167,7 +167,7 @@ class QuickTileService : TileService() {
                 tile.icon = iconOff
             }
             else -> {
-                tile.label = tunnel.name
+                tile.label = tunnel.displayName
                 tile.state = if (tunnel.state == Tunnel.State.UP) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
                 tile.icon = if (tunnel.state == Tunnel.State.UP) iconOn else iconOff
             }

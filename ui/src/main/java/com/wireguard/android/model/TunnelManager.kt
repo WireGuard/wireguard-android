@@ -21,6 +21,7 @@ import com.wireguard.android.backend.Statistics
 import com.wireguard.android.backend.Tunnel
 import com.wireguard.android.configStore.ConfigStore
 import com.wireguard.android.databinding.ObservableSortedKeyedArrayList
+import com.wireguard.android.util.DisplayNameStore
 import com.wireguard.android.util.ErrorMessages
 import com.wireguard.android.util.UserKnobs
 import com.wireguard.android.util.applicationScope
@@ -45,18 +46,34 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
 
     private fun addToList(name: String, config: Config?, state: Tunnel.State): ObservableTunnel {
         val tunnel = ObservableTunnel(this, name, config, state)
+        // Load display name from store
+        val displayName = DisplayNameStore.getDisplayName(context, name)
+        if (displayName != null) {
+            tunnel.displayName = displayName
+        }
         tunnelMap.add(tunnel)
         return tunnel
     }
 
     suspend fun getTunnels(): ObservableSortedKeyedArrayList<String, ObservableTunnel> = tunnels.await()
 
-    suspend fun create(name: String, config: Config?): ObservableTunnel = withContext(Dispatchers.Main.immediate) {
-        if (Tunnel.isNameInvalid(name))
+    /**
+     * Create a tunnel. If displayName contains characters not valid for a Linux interface
+     * name, an interface name is auto-generated and the displayName is stored separately.
+     */
+    suspend fun create(displayName: String, config: Config?): ObservableTunnel = withContext(Dispatchers.Main.immediate) {
+        val interfaceName = DisplayNameStore.generateInterfaceName(displayName) ?: displayName
+        if (Tunnel.isNameInvalid(interfaceName))
             throw IllegalArgumentException(context.getString(R.string.tunnel_error_invalid_name))
-        if (tunnelMap.containsKey(name))
-            throw IllegalArgumentException(context.getString(R.string.tunnel_error_already_exists, name))
-        addToList(name, withContext(Dispatchers.IO) { configStore.create(name, config!!) }, Tunnel.State.DOWN)
+        if (tunnelMap.containsKey(interfaceName))
+            throw IllegalArgumentException(context.getString(R.string.tunnel_error_already_exists, displayName))
+        val tunnel = addToList(interfaceName, withContext(Dispatchers.IO) { configStore.create(interfaceName, config!!) }, Tunnel.State.DOWN)
+        // If display name differs from interface name, persist it
+        if (displayName != interfaceName) {
+            DisplayNameStore.setDisplayName(context, interfaceName, displayName)
+            tunnel.onDisplayNameChanged(displayName)
+        }
+        tunnel
     }
 
     suspend fun delete(tunnel: ObservableTunnel) = withContext(Dispatchers.Main.immediate) {
@@ -71,6 +88,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
                 withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.DOWN, null) }
             try {
                 withContext(Dispatchers.IO) { configStore.delete(tunnel.name) }
+                DisplayNameStore.delete(context, tunnel.name)
             } catch (e: Throwable) {
                 if (originalState == Tunnel.State.UP)
                     withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }
@@ -177,6 +195,7 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
             if (originalState == Tunnel.State.UP)
                 withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.DOWN, null) }
             withContext(Dispatchers.IO) { configStore.rename(tunnel.name, name) }
+            DisplayNameStore.rename(context, tunnel.name, name)
             newName = tunnel.onNameChanged(name)
             if (originalState == Tunnel.State.UP)
                 withContext(Dispatchers.IO) { getBackend().setState(tunnel, Tunnel.State.UP, tunnel.config) }
@@ -192,6 +211,21 @@ class TunnelManager(private val configStore: ConfigStore) : BaseObservable() {
         if (throwable != null)
             throw throwable
         newName!!
+    }
+
+    /**
+     * Update the display name of a tunnel. If the new display name requires a different
+     * interface name, the tunnel is renamed at the backend level too.
+     */
+    suspend fun setTunnelDisplayName(tunnel: ObservableTunnel, newDisplayName: String): String = withContext(Dispatchers.Main.immediate) {
+        val newInterfaceName = DisplayNameStore.generateInterfaceName(newDisplayName)
+        if (newInterfaceName != null && newInterfaceName != tunnel.name) {
+            // Need to rename the underlying interface too
+            setTunnelName(tunnel, newInterfaceName)
+        }
+        DisplayNameStore.setDisplayName(context, tunnel.name, newDisplayName)
+        tunnel.onDisplayNameChanged(newDisplayName)
+        newDisplayName
     }
 
     suspend fun setTunnelState(tunnel: ObservableTunnel, state: Tunnel.State): Tunnel.State = withContext(Dispatchers.Main.immediate) {

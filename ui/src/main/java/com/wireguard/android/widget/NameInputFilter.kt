@@ -7,10 +7,11 @@ package com.wireguard.android.widget
 import android.text.InputFilter
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import com.wireguard.android.backend.Tunnel
 
 /**
- * InputFilter for entering WireGuard configuration names (Linux interface names).
+ * InputFilter for entering WireGuard tunnel display names.
+ * Allows Unicode characters including emoji. The underlying interface name
+ * is auto-generated when the display name contains non-ASCII characters.
  */
 class NameInputFilter : InputFilter {
     override fun filter(
@@ -25,10 +26,9 @@ class NameInputFilter : InputFilter {
         for (sIndex in sStart until sEnd) {
             val c = source[sIndex]
             val dIndex = dStart + (sIndex - sStart)
-            // Restrict characters to those valid in interfaces.
-            // Ensure adding this character does not push the length over the limit.
-            if (dIndex < Tunnel.NAME_MAX_LENGTH && isAllowed(c) &&
-                dLength + (sIndex - sStart) < Tunnel.NAME_MAX_LENGTH
+            // Allow any non-control character. Display name length limit is 80 characters.
+            if (dIndex < DISPLAY_NAME_MAX_LENGTH && isAllowed(c) &&
+                dLength + (sIndex - sStart) < DISPLAY_NAME_MAX_LENGTH
             ) {
                 ++rIndex
             } else {
@@ -40,7 +40,14 @@ class NameInputFilter : InputFilter {
     }
 
     companion object {
-        private fun isAllowed(c: Char) = Character.isLetterOrDigit(c) || "_=+.-".indexOf(c) >= 0
+        const val DISPLAY_NAME_MAX_LENGTH = 80
+
+        private fun isAllowed(c: Char): Boolean {
+            // Allow anything that isn't a control character or the path separators / and \
+            if (Character.isISOControl(c)) return false
+            if (c == '/' || c == '\\') return false
+            return true
+        }
 
         @JvmStatic
         fun newInstance() = NameInputFilter()
