@@ -36,7 +36,7 @@
         android:background="@drawable/list_item_background"
         android:descendantFocusability="beforeDescendants"
         android:focusable="true"
-        android:nextFocusRight="@+id/tunnel_switch"
+        android:nextFocusRight="@+id/tunnel_shortcut_toggle"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp">
 
@@ -51,6 +51,20 @@
             android:text="@{key}"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="@sample/interface_names.json/names/names/name" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/tunnel_shortcut_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tunnel_switch"
+            android:layout_toStartOf="@id/tunnel_switch"
+            android:button="@drawable/ic_action_shortcut"
+            android:checked="@{item.hasShortcut == true}"
+            android:nextFocusRight="@+id/tunnel_switch"
+            android:onCheckedChanged="@{fragment::setShortcutState}"
+            android:tooltipText="@string/tooltip_tunnel_shortcut"
+            app:buttonTint="?attr/colorSecondary"
+            tools:checked="@sample/interface_names.json/names/shortcut/shortcut" />
 
         <com.wireguard.android.widget.ToggleSwitch
             android:id="@+id/tunnel_switch"
