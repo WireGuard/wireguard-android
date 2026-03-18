@@ -5,11 +5,15 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+
     <application>
         <service
             android:name="com.wireguard.android.backend.GoBackend$VpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
-            android:exported="false">
+            android:exported="false"
+            android:persistent="true"
+            android:foregroundServiceType="systemExempted">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
